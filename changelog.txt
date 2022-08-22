@@ -1,0 +1,155 @@
+Kevinbot_7-3-22 (07/03/2022)
+
+    A test of the new Software Updater and Runner (very buggy)
+
+1.0-b0 (07/03/2022)
+
+    First beta release of Kevinbot Remote
+
+1.0-b1 (07/04/2022)
+
+    Fix a bug that can cause the remote app to stop working
+    Make runner icons smaller to fit more apps
+
+1.0-b2 (07/05/2022)
+
+    Fixed a bug in the theme of palettes
+    Fixed a bug that caused the remote not to recognize the robot version
+    Make palette buttons bigger
+
+1.0-b3 (07/05/2022)
+
+    The remote will no longer send "head=x,y" and will now send "head_x" and "head_y" separately
+
+1.0-b4 (07/05/2022)
+
+    Sliders now have a bigger handle
+    Added base colors
+
+1.0-b5  "The Terminal Update" (07/13/2022)
+
+    Use new "txmot()" function in com.py
+    Send separate "left_us" and "right_us" instead of "motor_us"
+    Remove "robot_version"
+    Add battery status and a modal message that pops up when battery is low
+    Make runner button text smaller
+
+    NEW APP:
+    Kevinbot XBee Terminal
+
+1.0-b6 (07/13/2022)
+
+    Fix a bug that causes the terminal to crash randomly
+    Fix a bug that causes the remote ui to close when clicking "ignore" on modals
+    Enable Antialiasing on joystick
+    Change arrow icons on bottom to sensor and camera icons (in remote-ui.py)
+    New sensors page
+
+1.0-b7 (07/13/2022)
+
+    Change Chase animation to Jump3
+    Say "One or More Batteries are Low" on modal
+    Outside Temp, Outside Humidity, and Outside Pressure have been added to the sensor page
+    Eyes and base leds will now go to defaults when remote starts
+    "txcv()" in "com.py" now has a delay option
+    com.py will now show a graphical error when serial port is not found
+
+1.0-b8 (07/14/2022) (This update was LOST and no longer exists)
+
+    The sensors' page will now show ℉
+
+    NEW APP:
+    Kevinbot Remote Settings (can only change screen brightness currently)
+
+1.0-b9 (07/14/2022)
+
+    Code cleanup
+    Make runner button smaller to fit more apps
+    Settings now has camera url option with a validate button
+    Fix duplicate "closeEvent()" in remote-ui.py
+
+1.0-b10 (07/15/2022)
+
+    Add left and right motor temperatures
+    settings now has an option for runner themes
+    Kevinbot Runner now has two themes (Classic and Blue)
+    The updater no longer has the "Don't add new apps" option because it might cause a problem with themes
+    Fixed a bug in the updater that causes it to stop when adding new directories
+    The updater now shows the version when complete
+
+1.0-b11 (07/15/2022)
+
+    Added green theme
+    background images on themes are now better on actual display
+    get current theme in settings.py
+    theme will mostly update when changed in settings
+    theme changes
+
+1.0-b12 (07/15/2022)
+
+    Added Purple and Yellow themes
+    runner.py has been changed to menu.py
+    runner.py is now a script that opens runner.py and reboots system if runner.py crashes
+
+1.0-b13 (07/15/2022 ~ 07/18/2022)
+
+    Added Haptic Feedback using the raspberry pi's GPIO21 (BCM)
+    Use GPIOEmulator on PCs
+    Added Geometric Blue and Green Themes
+    runner.py no longer reboots
+    the updater now updates much faster
+
+1.0-b14 (07/18/2022 ~ 07/19/2022)
+
+    menu.py will now only update the theme when apps.json is changed
+    Kevinbot Runner now shows the time
+    Added new "Geometric" Theme
+    left and right  motor temp now work
+    com.py will only show error after init()
+    battery 1 and 2 labels will turn red when low
+
+1.0-b15 (07/19/2022 ~ 07/20/2022)
+
+    A modal will be shown when the motor temperature is too high
+    The "Classic" theme is now called "Classic Dark"
+    The DPad now turns red and disables when the motor temperature is too high
+
+    NEW APP:
+    Kevinbot Browser (simple web browser with tabs)
+
+1.0-b16 (07/20/2022)
+
+    Browser has been renamed to "Browser (Beta)" because of many bugs
+    Browser now has a close button
+    The Remote-UI will now also listen to "batt_volts=<volt1 * 10>,<volt2 * 10>"
+
+1.0-b17 (07/21/2022 ~ 08/03/2022)
+
+    Code cleanup
+    New Level widget
+    Added Level widget in the sensor page
+    Move close button of the updater from the right to the left
+    save.svg no longer has a gradient
+    Added "Advanced Settings" to the settings page with a treeview-based json editor
+    remote-ui.py has a speed option for the robot's motors and the setting will save on exit
+    The settings must be updated in this version, due to a change in the speed option
+
+    KNOWN BUGS:
+    The settings editor sometimes has issues saving integers to json
+
+1.0-b18
+
+    Use json_editor based on https://github.com/zzhhdaaa/json-editor-py (MIT License)
+    The advanced settings editor now has a json text view, collapse button and an expand button
+    The json_editor has icons for the type of values (int, string, boolean, url, file, folder, etc)
+    The text view in the advanced settings editor now has syntax highlighting using QScintilla
+    A new requirement "QScintilla" has been added to the requirements.txt
+
+1.0-b19 (08/21/2022)
+
+    remote-ui.py now uses a joystick to control motors instead of a D-Pad
+
+1.0-b20 (08/21/2022)
+
+    Settings editor no longer uses QScintilla
+    

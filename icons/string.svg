@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="16"
+   height="16"
+   version="1.1"
+   id="svg7"
+   sodipodi:docname="string.svg"
+   inkscape:version="1.2 (dc2aedaf03, 2022-05-15)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview9"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="31.0625"
+     inkscape:cx="8.0321932"
+     inkscape:cy="8.0160966"
+     inkscape:window-width="1920"
+     inkscape:window-height="1011"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg7" />
+  <defs
+     id="defs3">
+    <style
+       id="current-color-scheme"
+       type="text/css">
+   .ColorScheme-Text { color:#dfdfdf; } .ColorScheme-Highlight { color:#4285f4; } .ColorScheme-NeutralText { color:#ff9800; } .ColorScheme-PositiveText { color:#4caf50; } .ColorScheme-NegativeText { color:#f44336; }
+  </style>
+  </defs>
+  <path
+     style="fill:currentColor;stroke-width:2.06766"
+     class="ColorScheme-Text"
+     d="m 12.66914,1.7970322 c -2.290963,0 -4.135312,1.8443491 -4.135312,4.1353119 v 5.1691399 c 0,1.712019 1.3886377,3.101484 3.101484,3.101484 1.712019,0 3.101484,-1.389465 3.101484,-3.101484 C 14.736796,9.3886377 13.347331,8 11.635312,8 H 10.601484 V 5.9323441 c 0,-1.1454814 0.922174,-2.067656 2.067656,-2.067656 z m -8.2706239,0 c -2.2909628,0 -4.13531187,1.8443491 -4.13531187,4.1353119 v 5.1691399 c 0,1.712019 1.38863777,3.101484 3.10148387,3.101484 1.7128462,0 3.1014839,-1.389465 3.1014839,-3.101484 C 6.466172,9.3886377 5.0775343,8 3.3646881,8 H 2.3308602 V 5.9323441 c 0,-1.1454814 0.9221745,-2.067656 2.0676559,-2.067656 z"
+     id="path5" />
+</svg>

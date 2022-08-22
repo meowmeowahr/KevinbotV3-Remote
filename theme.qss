@@ -1,0 +1,561 @@
+#Kevinbot3_RemoteUI {
+    background-color: #111114;
+}
+
+#Kevinbot3_RemoteUI_Group {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+#Kevinbot3_RemoteUI_ArmButton, #Kevinbot3_RemoteUI_Button {
+    background-color: #222238;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 12px;
+    border-radius: 5px;
+}
+
+#Kevinbot3_RemoteUI_ArmButton:hover, #Kevinbot3_RemoteUI_Button:hover {
+    background-color: #333348;
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+#Kevinbot3_RemoteUI_ArmButton:pressed, #Kevinbot3_RemoteUI_Button:pressed {
+    background-color: #444458;
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+#Kevinbot3_RemoteUI_ModalButton {
+    background-color: #28283e;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+#Kevinbot3_RemoteUI_ModalButton:hover {
+    background-color: #333348;
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+#Kevinbot3_RemoteUI_ModalButton:pressed {
+    background-color: #444458;
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+#Kevinbot3_RemoteUI_PageFlipButton, #Kevinbot3_RemoteUI_AboutButton, #Kevinbot3_RemoteUI_ShutdownButton {
+    background-color: #222238;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 14px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+#Kevinbot3_RemoteUI_PageFlipButton:hover, #Kevinbot3_RemoteUI_AboutButton:hover, #Kevinbot3_RemoteUI_ShutdownButton:hover {
+    background-color: #333348;
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+#Kevinbot3_RemoteUI_LedButton , #Kevinbot3_RemoteUI_NumberBoard_Key{
+    background-color: #222238;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 12px;
+    border-radius: 5px;
+    border: 1px solid #ffffff;
+}
+
+#Kevinbot3_RemoteUI_LedButton:hover, #Kevinbot3_RemoteUI_NumberBoard_Key:hover {
+    border: 2px solid #ffffff;
+}
+
+#Kevinbot3_DPad_Button {
+    background-color: #323339;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 12px;
+    border-radius: 5px;
+    border: 1px solid #ffffff;
+}
+
+#Kevinbot3_DPad_Button:hover {
+    border: 2px solid #ffffff;
+    background-color: #424349;
+}
+
+#Kevinbot3_DPad_Button:pressed {
+    background-color: #53535a;
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 5px;
+    border: 1px solid #ffffff;
+}
+
+#Kevinbot3_DPad_Button:disabled {
+    background-color: #df574d;
+}
+
+#Kevinbot3_RemoteUI_SpeechInput, #Kevinbot3_RemoteUI_JSONEdit {
+    background-color: #222238;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 12px;
+    border-radius: 5px;
+    padding: 8px;
+}
+
+#Kevinbot3_RemoteUI_SpeechButton {
+    background-color: #222238;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 12px;
+    border-radius: 5px;
+    padding: 9px;
+}
+
+#Kevinbot3_RemoteUI_SpeechButton:hover {
+    background-color: #333348;
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+#Kevinbot3_RemoteUI_SpeechButton:pressed {
+    background-color: #444458;
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+#Kevinbot3_RemoteUI_CameraLedSlider, #Kevinbot3_RemoteUI_Slider {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 12px;
+    border-radius: 5px;
+    padding: 6px;
+}
+
+#Kevinbot3_RemoteUI_CameraLedSlider:handle, #Kevinbot3_RemoteUI_Slider:handle {
+    background-color: #fad010;
+    border-radius: 5px;
+}
+
+#Kevinbot3_RemoteUI_CameraLedSlider:handle:hover, #Kevinbot3_RemoteUI_Slider:handle:hover {
+    background-color: #d8d000;
+}
+
+#Kevinbot3_RemoteUI_CameraLedSlider::handle:disabled, #Kevinbot3_RemoteUI_Slider::handle:disabled {
+    background-color: #010110;
+}
+
+#Kevinbot3_RemoteUI_HeadEffectButton, #Kevinbot3_RemoteUI_BodyEffectButton {
+    background-color: #222238;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 11px;
+    border-radius: 5px;
+    border: 1px solid #ffffff;
+}
+
+#Kevinbot3_RemoteUI_HeadEffectButton:hover, #Kevinbot3_RemoteUI_BodyEffectButton:hover {
+    background-color: #333348;
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+#Kevinbot3_RemoteUI_HeadEffectButton:pressed, #Kevinbot3_RemoteUI_BodyEffectButton:pressed {
+    background-color: #444458;
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+#Kevinbot3_RemoteUI_Menu {
+    background-color: #212121;
+    color: #ffffff;
+}
+
+#Kevinbot3_RemoteUI_Menu::item {
+    padding: 3px 5px;
+    background: transparent;
+    border-radius: 4px;
+}
+
+#Kevinbot3_RemoteUI_Menu::item:selected { /* when selected using mouse or keyboard */
+    background: #383838;
+}
+
+#Kevinbot3_RemoteUI_Menu::item:pressed {
+    background: #888888;
+}
+
+#Kevinbot3_RemoteUI_MenuItem {
+    background-color: #232a2f; /* sets background of the menu */
+    border: 1px solid black;
+    color: #ffffff;
+    font-size: 14px;
+}
+
+#Kevinbot3_RemoteUI_MenuItem::item {
+    /* sets background of menu item. set this to something non-transparent
+        if you want menu color and menu item color to be different */
+    background-color: transparent;
+}
+
+#Kevinbot3_RemoteUI_MenuItem::item:selected { /* when user selects item using mouse or keyboard */
+    background-color: #654321;
+}
+
+#Kevinbot3_RemoteUI_Title {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+#Kevinbot3_RemoteUI_ArmLabel {
+    color: #ffffff;
+    background-color: #222238;
+    font-weight: bold;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ffffff;
+}
+
+#Kevinbot3_RemoteUI_ArmKnob {
+    background: #000000;
+}
+
+#Kevinbot3_RemoteUI_Label {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+#Kevinbot3_RemoteUI_Modal {
+    background-color: #222238;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ffffff;
+}
+
+#Kevinbot3_RemoteUI_ModalText {
+    padding: 32px;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+#Kevinbot3_RemoteUI_EyeConfigSlider:handle {
+    background-color: #fad010;
+    border-radius: 5px;
+}
+
+#Kevinbot3_RemoteUI_EyeConfigSlider:handle:hover {
+    background-color: #d8d000;
+}
+
+#Kevinbot3_RemoteUI_EyeConfigSlider {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 12px;
+    border-radius: 5px;
+    padding: 6px;
+}
+
+#Kevinbot3_RemoteUI_EyeConfigSlider:tick {
+    color: #ffffff;
+}
+
+#Kevinbot3_RemoteUI_SpeechRadio {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 13px;
+    border-radius: 5px;
+    padding: 6px;
+}
+
+#Kevinbot3_RemoteUI_SpeechRadio::indicator {
+    width: 24px;
+    height: 24px;
+}
+
+#Kevinbot3_RemoteUI_SpeechRadio::indicator::unchecked {
+    image: url(icons/radio-button-off-icon.png);
+}
+
+#Kevinbot3_RemoteUI_SpeechRadio::indicator::checked {
+    image: url(icons/radio-button-on-icon.png);
+}
+
+#Kevinbot3_RemoteUI_SmallText {
+    font-size: 12px;
+    color: #ffffff;
+}
+
+#Kevinbot3_RemoteUI_VoltageText {
+    font-size: 14px;
+    color: #ffffff;
+}
+
+#Kevinbot3_RemoteUI_DriveButton, #Kevinbot3_RemoteUI_FileButton {
+    background-color: #222238;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 5px;
+    padding: 8px;
+}
+
+#Kevinbot3_RemoteUI_DriveButton:hover, #Kevinbot3_RemoteUI_FileButton:hover {
+    background-color: #333348;
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+#Kevinbot3_RemoteUI_DriveButton:pressed, #Kevinbot3_RemoteUI_FileButton:pressed {
+    background-color: #444458;
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+#Kevinbot3_RemoteUI_DriveCombo, #Kevinbot3_RemoteUI_FileCombo, #Kevinbot3_RemoteUI_Combo {
+    background-color: #222238;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 5px;
+    selection-background-color: #654321;
+}
+
+#Kevinbot3_RemoteUI_DriveCombo:hover, #Kevinbot3_RemoteUI_FileCombo:hover, #Kevinbot3_RemoteUI_Combo:hover {
+    background-color: #333348;
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+#Kevinbot3_RemoteUI_DriveCombo QAbstractItemView {
+    background-color: #222238;
+    color: #ffffff;
+}
+
+#Kevinbot3_RemoteUI_FileCombo QAbstractItemView {
+    background-color: #222238;
+    color: #ffffff;
+}
+
+#Kevinbot3_RemoteUI_Combo QAbstractItemView {
+    background-color: #222238;
+    color: #ffffff;
+}
+
+
+#Kevinbot3_RemoteUI_CheckBox {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 5px;
+    padding: 6px;
+}
+
+#Kevinbot3_RemoteUI_CheckBox::indicator {
+    width: 32px;
+    height: 32px;
+}
+
+#Kevinbot3_RemoteUI_CheckBox::indicator:unchecked {
+    image: url(icons/radio-button-off-icon.png);
+}
+
+#Kevinbot3_RemoteUI_CheckBox::indicator:checked {
+    image: url(icons/radio-button-on-icon.png);
+}
+
+#Kevinbot3_RemoteUI_UpdateButton {
+    background-color: #222238;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 5px;
+    padding: 8px;
+}
+
+#Kevinbot3_RemoteUI_UpdateButton:hover {
+    background-color: #333348;
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+#Kevinbot3_RemoteUI_UpdateButton:pressed {
+    background-color: #444458;
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+#Kevinbot3_RemoteUI_UpdateButton:disabled {
+    background-color: #222223;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 5px;
+    padding: 8px;
+}
+
+#Kevinbot3_RemoteUI_TextEdit {
+    background-color: #222238;
+    border-radius: 5px;
+}
+
+ QScrollBar:vertical {
+     background: #323248;
+     width: 15px;
+     margin: 22px 0 22px 0;
+ }
+ QScrollBar::handle:vertical {
+     background: white;
+     min-height: 20px;
+ }
+
+ QScrollBar::add-line:vertical {
+      border: none;
+      background: none;
+}
+
+QScrollBar::sub-line:vertical {
+      border: none;
+      background: none;
+}
+
+#Kevinbot3_RemoteUI_SensorData {
+    color: #ffffff;
+    background-color: #222238;
+    border-radius: 5px;
+}
+
+#Kevinbot3_RemoteUI_SensorData_Critical {
+    color: #ffffff;
+    background-color: #df574d;
+    border-radius: 5px;
+}
+
+QToolBar QToolButton{
+    background-color: #222238;
+    border-radius: 4px;
+    padding: 2px;
+    margin: 1px;
+}
+
+QToolBar QToolButton:hover{
+    background-color: #333348;
+    border-radius: 4px;
+    padding: 2px;
+}
+
+QToolBar QToolButton:pressed{
+    background-color: #444458;
+    border-radius: 4px;
+    padding: 2px;
+}
+
+QToolBar {
+    background-color: #111114;
+    border-radius: 4px;
+    padding: 2px;
+}
+
+QTabBar::tab {
+    background-color: #222238;
+    border-radius: 4px;
+    padding: 6px;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+QTabBar::tab:hover {
+    background-color: #333348;
+    border-radius: 4px;
+    padding: 6px;
+}
+
+QTabBar::tab:selected {
+    background-color: #444458;
+    border-radius: 4px;
+    padding: 7px;
+    border: 1px solid #555558;
+}
+
+#Kevinbot3_Remote_UI_URLBar {
+    background-color: #222238;
+    border-radius: 4px;
+    padding: 2px;
+    color: #ffffff;
+}
+
+#Kevinbot3_JsonEditor_TreeView {
+    border: none;
+    border-radius: 4px;
+    background-color: #222238;
+    alternate-background-color: #323248;
+    color: #ffffff;
+    font-size: 15px;
+}
+
+#Kevinbot3_JsonEditor_TreeView QHeaderView {
+    background-color: #222238;
+    color: #ffffff;
+    border-radius: 4px;
+}
+
+#Kevinbot3_JsonEditor_TreeView QLineEdit {
+    background-color: #222238;
+    color: #ffffff;
+    font-size: 14px;
+}
+
+#Kevinbot3_JsonEditor_TreeView::item:selected {
+    background-color: #654321;
+    color: #ffffff;
+}
+
+#Kevinbot3_JsonEditor_TreeView::item {
+    padding: 10px;
+}
+
+#Kevinbot3_JsonEditor_TreeView::branch {
+    background-color: #222238;
+    color: #ffffff;
+}
+
+#Kevinbot3_JsonEditor_TreeView::branch:open {
+    image: url(icons/branch-open.svg);
+}
+
+#Kevinbot3_JsonEditor_TreeView::branch:closed:has-children {
+    image: url(icons/branch-closed.svg);
+}
+
+#Kevinbot3_RemoteUI_Warning {
+    color: #ffffff;
+    background-color: #df574d;
+    border-radius: 5px;
+    height: 36px;
+    font-weight: bold;
+}

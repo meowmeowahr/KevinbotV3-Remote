@@ -1,0 +1,8 @@
+PyQt5
+xbee
+PyQtWebEngine
+pyserial
+watchdog
+GPIOSimulator
+RPi.GPIO
+Qt.py

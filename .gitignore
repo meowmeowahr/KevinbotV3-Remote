@@ -1,0 +1,7 @@
+.idea/*
+__pycache__/*
+colorpicker/__pycache__/*
+Joystick/__pycache__/*
+jsonViewer/__pycache__/*
+DPad/__pycache__/*
+.qt_for_python/*

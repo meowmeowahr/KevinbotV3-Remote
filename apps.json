@@ -1,0 +1,72 @@
+{
+  "theme": "geoblue.qss",
+  "theme_effect": "shadow:b15:c5b5555",
+  "theme_name": "Geometric Blue",
+  "themes": [
+    "Classic Dark",
+    "Blue",
+    "Green",
+    "Yellow",
+    "Purple",
+    "Geometric Blue",
+    "Geometric Green",
+    "Geometric"
+  ],
+  "theme_files": [
+    "theme.qss",
+    "blue.qss",
+    "green.qss",
+    "yellow.qss",
+    "purple.qss",
+    "geoblue.qss",
+    "geogreen.qss",
+    "geo.qss"
+  ],
+  "theme_effects": [
+    "none",
+    "shadow:b20:c555555",
+    "shadow:b20:c555555",
+    "shadow:b20:c555555",
+    "shadow:b20:c555555",
+    "shadow:b15:c5b5555",
+    "shadow:b15:c565555",
+    "shadow:b15:c555555"
+  ],
+  "apps": [
+    {
+      "name": "Remote",
+      "icon": "icon.svg",
+      "launch": "./remote-ui.py &",
+      "row": 0,
+      "col": 0
+    },
+    {
+      "name": "Software\nUpdate",
+      "icon": "system-software-update.svg",
+      "launch": "./updater.py &",
+      "row": 0,
+      "col": 1
+    },
+    {
+      "name": "XBee\nTerminal",
+      "icon": "terminal.svg",
+      "launch": "./terminal.py &",
+      "row": 0,
+      "col": 2
+    },
+    {
+      "name": "Settings",
+      "icon": "settings.svg",
+      "launch": "./settings.py &",
+      "row": 0,
+      "col": 3
+    },
+    {
+      "name": "Browser\n(Beta)",
+      "icon": "browser.svg",
+      "launch": "./browser.py &",
+      "row": 0,
+      "col": 4
+    }
+  ]
+}
