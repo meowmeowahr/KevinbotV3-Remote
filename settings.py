@@ -12,6 +12,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from SlidingStackedWidget import SlidingStackedWidget
 from json_editor import Editor
+from QSpinner import QSpinner
 
 from com import is_pi
 
@@ -193,12 +194,12 @@ class MainWindow(QMainWindow):
         self.max_us_label.setObjectName("Kevinbot3_RemoteUI_Label")
         self.speed_layout.addWidget(self.max_us_label)
 
-        self.max_us_spinner = QSpinBox()
+        self.max_us_spinner = QSpinner()
         self.max_us_spinner.setMaximum(1500)
         self.max_us_spinner.setMinimum(1000)
         self.max_us_spinner.setSingleStep(25)
         self.max_us_spinner.setValue(SETTINGS["max_us"])
-        self.max_us_spinner.valueChanged.connect(self.max_us_changed)
+        self.max_us_spinner.spinbox.valueChanged.connect(self.max_us_changed)
         self.speed_layout.addWidget(self.max_us_spinner)
 
         # Exit
@@ -255,7 +256,7 @@ class MainWindow(QMainWindow):
             json.dump(SETTINGS, file, indent=2)
 
     def max_us_changed(self):
-        SETTINGS["max_us"] = self.max_us_spinner.value()
+        SETTINGS["max_us"] = self.max_us_spinner.spinbox.value()
         with open('settings.json', 'w') as file:
             json.dump(SETTINGS, file, indent=2)
 

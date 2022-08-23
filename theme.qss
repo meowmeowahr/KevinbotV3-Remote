@@ -7,7 +7,7 @@
     font-weight: bold;
 }
 
-#Kevinbot3_RemoteUI_ArmButton, #Kevinbot3_RemoteUI_Button {
+#Kevinbot3_RemoteUI_ArmButton, #Kevinbot3_RemoteUI_Button, QPushButton {
     background-color: #222238;
     color: #ffffff;
     font-weight: bold;
@@ -15,14 +15,14 @@
     border-radius: 5px;
 }
 
-#Kevinbot3_RemoteUI_ArmButton:hover, #Kevinbot3_RemoteUI_Button:hover {
+#Kevinbot3_RemoteUI_ArmButton:hover, #Kevinbot3_RemoteUI_Button:hover, QPushButton:hover {
     background-color: #333348;
     color: #ffffff;
     font-weight: bold;
     border-radius: 5px;
 }
 
-#Kevinbot3_RemoteUI_ArmButton:pressed, #Kevinbot3_RemoteUI_Button:pressed {
+#Kevinbot3_RemoteUI_ArmButton:pressed, #Kevinbot3_RemoteUI_Button:pressed, QPushButton:pressed {
     background-color: #444458;
     color: #ffffff;
     font-weight: bold;
