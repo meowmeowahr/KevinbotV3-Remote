@@ -144,6 +144,8 @@ class MainWindow(QMainWindow):
 
         self.main_layout.addWidget(self.screen_bright_box)
 
+        # Camera URL
+
         self.cam_url = QGroupBox("Camera URL")
         self.cam_url.setObjectName("Kevinbot3_RemoteUI_Group")
         self.cam_layout = QVBoxLayout()
@@ -180,6 +182,24 @@ class MainWindow(QMainWindow):
             self.theme_picker.addItem(name)
         self.theme_picker.setCurrentIndex(APPS["themes"].index(APPS["theme_name"]))
         self.theme_picker.blockSignals(False)
+
+        self.speed_box = QGroupBox("Robot Speed")
+        self.speed_box.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.speed_layout = QHBoxLayout()
+        self.speed_box.setLayout(self.speed_layout)
+        self.main_layout.addWidget(self.speed_box)
+
+        self.max_us_label = QLabel("Max µS:")
+        self.max_us_label.setObjectName("Kevinbot3_RemoteUI_Label")
+        self.speed_layout.addWidget(self.max_us_label)
+
+        self.max_us_spinner = QSpinBox()
+        self.max_us_spinner.setMaximum(1500)
+        self.max_us_spinner.setMinimum(1000)
+        self.max_us_spinner.setSingleStep(25)
+        self.max_us_spinner.setValue(SETTINGS["max_us"])
+        self.max_us_spinner.valueChanged.connect(self.max_us_changed)
+        self.speed_layout.addWidget(self.max_us_spinner)
 
         # Exit
         self.exit_layout = QHBoxLayout()
@@ -231,6 +251,11 @@ class MainWindow(QMainWindow):
 
     def save_url(self):
         SETTINGS["camera_url"] = self.cam_url_input.text()
+        with open('settings.json', 'w') as file:
+            json.dump(SETTINGS, file, indent=2)
+
+    def max_us_changed(self):
+        SETTINGS["max_us"] = self.max_us_spinner.value()
         with open('settings.json', 'w') as file:
             json.dump(SETTINGS, file, indent=2)
 

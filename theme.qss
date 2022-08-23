@@ -559,3 +559,10 @@ QTabBar::tab:selected {
     height: 36px;
     font-weight: bold;
 }
+
+QSpinBox {
+    background-color: #222238;
+    color: #ffffff;
+    font-size: 14px; 
+    padding: 4px;
+}
