@@ -566,3 +566,16 @@ QSpinBox {
     font-size: 14px; 
     padding: 4px;
 }
+
+QMessageBox QPushButton {
+    padding: 10px;
+    background-color: #111114;
+}
+
+QMessageBox QLabel {
+    color: #ffffff;
+}
+
+QMessageBox {
+    background-color: #222228;
+}
