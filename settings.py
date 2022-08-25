@@ -149,19 +149,21 @@ class MainWindow(QMainWindow):
 
         self.cam_url = QGroupBox("Camera URL")
         self.cam_url.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.cam_layout = QVBoxLayout()
+        self.cam_layout = QHBoxLayout()
         self.cam_url.setLayout(self.cam_layout)
         self.main_layout.addWidget(self.cam_url)
 
         self.cam_url_input = QLineEdit()
         self.cam_url_input.setObjectName("Kevinbot3_RemoteUI_SpeechInput")
         self.cam_url_input.setText(SETTINGS["camera_url"])
+        self.cam_url_input.setFixedHeight(32)
         self.cam_url_input.textChanged.connect(self.save_url)
         self.cam_url_input.setStyleSheet("font-size: 14px;")
         self.cam_layout.addWidget(self.cam_url_input)
 
         self.cam_validate = QPushButton("Validate URL")
         self.cam_validate.setFixedHeight(32)
+        self.cam_validate.setFixedWidth(self.cam_validate.sizeHint().width() + 10)
         self.cam_validate.clicked.connect(self.validate_url)
         self.cam_validate.setObjectName("Kevinbot3_RemoteUI_Button")
         self.cam_layout.addWidget(self.cam_validate)
