@@ -11,3 +11,6 @@ qdarktheme/qtpy/QtCore/__pycache__/*
 qdarktheme/qtpy/QtGui/__pycache__/*
 qdarktheme/qtpy/QtSvg/__pycache__/*
 qdarktheme/qtpy/QtWidgets/__pycache__/*
+qdarktheme/themes/light/__pycache__/__init__.cpython-310.pyc
+qdarktheme/themes/light/__pycache__/stylesheet.cpython-310.pyc
+qdarktheme/themes/light/__pycache__/svg.cpython-310.pyc

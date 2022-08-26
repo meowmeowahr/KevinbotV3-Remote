@@ -9,6 +9,7 @@ import os
 import sys
 import json
 import platform
+from utils import load_theme
 
 START_FULL_SCREEN = False
 EMULATE_REAL_REMOTE = True
@@ -33,9 +34,7 @@ class MainWindow(QMainWindow):
             self.setWindowFlags(Qt.Window | Qt.FramelessWindowHint)
             self.setFixedSize(800, 480)
 
-        # load theme
-        with open("theme.qss", 'r') as file:
-            self.setStyleSheet(file.read())
+        load_theme(self, settings["window_properties"]["theme"])
 
         self.tabs = QTabWidget()
         self.tabs.setDocumentMode(True)

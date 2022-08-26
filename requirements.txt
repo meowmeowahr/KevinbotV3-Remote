@@ -6,3 +6,4 @@ watchdog
 GPIOSimulator
 RPi.GPIO
 Qt.py
+QtAwesome

@@ -1,4 +1,5 @@
 import re
+import statistics
 
 
 def capitalize(string):
@@ -24,6 +25,13 @@ def rstr(string, decimals=1):
 def limit(value, min_value, max_value):
     return max(min(value, max_value), min_value)
 
+def detect_dark(rgb):
+    average = statistics.mean(rgb)
+    if average > 127:
+        return False
+    else:
+        return True
+
 def load_theme(widget, themename="classic"):
     if themename == "classic":
         with open("theme.qss", 'r') as file:
@@ -31,3 +39,6 @@ def load_theme(widget, themename="classic"):
     elif themename == "qdarktheme":
         import qdarktheme
         widget.setStyleSheet(qdarktheme.load_stylesheet())
+    elif themename == "qdarktheme_light":
+        import qdarktheme
+        widget.setStyleSheet(qdarktheme.load_stylesheet(theme="light"))

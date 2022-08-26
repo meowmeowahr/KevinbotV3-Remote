@@ -14,6 +14,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtWidgets import *
+import qtawesome as qta
 
 import DPad.DPad as DPad
 import Joystick.Joystick as Joystick
@@ -445,7 +446,15 @@ class RemoteUI(QMainWindow):
         self.mainLayout = QHBoxLayout()
         self.mainGroup.setLayout(self.mainLayout)
 
-        self.motor_stick = Joystick.Joystick(color=Qt.GlobalColor.white, sticky=False)
+        self.ensurePolished()
+        if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],
+                                QColor(self.palette().color(QPalette.Window)).getRgb()[1], 
+                                QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
+            self.fg_color = Qt.GlobalColor.white
+        else:
+            self.fg_color = Qt.GlobalColor.black
+
+        self.motor_stick = Joystick.Joystick(color=self.fg_color, sticky=False)
         self.motor_stick.setObjectName("Kevinbot3_RemoteUI_Joystick")
         self.motor_stick.posChanged.connect(self.motor_action)
         self.motor_stick.setMinimumSize(140, 140)
@@ -494,7 +503,7 @@ class RemoteUI(QMainWindow):
 
         self.mainLayout.addStretch()
 
-        self.joystick = Joystick.Joystick(color=Qt.GlobalColor.white)
+        self.joystick = Joystick.Joystick(color=self.fg_color)
         self.joystick.setObjectName("Kevinbot3_RemoteUI_Joystick")
         self.joystick.posChanged.connect(self.head_changed_action)
         self.joystick.setMinimumSize(140, 140)
@@ -539,7 +548,7 @@ class RemoteUI(QMainWindow):
         self.headColorBack = QPushButton()
         self.headColorBack.setObjectName("Kevinbot3_RemoteUI_BackButton")
         self.headColorBack.clicked.connect(lambda: self.widget.slideInIdx(0))
-        self.headColorBack.setIcon(QIcon("icons/caret-left-dark.svg"))
+        self.headColorBack.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
         self.headColorBack.setIconSize(QSize(32, 32))
         self.headColorBack.setFixedSize(QSize(36, 36))
         self.headColorBack.setFlat(True)
@@ -601,7 +610,7 @@ class RemoteUI(QMainWindow):
         self.bodyColorBack = QPushButton()
         self.bodyColorBack.setObjectName("Kevinbot3_RemoteUI_BackButton")
         self.bodyColorBack.clicked.connect(lambda: self.widget.slideInIdx(0))
-        self.bodyColorBack.setIcon(QIcon("icons/caret-left-dark.svg"))
+        self.bodyColorBack.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
         self.bodyColorBack.setIconSize(QSize(32, 32))
         self.bodyColorBack.setFixedSize(QSize(36, 36))
         self.bodyColorBack.setFlat(True)
@@ -685,7 +694,7 @@ class RemoteUI(QMainWindow):
         self.baseColorBack = QPushButton()
         self.baseColorBack.setObjectName("Kevinbot3_RemoteUI_BackButton")
         self.baseColorBack.clicked.connect(lambda: self.widget.slideInIdx(0))
-        self.baseColorBack.setIcon(QIcon("icons/caret-left-dark.svg"))
+        self.baseColorBack.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
         self.baseColorBack.setIconSize(QSize(32, 32))
         self.baseColorBack.setFixedSize(QSize(36, 36))
         self.baseColorBack.setFlat(True)
@@ -878,7 +887,7 @@ class RemoteUI(QMainWindow):
 
         self.armPresetBack = QPushButton()
         self.armPresetBack.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
-        self.armPresetBack.setIcon(QIcon("icons/caret-left-dark.svg"))
+        self.armPresetBack.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
         self.armPresetBack.setFixedSize(QSize(36, 36))
         self.armPresetBack.setIconSize(QSize(32, 32))
         self.armPresetBack.clicked.connect(lambda: self.widget.slideInIdx(0))
@@ -887,7 +896,7 @@ class RemoteUI(QMainWindow):
         self.armPresetSave = QPushButton("    " + strings.SAVE)
         self.armPresetSave.setObjectName("Kevinbot3_RemoteUI_ArmButton")
         self.armPresetSave.setFixedHeight(36)
-        self.armPresetSave.setIcon(QIcon("icons/save.svg"))
+        self.armPresetSave.setIcon(qta.icon("fa5.save", color=self.fg_color))
         self.armPresetSave.setIconSize(QSize(32, 32))
         self.armPresetSave.clicked.connect(self.arm_preset_save_action)
         self.armBottomLayout.addWidget(self.armPresetSave)
@@ -896,7 +905,7 @@ class RemoteUI(QMainWindow):
 
         self.eyeConfigBack = QPushButton()
         self.eyeConfigBack.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
-        self.eyeConfigBack.setIcon(QIcon("icons/caret-left-dark.svg"))
+        self.eyeConfigBack.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
         self.eyeConfigBack.setFixedSize(QSize(36, 36))
         self.eyeConfigBack.setIconSize(QSize(32, 32))
         self.eyeConfigBack.clicked.connect(lambda: self.widget.slideInIdx(0))
@@ -1018,7 +1027,7 @@ class RemoteUI(QMainWindow):
         # Sensors
         self.sensorsBack = QPushButton()
         self.sensorsBack.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
-        self.sensorsBack.setIcon(QIcon("icons/caret-left-dark.svg"))
+        self.sensorsBack.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
         self.sensorsBack.setFixedSize(QSize(36, 36))
         self.sensorsBack.setIconSize(QSize(32, 32))
         self.sensorsBack.clicked.connect(lambda: self.widget.slideInIdx(0))
@@ -1101,7 +1110,7 @@ class RemoteUI(QMainWindow):
         self.level = Level()
         self.level.label.setObjectName("Kevinbot3_RemoteUI_SensorData")
         self.level.setFixedSize(QSize(220, 260))
-        self.level.setLineColor(Qt.white)
+        self.level.setLineColor(self.fg_color)
         self.level.setLineWidth(16)
         self.level.setRobotColor(QColor(0, 34, 255))
         self.ensurePolished()
@@ -1128,7 +1137,7 @@ class RemoteUI(QMainWindow):
 
         self.shutdown = QPushButton()
         self.shutdown.setObjectName("Kevinbot3_RemoteUI_ShutdownButton")
-        self.shutdown.setIcon(QIcon("icons/window-close.svg"))
+        self.shutdown.setIcon(qta.icon("fa5.window-close", color=self.fg_color))
         self.shutdown.setIconSize(QSize(32, 32))
         self.shutdown.clicked.connect(self.shutdown_action)
         self.shutdown.setFixedSize(QSize(36, 36))
@@ -1153,7 +1162,7 @@ class RemoteUI(QMainWindow):
         self.aboutButton = QPushButton()
         self.aboutButton.setObjectName("Kevinbot3_RemoteUI_AboutButton")
         self.aboutButton.clicked.connect(self.about_action)
-        self.aboutButton.setIcon(QIcon("icons/info-circle.svg"))
+        self.aboutButton.setIcon(qta.icon("fa5s.info-circle", color=self.fg_color))
         self.aboutButton.setIconSize(QSize(32, 32))
         self.aboutButton.setFixedSize(QSize(36, 36))
         self.pageFlipLayout1.addWidget(self.pageFlipLeft)
@@ -1180,8 +1189,8 @@ class RemoteUI(QMainWindow):
         self.pageFlipLeft.setShortcut(QKeySequence(Qt.Key.Key_Period))
         self.pageFlipRight2.setDisabled(True)
 
-        self.pageFlipLeft2.setIcon(QIcon("icons/arrow-alt-circle-left.svg"))
-        self.pageFlipRight2.setIcon(QIcon("icons/arrow-alt-circle-right.svg"))
+        self.pageFlipLeft2.setIcon(qta.icon("fa5.arrow-alt-circle-left", color=self.fg_color))
+        self.pageFlipRight2.setIcon(qta.icon("fa5.arrow-alt-circle-right", color=self.fg_color))
 
         self.pageFlipLeft2.setFixedSize(36, 36)
         self.pageFlipRight2.setFixedSize(36, 36)
@@ -1201,6 +1210,7 @@ class RemoteUI(QMainWindow):
     def init_modal(self):
         # a main_widget floating in the middle of the window
         self.modal = QWidget(self)
+        self.modal.setStyleSheet("#Kevinbot3_RemoteUI_Modal {border: 1px solid #ffffff; }")
         self.modal.setFixedSize(QSize(400, 200))
         self.modal.move(int(self.width() / 2 - self.modal.width() / 2),
                         int(self.height() / 2 - self.modal.height() / 2))
@@ -1228,6 +1238,7 @@ class RemoteUI(QMainWindow):
         # a main_widget floating in the middle of the window
         self.batt_modal = QWidget(self)
         self.batt_modal.setFixedSize(QSize(400, 200))
+        self.batt_modal.setStyleSheet("#Kevinbot3_RemoteUI_Modal {border: 1px solid #ffffff; }")
         self.batt_modal.move(int(self.width() / 2 - self.batt_modal.width() / 2),
                              int(self.height() / 2 - self.batt_modal.height() / 2))
         self.batt_modal.setObjectName("Kevinbot3_RemoteUI_Modal")
@@ -1271,6 +1282,7 @@ class RemoteUI(QMainWindow):
     def init_mot_temp_modal(self):
         # a main_widget floating in the middle of the window
         self.motTemp_modal = QWidget(self)
+        self.motTemp_modal.setStyleSheet("#Kevinbot3_RemoteUI_Modal {border: 1px solid #ffffff; }")
         self.motTemp_modal.setFixedSize(QSize(400, 200))
         self.motTemp_modal.move(int(self.width() / 2 - self.motTemp_modal.width() / 2),
                                 int(self.height() / 2 - self.motTemp_modal.height() / 2))
