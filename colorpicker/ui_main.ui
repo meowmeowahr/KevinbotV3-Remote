@@ -259,7 +259,7 @@ border-radius: 5px;</string>
        </size>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: #222;
+       <string notr="true">background-color: #ffffff;
 </string>
       </property>
       <property name="text">

@@ -5,3 +5,9 @@ Joystick/__pycache__/*
 jsonViewer/__pycache__/*
 DPad/__pycache__/*
 .qt_for_python/*
+qdarktheme/__pycache__/*
+qdarktheme/qtpy/__pycache__/*
+qdarktheme/qtpy/QtCore/__pycache__/*
+qdarktheme/qtpy/QtGui/__pycache__/*
+qdarktheme/qtpy/QtSvg/__pycache__/*
+qdarktheme/qtpy/QtWidgets/__pycache__/*

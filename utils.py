@@ -23,3 +23,11 @@ def rstr(string, decimals=1):
 
 def limit(value, min_value, max_value):
     return max(min(value, max_value), min_value)
+
+def load_theme(widget, themename="classic"):
+    if themename == "classic":
+        with open("theme.qss", 'r') as file:
+            widget.setStyleSheet(file.read())
+    elif themename == "qdarktheme":
+        import qdarktheme
+        widget.setStyleSheet(qdarktheme.load_stylesheet())

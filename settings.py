@@ -13,6 +13,7 @@ from PyQt5.QtWidgets import *
 from SlidingStackedWidget import SlidingStackedWidget
 from json_editor import Editor
 from QSpinner import QSpinner
+from utils import load_theme
 
 from com import is_pi
 
@@ -54,7 +55,7 @@ class MainWindow(QMainWindow):
         self.slider_style = SliderProxyStyle(QSlider().style())
         self.setWindowTitle("Kevinbot Remote Settings")
         self.setObjectName("Kevinbot3_RemoteUI")
-        self.load_theme()
+        load_theme(self, SETTINGS["window_properties"]["theme"])
 
         if EMULATE_REAL_REMOTE:
             self.setWindowFlags(Qt.FramelessWindowHint)

@@ -232,8 +232,7 @@ class RemoteUI(QMainWindow):
             self.setFixedSize(800, 480)
 
         # load theme
-        with open(THEME_FILE, 'r') as file:
-            self.setStyleSheet(file.read())
+        load_theme(self, themename=settings["window_properties"]["theme"])
 
         self.init_ui()
 
@@ -353,16 +352,16 @@ class RemoteUI(QMainWindow):
         self.armSetPreset = QPushButton(strings.ARM_SET_PRESET)
         self.armSetPreset.setObjectName("Kevinbot3_RemoteUI_ArmButton")
 
-        self.armPreset1.setFixedSize(50, 50)
-        self.armPreset2.setFixedSize(50, 50)
-        self.armPreset3.setFixedSize(50, 50)
-        self.armPreset4.setFixedSize(50, 50)
-        self.armPreset5.setFixedSize(50, 50)
-        self.armPreset6.setFixedSize(50, 50)
-        self.armPreset7.setFixedSize(50, 50)
-        self.armPreset8.setFixedSize(50, 50)
-        self.armPreset9.setFixedSize(50, 50)
-        self.armSetPreset.setFixedSize(50, 50)
+        self.armPreset1.setFixedSize(60, 50)
+        self.armPreset2.setFixedSize(60, 50)
+        self.armPreset3.setFixedSize(60, 50)
+        self.armPreset4.setFixedSize(60, 50)
+        self.armPreset5.setFixedSize(60, 50)
+        self.armPreset6.setFixedSize(60, 50)
+        self.armPreset7.setFixedSize(60, 50)
+        self.armPreset8.setFixedSize(60, 50)
+        self.armPreset9.setFixedSize(60, 50)
+        self.armSetPreset.setFixedSize(60, 50)
 
         self.armPreset1.clicked.connect(lambda: self.arm_action(0))
         self.armPreset2.clicked.connect(lambda: self.arm_action(1))
@@ -594,7 +593,7 @@ class RemoteUI(QMainWindow):
             effect_button.setObjectName("Kevinbot3_RemoteUI_HeadEffectButton")
             self.headEffectsLayout.addWidget(effect_button, i // 2, i % 2)
             effect_button.clicked.connect(partial(self.head_effect_action, i))
-            effect_button.setFixedSize(QSize(50, 50))
+            effect_button.setFixedSize(QSize(75, 50))
 
         # Body Color Page
 
@@ -657,7 +656,7 @@ class RemoteUI(QMainWindow):
                 effect_button.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
                 self.bodyEffectsLayout.addWidget(effect_button, i // 2, i % 2)
                 effect_button.clicked.connect(partial(self.body_effect_action, i))
-                effect_button.setFixedSize(QSize(50, 50))
+                effect_button.setFixedSize(QSize(75, 50))
             elif "*c" in settings["body_effects"][i]:
                 dt = datetime.datetime.now()
                 if dt.day in range(20, 27) and dt.month == 12:
@@ -669,14 +668,14 @@ class RemoteUI(QMainWindow):
         self.bodyBrightPlus = QPushButton("Bright+")
         self.bodyBrightPlus.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
         self.bodyBrightPlus.clicked.connect(lambda: com.txstr("body_bright+"))
-        self.bodyBrightPlus.setFixedSize(QSize(50, 50))
+        self.bodyBrightPlus.setFixedSize(QSize(75, 50))
         self.bodyEffectsLayout.addWidget(self.bodyBrightPlus, (len(settings["body_effects"]) // 2),
                                          (len(settings["body_effects"]) % 2) - 1)
 
         self.bodyBrightMinus = QPushButton("Bright-")
         self.bodyBrightMinus.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
         self.bodyBrightMinus.clicked.connect(lambda: com.txstr("body_bright-"))
-        self.bodyBrightMinus.setFixedSize(QSize(50, 50))
+        self.bodyBrightMinus.setFixedSize(QSize(75, 50))
         self.bodyEffectsLayout.addWidget(self.bodyBrightMinus, len(settings["body_effects"]) // 2,
                                          len(settings["body_effects"]) % 2)
 
@@ -740,7 +739,7 @@ class RemoteUI(QMainWindow):
                 effect_button.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
                 self.baseEffectsLayout.addWidget(effect_button, i // 2, i % 2)
                 effect_button.clicked.connect(partial(self.base_effect_action, i))
-                effect_button.setFixedSize(QSize(50, 50))
+                effect_button.setFixedSize(QSize(75, 50))
             elif "*c" in settings["base_effects"][i]:
                 dt = datetime.datetime.now()
                 if dt.day in range(20, 27) and dt.month == 12:
@@ -752,14 +751,14 @@ class RemoteUI(QMainWindow):
         self.baseBrightPlus = QPushButton("Bright+")
         self.baseBrightPlus.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
         self.baseBrightPlus.clicked.connect(lambda: com.txstr("base_bright+"))
-        self.baseBrightPlus.setFixedSize(QSize(50, 50))
+        self.baseBrightPlus.setFixedSize(QSize(75, 50))
         self.baseEffectsLayout.addWidget(self.baseBrightPlus, (len(settings["base_effects"]) // 2),
                                          (len(settings["base_effects"]) % 2) - 1)
 
         self.baseBrightMinus = QPushButton("Bright-")
         self.baseBrightMinus.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
         self.baseBrightMinus.clicked.connect(lambda: com.txstr("base_bright-"))
-        self.baseBrightMinus.setFixedSize(QSize(50, 50))
+        self.baseBrightMinus.setFixedSize(QSize(75, 50))
         self.baseEffectsLayout.addWidget(self.baseBrightMinus, len(settings["base_effects"]) // 2,
                                          len(settings["base_effects"]) % 2)
 
@@ -1105,7 +1104,10 @@ class RemoteUI(QMainWindow):
         self.level.setLineColor(Qt.white)
         self.level.setLineWidth(16)
         self.level.setRobotColor(QColor(0, 34, 255))
-        self.level.setBackgroundColor(QColor(17, 17, 20))
+        self.ensurePolished()
+        self.level.setBackgroundColor(QColor(QColor(self.palette().color(QPalette.Window)).getRgb()[0],
+                                            QColor(self.palette().color(QPalette.Window)).getRgb()[1], 
+                                            QColor(self.palette().color(QPalette.Window)).getRgb()[2]))
         self.level_layout.addWidget(self.level)
 
         self.sensorBoxLayout.addStretch()

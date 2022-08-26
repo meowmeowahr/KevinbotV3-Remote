@@ -216,6 +216,7 @@
     "window_properties": {
         "animation_dir": 0,
         "animation_speed": 500,
-        "error_animation_speed": 80
+        "error_animation_speed": 80,
+        "theme": "classic"
     }
 }

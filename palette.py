@@ -46,7 +46,7 @@ class _PaletteButton(QtWidgets.QPushButton):
         super().__init__()
         self.setFixedSize(QtCore.QSize(26, 26))
         self.color = color
-        self.setStyleSheet("background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 {0}, stop: 1 {0});".format(color))
+        self.setStyleSheet("padding: 0px; background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 {0}, stop: 1 {0});".format(color))
 
 class _PaletteBase(QtWidgets.QWidget):
 

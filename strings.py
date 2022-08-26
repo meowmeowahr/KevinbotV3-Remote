@@ -3,8 +3,8 @@
 WIN_TITLE = "Kevinbot3 Remote"
 
 ARM_PRESET_G = "Arm Presets"
-ARM_PRESETS = ["Arm P1", "Arm P2", "Arm P3", "Arm P4", "Arm P5", "Arm P6", "Arm P7", "Arm P8", "Arm P9"]
-ARM_SET_PRESET = "Set\nPresets"
+ARM_PRESETS = ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9"]
+ARM_SET_PRESET = "Setup"
 
 LED_PRESET_G = "Appearance"
 LED_HEAD = "Head LEDs"
@@ -36,12 +36,12 @@ BASE_COLOR_G = "Base Color"
 BASE_EFFECTS_G = "Base Effects"
 BASE_SPEED_G = "Base Speed"
 
-ARM_PRESET_EDIT_G = "Edit Arm Presets"
+ARM_PRESET_EDIT_G = "Edit Presets"
 PRESET_PICK = "Pick Preset"
 ARM_PRESET_EDIT = "Editor"
 ARM_PRESET_EDIT_L = "Left"
 ARM_PRESET_EDIT_R = "Right"
-CURRENT_ARM_PRESET = "Current Arm Preset"
+CURRENT_ARM_PRESET = "Current Preset"
 
 EYE_CONFIG_G = "Eye Config"
 EYE_CONFIG_B_G = "Eye Background"

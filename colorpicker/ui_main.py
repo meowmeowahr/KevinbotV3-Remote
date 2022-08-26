@@ -111,7 +111,7 @@ class Ui_ColorPicker(object):
         self.hue_selector = QtWidgets.QLabel(self.hue_frame)
         self.hue_selector.setGeometry(QtCore.QRect(7, 185, 26, 15))
         self.hue_selector.setMinimumSize(QtCore.QSize(26, 0))
-        self.hue_selector.setStyleSheet("background-color: #222;\n"
+        self.hue_selector.setStyleSheet("background-color: #ffffff;\n"
 "")
         self.hue_selector.setText("")
         self.hue_selector.setObjectName("hue_selector")
