@@ -13,7 +13,8 @@ from PyQt5.QtWidgets import *
 from SlidingStackedWidget import SlidingStackedWidget
 from json_editor import Editor
 from QSpinner import QSpinner
-from utils import load_theme
+from utils import load_theme, detect_dark
+import qtawesome as qta
 
 from com import is_pi
 
@@ -61,6 +62,14 @@ class MainWindow(QMainWindow):
             self.setWindowFlags(Qt.FramelessWindowHint)
             self.setFixedSize(QSize(800, 480))
 
+        self.ensurePolished()
+        if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],
+                                QColor(self.palette().color(QPalette.Window)).getRgb()[1], 
+                                QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
+            self.fg_color = Qt.GlobalColor.white
+        else:
+            self.fg_color = Qt.GlobalColor.black
+
         self.main_widget = SlidingStackedWidget(self)
         self.setCentralWidget(self.main_widget)
 
@@ -84,7 +93,7 @@ class MainWindow(QMainWindow):
         self.adv_exit_button = QPushButton()
         self.adv_exit_button.setObjectName("Kevinbot3_RemoteUI_Button")
         self.adv_exit_button.clicked.connect(lambda: self.main_widget.slideInIdx(0))
-        self.adv_exit_button.setIcon(QIcon("icons/arrow-alt-circle-left.svg"))
+        self.adv_exit_button.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
         self.adv_exit_button.setIconSize(QSize(32, 32))
         self.adv_exit_button.setFixedSize(QSize(36, 36))
         self.adv_bottom_layout.addWidget(self.adv_exit_button)
@@ -92,7 +101,7 @@ class MainWindow(QMainWindow):
         self.adv_save_button = QPushButton()
         self.adv_save_button.setObjectName("Kevinbot3_RemoteUI_Button")
         self.adv_save_button.clicked.connect(self.adv_editor.saveFile)
-        self.adv_save_button.setIcon(QIcon("icons/save.svg"))
+        self.adv_save_button.setIcon(qta.icon("fa5s.save", color=self.fg_color))
         self.adv_save_button.setIconSize(QSize(32, 32))
         self.adv_save_button.setFixedSize(QSize(36, 36))
         self.adv_bottom_layout.addWidget(self.adv_save_button)
@@ -100,7 +109,7 @@ class MainWindow(QMainWindow):
         self.adv_expand_all_button = QPushButton()
         self.adv_expand_all_button.setObjectName("Kevinbot3_RemoteUI_Button")
         self.adv_expand_all_button.clicked.connect(self.adv_editor.expandAll)
-        self.adv_expand_all_button.setIcon(QIcon("icons/caret-down-dark.svg"))
+        self.adv_expand_all_button.setIcon(qta.icon("fa5s.caret-down", color=self.fg_color))
         self.adv_expand_all_button.setIconSize(QSize(32, 32))
         self.adv_expand_all_button.setFixedSize(QSize(36, 36))
         self.adv_bottom_layout.addWidget(self.adv_expand_all_button)
@@ -108,7 +117,7 @@ class MainWindow(QMainWindow):
         self.adv_collapse_all_button = QPushButton()
         self.adv_collapse_all_button.setObjectName("Kevinbot3_RemoteUI_Button")
         self.adv_collapse_all_button.clicked.connect(self.adv_editor.collapseAll)
-        self.adv_collapse_all_button.setIcon(QIcon("icons/caret-up-dark.svg"))
+        self.adv_collapse_all_button.setIcon(qta.icon("fa5s.caret-up", color=self.fg_color))
         self.adv_collapse_all_button.setIconSize(QSize(32, 32))
         self.adv_collapse_all_button.setFixedSize(QSize(36, 36))
         self.adv_bottom_layout.addWidget(self.adv_collapse_all_button)
@@ -209,7 +218,7 @@ class MainWindow(QMainWindow):
         self.exit_layout = QHBoxLayout()
         self.exit_button = QPushButton()
         self.exit_button.setObjectName("Kevinbot3_RemoteUI_ShutdownButton")
-        self.exit_button.setIcon(QIcon("icons/window-close.svg"))
+        self.exit_button.setIcon(qta.icon("fa5s.window-close", color=self.fg_color))
         self.exit_button.setIconSize(QSize(32, 32))
         self.exit_button.clicked.connect(self.close)
         self.exit_button.setFixedSize(QSize(36, 36))

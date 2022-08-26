@@ -4,12 +4,13 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtWebEngineWidgets import *
+import qtawesome as qta
 
 import os
 import sys
 import json
 import platform
-from utils import load_theme
+from utils import load_theme, detect_dark
 
 START_FULL_SCREEN = False
 EMULATE_REAL_REMOTE = True
@@ -36,6 +37,14 @@ class MainWindow(QMainWindow):
 
         load_theme(self, settings["window_properties"]["theme"])
 
+        self.ensurePolished()
+        if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],
+                                QColor(self.palette().color(QPalette.Window)).getRgb()[1], 
+                                QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
+            self.fg_color = Qt.GlobalColor.white
+        else:
+            self.fg_color = Qt.GlobalColor.black
+
         self.tabs = QTabWidget()
         self.tabs.setDocumentMode(True)
         self.tabs.tabBarDoubleClicked.connect(self.tab_open_doubleclick)
@@ -50,19 +59,19 @@ class MainWindow(QMainWindow):
         navtb.setIconSize(QSize(24, 24))
         self.addToolBar(navtb)
 
-        back_btn = QAction(QIcon(os.path.join('icons', 'back.svg')), "Back", self)
+        back_btn = QAction(qta.icon("fa5s.chevron-left", color=self.fg_color), "Back", self)
         back_btn.triggered.connect(lambda: self.tabs.currentWidget().back())
         navtb.addAction(back_btn)
 
-        next_btn = QAction(QIcon(os.path.join("icons", "next.svg")), "Forward", self)
+        next_btn = QAction(qta.icon("fa5s.chevron-right", color=self.fg_color), "Forward", self)
         next_btn.triggered.connect(lambda: self.tabs.currentWidget().forward())
         navtb.addAction(next_btn)
 
-        reload_btn = QAction(QIcon(os.path.join('icons', 'refresh.svg')), "Reload", self)
+        reload_btn = QAction(qta.icon("fa5s.redo", color=self.fg_color), "Reload", self)
         reload_btn.triggered.connect(lambda: self.tabs.currentWidget().reload())
         navtb.addAction(reload_btn)
 
-        home_btn = QAction(QIcon(os.path.join('icons', 'home.svg')), "Home", self)
+        home_btn = QAction(qta.icon("fa5s.home", color=self.fg_color), "Home", self)
         home_btn.triggered.connect(self.navigate_home)
         navtb.addAction(home_btn)
 
@@ -79,7 +88,7 @@ class MainWindow(QMainWindow):
         self.urlbar.setObjectName("Kevinbot3_Remote_UI_URLBar")
         navtb.addWidget(self.urlbar)
 
-        self.close_button = QAction(QIcon(os.path.join('icons', 'window-close.svg')), "Close", self)
+        self.close_button = QAction(qta.icon("fa5s.window-close", color=self.fg_color), "Close", self)
         self.close_button.triggered.connect(self.close)
         navtb.addAction(self.close_button)
 
