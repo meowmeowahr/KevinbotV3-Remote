@@ -30,6 +30,12 @@ if platform.system() == "Windows":
 SETTINGS = json.load(open("settings.json", "r"))
 APPS = json.load(open("apps.json", "r"))
 
+THEME_PAIRS = [
+    ("Kevinbot Dark", "classic"),
+    ("QDarkTheme Dark", "qdarktheme"),
+    ("QDarkTheme Light", "qdarktheme_light")
+]
+
 
 def uri_validator(x):
     try:
@@ -194,10 +200,30 @@ class MainWindow(QMainWindow):
         self.theme_picker.setFixedHeight(36)
         self.theme_layout.addWidget(self.theme_picker)
 
+        self.app_theme_box = QGroupBox("App Theme")
+        self.app_theme_box.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.app_theme_layout = QVBoxLayout()
+        self.app_theme_box.setLayout(self.app_theme_layout)
+        self.display_layout.addWidget(self.app_theme_box)
+
+        self.app_theme_picker = QComboBox()
+        self.app_theme_picker.setObjectName("Kevinbot3_RemoteUI_Combo")
+        self.app_theme_picker.blockSignals(True)
+        self.app_theme_picker.currentIndexChanged.connect(self.change_app_theme)
+        self.app_theme_picker.setFixedHeight(36)
+        self.app_theme_layout.addWidget(self.app_theme_picker)
+
         for name in APPS["themes"]:
             self.theme_picker.addItem(name)
         self.theme_picker.setCurrentIndex(APPS["themes"].index(APPS["theme_name"]))
         self.theme_picker.blockSignals(False)
+
+        for pair in THEME_PAIRS:
+            self.app_theme_picker.addItem(pair[0])
+
+            if pair[1] == SETTINGS["window_properties"]["theme"]:
+                self.app_theme_picker.setCurrentText(pair[0])
+        self.app_theme_picker.blockSignals(False)
 
         self.exit_themes = QPushButton()
         self.exit_themes.clicked.connect(lambda: self.main_widget.setCurrentIndex(0))
@@ -322,6 +348,15 @@ class MainWindow(QMainWindow):
 
         with open('apps.json', 'w') as file:
             json.dump(APPS, file, indent=2)
+
+    def change_app_theme(self):
+        combo_val = self.app_theme_picker.currentText()
+        for pair in THEME_PAIRS:
+            if pair[0] == combo_val:
+                SETTINGS["window_properties"]["theme"] = pair[1]
+
+        with open('settings.json', 'w') as file:
+            json.dump(SETTINGS, file, indent=2)
 
 
 if __name__ == "__main__":

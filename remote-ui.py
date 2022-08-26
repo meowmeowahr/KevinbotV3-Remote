@@ -1048,6 +1048,7 @@ class RemoteUI(QMainWindow):
 
         # Battery 1
         self.battery1_label = QLabel(strings.BATT_VOLT1[:-1].format("Not Installed / Unknown"))
+        self.battery1_label.setFrameShape(QFrame.Shape.Box)
         self.battery1_label.setObjectName("Kevinbot3_RemoteUI_SensorData")
         self.battery1_label.setFixedHeight(32)
         self.battery1_label.setAlignment(Qt.AlignCenter)
@@ -1055,6 +1056,7 @@ class RemoteUI(QMainWindow):
 
         # Battery 2
         self.battery2_label = QLabel(strings.BATT_VOLT2[:-1].format("Not Installed / Unknown"))
+        self.battery2_label.setFrameShape(QFrame.Shape.Box)
         self.battery2_label.setObjectName("Kevinbot3_RemoteUI_SensorData")
         self.battery2_label.setFixedHeight(32)
         self.battery2_label.setAlignment(Qt.AlignCenter)

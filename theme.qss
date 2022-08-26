@@ -579,3 +579,10 @@ QMessageBox QLabel {
 QMessageBox {
     background-color: #222228;
 }
+
+QToolButton {
+    spacing: 2px;
+    padding: 5px;
+    padding-right: 1px;
+    margin-right: 18px;
+}
