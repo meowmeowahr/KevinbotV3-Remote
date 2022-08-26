@@ -317,6 +317,7 @@ class RemoteUI(QMainWindow):
 
         # Modal
 
+        self.ensurePolished()
         self.init_modal()
         self.init_batt_modal()
         self.init_mot_temp_modal()
@@ -1211,11 +1212,11 @@ class RemoteUI(QMainWindow):
     def init_modal(self):
         # a main_widget floating in the middle of the window
         self.modal = QWidget(self)
-        self.modal.setStyleSheet("#Kevinbot3_RemoteUI_Modal {border: 1px solid #ffffff; }")
+        self.modal.setObjectName("Kevinbot3_RemoteUI_Modal")
+        self.modal.setStyleSheet("#Kevinbot3_RemoteUI_Modal { border: 1px solid " + QColor(self.palette().color(QPalette.ColorRole.ButtonText)).name() + "; }")
         self.modal.setFixedSize(QSize(400, 200))
         self.modal.move(int(self.width() / 2 - self.modal.width() / 2),
                         int(self.height() / 2 - self.modal.height() / 2))
-        self.modal.setObjectName("Kevinbot3_RemoteUI_Modal")
         self.modal.hide()
 
         self.modalLayout = QGridLayout()
@@ -1239,10 +1240,10 @@ class RemoteUI(QMainWindow):
         # a main_widget floating in the middle of the window
         self.batt_modal = QWidget(self)
         self.batt_modal.setFixedSize(QSize(400, 200))
-        self.batt_modal.setStyleSheet("#Kevinbot3_RemoteUI_Modal {border: 1px solid #ffffff; }")
+        self.batt_modal.setObjectName("Kevinbot3_RemoteUI_Modal")
+        self.batt_modal.setStyleSheet("#Kevinbot3_RemoteUI_Modal { border: 1px solid " + QColor(self.palette().color(QPalette.ColorRole.ButtonText)).name() + "; }")
         self.batt_modal.move(int(self.width() / 2 - self.batt_modal.width() / 2),
                              int(self.height() / 2 - self.batt_modal.height() / 2))
-        self.batt_modal.setObjectName("Kevinbot3_RemoteUI_Modal")
         self.batt_modal.hide()
 
         self.battModalMainLayout = QVBoxLayout()
@@ -1283,11 +1284,11 @@ class RemoteUI(QMainWindow):
     def init_mot_temp_modal(self):
         # a main_widget floating in the middle of the window
         self.motTemp_modal = QWidget(self)
-        self.motTemp_modal.setStyleSheet("#Kevinbot3_RemoteUI_Modal {border: 1px solid #ffffff; }")
+        self.motTemp_modal.setObjectName("Kevinbot3_RemoteUI_Modal")
+        self.motTemp_modal.setStyleSheet("#Kevinbot3_RemoteUI_Modal { border: 1px solid " + QColor(self.palette().color(QPalette.ColorRole.ButtonText)).name() + "; }")
         self.motTemp_modal.setFixedSize(QSize(400, 200))
         self.motTemp_modal.move(int(self.width() / 2 - self.motTemp_modal.width() / 2),
                                 int(self.height() / 2 - self.motTemp_modal.height() / 2))
-        self.motTemp_modal.setObjectName("Kevinbot3_RemoteUI_Modal")
         self.motTemp_modal.hide()
 
         self.motTempModalMainLayout = QVBoxLayout()
