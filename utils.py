@@ -13,6 +13,14 @@ def extract_digits(string):
 def map_range(x, in_min, in_max, out_min, out_max):
     return (x - in_min) * (out_max - out_min) // (in_max - in_min) + out_min
 
+def map_range_limit(x, in_min, in_max, out_min, out_max):
+    if x > in_max:
+        x = in_max
+    elif x < in_min:
+        x = in_min
+
+    return (x - in_min) * (out_max - out_min) // (in_max - in_min) + out_min
+
 
 def convert_c_to_f(c):
     return (c * 9 / 5) + 32

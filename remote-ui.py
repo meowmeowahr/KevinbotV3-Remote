@@ -457,6 +457,7 @@ class RemoteUI(QMainWindow):
         self.motor_stick = Joystick.Joystick(color=self.fg_color, sticky=False)
         self.motor_stick.setObjectName("Kevinbot3_RemoteUI_Joystick")
         self.motor_stick.posChanged.connect(self.motor_action)
+        self.motor_stick.centerEvent.connect(lambda: com.txmot((1500, 1500)))
         self.motor_stick.setMinimumSize(140, 140)
         self.mainLayout.addWidget(self.motor_stick)
 
@@ -1589,8 +1590,8 @@ class RemoteUI(QMainWindow):
         com.txcv("eye_speed", value)
 
     def motor_action(self):
-        left, right = joy2lr(map_range(-self.motor_stick.getXY()[0], -60, 60, -settings["max_us"], settings["max_us"]), 
-        map_range(-self.motor_stick.getXY()[1], -60, 60, -settings["max_us"], settings["max_us"]))
+        left, right = joy2lr(map_range_limit(-self.motor_stick.getXY()[0], -70, 70, -settings["max_us"], settings["max_us"]), 
+        map_range_limit(-self.motor_stick.getXY()[1], -70, 70, -settings["max_us"], settings["max_us"]))
 
         if (left > settings["max_us"] or left < -settings["max_us"]) or (right > settings["max_us"] or right < -settings["max_us"]):
             return

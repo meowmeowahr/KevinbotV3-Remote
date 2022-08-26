@@ -183,20 +183,6 @@
   ],
   "camera_url": "http://kevinbotv3/stream",
   "data_dir": "/home/$USER/KbotV3/",
-  "fwd_us": {
-    "F": [
-      1000,
-      1000
-    ],
-    "M": [
-      1200,
-      1200
-    ],
-    "S": [
-      1400,
-      1400
-    ]
-  },
   "head_effects": [
     "flash",
     "fade",

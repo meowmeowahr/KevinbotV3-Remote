@@ -15,6 +15,7 @@ class Direction(Enum):
 class Joystick(QWidget):
 
     posChanged = pyqtSignal()
+    centerEvent = pyqtSignal()
 
     def __init__(self, parent=None, color=Qt.GlobalColor.black, sticky=True, maxDistance=60):
         super(Joystick, self).__init__(parent)
@@ -64,8 +65,8 @@ class Joystick(QWidget):
         if self.sticky is False:
             self.movingOffset = QPointF(10, 0)
             self.grabCenter = False
-        self.posChanged.emit()
         self.update()
+        self.centerEvent.emit()
 
     def mouseMoveEvent(self, event):
         if self.grabCenter:
