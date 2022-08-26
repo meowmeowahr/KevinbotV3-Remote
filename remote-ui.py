@@ -1062,6 +1062,7 @@ class RemoteUI(QMainWindow):
 
         # Outside Temp
         self.outside_temp = QLabel(strings.OUTSIDE_TEMP.format("Unknown"))
+        self.outside_temp.setFrameShape(QFrame.Shape.Box)
         self.outside_temp.setObjectName("Kevinbot3_RemoteUI_SensorData")
         self.outside_temp.setFixedHeight(32)
         self.outside_temp.setAlignment(Qt.AlignCenter)
@@ -1069,6 +1070,7 @@ class RemoteUI(QMainWindow):
 
         # Outside Humidity
         self.outside_humi = QLabel(strings.OUTSIDE_HUMI.format("Unknown"))
+        self.outside_humi.setFrameShape(QFrame.Shape.Box)
         self.outside_humi.setObjectName("Kevinbot3_RemoteUI_SensorData")
         self.outside_humi.setFixedHeight(32)
         self.outside_humi.setAlignment(Qt.AlignCenter)
@@ -1076,6 +1078,7 @@ class RemoteUI(QMainWindow):
 
         # Outside Pressure
         self.outside_hpa = QLabel(strings.OUTSIDE_PRES.format("Unknown"))
+        self.outside_hpa.setFrameShape(QFrame.Shape.Box)
         self.outside_hpa.setObjectName("Kevinbot3_RemoteUI_SensorData")
         self.outside_hpa.setFixedHeight(32)
         self.outside_hpa.setAlignment(Qt.AlignCenter)
@@ -1086,6 +1089,7 @@ class RemoteUI(QMainWindow):
 
         # Left
         self.left_temp = QLabel(strings.LEFT_TEMP.format("Unknown"))
+        self.left_temp.setFrameShape(QFrame.Shape.Box)
         self.left_temp.setObjectName("Kevinbot3_RemoteUI_SensorData")
         self.left_temp.setFixedHeight(32)
         self.left_temp.setAlignment(Qt.AlignCenter)
@@ -1093,6 +1097,7 @@ class RemoteUI(QMainWindow):
 
         # Robot Temp
         self.robot_temp = QLabel(strings.INSIDE_TEMP.format("Unknown"))
+        self.robot_temp.setFrameShape(QFrame.Shape.Box)
         self.robot_temp.setObjectName("Kevinbot3_RemoteUI_SensorData")
         self.robot_temp.setFixedHeight(32)
         self.robot_temp.setAlignment(Qt.AlignCenter)
@@ -1100,6 +1105,7 @@ class RemoteUI(QMainWindow):
 
         # Right
         self.right_temp = QLabel(strings.RIGHT_TEMP.format("Unknown"))
+        self.right_temp.setFrameShape(QFrame.Shape.Box)
         self.right_temp.setObjectName("Kevinbot3_RemoteUI_SensorData")
         self.right_temp.setFixedHeight(32)
         self.right_temp.setAlignment(Qt.AlignCenter)
