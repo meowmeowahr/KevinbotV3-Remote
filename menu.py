@@ -38,11 +38,11 @@ class Handler(FileSystemEventHandler):
         elif event.event_type == 'modified':
             print("Reloading Theme")
             global SETTINGS, APPS
-            time.sleep(0.07)  # wait a while
+            time.sleep(0.1)  # wait a while
             # Event is modified, you can process it now
             SETTINGS = json.load(open("settings.json", "r"))
             APPS = json.load(open("apps.json", "r"))
-            window.load_theme()
+            window.updateTheme.emit()
 
 
 observer = Observer()
@@ -65,6 +65,9 @@ def hex2rgb(h):
 
 
 class MainWindow(QMainWindow):
+
+    updateTheme = pyqtSignal()
+
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Kevinbot Runner")
@@ -79,6 +82,8 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.main_widget)
 
         self.load_theme()
+
+        self.updateTheme.connect(self.load_theme)
 
         effects = APPS["theme_effect"].strip().split()
 
