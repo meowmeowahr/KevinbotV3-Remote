@@ -73,9 +73,8 @@ class MainWindow(QMainWindow):
         self.main_widget = SlidingStackedWidget(self)
         self.setCentralWidget(self.main_widget)
 
-        self.widget = QGroupBox("Remote Settings")
-        self.widget.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.main_widget.addWidget(self.widget)
+        self.home_widget = QWidget()
+        self.main_widget.addWidget(self.home_widget)
 
         self.adv_widget = QGroupBox("Advanced Settings")
         self.adv_widget.setObjectName("Kevinbot3_RemoteUI_Group")
@@ -128,8 +127,35 @@ class MainWindow(QMainWindow):
         self.warning.setAlignment(Qt.AlignCenter)
         self.adv_bottom_layout.addWidget(self.warning)
 
+        self.display_widget = QWidget()
+        self.main_widget.addWidget(self.display_widget)
+
+        self.display_layout = QVBoxLayout()
+        self.display_widget.setLayout(self.display_layout)
+
+        self.robot_widget = QWidget()
+        self.main_widget.addWidget(self.robot_widget)
+
+        self.robot_layout = QVBoxLayout()
+        self.robot_widget.setLayout(self.robot_layout)
+
+
         self.main_layout = QVBoxLayout()
-        self.widget.setLayout(self.main_layout)
+        self.home_widget.setLayout(self.main_layout)
+
+        self.display_button = QPushButton("Display and Theme Settings")
+        self.display_button.setStyleSheet("text-align: left;")
+        self.display_button.setIcon(qta.icon("fa5s.paint-roller", color=self.fg_color))
+        self.display_button.clicked.connect(lambda: self.main_widget.setCurrentIndex(2))
+        self.display_button.setIconSize(QSize(48,48))
+        self.main_layout.addWidget(self.display_button)
+
+        self.robot_button = QPushButton("Robot Settings")
+        self.robot_button.setStyleSheet("text-align: left;")
+        self.robot_button.setIcon(qta.icon("fa5s.robot", color=self.fg_color))
+        self.robot_button.clicked.connect(lambda: self.main_widget.setCurrentIndex(3))
+        self.robot_button.setIconSize(QSize(48,48))
+        self.main_layout.addWidget(self.robot_button)
 
         # Screen Brightness
         self.screen_bright_box = QGroupBox("Screen Brightness")
@@ -153,7 +179,50 @@ class MainWindow(QMainWindow):
                                                         stdout=subprocess.PIPE)
             self.screen_bright_slider.setValue(int(result.stdout))
 
-        self.main_layout.addWidget(self.screen_bright_box)
+        self.display_layout.addWidget(self.screen_bright_box)
+
+        self.theme_box = QGroupBox("Runner Theme")
+        self.theme_box.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.theme_layout = QVBoxLayout()
+        self.theme_box.setLayout(self.theme_layout)
+        self.display_layout.addWidget(self.theme_box)
+
+        self.theme_picker = QComboBox()
+        self.theme_picker.setObjectName("Kevinbot3_RemoteUI_Combo")
+        self.theme_picker.blockSignals(True)
+        self.theme_picker.currentIndexChanged.connect(self.change_theme)
+        self.theme_picker.setFixedHeight(36)
+        self.theme_layout.addWidget(self.theme_picker)
+
+        for name in APPS["themes"]:
+            self.theme_picker.addItem(name)
+        self.theme_picker.setCurrentIndex(APPS["themes"].index(APPS["theme_name"]))
+        self.theme_picker.blockSignals(False)
+
+        self.exit_themes = QPushButton()
+        self.exit_themes.clicked.connect(lambda: self.main_widget.setCurrentIndex(0))
+        self.exit_themes.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
+        self.exit_themes.setFixedSize(QSize(36, 36))
+        self.exit_themes.setIconSize(QSize(32, 32))
+        self.display_layout.addWidget(self.exit_themes)
+
+        self.speed_box = QGroupBox("Robot Speed")
+        self.speed_box.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.speed_layout = QHBoxLayout()
+        self.speed_box.setLayout(self.speed_layout)
+        self.robot_layout.addWidget(self.speed_box)
+
+        self.max_us_label = QLabel("Max µS:")
+        self.max_us_label.setObjectName("Kevinbot3_RemoteUI_Label")
+        self.speed_layout.addWidget(self.max_us_label)
+
+        self.max_us_spinner = QSpinner()
+        self.max_us_spinner.setMaximum(1500)
+        self.max_us_spinner.setMinimum(1000)
+        self.max_us_spinner.setSingleStep(25)
+        self.max_us_spinner.setValue(SETTINGS["max_us"])
+        self.max_us_spinner.spinbox.valueChanged.connect(self.max_us_changed)
+        self.speed_layout.addWidget(self.max_us_spinner)
 
         # Camera URL
 
@@ -161,7 +230,7 @@ class MainWindow(QMainWindow):
         self.cam_url.setObjectName("Kevinbot3_RemoteUI_Group")
         self.cam_layout = QHBoxLayout()
         self.cam_url.setLayout(self.cam_layout)
-        self.main_layout.addWidget(self.cam_url)
+        self.robot_layout.addWidget(self.cam_url)
 
         self.cam_url_input = QLineEdit()
         self.cam_url_input.setObjectName("Kevinbot3_RemoteUI_SpeechInput")
@@ -178,41 +247,12 @@ class MainWindow(QMainWindow):
         self.cam_validate.setObjectName("Kevinbot3_RemoteUI_Button")
         self.cam_layout.addWidget(self.cam_validate)
 
-        self.theme_box = QGroupBox("Runner Theme")
-        self.theme_box.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.theme_layout = QVBoxLayout()
-        self.theme_box.setLayout(self.theme_layout)
-        self.main_layout.addWidget(self.theme_box)
-
-        self.theme_picker = QComboBox()
-        self.theme_picker.setObjectName("Kevinbot3_RemoteUI_Combo")
-        self.theme_picker.blockSignals(True)
-        self.theme_picker.currentIndexChanged.connect(self.change_theme)
-        self.theme_picker.setFixedHeight(36)
-        self.theme_layout.addWidget(self.theme_picker)
-
-        for name in APPS["themes"]:
-            self.theme_picker.addItem(name)
-        self.theme_picker.setCurrentIndex(APPS["themes"].index(APPS["theme_name"]))
-        self.theme_picker.blockSignals(False)
-
-        self.speed_box = QGroupBox("Robot Speed")
-        self.speed_box.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.speed_layout = QHBoxLayout()
-        self.speed_box.setLayout(self.speed_layout)
-        self.main_layout.addWidget(self.speed_box)
-
-        self.max_us_label = QLabel("Max µS:")
-        self.max_us_label.setObjectName("Kevinbot3_RemoteUI_Label")
-        self.speed_layout.addWidget(self.max_us_label)
-
-        self.max_us_spinner = QSpinner()
-        self.max_us_spinner.setMaximum(1500)
-        self.max_us_spinner.setMinimum(1000)
-        self.max_us_spinner.setSingleStep(25)
-        self.max_us_spinner.setValue(SETTINGS["max_us"])
-        self.max_us_spinner.spinbox.valueChanged.connect(self.max_us_changed)
-        self.speed_layout.addWidget(self.max_us_spinner)
+        self.exit_robot = QPushButton()
+        self.exit_robot.clicked.connect(lambda: self.main_widget.setCurrentIndex(0))
+        self.exit_robot.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
+        self.exit_robot.setFixedSize(QSize(36, 36))
+        self.exit_robot.setIconSize(QSize(32, 32))
+        self.robot_layout.addWidget(self.exit_robot)
 
         # Exit
         self.exit_layout = QHBoxLayout()
