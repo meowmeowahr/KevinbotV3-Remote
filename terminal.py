@@ -4,6 +4,9 @@ from xbee.backend.base import TimeoutException as XBee_Timeout
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+from settings import SETTINGS
+from utils import load_theme, detect_dark
+import qtawesome as qta
 import threading
 import strings
 import sys
@@ -14,13 +17,23 @@ __author__ = "Kevin Ahr"
 
 START_FULL_SCREEN = False
 EMULATE_REAL_REMOTE = True
-THEME_FILE = "theme.qss"
 
 
 class Window(QWidget):
     # noinspection PyArgumentList
     def __init__(self, *args):
         QWidget.__init__(self, *args)
+
+        load_theme(self, SETTINGS["window_properties"]["theme"])
+
+        self.ensurePolished()
+        if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],
+                                QColor(self.palette().color(QPalette.Window)).getRgb()[1], 
+                                QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
+            self.fg_color = Qt.GlobalColor.white
+        else:
+            self.fg_color = Qt.GlobalColor.black
+
 
         self.hex_mode = False
 
@@ -68,7 +81,7 @@ class Window(QWidget):
 
         self.shutdown = QPushButton()
         self.shutdown.setObjectName("Kevinbot3_RemoteUI_ShutdownButton")
-        self.shutdown.setIcon(QIcon("icons/window-close.svg"))
+        self.shutdown.setIcon(qta.icon("fa5s.window-close", color=self.fg_color))
         self.shutdown.setIconSize(QSize(32, 32))
         self.shutdown.clicked.connect(self.close)
         self.shutdown.setFixedSize(QSize(36, 36))
@@ -76,9 +89,6 @@ class Window(QWidget):
 
         self.serial_th = threading.Thread(target=self.target, daemon=True)
         self.serial_th.start()
-
-        with open(THEME_FILE, "r") as file:
-            self.setStyleSheet(file.read())
 
         if EMULATE_REAL_REMOTE:
             self.setFixedSize(QSize(800, 480))

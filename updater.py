@@ -13,6 +13,8 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+import qtawesome as qta
+from utils import detect_dark, load_theme
 import platform
 import sys
 import json
@@ -154,11 +156,19 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("Kevinbot Updater")
         self.setObjectName("Kevinbot3_RemoteUI")
-        self.load_theme()
+        load_theme(self, SETTINGS["window_properties"]["theme"])
 
         if EMULATE_REAL_REMOTE:
             self.setWindowFlags(Qt.FramelessWindowHint)
             self.setFixedSize(QSize(800, 480))
+
+        self.ensurePolished()
+        if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],
+                                QColor(self.palette().color(QPalette.Window)).getRgb()[1], 
+                                QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
+            self.fg_color = Qt.GlobalColor.white
+        else:
+            self.fg_color = Qt.GlobalColor.black
 
         widget = QGroupBox("Kevinbot Updater")
         widget.setObjectName("Kevinbot3_RemoteUI_Group")
@@ -245,7 +255,7 @@ class MainWindow(QMainWindow):
         self.exit_button = QPushButton()
         self.exit_button.setObjectName("Kevinbot3_RemoteUI_ExitButton")
         self.exit_button.setObjectName("Kevinbot3_RemoteUI_ShutdownButton")
-        self.exit_button.setIcon(QIcon("icons/window-close.svg"))
+        self.exit_button.setIcon(qta.icon("fa5s.window-close", color=self.fg_color))
         self.exit_button.setIconSize(QSize(32, 32))
         self.exit_button.clicked.connect(self.close)
         self.exit_button.setFixedSize(QSize(36, 36))
