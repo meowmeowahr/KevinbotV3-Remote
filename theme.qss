@@ -106,7 +106,7 @@
     background-color: #df574d;
 }
 
-#Kevinbot3_RemoteUI_SpeechInput, #Kevinbot3_RemoteUI_JSONEdit {
+#Kevinbot3_RemoteUI_SpeechInput, #Kevinbot3_RemoteUI_JSONEdit, QLineEdit {
     background-color: #222238;
     color: #ffffff;
     font-weight: bold;

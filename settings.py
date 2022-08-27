@@ -145,6 +145,11 @@ class MainWindow(QMainWindow):
         self.robot_layout = QVBoxLayout()
         self.robot_widget.setLayout(self.robot_layout)
 
+        self.web_widget = QWidget()
+        self.main_widget.addWidget(self.web_widget)
+
+        self.web_layout = QVBoxLayout()
+        self.web_widget.setLayout(self.web_layout)
 
         self.main_layout = QVBoxLayout()
         self.home_widget.setLayout(self.main_layout)
@@ -162,6 +167,13 @@ class MainWindow(QMainWindow):
         self.robot_button.clicked.connect(lambda: self.main_widget.setCurrentIndex(3))
         self.robot_button.setIconSize(QSize(48,48))
         self.main_layout.addWidget(self.robot_button)
+
+        self.web_button = QPushButton("Browser Settings")
+        self.web_button.setStyleSheet("text-align: left;")
+        self.web_button.setIcon(qta.icon("fa5s.globe", color=self.fg_color))
+        self.web_button.clicked.connect(lambda: self.main_widget.setCurrentIndex(4))
+        self.web_button.setIconSize(QSize(48,48))
+        self.main_layout.addWidget(self.web_button)
 
         # Screen Brightness
         self.screen_bright_box = QGroupBox("Screen Brightness")
@@ -280,6 +292,25 @@ class MainWindow(QMainWindow):
         self.exit_robot.setIconSize(QSize(32, 32))
         self.robot_layout.addWidget(self.exit_robot)
 
+        self.homepage_box = QGroupBox("Homepage")
+        self.homepage_box.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.homepage_layout = QVBoxLayout()
+        self.homepage_box.setLayout(self.homepage_layout)
+        self.web_layout.addWidget(self.homepage_box)
+
+        self.homepage_line = QLineEdit()
+        self.homepage_line.setPlaceholderText("http://www.example.com")
+        self.homepage_line.setText(SETTINGS["homepage"])
+        self.homepage_line.textChanged.connect(self.update_homepage)
+        self.homepage_layout.addWidget(self.homepage_line)
+
+        self.exit_web = QPushButton()
+        self.exit_web.clicked.connect(lambda: self.main_widget.setCurrentIndex(0))
+        self.exit_web.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
+        self.exit_web.setFixedSize(QSize(36, 36))
+        self.exit_web.setIconSize(QSize(32, 32))
+        self.web_layout.addWidget(self.exit_web)
+
         # Exit
         self.exit_layout = QHBoxLayout()
         self.exit_button = QPushButton()
@@ -354,6 +385,14 @@ class MainWindow(QMainWindow):
         for pair in THEME_PAIRS:
             if pair[0] == combo_val:
                 SETTINGS["window_properties"]["theme"] = pair[1]
+
+        with open('settings.json', 'w') as file:
+            json.dump(SETTINGS, file, indent=2)
+
+        load_theme(self, SETTINGS["window_properties"]["theme"])
+
+    def update_homepage(self):
+        SETTINGS["homepage"] = self.homepage_line.text()
 
         with open('settings.json', 'w') as file:
             json.dump(SETTINGS, file, indent=2)
