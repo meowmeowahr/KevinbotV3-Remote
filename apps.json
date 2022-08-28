@@ -67,6 +67,13 @@
       "launch": "./browser.py &",
       "row": 0,
       "col": 4
+    },
+    {
+      "name": "About",
+      "icon": "about.svg",
+      "launch": "./about.py &",
+      "row": 1,
+      "col": 0
     }
   ]
 }
