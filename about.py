@@ -55,7 +55,7 @@ class MainWindow(QMainWindow):
         self.icon.setPixmap(QPixmap("icons/icon.svg"))
         self.icon.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.icon.setScaledContents(True)
-        self.icon.setFixedSize(QSize(256, 256))
+        self.icon.setFixedSize(QSize(192, 192))
         self.icon_layout.addWidget(self.icon)
 
         self.name_text = QLabel("Kevinbot v3 Remote")
