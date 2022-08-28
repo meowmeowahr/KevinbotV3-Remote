@@ -255,7 +255,7 @@ class MainWindow(QMainWindow):
         self.speed_layout.addWidget(self.max_us_label)
 
         self.max_us_spinner = QSpinner()
-        self.max_us_spinner.setMaximum(1500)
+        self.max_us_spinner.setMaximum(1400)
         self.max_us_spinner.setMinimum(1000)
         self.max_us_spinner.setSingleStep(25)
         self.max_us_spinner.setValue(SETTINGS["max_us"])

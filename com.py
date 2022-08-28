@@ -49,7 +49,7 @@ def init(callback=None):
 
 def _send_data(data):
     # noinspection PyUnresolvedReferences
-    xb.send("tx", dest_addr=b'\x00\x00', data=bytes("{}".format(data), 'utf-8'))
+    xb.send("tx", dest_addr=b'\x00\x00', data=bytes("{}\r".format(data), 'utf-8'))
 
 
 def txstr(string):

@@ -8,6 +8,7 @@ import platform
 import sys
 import threading
 import time
+import math
 from functools import partial
 
 from PyQt5.QtCore import *
@@ -1599,13 +1600,23 @@ class RemoteUI(QMainWindow):
         com.txcv("eye_speed", value)
 
     def motor_action(self):
-        left, right = joy2lr(map_range_limit(-self.motor_stick.getXY()[0], -70, 70, -settings["max_us"], settings["max_us"]), 
-        map_range_limit(-self.motor_stick.getXY()[1], -70, 70, -settings["max_us"], settings["max_us"]))
+        x, y = self.motor_stick.getXY()
+        y = -y
 
-        if (left > settings["max_us"] or left < -settings["max_us"]) or (right > settings["max_us"] or right < -settings["max_us"]):
-            return
+        direction = direction_lookup(x, 0, y, 0)[0]
+        
+        print(x, y)
+        print(direction)
+        distance = round(math.dist((0, 0), (x, y)))
 
-        com.txmot((left, right))
+        if direction == "N":
+            com.txmot((map_range(distance, 0, 60, 1500, settings["max_us"]), map_range(distance, 0, 60, 1500, settings["max_us"])))
+        elif direction == "S":
+            com.txmot((map_range(distance, 0, 60, 1500, 2000 - (settings["max_us"] - 1000)), map_range(distance, 0, 60, 1500, 2000 - (settings["max_us"] - 1000))))
+        elif direction == "W":
+            com.txmot((map_range(distance, 0, 60, 1500, 2000 - (settings["max_us"] - 1000)), map_range(distance, 0, 60, 1500, settings["max_us"])))
+        elif direction == "E":
+            com.txmot((map_range(distance, 0, 60, 1500, settings["max_us"]), map_range(distance, 0, 60, 1500, 2000 - (settings["max_us"] - 1000))))
 
 
 def init_robot():
