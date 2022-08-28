@@ -10,6 +10,7 @@ import json
 import time
 import platform
 from functools import partial
+from utils import load_theme
 import haptics
 
 from watchdog.observers import Observer
@@ -162,10 +163,10 @@ class MainWindow(QMainWindow):
         with open(APPS["theme"], "r") as file:
             self.setStyleSheet(file.read())
 
-    @staticmethod
-    def shutdown():
+    def shutdown(self):
         # confirm shutdown
-        msg = QMessageBox()
+        msg = QMessageBox(self)
+        load_theme(msg, SETTINGS["window_properties"]["theme"])
         msg.setIcon(QMessageBox.Warning)
         msg.setText("Are you sure you want to shutdown?")
         msg.setInformativeText("This will shutdown the computer.")
@@ -177,10 +178,10 @@ class MainWindow(QMainWindow):
         if ret == QMessageBox.Yes:
             os.system(SETTINGS["shutdown_command"])
         
-    @staticmethod
-    def reboot():
+    def reboot(self):
         # confirm reboot
-        msg = QMessageBox()
+        msg = QMessageBox(self)
+        load_theme(msg, SETTINGS["window_properties"]["theme"])
         msg.setIcon(QMessageBox.Warning)
         msg.setText("Are you sure you want to reboot?")
         msg.setInformativeText("This will reboot the computer.")
