@@ -40,6 +40,7 @@ def init(callback=None):
             _ = QApplication(sys.argv)
             mess = QMessageBox()
             mess.setText(f"Port {PORT} Not Found")
+            mess.setDetailedText("If you are on a Raspberry Pi, try turning on the serial port.\nIf you are on a PC, make sure that an xbee if connected.")
             mess.setStandardButtons(QMessageBox.Ok)
             mess.exec_()
         except ImportError:
