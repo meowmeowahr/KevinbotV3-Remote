@@ -361,13 +361,13 @@ class MainWindow(QMainWindow):
 
     def validate_url(self):
         if uri_validator(self.cam_url_input.text()):
-            message = QMessageBox()
+            message = QMessageBox(self)
             message.setIcon(QMessageBox.Information)
             message.setText("URL is Valid")
             message.setWindowTitle("URL Validation")
             message.exec_()
         else:
-            message = QMessageBox()
+            message = QMessageBox(self)
             message.setIcon(QMessageBox.Warning)
             message.setText("URL is Invalid")
             message.setWindowTitle("URL Validation")
