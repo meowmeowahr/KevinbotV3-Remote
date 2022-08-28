@@ -237,6 +237,20 @@ class MainWindow(QMainWindow):
                 self.app_theme_picker.setCurrentText(pair[0])
         self.app_theme_picker.blockSignals(False)
 
+        self.animation_box = QGroupBox("Animation Speed")
+        self.animation_box.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.animation_layout = QVBoxLayout()
+        self.animation_box.setLayout(self.animation_layout)
+        self.display_layout.addWidget(self.animation_box)
+
+        self.animation_spinner = QSpinner()
+        self.animation_spinner.spinbox.setMaximum(500)
+        self.animation_spinner.spinbox.setMinimum(50)
+        self.animation_spinner.spinbox.setSingleStep(25)
+        self.animation_spinner.spinbox.valueChanged.connect(self.set_animation_speed)
+        self.animation_spinner.setValue(SETTINGS["window_properties"]["animation_speed"])
+        self.animation_layout.addWidget(self.animation_spinner)
+
         self.exit_themes = QPushButton()
         self.exit_themes.clicked.connect(lambda: self.main_widget.setCurrentIndex(0))
         self.exit_themes.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
@@ -393,6 +407,12 @@ class MainWindow(QMainWindow):
 
     def update_homepage(self):
         SETTINGS["homepage"] = self.homepage_line.text()
+
+        with open('settings.json', 'w') as file:
+            json.dump(SETTINGS, file, indent=2)
+
+    def set_animation_speed(self):
+        SETTINGS["window_properties"]["animation_speed"] = self.animation_spinner.spinbox.value()
 
         with open('settings.json', 'w') as file:
             json.dump(SETTINGS, file, indent=2)
