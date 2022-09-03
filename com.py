@@ -57,7 +57,6 @@ def txstr(string):
     print("Sent: " + string)
     _send_data(string)
 
-
 def txcv(cmd, val, delay=0):
     # see if val is a list or a string
     if isinstance(val, list) or isinstance(val, tuple):
@@ -72,6 +71,8 @@ def txmot(vals):
     txcv("left_us", vals[0])
     txcv("right_us", vals[1])
 
+def txstop():
+    txstr("stop")
 
 def txshut():
     txstr("shutdown")

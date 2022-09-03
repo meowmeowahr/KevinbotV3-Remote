@@ -459,7 +459,7 @@ class RemoteUI(QMainWindow):
         self.motor_stick = Joystick.Joystick(color=self.fg_color, sticky=False)
         self.motor_stick.setObjectName("Kevinbot3_RemoteUI_Joystick")
         self.motor_stick.posChanged.connect(self.motor_action)
-        self.motor_stick.centerEvent.connect(lambda: com.txmot((1500, 1500)))
+        self.motor_stick.centerEvent.connect(com.txstop)
         self.motor_stick.setMinimumSize(140, 140)
         self.mainLayout.addWidget(self.motor_stick)
 
