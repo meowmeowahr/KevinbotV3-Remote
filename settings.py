@@ -24,6 +24,7 @@ EMULATE_REAL_REMOTE = True
 # windows support
 if platform.system() == "Windows":
     import ctypes
+
     app_id = 'kevinbot.kevinbot.runner._'  # arbitrary string
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(app_id)
 
@@ -55,6 +56,7 @@ class SliderProxyStyle(QProxyStyle):
         return super().pixelMetric(metric, option, widget)
 
 
+# noinspection PyUnresolvedReferences
 class MainWindow(QMainWindow):
     def __init__(self):
         # noinspection PyArgumentList
@@ -70,8 +72,8 @@ class MainWindow(QMainWindow):
 
         self.ensurePolished()
         if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],
-                                QColor(self.palette().color(QPalette.Window)).getRgb()[1], 
-                                QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
+                        QColor(self.palette().color(QPalette.Window)).getRgb()[1],
+                        QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
             self.fg_color = Qt.GlobalColor.white
         else:
             self.fg_color = Qt.GlobalColor.black
@@ -158,21 +160,21 @@ class MainWindow(QMainWindow):
         self.display_button.setStyleSheet("text-align: left;")
         self.display_button.setIcon(qta.icon("fa5s.paint-roller", color=self.fg_color))
         self.display_button.clicked.connect(lambda: self.main_widget.setCurrentIndex(2))
-        self.display_button.setIconSize(QSize(48,48))
+        self.display_button.setIconSize(QSize(48, 48))
         self.main_layout.addWidget(self.display_button)
 
         self.robot_button = QPushButton("Robot Settings")
         self.robot_button.setStyleSheet("text-align: left;")
         self.robot_button.setIcon(qta.icon("fa5s.robot", color=self.fg_color))
         self.robot_button.clicked.connect(lambda: self.main_widget.setCurrentIndex(3))
-        self.robot_button.setIconSize(QSize(48,48))
+        self.robot_button.setIconSize(QSize(48, 48))
         self.main_layout.addWidget(self.robot_button)
 
         self.web_button = QPushButton("Browser Settings")
         self.web_button.setStyleSheet("text-align: left;")
         self.web_button.setIcon(qta.icon("fa5s.globe", color=self.fg_color))
         self.web_button.clicked.connect(lambda: self.main_widget.setCurrentIndex(4))
-        self.web_button.setIconSize(QSize(48,48))
+        self.web_button.setIconSize(QSize(48, 48))
         self.main_layout.addWidget(self.web_button)
 
         # Screen Brightness
