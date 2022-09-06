@@ -19,7 +19,6 @@ import sys
 
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
 
 from jsonViewer.qjsonmodel import QJsonModel
 from jsonViewer.qjsonnode import QJsonNode
@@ -50,7 +49,6 @@ class Editor(QSplitter):
         self.ui_view_edit = JSONEditor()
         self.ui_view_edit.setReadOnly(True)
         self.addWidget(self.ui_view_edit)
-
 
         self.ui_tree_view = QJsonView()
         self.ui_tree_view.setAnimated(True)
