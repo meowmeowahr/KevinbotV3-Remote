@@ -14,24 +14,25 @@ class Direction(Enum):
 
 class Joystick(QWidget):
 
-    posChanged = pyqtSignal()
-    centerEvent = pyqtSignal()
+    posChanged = pyqtSignal(name="posChanged")
+    centerEvent = pyqtSignal(name="centerEvent")
 
-    def __init__(self, parent=None, color=Qt.GlobalColor.black, sticky=True, maxDistance=60):
+    def __init__(self, parent=None, color=Qt.GlobalColor.black, sticky=True, max_distance=60):
         super(Joystick, self).__init__(parent)
         self.color = color
         self.sticky = sticky
         self.setMinimumSize(100, 100)
         self.movingOffset = QPointF(0, 0)
         self.grabCenter = False
-        self.__maxDistance = maxDistance
+        self.__maxDistance = max_distance
 
         self.__changedEvent = None
 
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
-        bounds = QRectF(-self.__maxDistance, -self.__maxDistance, self.__maxDistance * 2, self.__maxDistance * 2).translated(self._center())
+        bounds = QRectF(-self.__maxDistance, -self.__maxDistance, self.__maxDistance * 2, self.__maxDistance * 2).\
+            translated(self._center())
         painter.setPen(QPen(self.color, 4))
         painter.drawEllipse(bounds)
         painter.setBrush(self.color)
@@ -45,17 +46,15 @@ class Joystick(QWidget):
     def _center(self):
         return QPointF(self.width()/2, self.height()/2)
 
-
     def _boundJoystick(self, point):
-        limitLine = QLineF(self._center(), point)
-        if (limitLine.length() > self.__maxDistance):
-            limitLine.setLength(self.__maxDistance)
-        return limitLine.p2()
+        limit_line = QLineF(self._center(), point)
+        if limit_line.length() > self.__maxDistance:
+            limit_line.setLength(self.__maxDistance)
+        return limit_line.p2()
 
     def joystickDirection(self):
-        normVector = QLineF(self._center(), self.movingOffset)
-        return (round(normVector.dx()), round(normVector.dy()))
-
+        norm_vector = QLineF(self._center(), self.movingOffset)
+        return round(norm_vector.dx()), round(norm_vector.dy())
 
     def mousePressEvent(self, ev):
         self.grabCenter = self._centerEllipse().contains(ev.pos())
