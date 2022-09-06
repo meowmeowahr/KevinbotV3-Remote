@@ -8,7 +8,6 @@ import platform
 import sys
 import threading
 import time
-import math
 from functools import partial
 
 from PyQt5.QtCore import *
@@ -17,7 +16,6 @@ from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtWidgets import *
 import qtawesome as qta
 
-import DPad.DPad as DPad
 import Joystick.Joystick as Joystick
 import SlidingStackedWidget as SlidingStackedWidget
 from level import Level
@@ -26,7 +24,6 @@ import strings
 from colorpicker.colorpicker import ColorPicker
 from palette import PaletteGrid, PALETTES
 from utils import *
-from joy2lr import joy2lr
 
 START_FULL_SCREEN = False
 EMULATE_REAL_REMOTE = True
@@ -243,7 +240,7 @@ class RemoteUI(QMainWindow):
         else:
             self.show()
 
-    # noinspection PyArgumentList
+    # noinspection PyArgumentList,PyUnresolvedReferences
     def init_ui(self):
         self.widget = SlidingStackedWidget.SlidingStackedWidget()
         self.setCentralWidget(self.widget)
@@ -450,8 +447,8 @@ class RemoteUI(QMainWindow):
 
         self.ensurePolished()
         if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],
-                                QColor(self.palette().color(QPalette.Window)).getRgb()[1], 
-                                QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
+                        QColor(self.palette().color(QPalette.Window)).getRgb()[1],
+                        QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
             self.fg_color = Qt.GlobalColor.white
         else:
             self.fg_color = Qt.GlobalColor.black
@@ -1126,8 +1123,8 @@ class RemoteUI(QMainWindow):
         self.level.setRobotColor(QColor(0, 34, 255))
         self.ensurePolished()
         self.level.setBackgroundColor(QColor(QColor(self.palette().color(QPalette.Window)).getRgb()[0],
-                                            QColor(self.palette().color(QPalette.Window)).getRgb()[1], 
-                                            QColor(self.palette().color(QPalette.Window)).getRgb()[2]))
+                                             QColor(self.palette().color(QPalette.Window)).getRgb()[1],
+                                             QColor(self.palette().color(QPalette.Window)).getRgb()[2]))
         self.level_layout.addWidget(self.level)
 
         self.sensorBoxLayout.addStretch()
@@ -1222,7 +1219,8 @@ class RemoteUI(QMainWindow):
         # a main_widget floating in the middle of the window
         self.modal = QWidget(self)
         self.modal.setObjectName("Kevinbot3_RemoteUI_Modal")
-        self.modal.setStyleSheet("#Kevinbot3_RemoteUI_Modal { border: 1px solid " + QColor(self.palette().color(QPalette.ColorRole.ButtonText)).name() + "; }")
+        self.modal.setStyleSheet("#Kevinbot3_RemoteUI_Modal { border: 1px solid " + QColor(
+            self.palette().color(QPalette.ColorRole.ButtonText)).name() + "; }")
         self.modal.setFixedSize(QSize(400, 200))
         self.modal.move(int(self.width() / 2 - self.modal.width() / 2),
                         int(self.height() / 2 - self.modal.height() / 2))
@@ -1244,13 +1242,14 @@ class RemoteUI(QMainWindow):
         self.modalText.setWordWrap(True)
         self.modalLayout.addWidget(self.modalText, 0, 1, 1, 2)
 
-    # noinspection PyArgumentList
+    # noinspection PyArgumentList,PyUnresolvedReferences
     def init_batt_modal(self):
         # a main_widget floating in the middle of the window
         self.batt_modal = QWidget(self)
         self.batt_modal.setFixedSize(QSize(400, 200))
         self.batt_modal.setObjectName("Kevinbot3_RemoteUI_Modal")
-        self.batt_modal.setStyleSheet("#Kevinbot3_RemoteUI_Modal { border: 1px solid " + QColor(self.palette().color(QPalette.ColorRole.ButtonText)).name() + "; }")
+        self.batt_modal.setStyleSheet("#Kevinbot3_RemoteUI_Modal { border: 1px solid " + QColor(
+            self.palette().color(QPalette.ColorRole.ButtonText)).name() + "; }")
         self.batt_modal.move(int(self.width() / 2 - self.batt_modal.width() / 2),
                              int(self.height() / 2 - self.batt_modal.height() / 2))
         self.batt_modal.hide()
@@ -1289,12 +1288,13 @@ class RemoteUI(QMainWindow):
         self.battModalShutdown.clicked.connect(lambda: self.shutdown_robot_modal_action(self.slide_out_batt_modal()))
         self.battModalButtonLayout.addWidget(self.battModalShutdown)
 
-    # noinspection PyArgumentList
+    # noinspection PyArgumentList,PyUnresolvedReferences
     def init_mot_temp_modal(self):
         # a main_widget floating in the middle of the window
         self.motTemp_modal = QWidget(self)
         self.motTemp_modal.setObjectName("Kevinbot3_RemoteUI_Modal")
-        self.motTemp_modal.setStyleSheet("#Kevinbot3_RemoteUI_Modal { border: 1px solid " + QColor(self.palette().color(QPalette.ColorRole.ButtonText)).name() + "; }")
+        self.motTemp_modal.setStyleSheet("#Kevinbot3_RemoteUI_Modal { border: 1px solid " + QColor(
+            self.palette().color(QPalette.ColorRole.ButtonText)).name() + "; }")
         self.motTemp_modal.setFixedSize(QSize(400, 200))
         self.motTemp_modal.move(int(self.width() / 2 - self.motTemp_modal.width() / 2),
                                 int(self.height() / 2 - self.motTemp_modal.height() / 2))
@@ -1604,19 +1604,23 @@ class RemoteUI(QMainWindow):
         y = -y
 
         direction = direction_lookup(x, 0, y, 0)[0]
-        
+
         print(x, y)
         print(direction)
         distance = round(math.dist((0, 0), (x, y)))
 
         if direction == "N":
-            com.txmot((map_range(distance, 0, 60, 1500, settings["max_us"]), map_range(distance, 0, 60, 1500, settings["max_us"])))
+            com.txmot((map_range(distance, 0, 60, 1500, settings["max_us"]),
+                       map_range(distance, 0, 60, 1500, settings["max_us"])))
         elif direction == "S":
-            com.txmot((map_range(distance, 0, 60, 1500, 2000 - (settings["max_us"] - 1000)), map_range(distance, 0, 60, 1500, 2000 - (settings["max_us"] - 1000))))
+            com.txmot((map_range(distance, 0, 60, 1500, 2000 - (settings["max_us"] - 1000)),
+                       map_range(distance, 0, 60, 1500, 2000 - (settings["max_us"] - 1000))))
         elif direction == "W":
-            com.txmot((map_range(distance, 0, 60, 1500, 2000 - (settings["max_us"] - 1000)), map_range(distance, 0, 60, 1500, settings["max_us"])))
+            com.txmot((map_range(distance, 0, 60, 1500, 2000 - (settings["max_us"] - 1000)),
+                       map_range(distance, 0, 60, 1500, settings["max_us"])))
         elif direction == "E":
-            com.txmot((map_range(distance, 0, 60, 1500, settings["max_us"]), map_range(distance, 0, 60, 1500, 2000 - (settings["max_us"] - 1000))))
+            com.txmot((map_range(distance, 0, 60, 1500, settings["max_us"]),
+                       map_range(distance, 0, 60, 1500, 2000 - (settings["max_us"] - 1000))))
 
 
 def init_robot():
