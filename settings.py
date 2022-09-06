@@ -177,6 +177,14 @@ class MainWindow(QMainWindow):
         self.web_button.setIconSize(QSize(48, 48))
         self.main_layout.addWidget(self.web_button)
 
+        self.adv_button = QPushButton("Advanced Settings")
+        self.adv_button.setStyleSheet("text-align: left;")
+        self.adv_button.setIcon(qta.icon("fa5s.tools", color=self.fg_color))
+        self.adv_button.setObjectName("Kevinbot3_RemoteUI_Button")
+        self.adv_button.setIconSize(QSize(48, 48))
+        self.adv_button.clicked.connect(lambda: self.main_widget.slideInIdx(1))
+        self.main_layout.addWidget(self.adv_button)
+
         # Screen Brightness
         self.screen_bright_box = QGroupBox("Screen Brightness")
         self.screen_bright_box.setObjectName("Kevinbot3_RemoteUI_Group")
@@ -337,14 +345,6 @@ class MainWindow(QMainWindow):
         self.exit_button.setFixedSize(QSize(36, 36))
         self.exit_layout.addWidget(self.exit_button)
         self.main_layout.addLayout(self.exit_layout)
-
-        # Advanced Settings
-        self.adv_button = QPushButton("Advanced Settings")
-        self.adv_button.setObjectName("Kevinbot3_RemoteUI_Button")
-        self.adv_button.setStyleSheet("font-size: 14px;")
-        self.adv_button.setFixedHeight(36)
-        self.adv_button.clicked.connect(lambda: self.main_widget.slideInIdx(1))
-        self.exit_layout.addWidget(self.adv_button)
 
         if START_FULL_SCREEN:
             self.showFullScreen()
