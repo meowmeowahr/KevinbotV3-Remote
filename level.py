@@ -123,6 +123,7 @@ if __name__ == "__main__":
     spinbox = QSpinBox()
     spinbox.setRange(0, 360)
     spinbox.setValue(0)
+    # noinspection PyUnresolvedReferences
     spinbox.valueChanged.connect(level.setAngle)
     layout.addWidget(spinbox)
     window.show()
