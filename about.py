@@ -8,7 +8,6 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from utils import load_theme, detect_dark
-import qtawesome as qta
 
 START_FULL_SCREEN = False
 EMULATE_REAL_REMOTE = True
@@ -16,12 +15,15 @@ EMULATE_REAL_REMOTE = True
 # windows support
 if platform.system() == "Windows":
     import ctypes
+
     app_id = 'kevinbot.kevinbot.remote.about'  # arbitrary string
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(app_id)
 
 SETTINGS = json.load(open("settings.json", "r"))
 
+
 class MainWindow(QMainWindow):
+    # noinspection PyUnresolvedReferences
     def __init__(self):
         # noinspection PyArgumentList
         super().__init__()
@@ -35,12 +37,11 @@ class MainWindow(QMainWindow):
 
         self.ensurePolished()
         if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],
-                                QColor(self.palette().color(QPalette.Window)).getRgb()[1], 
-                                QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
+                        QColor(self.palette().color(QPalette.Window)).getRgb()[1],
+                        QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
             self.fg_color = Qt.GlobalColor.white
         else:
             self.fg_color = Qt.GlobalColor.black
-
 
         self.widget = QWidget()
         self.setCentralWidget(self.widget)
@@ -102,6 +103,7 @@ class MainWindow(QMainWindow):
             self.anim.setDuration(100)
             self.anim.start()
         else:
+            # noinspection PyAttributeOutsideInit
             self.anim = QPropertyAnimation(self.credits_box, b"maximumHeight")
             self.anim.setStartValue(100)
             self.anim.setEndValue(0)
