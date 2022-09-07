@@ -111,10 +111,14 @@ class Worker(QObject):
                                                                                                      os.getenv("USER")),
                                                                                             file))
                 elif file == "version.txt":
-                    version = open(os.path.join("/tmp/Kevinbot3_Temp", file), "r").read()
+                    # version = open(os.path.join("/tmp/Kevinbot3_Temp", file), "r").read()
+                    pass
 
                 elif file == "requirements.txt":
                     requirements = os.path.join("/tmp/Kevinbot3_Temp", file)
+                elif file == "update_manifest.json":
+                    manifest = json.load(open(os.path.join("/tmp/Kevinbot3_Temp", file), "r").read())
+                    version = manifest["version"]
 
                 else:
                     shutil.copy(os.path.join("/tmp/Kevinbot3_Temp", file), os.path.join(SETTINGS["data_dir"]
