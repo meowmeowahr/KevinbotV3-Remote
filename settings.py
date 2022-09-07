@@ -34,7 +34,9 @@ APPS = json.load(open("apps.json", "r"))
 THEME_PAIRS = [
     ("Kevinbot Dark", "classic"),
     ("QDarkTheme Dark", "qdarktheme"),
-    ("QDarkTheme Light", "qdarktheme_light")
+    ("QDarkTheme Light", "qdarktheme_light"),
+    ("Breeze Dark", "breeze_dark"),
+    ("Breeze Light", "breeze_light")
 ]
 
 
