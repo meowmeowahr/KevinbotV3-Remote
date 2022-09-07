@@ -1,7 +1,7 @@
 import re
 import math
 import statistics
-
+from PyQt5.QtCore import QFile, QTextStream
 
 def capitalize(string):
     return string[0].upper() + string[1:]
@@ -51,6 +51,18 @@ def load_theme(widget, themename="classic"):
     elif themename == "qdarktheme_light":
         import qdarktheme
         widget.setStyleSheet(qdarktheme.load_stylesheet(theme="light"))
+    elif themename == "breeze_dark":
+        import breeze_resources
+        file = QFile(":/dark/stylesheet.qss")
+        file.open(QFile.ReadOnly | QFile.Text)
+        stream = QTextStream(file)
+        widget.setStyleSheet(stream.readAll())
+    elif themename == "breeze_light":
+        import breeze_resources
+        file = QFile(":/light/stylesheet.qss")
+        file.open(QFile.ReadOnly | QFile.Text)
+        stream = QTextStream(file)
+        widget.setStyleSheet(stream.readAll())
 
 def direction_lookup(destination_x, origin_x, destination_y, origin_y):
     deltaX = destination_x - origin_x
