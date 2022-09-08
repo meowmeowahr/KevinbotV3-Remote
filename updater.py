@@ -117,7 +117,7 @@ class Worker(QObject):
                 elif file == "requirements.txt":
                     requirements = os.path.join("/tmp/Kevinbot3_Temp", file)
                 elif file == "update_manifest.json":
-                    manifest = json.load(open(os.path.join("/tmp/Kevinbot3_Temp", file), "r").read())
+                    manifest = json.loads(open(os.path.join("/tmp/Kevinbot3_Temp", file), "r").read())
                     version = manifest["version"]
 
                 else:
