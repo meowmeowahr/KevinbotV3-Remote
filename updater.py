@@ -120,7 +120,7 @@ class Worker(QObject):
                     manifest = json.loads(open(os.path.join("/tmp/Kevinbot3_Temp", file), "r").read())
                     version = manifest["version"]
                     for filename in manifest["removed_files"]:
-                        os.remove(os.path.join(SETTINGS["data_dir"], filename))
+                        os.remove(os.path.join(SETTINGS["data_dir"].replace("$USER", os.environ("USER")), filename))
 
                 else:
                     shutil.copy(os.path.join("/tmp/Kevinbot3_Temp", file), os.path.join(SETTINGS["data_dir"]
