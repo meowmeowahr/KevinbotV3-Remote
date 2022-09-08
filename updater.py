@@ -95,6 +95,7 @@ class Worker(QObject):
             tar.extractall(path="/tmp/Kevinbot3_Temp")
 
         requirements = None
+        manifest = None
 
         # copy the files to the data directory and overwrite any existing files
         for file in os.listdir("/tmp/Kevinbot3_Temp"):
@@ -119,9 +120,7 @@ class Worker(QObject):
                 elif file == "update_manifest.json":
                     manifest = json.loads(open(os.path.join("/tmp/Kevinbot3_Temp", file), "r").read())
                     version = manifest["version"]
-                    for filename in manifest["removed_files"]:
-                        os.remove(os.path.join(SETTINGS["data_dir"].replace("$USER", os.getenv("USER")), filename))
-
+                    
                 else:
                     shutil.copy(os.path.join("/tmp/Kevinbot3_Temp", file), os.path.join(SETTINGS["data_dir"]
                                                                                         .replace("$USER",
@@ -140,6 +139,10 @@ class Worker(QObject):
                                                                                           .replace("$USER",
                                                                                                    os.getenv("USER")),
                                                                                           folder))
+        if manifest:
+            for filename in manifest["removed_files"]:
+                os.remove(os.path.join(SETTINGS["data_dir"].replace("$USER", os.getenv("USER")), filename))
+
 
         self.set_prog(62)
 
