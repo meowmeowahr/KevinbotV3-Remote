@@ -1,6 +1,7 @@
 import re
 import math
 import statistics
+from shutil import which
 from PyQt5.QtCore import QFile, QTextStream
 
 def capitalize(string):
@@ -77,3 +78,8 @@ def direction_lookup(destination_x, origin_x, destination_y, origin_y):
     compass_brackets = ["N", "E", "S", "W", "N"]
     compass_lookup = round(degrees_final / 90)
     return compass_brackets[compass_lookup], degrees_final
+
+def is_tool(name):
+    """Check whether `name` is on PATH and marked as executable."""
+
+    return which(name) is not None

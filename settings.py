@@ -13,7 +13,7 @@ from PyQt5.QtWidgets import *
 from SlidingStackedWidget import SlidingStackedWidget
 from json_editor import Editor
 from QSpinner import QSpinner
-from utils import load_theme, detect_dark
+from utils import load_theme, detect_dark, is_tool
 import qtawesome as qta
 
 from com import is_pi
@@ -155,6 +155,12 @@ class MainWindow(QMainWindow):
         self.web_layout = QVBoxLayout()
         self.web_widget.setLayout(self.web_layout)
 
+        self.ss_widget = QWidget()
+        self.main_widget.addWidget(self.ss_widget)
+
+        self.ss_layout = QVBoxLayout()
+        self.ss_widget.setLayout(self.ss_layout)
+
         self.main_layout = QVBoxLayout()
         self.home_widget.setLayout(self.main_layout)
 
@@ -164,6 +170,14 @@ class MainWindow(QMainWindow):
         self.display_button.clicked.connect(lambda: self.main_widget.setCurrentIndex(2))
         self.display_button.setIconSize(QSize(48, 48))
         self.main_layout.addWidget(self.display_button)
+
+        self.ss_button = QPushButton("Screensaver Settings")
+        self.ss_button.setStyleSheet("text-align: left;")
+        self.ss_button.setIcon(qta.icon("fa5s.desktop", color=self.fg_color))
+        self.ss_button.setObjectName("Kevinbot3_RemoteUI_Button")
+        self.ss_button.setIconSize(QSize(48, 48))
+        self.ss_button.clicked.connect(lambda: self.main_widget.setCurrentIndex(5))
+        self.main_layout.addWidget(self.ss_button)
 
         self.robot_button = QPushButton("Robot Settings")
         self.robot_button.setStyleSheet("text-align: left;")
@@ -336,6 +350,19 @@ class MainWindow(QMainWindow):
         self.exit_web.setFixedSize(QSize(36, 36))
         self.exit_web.setIconSize(QSize(32, 32))
         self.web_layout.addWidget(self.exit_web)
+
+        self.ss_box = QGroupBox("Screensaver")
+        self.ss_box.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.ss_box_layout = QVBoxLayout()
+        self.ss_box.setLayout(self.ss_box_layout)
+        self.ss_layout.addWidget(self.ss_box)
+
+        self.exit_ss = QPushButton()
+        self.exit_ss.clicked.connect(lambda: self.main_widget.setCurrentIndex(0))
+        self.exit_ss.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
+        self.exit_ss.setFixedSize(QSize(36, 36))
+        self.exit_ss.setIconSize(QSize(32, 32))
+        self.ss_layout.addWidget(self.exit_ss)
 
         # Exit
         self.exit_layout = QHBoxLayout()
