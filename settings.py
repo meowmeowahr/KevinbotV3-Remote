@@ -177,6 +177,10 @@ class MainWindow(QMainWindow):
         self.ss_button.setObjectName("Kevinbot3_RemoteUI_Button")
         self.ss_button.setIconSize(QSize(48, 48))
         self.ss_button.clicked.connect(lambda: self.main_widget.setCurrentIndex(5))
+
+        if not is_tool("xscreensaver"):
+            self.ss_button.setDisabled(True)
+
         self.main_layout.addWidget(self.ss_button)
 
         self.robot_button = QPushButton("Robot Settings")
