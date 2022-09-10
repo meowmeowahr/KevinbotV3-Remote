@@ -141,7 +141,10 @@ class Worker(QObject):
                                                                                           folder))
         if manifest:
             for filename in manifest["removed_files"]:
-                os.remove(os.path.join(SETTINGS["data_dir"].replace("$USER", os.getenv("USER")), filename))
+                try:
+                    os.remove(os.path.join(SETTINGS["data_dir"].replace("$USER", os.getenv("USER")), filename))
+                except FileNotFoundError:
+                    pass
 
 
         self.set_prog(62)
