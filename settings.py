@@ -15,6 +15,7 @@ from json_editor import Editor
 from QSpinner import QSpinner
 from utils import load_theme, detect_dark, is_tool
 import qtawesome as qta
+import xscreensaver_config.ConfigParser as xsc
 
 from com import is_pi
 
@@ -355,22 +356,32 @@ class MainWindow(QMainWindow):
         self.exit_web.setIconSize(QSize(32, 32))
         self.web_layout.addWidget(self.exit_web)
 
-        self.ss_box = QGroupBox("Screensaver")
-        self.ss_box.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.ss_box_layout = QVBoxLayout()
-        self.ss_box.setLayout(self.ss_box_layout)
-        self.ss_layout.addWidget(self.ss_box)
+        if is_tool("xscreensaver"):
+            self.ss_box = QGroupBox("Screensaver")
+            self.ss_box.setObjectName("Kevinbot3_RemoteUI_Group")
+            self.ss_box_layout = QVBoxLayout()
+            self.ss_box.setLayout(self.ss_box_layout)
+            self.ss_layout.addWidget(self.ss_box)
 
-        self.preview_ss_button = QPushButton("Preview Screensaver")
-        self.preview_ss_button.clicked.connect(lambda: os.system("xscreensaver-command -activate"))
-        self.ss_box_layout.addWidget(self.preview_ss_button)
+            self.xsc_config = xsc.ConfigParser("/home/$USER/.xscreensaver".replace("$USER", os.getenv("USER")))
+            #xsc_config.update({"timeout": "0:{}:0".format(self.ss_timeout_spinner.value())})
 
-        self.exit_ss = QPushButton()
-        self.exit_ss.clicked.connect(lambda: self.main_widget.setCurrentIndex(0))
-        self.exit_ss.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
-        self.exit_ss.setFixedSize(QSize(36, 36))
-        self.exit_ss.setIconSize(QSize(32, 32))
-        self.ss_layout.addWidget(self.exit_ss)
+            self.ss_timeout_spinner = QSpinner("Screen Timeout: ")
+            self.ss_timeout_spinner.setSuffix(" minutes")
+            self.ss_timeout_spinner.spinbox.valueChanged.connect(self.ss_timeout_changed)
+            self.ss_timeout_spinner.setValue(int(self.xsc_config.read()["timeout"].split(":")[1]))
+            self.ss_box_layout.addWidget(self.ss_timeout_spinner)
+
+            self.preview_ss_button = QPushButton("Preview Screensaver")
+            self.preview_ss_button.clicked.connect(lambda: os.system("xscreensaver-command -activate"))
+            self.ss_box_layout.addWidget(self.preview_ss_button)
+
+            self.exit_ss = QPushButton()
+            self.exit_ss.clicked.connect(lambda: self.main_widget.setCurrentIndex(0))
+            self.exit_ss.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
+            self.exit_ss.setFixedSize(QSize(36, 36))
+            self.exit_ss.setIconSize(QSize(32, 32))
+            self.ss_layout.addWidget(self.exit_ss)
 
         # Exit
         self.exit_layout = QHBoxLayout()
@@ -455,6 +466,11 @@ class MainWindow(QMainWindow):
 
         with open('settings.json', 'w') as file:
             json.dump(SETTINGS, file, indent=2)
+
+    def ss_timeout_changed(self):
+        value = self.ss_timeout_spinner.spinbox.value()
+        self.xsc_config.update({"timeout": "0:{}:0".format(value)})   
+        self.xsc_config.save()     
 
 
 if __name__ == "__main__":

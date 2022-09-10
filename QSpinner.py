@@ -4,11 +4,16 @@ from PyQt5.QtGui import *
 
 
 class QSpinner(QWidget):
-    def __init__(self):
+    def __init__(self, text=None):
         super().__init__()
 
         self.__layout = QHBoxLayout()
         self.setLayout(self.__layout)
+
+        if text:
+            self.text = QLabel()
+            self.text.setText(text)
+            self.__layout.addWidget(self.text)
 
         self.spinbox = QSpinBox()
         self.spinbox.setButtonSymbols(QAbstractSpinBox.ButtonSymbols.NoButtons)
@@ -39,3 +44,6 @@ class QSpinner(QWidget):
 
     def setSingleStep(self, value: int):
         self.spinbox.setSingleStep(value)
+
+    def setSuffix(self, suffix: str):
+        self.spinbox.setSuffix(suffix)
