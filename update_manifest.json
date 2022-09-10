@@ -1,4 +1,4 @@
 {
     "version": "1.0-b25",
-    "removed_files": ["icons/bool.png", "icons/window-close.svg", "icons/arrow-alt-circle-left.svg"]
+    "removed_files": ["icons/bool.png", "icons/window-close.svg", "icons/arrow-alt-circle-left.svg", "icons/arrow-alt-circle-right.svg"]
 }
