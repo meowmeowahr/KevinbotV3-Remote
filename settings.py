@@ -357,6 +357,10 @@ class MainWindow(QMainWindow):
         self.ss_box.setLayout(self.ss_box_layout)
         self.ss_layout.addWidget(self.ss_box)
 
+        self.preview_ss_button = QPushButton("Preview Screensaver")
+        self.preview_ss_button.clicked.connect(lambda: os.system("xscreensaver-command -activate"))
+        self.ss_box_layout.addWidget(self.preview_ss_button)
+
         self.exit_ss = QPushButton()
         self.exit_ss.clicked.connect(lambda: self.main_widget.setCurrentIndex(0))
         self.exit_ss.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
