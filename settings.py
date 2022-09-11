@@ -15,7 +15,7 @@ from json_editor import Editor
 from QSpinner import QSpinner
 from utils import load_theme, detect_dark, is_tool
 import qtawesome as qta
-import xscreensaver_config.ConfigParser as xsc
+import xscreensaver_config.ConfigParser as xSc
 
 from com import is_pi
 
@@ -61,6 +61,7 @@ class SliderProxyStyle(QProxyStyle):
 
 # noinspection PyUnresolvedReferences
 class MainWindow(QMainWindow):
+    # noinspection PyArgumentList
     def __init__(self):
         # noinspection PyArgumentList
         super().__init__()
@@ -363,7 +364,7 @@ class MainWindow(QMainWindow):
             self.ss_box.setLayout(self.ss_box_layout)
             self.ss_layout.addWidget(self.ss_box)
 
-            self.xsc_config = xsc.ConfigParser("/home/$USER/.xscreensaver".replace("$USER", os.getenv("USER")))
+            self.xsc_config = xSc.ConfigParser("/home/$USER/.xscreensaver".replace("$USER", os.getenv("USER")))
 
             self.preview_ss_button = QPushButton("Preview Screensaver")
             self.preview_ss_button.clicked.connect(lambda: os.system("xscreensaver-command -activate"))
@@ -382,8 +383,6 @@ class MainWindow(QMainWindow):
             else:
                 self.ss_timeout_spinner.setDisabled(True)
                 self.ss_enable_checkbox.setChecked(False)
-
-            enabled = self.ss_enable_checkbox.isChecked()
 
             self.ss_box_layout.addWidget(self.ss_enable_checkbox)
             self.ss_box_layout.addWidget(self.ss_timeout_spinner)
