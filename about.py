@@ -71,7 +71,8 @@ class MainWindow(QMainWindow):
 
         self.credits_box = QTextEdit()
         self.credits_box.setText("<p>Kevinbot and Kevinbot Software created by Kevin Ahr <br>"
-                                 "PyQtDarkTheme created by Yunosuke Ohsugi</p>")
+                                 "PyQtDarkTheme created by Yunosuke Ohsugi <br>"
+                                 "BreezeStyleSheets created by Alexander Huszagh </p>")
         self.credits_box.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.credits_box.hide()
         self.layout.addWidget(self.credits_box)
