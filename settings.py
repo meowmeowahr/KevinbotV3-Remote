@@ -364,16 +364,29 @@ class MainWindow(QMainWindow):
             self.ss_layout.addWidget(self.ss_box)
 
             self.xsc_config = xsc.ConfigParser("/home/$USER/.xscreensaver".replace("$USER", os.getenv("USER")))
-            #xsc_config.update({"timeout": "0:{}:0".format(self.ss_timeout_spinner.value())})
+
+            self.preview_ss_button = QPushButton("Preview Screensaver")
+            self.preview_ss_button.clicked.connect(lambda: os.system("xscreensaver-command -activate"))
 
             self.ss_timeout_spinner = QSpinner("Screen Timeout: ")
             self.ss_timeout_spinner.setSuffix(" minutes")
             self.ss_timeout_spinner.spinbox.valueChanged.connect(self.ss_timeout_changed)
             self.ss_timeout_spinner.setValue(int(self.xsc_config.read()["timeout"].split(":")[1]))
-            self.ss_box_layout.addWidget(self.ss_timeout_spinner)
 
-            self.preview_ss_button = QPushButton("Preview Screensaver")
-            self.preview_ss_button.clicked.connect(lambda: os.system("xscreensaver-command -activate"))
+            self.ss_enable_checkbox = QCheckBox("Enable")
+            self.ss_enable_checkbox.stateChanged.connect(self.ss_enable_changed)
+            
+            if self.xsc_config.read()["mode"] == "one":
+                self.ss_timeout_spinner.setDisabled(False)
+                self.ss_enable_checkbox.setChecked(True)
+            else:
+                self.ss_timeout_spinner.setDisabled(True)
+                self.ss_enable_checkbox.setChecked(False)
+
+            enabled = self.ss_enable_checkbox.isChecked()
+
+            self.ss_box_layout.addWidget(self.ss_enable_checkbox)
+            self.ss_box_layout.addWidget(self.ss_timeout_spinner)
             self.ss_box_layout.addWidget(self.preview_ss_button)
 
             self.exit_ss = QPushButton()
@@ -470,6 +483,17 @@ class MainWindow(QMainWindow):
     def ss_timeout_changed(self):
         value = self.ss_timeout_spinner.spinbox.value()
         self.xsc_config.update({"timeout": "0:{}:0".format(value)})   
+        self.xsc_config.save()     
+
+    def ss_enable_changed(self):
+        enabled = self.ss_enable_checkbox.isChecked()
+        if enabled:
+            self.ss_timeout_spinner.setDisabled(False)
+            self.xsc_config.update({"mode": "one"})   
+        else:
+            self.ss_timeout_spinner.setDisabled(True)
+            self.xsc_config.update({"mode": "off"})
+         
         self.xsc_config.save()     
 
 
