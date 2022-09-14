@@ -1624,6 +1624,12 @@ class RemoteUI(QMainWindow):
 
 
 def init_robot():
+    com.txcv("no-pass.remote.name", "REMOTE")
+    try:
+        com.txcv("no-pass.remote.version", open("version.txt", "r").read())
+    except FileNotFoundError:
+        com.txcv("no-pass.remote.version", "UNKNOWN")
+    com.txcv("no-pass.remote.status", "connected")
     com.txcv("arms", CURRENT_ARM_POS, delay=0.02)
     com.txcv("no-pass.speech-engine", "espeak", delay=0.02)
     com.txcv("head_effect", "color1", delay=0.02)
@@ -1638,12 +1644,22 @@ def init_robot():
 
 
 if __name__ == '__main__':
-    com.init()
-    rx_thread = threading.Thread(target=rx_data, daemon=True)
-    rx_thread.start()
-    init_robot()
-    app = QApplication(sys.argv)
-    app.setApplicationName("Kevinbot Remote")
-    app.setApplicationVersion(__version__)
-    window = RemoteUI()
-    sys.exit(app.exec_())
+    error = None
+    try:
+        com.init()
+        rx_thread = threading.Thread(target=rx_data, daemon=True)
+        rx_thread.start()
+        init_robot()
+        app = QApplication(sys.argv)
+        app.setApplicationName("Kevinbot Remote")
+        app.setApplicationVersion(__version__)
+        window = RemoteUI()
+        ex = app.exec()
+    except Exception as e:
+        com.txcv("no-pass.remote.status", "error")
+        com.txcv("no-pass.remote.error", e)
+        error = True
+    finally:
+        if not error:
+            com.txcv("no-pass.remote.status", "disconnected")
+    sys.exit()
