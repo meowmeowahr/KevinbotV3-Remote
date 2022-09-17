@@ -10,9 +10,9 @@ from urllib.parse import urlparse
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+from QCustomWidgets import QSpinner
 from SlidingStackedWidget import SlidingStackedWidget
 from json_editor import Editor
-from QSpinner import QSpinner
 from utils import load_theme, detect_dark, is_tool
 import qtawesome as qta
 import xscreensaver_config.ConfigParser as xSc
