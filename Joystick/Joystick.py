@@ -18,6 +18,7 @@ class Joystick(QWidget):
     centerEvent = pyqtSignal(name="centerEvent")
 
     def __init__(self, parent=None, color=Qt.GlobalColor.black, sticky=True, max_distance=60):
+        # noinspection PyArgumentList
         super(Joystick, self).__init__(parent)
         self.color = color
         self.sticky = sticky

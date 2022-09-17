@@ -2,12 +2,15 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
+
 class QPushToolButton(QToolButton):
     def __init__(self, text: str = None):
         super().__init__()
         self.setText(text)
 
+
 class QSpinner(QWidget):
+    # noinspection PyArgumentList
     def __init__(self, text=None):
         super().__init__()
 

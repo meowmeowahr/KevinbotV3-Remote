@@ -4,8 +4,10 @@ import time
 import threading
 
 try:
+    # noinspection PyPep8Naming
     import RPi.GPIO as io
 except ImportError:
+    # noinspection PyPep8Naming
     try:
         from RPiSim.GPIO import GPIO as io
     except ImportError:

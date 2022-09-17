@@ -78,6 +78,7 @@ class LevelWidget(QWidget):
 
 
 class Level(QWidget):
+    # noinspection PyArgumentList
     def __init__(self, parent=None):
         super(Level, self).__init__(parent)
 
@@ -115,16 +116,19 @@ if __name__ == "__main__":
     import sys
 
     app = QApplication(sys.argv)
+    # noinspection PyArgumentList
     window = QWidget()
     layout = QVBoxLayout()
     window.setLayout(layout)
     level = Level()
+    # noinspection PyArgumentList
     layout.addWidget(level)
     spinbox = QSpinBox()
     spinbox.setRange(0, 360)
     spinbox.setValue(0)
     # noinspection PyUnresolvedReferences
     spinbox.valueChanged.connect(level.setAngle)
+    # noinspection PyArgumentList
     layout.addWidget(spinbox)
     window.show()
     sys.exit(app.exec_())

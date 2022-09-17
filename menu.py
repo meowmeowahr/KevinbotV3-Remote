@@ -22,8 +22,8 @@ EMULATE_REAL_REMOTE = True
 # windows support
 if platform.system() == "Windows":
     import ctypes
-    myappid = 'kevinbot.kevinbot.runner._'  # arbitrary string
-    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+    appid = 'kevinbot.kevinbot.runner._'  # arbitrary string
+    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(appid)
 
 SETTINGS = json.load(open("settings.json", "r"))
 APPS = json.load(open("apps.json", "r"))
@@ -69,6 +69,7 @@ class MainWindow(QMainWindow):
 
     updateTheme = pyqtSignal()
 
+    # noinspection PyUnresolvedReferences
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Kevinbot Runner")
@@ -151,7 +152,6 @@ class MainWindow(QMainWindow):
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_time)
         self.timer.start(1000)
-
 
         if START_FULL_SCREEN:
             self.showFullScreen()

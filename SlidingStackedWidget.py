@@ -8,7 +8,7 @@ class SlidingStackedWidget(QStackedWidget):
     def __init__(self, parent=None, anim=QEasingCurve.Type.OutExpo, speed=300):
         super(SlidingStackedWidget, self).__init__(parent)
 
-        self.m_animationtype = anim
+        self.m_animation_type = anim
         self.m_direction = 0
         self.m_speed = speed
         self.m_now = 0
@@ -27,10 +27,10 @@ class SlidingStackedWidget(QStackedWidget):
         self.m_speed = speed
 
     def getAnimation(self):
-        return self.m_animationtype
+        return self.m_animation_type
 
     def setAnimation(self, animationtype):
-        self.m_animationtype = animationtype
+        self.m_animation_type = animationtype
 
     def setWrap(self, wrap):
         self.m_wrap = wrap
@@ -65,30 +65,31 @@ class SlidingStackedWidget(QStackedWidget):
             self.m_active = False
             return
 
-        offsetx, offsety = self.frameRect().width(), self.frameRect().height()
+        offset_x, offsety_y = self.frameRect().width(), self.frameRect().height()
         self.widget(_next).setGeometry(self.frameRect())
 
         # noinspection PyUnresolvedReferences
         if not self.m_direction == Qt.Axis.XAxis:
             if _now < _next:
-                offsetx, offsety = 0, -offsety
+                offset_x, offsety_y = 0, -offsety_y
             else:
-                offsetx = 0
+                offset_x = 0
         else:
             if _now < _next:
-                offsetx, offsety = -offsetx, 0
+                offset_x, offsety_y = -offset_x, 0
             else:
-                offsety = 0
+                offsety_y = 0
 
         pnext = self.widget(_next).pos()
         pnow = self.widget(_now).pos()
         self.m_pnow = pnow
 
-        offset = QPoint(offsetx, offsety)
+        offset = QPoint(offset_x, offsety_y)
         self.widget(_next).move(pnext - offset)
         self.widget(_next).show()
         self.widget(_next).raise_()
 
+        # noinspection PyArgumentList
         anim_group = QParallelAnimationGroup(self, finished=self.animationDoneSlot)
 
         for index, start, end in zip(
@@ -99,7 +100,7 @@ class SlidingStackedWidget(QStackedWidget):
                 self.widget(index),
                 b"pos",
                 duration=self.m_speed,
-                easingCurve=self.m_animationtype,
+                easingCurve=self.m_animation_type,
                 startValue=start,
                 endValue=end,
             )

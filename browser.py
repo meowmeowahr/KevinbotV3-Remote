@@ -39,8 +39,8 @@ class MainWindow(QMainWindow):
 
         self.ensurePolished()
         if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],
-                                QColor(self.palette().color(QPalette.Window)).getRgb()[1], 
-                                QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
+                        QColor(self.palette().color(QPalette.Window)).getRgb()[1],
+                        QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
             self.fg_color = Qt.GlobalColor.white
         else:
             self.fg_color = Qt.GlobalColor.black

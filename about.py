@@ -23,7 +23,7 @@ SETTINGS = json.load(open("settings.json", "r"))
 
 
 class MainWindow(QMainWindow):
-    # noinspection PyUnresolvedReferences
+    # noinspection PyUnresolvedReferences,PyArgumentList
     def __init__(self):
         # noinspection PyArgumentList
         super().__init__()

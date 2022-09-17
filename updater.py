@@ -30,9 +30,9 @@ FULLSCREEN = False
 # windows support
 if platform.system() == "Windows":
     import ctypes
+
     myappid = 'kevinbot.kevinbot.updater._'  # arbitrary string
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
-
 
 SETTINGS = json.load(open("settings.json", "r"))
 
@@ -120,7 +120,7 @@ class Worker(QObject):
                 elif file == "update_manifest.json":
                     manifest = json.loads(open(os.path.join("/tmp/Kevinbot3_Temp", file), "r").read())
                     version = manifest["version"]
-                    
+
                 else:
                     shutil.copy(os.path.join("/tmp/Kevinbot3_Temp", file), os.path.join(SETTINGS["data_dir"]
                                                                                         .replace("$USER",
@@ -145,7 +145,6 @@ class Worker(QObject):
                     os.remove(os.path.join(SETTINGS["data_dir"].replace("$USER", os.getenv("USER")), filename))
                 except FileNotFoundError:
                     pass
-
 
         self.set_prog(62)
 
@@ -176,8 +175,8 @@ class MainWindow(QMainWindow):
 
         self.ensurePolished()
         if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],
-                                QColor(self.palette().color(QPalette.Window)).getRgb()[1], 
-                                QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
+                        QColor(self.palette().color(QPalette.Window)).getRgb()[1],
+                        QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
             self.fg_color = Qt.GlobalColor.white
         else:
             self.fg_color = Qt.GlobalColor.black
@@ -313,7 +312,8 @@ class MainWindow(QMainWindow):
 
         # get files
         files = []
-        for file in os.listdir(os.path.join(SETTINGS["media_dir"].replace("$USER", os.getenv("USER")), self.drive_combo.currentText())):
+        for file in os.listdir(os.path.join(SETTINGS["media_dir"].replace("$USER", os.getenv("USER")),
+                                            self.drive_combo.currentText())):
             if file.endswith(".tar.gz"):
                 files.append(file)
 
@@ -327,6 +327,7 @@ class MainWindow(QMainWindow):
             self.update_button.setEnabled(True)
 
     def run_update(self):
+        # noinspection PyAttributeOutsideInit
         self.progress_dialog = QProgressDialog("Updating...", "Cancel", 0, 100, self)
         self.progress_dialog.setWindowModality(Qt.WindowModal)
         self.progress_dialog.setWindowTitle("Please Wait")
@@ -335,7 +336,9 @@ class MainWindow(QMainWindow):
         self.progress_dialog.setCancelButton(None)
         self.progress_dialog.show()
 
+        # noinspection PyAttributeOutsideInit
         self.upd_thread = QThread()
+        # noinspection PyAttributeOutsideInit
         self.upd_worker = Worker()
         self.upd_worker.moveToThread(self.upd_thread)
         self.upd_thread.started.connect(self.upd_worker.run)
