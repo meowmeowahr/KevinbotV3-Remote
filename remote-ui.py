@@ -57,6 +57,11 @@ if platform.system() == "Windows":
     # show icon in taskbar
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("Kevinbot3 Remote")
 
+try:
+    remote_name = settings["name"]
+except KeyError:
+    remote_name = "KBOT_REMOTE"
+
 
 def rx_data():
     time.sleep(1)  # wait for window to open
@@ -1624,7 +1629,7 @@ class RemoteUI(QMainWindow):
 
 
 def init_robot():
-    com.txcv("no-pass.remote.name", "REMOTE")
+    com.txcv("no-pass.remote.name", remote_name)
     try:
         com.txcv("no-pass.remote.version", open("version.txt", "r").read())
     except FileNotFoundError:

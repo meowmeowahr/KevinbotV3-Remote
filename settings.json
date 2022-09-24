@@ -1,4 +1,5 @@
 {
+  "name": "REMOTE",
   "arm_dof": 5,
   "arm_min_max": [
     [
