@@ -154,6 +154,12 @@ class MainWindow(QMainWindow):
         self.web_widget = QWidget()
         self.main_widget.addWidget(self.web_widget)
 
+        self.remote_widget = QWidget()
+        self.main_widget.addWidget(self.remote_widget)
+
+        self.remote_layout = QVBoxLayout()
+        self.remote_widget.setLayout(self.remote_layout)
+
         self.web_layout = QVBoxLayout()
         self.web_widget.setLayout(self.web_layout)
 
@@ -173,6 +179,13 @@ class MainWindow(QMainWindow):
         self.robot_button.clicked.connect(lambda: self.main_widget.setCurrentIndex(3))
         self.robot_button.setIconSize(QSize(48, 48))
         self.main_layout.addWidget(self.robot_button)
+
+        self.remote_button = QPushButton("Remote Settings")
+        self.remote_button.setStyleSheet("text-align: left;")
+        self.remote_button.setIcon(qta.icon("fa5s.tablet-alt", color=self.fg_color))
+        self.remote_button.clicked.connect(lambda: self.main_widget.setCurrentIndex(5))
+        self.remote_button.setIconSize(QSize(48, 48))
+        self.main_layout.addWidget(self.remote_button)
 
         self.web_button = QPushButton("Browser Settings")
         self.web_button.setStyleSheet("text-align: left;")
@@ -367,6 +380,19 @@ class MainWindow(QMainWindow):
         self.exit_web.setFixedSize(QSize(36, 36))
         self.exit_web.setIconSize(QSize(32, 32))
         self.web_layout.addWidget(self.exit_web)
+
+        self.remote_box = QGroupBox("Remote")
+        self.remote_box.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.remote_box_layout = QVBoxLayout()
+        self.remote_box.setLayout(self.remote_box_layout)
+        self.remote_layout.addWidget(self.remote_box)
+
+        self.exit_remote = QPushButton()
+        self.exit_remote.clicked.connect(lambda: self.main_widget.setCurrentIndex(0))
+        self.exit_remote.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
+        self.exit_remote.setFixedSize(QSize(36, 36))
+        self.exit_remote.setIconSize(QSize(32, 32))
+        self.remote_layout.addWidget(self.exit_remote)
 
 
         # Exit
