@@ -157,12 +157,6 @@ class MainWindow(QMainWindow):
         self.web_layout = QVBoxLayout()
         self.web_widget.setLayout(self.web_layout)
 
-        self.ss_widget = QWidget()
-        self.main_widget.addWidget(self.ss_widget)
-
-        self.ss_layout = QVBoxLayout()
-        self.ss_widget.setLayout(self.ss_layout)
-
         self.main_layout = QVBoxLayout()
         self.home_widget.setLayout(self.main_layout)
 
@@ -172,18 +166,6 @@ class MainWindow(QMainWindow):
         self.display_button.clicked.connect(lambda: self.main_widget.setCurrentIndex(2))
         self.display_button.setIconSize(QSize(48, 48))
         self.main_layout.addWidget(self.display_button)
-
-        self.ss_button = QPushButton("Screensaver Settings")
-        self.ss_button.setStyleSheet("text-align: left;")
-        self.ss_button.setIcon(qta.icon("fa5s.desktop", color=self.fg_color))
-        self.ss_button.setObjectName("Kevinbot3_RemoteUI_Button")
-        self.ss_button.setIconSize(QSize(48, 48))
-        self.ss_button.clicked.connect(lambda: self.main_widget.setCurrentIndex(5))
-
-        if not is_tool("xscreensaver"):
-            self.ss_button.setDisabled(True)
-
-        self.main_layout.addWidget(self.ss_button)
 
         self.robot_button = QPushButton("Robot Settings")
         self.robot_button.setStyleSheet("text-align: left;")
@@ -221,9 +203,7 @@ class MainWindow(QMainWindow):
         self.screen_bright_layout.addWidget(self.screen_bright_slider)
 
         if not is_pi():
-            self.screen_bright_box.setDisabled(True)
-            warning = QLabel("Screen Brightness is not supported on your device")
-            self.screen_bright_layout.addWidget(warning)
+            pass
         else:
             result = subprocess.result = subprocess.run(['cat', SETTINGS["backlight_dir"] + "brightness"],
                                                         stdout=subprocess.PIPE)
@@ -282,6 +262,37 @@ class MainWindow(QMainWindow):
         self.animation_spinner.spinbox.valueChanged.connect(self.set_animation_speed)
         self.animation_spinner.setValue(SETTINGS["window_properties"]["animation_speed"])
         self.animation_layout.addWidget(self.animation_spinner)
+
+        if is_tool("xscreensaver"):
+            self.ss_box = QGroupBox("Screensaver")
+            self.ss_box.setObjectName("Kevinbot3_RemoteUI_Group")
+            self.ss_box_layout = QVBoxLayout()
+            self.ss_box.setLayout(self.ss_box_layout)
+            self.display_layout.addWidget(self.ss_box)
+
+            self.xsc_config = xSc.ConfigParser("/home/$USER/.xscreensaver".replace("$USER", os.getenv("USER")))
+
+            self.preview_ss_button = QPushButton("Preview Screensaver")
+            self.preview_ss_button.clicked.connect(lambda: os.system("xscreensaver-command -activate"))
+
+            self.ss_timeout_spinner = QSpinner("Screen Timeout: ")
+            self.ss_timeout_spinner.setSuffix(" minutes")
+            self.ss_timeout_spinner.spinbox.valueChanged.connect(self.ss_timeout_changed)
+            self.ss_timeout_spinner.setValue(int(self.xsc_config.read()["timeout"].split(":")[1]))
+
+            self.ss_enable_checkbox = QCheckBox("Enable")
+            self.ss_enable_checkbox.stateChanged.connect(self.ss_enable_changed)
+            
+            if self.xsc_config.read()["mode"] == "one":
+                self.ss_timeout_spinner.setDisabled(False)
+                self.ss_enable_checkbox.setChecked(True)
+            else:
+                self.ss_timeout_spinner.setDisabled(True)
+                self.ss_enable_checkbox.setChecked(False)
+
+            self.ss_box_layout.addWidget(self.ss_enable_checkbox)
+            self.ss_box_layout.addWidget(self.ss_timeout_spinner)
+            self.ss_box_layout.addWidget(self.preview_ss_button)
 
         self.exit_themes = QPushButton()
         self.exit_themes.clicked.connect(lambda: self.main_widget.setCurrentIndex(0))
@@ -357,43 +368,6 @@ class MainWindow(QMainWindow):
         self.exit_web.setIconSize(QSize(32, 32))
         self.web_layout.addWidget(self.exit_web)
 
-        if is_tool("xscreensaver"):
-            self.ss_box = QGroupBox("Screensaver")
-            self.ss_box.setObjectName("Kevinbot3_RemoteUI_Group")
-            self.ss_box_layout = QVBoxLayout()
-            self.ss_box.setLayout(self.ss_box_layout)
-            self.ss_layout.addWidget(self.ss_box)
-
-            self.xsc_config = xSc.ConfigParser("/home/$USER/.xscreensaver".replace("$USER", os.getenv("USER")))
-
-            self.preview_ss_button = QPushButton("Preview Screensaver")
-            self.preview_ss_button.clicked.connect(lambda: os.system("xscreensaver-command -activate"))
-
-            self.ss_timeout_spinner = QSpinner("Screen Timeout: ")
-            self.ss_timeout_spinner.setSuffix(" minutes")
-            self.ss_timeout_spinner.spinbox.valueChanged.connect(self.ss_timeout_changed)
-            self.ss_timeout_spinner.setValue(int(self.xsc_config.read()["timeout"].split(":")[1]))
-
-            self.ss_enable_checkbox = QCheckBox("Enable")
-            self.ss_enable_checkbox.stateChanged.connect(self.ss_enable_changed)
-            
-            if self.xsc_config.read()["mode"] == "one":
-                self.ss_timeout_spinner.setDisabled(False)
-                self.ss_enable_checkbox.setChecked(True)
-            else:
-                self.ss_timeout_spinner.setDisabled(True)
-                self.ss_enable_checkbox.setChecked(False)
-
-            self.ss_box_layout.addWidget(self.ss_enable_checkbox)
-            self.ss_box_layout.addWidget(self.ss_timeout_spinner)
-            self.ss_box_layout.addWidget(self.preview_ss_button)
-
-            self.exit_ss = QPushButton()
-            self.exit_ss.clicked.connect(lambda: self.main_widget.setCurrentIndex(0))
-            self.exit_ss.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
-            self.exit_ss.setFixedSize(QSize(36, 36))
-            self.exit_ss.setIconSize(QSize(32, 32))
-            self.ss_layout.addWidget(self.exit_ss)
 
         # Exit
         self.exit_layout = QHBoxLayout()
