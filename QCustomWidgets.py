@@ -54,3 +54,16 @@ class QSpinner(QWidget):
 
     def setSuffix(self, suffix: str):
         self.spinbox.setSuffix(suffix)
+
+class QNamedLineEdit(QWidget):
+    def __init__(self, text: str = ""):
+        super().__init__()
+
+        self.__layout = QHBoxLayout()
+        self.setLayout(self.__layout)
+
+        self.label = QLabel(text)
+        self.__layout.addWidget(self.label)
+
+        self.lineedit = QLineEdit()
+        self.__layout.addWidget(self.lineedit)

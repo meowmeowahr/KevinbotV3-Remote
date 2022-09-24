@@ -10,7 +10,7 @@ from urllib.parse import urlparse
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from QCustomWidgets import QSpinner
+from QCustomWidgets import QSpinner, QNamedLineEdit
 from SlidingStackedWidget import SlidingStackedWidget
 from json_editor import Editor
 from utils import load_theme, detect_dark, is_tool
@@ -387,6 +387,14 @@ class MainWindow(QMainWindow):
         self.remote_box.setLayout(self.remote_box_layout)
         self.remote_layout.addWidget(self.remote_box)
 
+        self.name_edit = QNamedLineEdit("Remote Nickname:")
+        self.remote_box_layout.addWidget(self.name_edit)
+        try:
+            self.name_edit.lineedit.setText(SETTINGS["name"])
+        except KeyError:
+            self.name_edit.lineedit.setText("KBOT_REMOTE")
+        self.name_edit.lineedit.textChanged.connect(self.name_change)
+
         self.exit_remote = QPushButton()
         self.exit_remote.clicked.connect(lambda: self.main_widget.setCurrentIndex(0))
         self.exit_remote.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
@@ -494,6 +502,13 @@ class MainWindow(QMainWindow):
             self.xsc_config.update({"mode": "off"})
          
         self.xsc_config.save()     
+
+    def name_change(self):
+        name = self.name_edit.lineedit.text()
+        SETTINGS["name"] = name
+
+        with open('settings.json', 'w') as file:
+            json.dump(SETTINGS, file, indent=2)
 
 
 if __name__ == "__main__":
