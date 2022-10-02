@@ -1197,20 +1197,28 @@ class RemoteUI(QMainWindow):
         self.pageFlipLeft2.clicked.connect(lambda: self.widget.slideInIdx(0))
         self.pageFlipLeft2.setShortcut(QKeySequence(Qt.Key.Key_Comma))
 
+        self.refreshCamera = QPushButton()
+        self.refreshCamera.clicked.connect(self.cameraWebView.reload)
+
         self.pageFlipRight2 = QPushButton()
         self.pageFlipRight2.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
         self.pageFlipLeft.setShortcut(QKeySequence(Qt.Key.Key_Period))
         self.pageFlipRight2.setDisabled(True)
 
         self.pageFlipLeft2.setIcon(qta.icon("fa5.arrow-alt-circle-left", color=self.fg_color))
+        self.refreshCamera.setIcon(qta.icon("fa5s.redo-alt", color=self.fg_color))
         self.pageFlipRight2.setIcon(qta.icon("fa5.arrow-alt-circle-right", color=self.fg_color))
 
         self.pageFlipLeft2.setFixedSize(36, 36)
+        self.refreshCamera.setFixedSize(36, 36)
         self.pageFlipRight2.setFixedSize(36, 36)
         self.pageFlipLeft2.setIconSize(QSize(32, 32))
+        self.refreshCamera.setIconSize(QSize(32, 32))
         self.pageFlipRight2.setIconSize(QSize(32, 32))
 
         self.pageFlipLayout2.addWidget(self.pageFlipLeft2)
+        self.pageFlipLayout2.addStretch()
+        self.pageFlipLayout2.addWidget(self.refreshCamera)
         self.pageFlipLayout2.addStretch()
         self.pageFlipLayout2.addWidget(self.pageFlipRight2)
 
