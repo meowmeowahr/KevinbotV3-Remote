@@ -205,5 +205,6 @@
     "animation_speed": 500,
     "error_animation_speed": 80,
     "theme": "qdarktheme"
-  }
+  },
+  "log_level": 20
 }

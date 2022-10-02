@@ -12,6 +12,7 @@ import platform
 from functools import partial
 from utils import load_theme
 import haptics
+import logging
 
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
@@ -27,6 +28,14 @@ if platform.system() == "Windows":
 
 SETTINGS = json.load(open("settings.json", "r"))
 APPS = json.load(open("apps.json", "r"))
+try:
+    logging.basicConfig(filename='menu.log', filemode='w', level=SETTINGS["log_level"], format=f'{__file__}:%(levelname)s - %(message)s')
+except KeyError:
+    logging.basicConfig(filename='menu.log', filemode='w', level=logging.INFO, format=f'{__file__}:%(levelname)s - %(message)s')
+    logging.warning("log level has not been set")
+    SETTINGS["log_level"] = 20
+    with open('settings.json', 'w') as file:
+            json.dump(SETTINGS, file, indent=2)
 
 haptics.init(21)
 
