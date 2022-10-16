@@ -33,7 +33,7 @@ def init(pin):
             pass
 
 
-def haptic(duration=0.15):
+def haptic(duration=0.02):
     if is_pi():
         io.output(_pin, 1)
         time.sleep(duration)
