@@ -48,9 +48,10 @@ def haptic(duration=0.02):
 
 
 class HPushButton(QPushButton):
-    def __init__(self):
+    def __init__(self, name=""):
         super(HPushButton, self).__init__()
         self.pressed.connect(self._run_haptic)
+        self.setText(name)
 
     @staticmethod
     def _run_haptic():

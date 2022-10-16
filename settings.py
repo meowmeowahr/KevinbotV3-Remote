@@ -18,6 +18,7 @@ import qtawesome as qta
 import xscreensaver_config.ConfigParser as xSc
 
 from com import is_pi
+import haptics
 
 START_FULL_SCREEN = False
 EMULATE_REAL_REMOTE = True
@@ -40,6 +41,7 @@ THEME_PAIRS = [
     ("Breeze Light", "breeze_light")
 ]
 
+haptics.init(21)
 
 def uri_validator(x):
     try:
@@ -166,35 +168,35 @@ class MainWindow(QMainWindow):
         self.main_layout = QVBoxLayout()
         self.home_widget.setLayout(self.main_layout)
 
-        self.display_button = QPushButton("Display and Theme Settings")
+        self.display_button = haptics.HPushButton("Display and Theme Settings")
         self.display_button.setStyleSheet("text-align: left;")
         self.display_button.setIcon(qta.icon("fa5s.paint-roller", color=self.fg_color))
         self.display_button.clicked.connect(lambda: self.main_widget.setCurrentIndex(2))
         self.display_button.setIconSize(QSize(48, 48))
         self.main_layout.addWidget(self.display_button)
 
-        self.robot_button = QPushButton("Robot Settings")
+        self.robot_button = haptics.HPushButton("Robot Settings")
         self.robot_button.setStyleSheet("text-align: left;")
         self.robot_button.setIcon(qta.icon("fa5s.robot", color=self.fg_color))
         self.robot_button.clicked.connect(lambda: self.main_widget.setCurrentIndex(3))
         self.robot_button.setIconSize(QSize(48, 48))
         self.main_layout.addWidget(self.robot_button)
 
-        self.remote_button = QPushButton("Remote Settings")
+        self.remote_button = haptics.HPushButton("Remote Settings")
         self.remote_button.setStyleSheet("text-align: left;")
         self.remote_button.setIcon(qta.icon("fa5s.tablet-alt", color=self.fg_color))
         self.remote_button.clicked.connect(lambda: self.main_widget.setCurrentIndex(5))
         self.remote_button.setIconSize(QSize(48, 48))
         self.main_layout.addWidget(self.remote_button)
 
-        self.web_button = QPushButton("Browser Settings")
+        self.web_button = haptics.HPushButton("Browser Settings")
         self.web_button.setStyleSheet("text-align: left;")
         self.web_button.setIcon(qta.icon("fa5s.globe", color=self.fg_color))
         self.web_button.clicked.connect(lambda: self.main_widget.setCurrentIndex(4))
         self.web_button.setIconSize(QSize(48, 48))
         self.main_layout.addWidget(self.web_button)
 
-        self.adv_button = QPushButton("Advanced Settings")
+        self.adv_button = haptics.HPushButton("Advanced Settings")
         self.adv_button.setStyleSheet("text-align: left;")
         self.adv_button.setIcon(qta.icon("fa5s.tools", color=self.fg_color))
         self.adv_button.setObjectName("Kevinbot3_RemoteUI_Button")
@@ -203,7 +205,7 @@ class MainWindow(QMainWindow):
         self.main_layout.addWidget(self.adv_button)
 
         # Screen Brightness
-        self.screen_bright_box = QGroupBox("Screen Brightness")
+        self.screen_bright_box = haptics.HPushButton("Screen Brightness")
         self.screen_bright_box.setObjectName("Kevinbot3_RemoteUI_Group")
         self.screen_bright_layout = QVBoxLayout()
         self.screen_bright_box.setLayout(self.screen_bright_layout)
