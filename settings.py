@@ -205,7 +205,7 @@ class MainWindow(QMainWindow):
         self.main_layout.addWidget(self.adv_button)
 
         # Screen Brightness
-        self.screen_bright_box = haptics.HPushButton("Screen Brightness")
+        self.screen_bright_box = QGroupBox("Screen Brightness")
         self.screen_bright_box.setObjectName("Kevinbot3_RemoteUI_Group")
         self.screen_bright_layout = QVBoxLayout()
         self.screen_bright_box.setLayout(self.screen_bright_layout)
