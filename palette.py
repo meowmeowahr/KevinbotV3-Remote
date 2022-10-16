@@ -1,6 +1,10 @@
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtCore import pyqtSignal as Signal
 
+import haptics
+
+haptics.init(21)
+
 BLACK = "#000000"
 RED = "#FF0000"
 GREEN = "#00FF00"
@@ -39,7 +43,7 @@ PALETTES = {
 }
 
 
-class _PaletteButton(QtWidgets.QPushButton):
+class _PaletteButton(haptics.HPushButton):
     def __init__(self, color):
         super().__init__()
         self.setFixedSize(QtCore.QSize(26, 26))
