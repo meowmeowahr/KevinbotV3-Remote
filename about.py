@@ -9,6 +9,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from utils import load_theme, detect_dark
 
+import haptics
+
 START_FULL_SCREEN = False
 EMULATE_REAL_REMOTE = True
 
@@ -21,6 +23,7 @@ if platform.system() == "Windows":
 
 SETTINGS = json.load(open("settings.json", "r"))
 
+haptics.init(21)
 
 class MainWindow(QMainWindow):
     # noinspection PyUnresolvedReferences,PyArgumentList
@@ -80,13 +83,13 @@ class MainWindow(QMainWindow):
         self.button_layout = QHBoxLayout()
         self.layout.addLayout(self.button_layout)
 
-        self.credits = QPushButton("Credits")
+        self.credits = haptics.HPushButton("Credits")
         self.credits.setCheckable(True)
         self.credits.setChecked(False)
         self.credits.toggled.connect(self.toggle_credits)
         self.button_layout.addWidget(self.credits)
 
-        self.close_button = QPushButton("Close")
+        self.close_button = haptics.HPushButton("Close")
         self.close_button.clicked.connect(self.close)
         self.button_layout.addWidget(self.close_button)
 
