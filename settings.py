@@ -103,7 +103,7 @@ class MainWindow(QMainWindow):
         self.adv_bottom_layout = QHBoxLayout()
         self.adv_layout.addLayout(self.adv_bottom_layout)
 
-        self.adv_exit_button = QPushButton()
+        self.adv_exit_button = haptics.HPushButton()
         self.adv_exit_button.setObjectName("Kevinbot3_RemoteUI_Button")
         self.adv_exit_button.clicked.connect(lambda: self.main_widget.slideInIdx(0))
         self.adv_exit_button.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
@@ -111,7 +111,7 @@ class MainWindow(QMainWindow):
         self.adv_exit_button.setFixedSize(QSize(36, 36))
         self.adv_bottom_layout.addWidget(self.adv_exit_button)
 
-        self.adv_save_button = QPushButton()
+        self.adv_save_button = haptics.HPushButton()
         self.adv_save_button.setObjectName("Kevinbot3_RemoteUI_Button")
         self.adv_save_button.clicked.connect(self.adv_editor.saveFile)
         self.adv_save_button.setIcon(qta.icon("fa5s.save", color=self.fg_color))
@@ -119,7 +119,7 @@ class MainWindow(QMainWindow):
         self.adv_save_button.setFixedSize(QSize(36, 36))
         self.adv_bottom_layout.addWidget(self.adv_save_button)
 
-        self.adv_expand_all_button = QPushButton()
+        self.adv_expand_all_button = haptics.HPushButton()
         self.adv_expand_all_button.setObjectName("Kevinbot3_RemoteUI_Button")
         self.adv_expand_all_button.clicked.connect(self.adv_editor.expandAll)
         self.adv_expand_all_button.setIcon(qta.icon("fa5s.caret-down", color=self.fg_color))
@@ -127,7 +127,7 @@ class MainWindow(QMainWindow):
         self.adv_expand_all_button.setFixedSize(QSize(36, 36))
         self.adv_bottom_layout.addWidget(self.adv_expand_all_button)
 
-        self.adv_collapse_all_button = QPushButton()
+        self.adv_collapse_all_button = haptics.HPushButton()
         self.adv_collapse_all_button.setObjectName("Kevinbot3_RemoteUI_Button")
         self.adv_collapse_all_button.clicked.connect(self.adv_editor.collapseAll)
         self.adv_collapse_all_button.setIcon(qta.icon("fa5s.caret-up", color=self.fg_color))
@@ -309,7 +309,7 @@ class MainWindow(QMainWindow):
             self.ss_box_layout.addWidget(self.ss_timeout_spinner)
             self.ss_box_layout.addWidget(self.preview_ss_button)
 
-        self.exit_themes = QPushButton()
+        self.exit_themes = haptics.HPushButton()
         self.exit_themes.clicked.connect(lambda: self.main_widget.setCurrentIndex(0))
         self.exit_themes.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
         self.exit_themes.setFixedSize(QSize(36, 36))
@@ -357,7 +357,7 @@ class MainWindow(QMainWindow):
         self.cam_validate.setObjectName("Kevinbot3_RemoteUI_Button")
         self.cam_layout.addWidget(self.cam_validate)
 
-        self.exit_robot = QPushButton()
+        self.exit_robot = haptics.HPushButton()
         self.exit_robot.clicked.connect(lambda: self.main_widget.setCurrentIndex(0))
         self.exit_robot.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
         self.exit_robot.setFixedSize(QSize(36, 36))
@@ -376,7 +376,7 @@ class MainWindow(QMainWindow):
         self.homepage_line.textChanged.connect(self.update_homepage)
         self.homepage_layout.addWidget(self.homepage_line)
 
-        self.exit_web = QPushButton()
+        self.exit_web = haptics.HPushButton()
         self.exit_web.clicked.connect(lambda: self.main_widget.setCurrentIndex(0))
         self.exit_web.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
         self.exit_web.setFixedSize(QSize(36, 36))
@@ -397,7 +397,7 @@ class MainWindow(QMainWindow):
             self.name_edit.lineedit.setText("KBOT_REMOTE")
         self.name_edit.lineedit.textChanged.connect(self.name_change)
 
-        self.exit_remote = QPushButton()
+        self.exit_remote = haptics.HPushButton()
         self.exit_remote.clicked.connect(lambda: self.main_widget.setCurrentIndex(0))
         self.exit_remote.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
         self.exit_remote.setFixedSize(QSize(36, 36))
@@ -407,7 +407,7 @@ class MainWindow(QMainWindow):
 
         # Exit
         self.exit_layout = QHBoxLayout()
-        self.exit_button = QPushButton()
+        self.exit_button = haptics.HPushButton()
         self.exit_button.setObjectName("Kevinbot3_RemoteUI_ShutdownButton")
         self.exit_button.setIcon(qta.icon("fa5s.window-close", color=self.fg_color))
         self.exit_button.setIconSize(QSize(32, 32))
