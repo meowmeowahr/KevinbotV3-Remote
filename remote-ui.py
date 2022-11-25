@@ -1415,10 +1415,10 @@ class RemoteUI(QMainWindow):
             self.close()
             sys.exit()
 
-    @staticmethod
-    def shutdown_robot_modal_action(modal):
-        modal()
+    def shutdown_robot_modal_action(self, modal):
+        com.txstr("no-pass.remote.status=disconnected")
         com.txshut()
+        self.close()
 
     def camera_led_action(self):
         old_dir = self.widget.getDirection()
