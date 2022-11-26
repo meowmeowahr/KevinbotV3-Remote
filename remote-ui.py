@@ -1159,8 +1159,8 @@ class RemoteUI(QMainWindow):
         self.remote_version.setObjectName("Kevinbot3_RemoteUI_SmallText")
 
         # icons
-        self.pageFlipLeft.setIcon(QIcon("icons/sensors.svg"))
-        self.pageFlipRight.setIcon(QIcon("icons/camera.svg"))
+        self.pageFlipLeft.setIcon(qta.icon("fa5s.thermometer-half", color=self.fg_color))
+        self.pageFlipRight.setIcon(qta.icon("fa5s.camera", color=self.fg_color))
 
         # batt_volt1
         self.batt_volt1 = QLabel(strings.BATT_VOLT1.format("Unknown"))
