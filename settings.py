@@ -33,6 +33,15 @@ if platform.system() == "Windows":
 SETTINGS = json.load(open("settings.json", "r"))
 APPS = json.load(open("apps.json", "r"))
 
+# load stick size settings
+if "joystick_size" in SETTINGS:
+    JOYSTICK_SIZE = SETTINGS["joystick_size"]
+else:
+    SETTINGS["joystick_size"] = 80 # save default
+    JOYSTICK_SIZE = SETTINGS["joystick_size"]
+    with open('settings.json', 'w') as file:
+        json.dump(SETTINGS, file, indent=2)
+
 THEME_PAIRS = [
     ("Kevinbot Dark (Deprecated)", "classic"),
     ("QDarkTheme Dark", "qdarktheme"),
@@ -397,6 +406,25 @@ class MainWindow(QMainWindow):
             self.name_edit.lineedit.setText("KBOT_REMOTE")
         self.name_edit.lineedit.textChanged.connect(self.name_change)
 
+        self.joy_size_layout = QHBoxLayout()
+        self.remote_box_layout.addLayout(self.joy_size_layout)
+
+        self.joy_size_label = QLabel("Joystick Size:")
+        self.joy_size_layout.addWidget(self.joy_size_label)
+
+        self.small_joy_radio = QRadioButton("Small")
+        self.small_joy_radio.clicked.connect(lambda: self.set_joy_size(60))
+        self.joy_size_layout.addWidget(self.small_joy_radio)
+
+        self.large_joy_radio = QRadioButton("Large")
+        self.large_joy_radio.clicked.connect(lambda: self.set_joy_size(80))
+        self.joy_size_layout.addWidget(self.large_joy_radio)
+
+        if SETTINGS["joystick_size"] == 60:
+            self.small_joy_radio.setChecked(True)
+        elif SETTINGS["joystick_size"] == 80:
+            self.large_joy_radio.setChecked(True)
+
         self.exit_remote = haptics.HPushButton()
         self.exit_remote.clicked.connect(lambda: self.main_widget.setCurrentIndex(0))
         self.exit_remote.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
@@ -452,6 +480,11 @@ class MainWindow(QMainWindow):
 
     def max_us_changed(self):
         SETTINGS["max_us"] = self.max_us_spinner.spinbox.value()
+        with open('settings.json', 'w') as file:
+            json.dump(SETTINGS, file, indent=2)
+
+    def set_joy_size(self, value):
+        SETTINGS["joystick_size"] = value
         with open('settings.json', 'w') as file:
             json.dump(SETTINGS, file, indent=2)
 
