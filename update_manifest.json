@@ -1,4 +1,6 @@
 {
-    "version": "1.0-b29",
-    "removed_files": ["icons/bool.png", "icons/window-close.svg", "icons/arrow-alt-circle-left.svg", "icons/arrow-alt-circle-right.svg", "QSpinner.py", "icons/camera.svg", "icons/sensors.svg"]
+    "version": "1.0-b30",
+    "removed_files": ["icons/bool.png", "icons/window-close.svg", "icons/arrow-alt-circle-left.svg", 
+                      "icons/arrow-alt-circle-right.svg", "QSpinner.py", "icons/camera.svg", 
+                      "icons/sensors.svg"]
 }
