@@ -50,6 +50,15 @@ disable_temp_modal = False
 with open("settings.json", "r") as f:
     settings = json.load(f)
 
+# load stick size settings
+if "joystick_size" in settings:
+    JOYSTICK_SIZE = settings["joystick_size"]
+else:
+    settings["joystick_size"] = 80 # save default
+    JOYSTICK_SIZE = settings["joystick_size"]
+    with open('settings.json', 'w') as file:
+        json.dump(settings, file, indent=2)
+
 # if windows
 if platform.system() == "Windows":
     import ctypes
@@ -458,7 +467,7 @@ class RemoteUI(QMainWindow):
         else:
             self.fg_color = Qt.GlobalColor.black
 
-        self.motor_stick = Joystick.Joystick(color=self.fg_color, sticky=False, max_distance=80)
+        self.motor_stick = Joystick.Joystick(color=self.fg_color, sticky=False, max_distance=JOYSTICK_SIZE)
         self.motor_stick.setObjectName("Kevinbot3_RemoteUI_Joystick")
         self.motor_stick.posChanged.connect(self.motor_action)
         self.motor_stick.centerEvent.connect(com.txstop)
@@ -508,7 +517,7 @@ class RemoteUI(QMainWindow):
 
         self.mainLayout.addStretch()
 
-        self.joystick = Joystick.Joystick(color=self.fg_color, max_distance=80)
+        self.joystick = Joystick.Joystick(color=self.fg_color, max_distance=JOYSTICK_SIZE)
         self.joystick.setObjectName("Kevinbot3_RemoteUI_Joystick")
         self.joystick.posChanged.connect(self.head_changed_action)
         self.joystick.setMinimumSize(180, 180)
