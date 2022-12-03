@@ -458,11 +458,11 @@ class RemoteUI(QMainWindow):
         else:
             self.fg_color = Qt.GlobalColor.black
 
-        self.motor_stick = Joystick.Joystick(color=self.fg_color, sticky=False)
+        self.motor_stick = Joystick.Joystick(color=self.fg_color, sticky=False, max_distance=80)
         self.motor_stick.setObjectName("Kevinbot3_RemoteUI_Joystick")
         self.motor_stick.posChanged.connect(self.motor_action)
         self.motor_stick.centerEvent.connect(com.txstop)
-        self.motor_stick.setMinimumSize(140, 140)
+        self.motor_stick.setMinimumSize(180, 180)
         self.mainLayout.addWidget(self.motor_stick)
 
         self.mainLayout.addStretch()
@@ -508,10 +508,10 @@ class RemoteUI(QMainWindow):
 
         self.mainLayout.addStretch()
 
-        self.joystick = Joystick.Joystick(color=self.fg_color)
+        self.joystick = Joystick.Joystick(color=self.fg_color, max_distance=80)
         self.joystick.setObjectName("Kevinbot3_RemoteUI_Joystick")
         self.joystick.posChanged.connect(self.head_changed_action)
-        self.joystick.setMinimumSize(140, 140)
+        self.joystick.setMinimumSize(180, 180)
         self.mainLayout.addWidget(self.joystick)
 
         # Camera Page
@@ -1623,17 +1623,17 @@ class RemoteUI(QMainWindow):
         distance = round(math.dist((0, 0), (x, y)))
 
         if direction == "N":
-            com.txmot((map_range(distance, 0, 60, 1500, settings["max_us"]),
-                       map_range(distance, 0, 60, 1500, settings["max_us"])))
+            com.txmot((map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, settings["max_us"]),
+                       map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, settings["max_us"])))
         elif direction == "S":
-            com.txmot((map_range(distance, 0, 60, 1500, 2000 - (settings["max_us"] - 1000)),
-                       map_range(distance, 0, 60, 1500, 2000 - (settings["max_us"] - 1000))))
+            com.txmot((map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, 2000 - (settings["max_us"] - 1000)),
+                       map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, 2000 - (settings["max_us"] - 1000))))
         elif direction == "W":
-            com.txmot((map_range(distance, 0, 60, 1500, 2000 - (settings["max_us"] - 1000)),
-                       map_range(distance, 0, 60, 1500, settings["max_us"])))
+            com.txmot((map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, 2000 - (settings["max_us"] - 1000)),
+                       map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, settings["max_us"])))
         elif direction == "E":
-            com.txmot((map_range(distance, 0, 60, 1500, settings["max_us"]),
-                       map_range(distance, 0, 60, 1500, 2000 - (settings["max_us"] - 1000))))
+            com.txmot((map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, settings["max_us"]),
+                       map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, 2000 - (settings["max_us"] - 1000))))
 
 
 def init_robot():
