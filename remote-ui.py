@@ -1595,8 +1595,8 @@ class RemoteUI(QMainWindow):
             json.dump(settings, file, indent=4)
 
     def head_changed_action(self):
-        com.txcv("head_x", self.joystick.getXY()[0])
-        com.txcv("head_y", self.joystick.getXY()[1])
+        com.txcv("head_x", map_range(self.joystick.getXY()[0], 0, JOYSTICK_SIZE, 0, 60))
+        com.txcv("head_y", map_range(self.joystick.getXY()[1], 0, JOYSTICK_SIZE, 0, 60))
 
     def shutdown_action(self):
         self.close()
