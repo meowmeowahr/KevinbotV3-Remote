@@ -34,7 +34,6 @@ THEME_FILE = "theme.qss"
 CURRENT_ARM_POS = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 2 5dof arms
 HIGH_MOTOR_TEMP = 50
 HIGH_INSIDE_TEMP = 45
-LOW_VOLTAGE = 10
 
 ROBOT_VERSION = "Unknown"
 ENABLED = True
@@ -56,6 +55,15 @@ if "joystick_size" in settings:
 else:
     settings["joystick_size"] = 80 # save default
     JOYSTICK_SIZE = settings["joystick_size"]
+    with open('settings.json', 'w') as file:
+        json.dump(settings, file, indent=2)
+
+# load stick size settings
+if "warning_voltage" in settings:
+    warning_voltage = settings["warning_voltage"]
+else:
+    settings["warning_voltage"] = 10 # save default
+    warning_voltage = settings["warning_voltage"]
     with open('settings.json', 'w') as file:
         json.dump(settings, file, indent=2)
 
@@ -95,13 +103,13 @@ def rx_data():
                 window.batt_volt1.setText(strings.BATT_VOLT1.format(int(data[1]) / 10))
                 window.battery1_label.setText(strings.BATT_VOLT1.format(int(data[1]) / 10))
 
-                if int(data[1]) / 10 < LOW_VOLTAGE:
+                if int(data[1]) / 10 < warning_voltage:
                     window.battery1_label.setStyleSheet("background-color: #df574d;")
                 else:
                     window.battery1_label.setStyleSheet("")
 
                 if not disable_batt_modal:
-                    if int(data[1]) / 10 < LOW_VOLTAGE:
+                    if int(data[1]) / 10 < warning_voltage:
                         com.txmot([1500, 1500])
                         window.battModalText.setText(strings.BATT_LOW)
                         window.batt_modal.show()
@@ -109,13 +117,13 @@ def rx_data():
             if window is not None:
                 window.battery2_label.setText(strings.BATT_VOLT2.format(int(data[1]) / 10))
 
-                if int(data[1]) / 10 < LOW_VOLTAGE:
+                if int(data[1]) / 10 < warning_voltage:
                     window.battery2_label.setStyleSheet("background-color: #df574d;")
                 else:
                     window.battery2_label.setStyleSheet("")
 
                 if not disable_batt_modal:
-                    if int(data[1]) / 10 < LOW_VOLTAGE:
+                    if int(data[1]) / 10 < warning_voltage:
                         com.txmot([1500, 1500])
                         window.battModalText.setText(strings.BATT_LOW)
                         window.batt_modal.show()
@@ -126,14 +134,14 @@ def rx_data():
                 window.batt_volt1.setText(strings.BATT_VOLT1.format(float(volt1) / 10))
                 window.battery1_label.setText(strings.BATT_VOLT1.format(float(volt1) / 10))
 
-                if float(volt1) / 10 < LOW_VOLTAGE:
+                if float(volt1) / 10 < warning_voltage:
                     window.battery1_label.setStyleSheet("background-color: #df574d;")
                 else:
                     window.battery1_label.setStyleSheet("")
 
                 if ENABLE_BATT2:
                     window.battery2_label.setText(strings.BATT_VOLT2.format(float(volt2) / 10))
-                    if float(volt2) / 10 < LOW_VOLTAGE:
+                    if float(volt2) / 10 < warning_voltage:
                         window.battery2_label.setStyleSheet("background-color: #df574d;")
                     else:
                         window.battery2_label.setStyleSheet("")

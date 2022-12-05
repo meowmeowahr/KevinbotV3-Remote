@@ -207,5 +207,6 @@
     "theme": "qdarktheme"
   },
   "log_level": 20,
-  "joystick_size": 80
+  "joystick_size": 80,
+  "warning_voltage": 10
 }
