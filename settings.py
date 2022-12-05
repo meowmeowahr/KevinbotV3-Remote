@@ -180,28 +180,28 @@ class MainWindow(QMainWindow):
         self.display_button = haptics.HPushButton("Display and Theme Settings")
         self.display_button.setStyleSheet("text-align: left;")
         self.display_button.setIcon(qta.icon("fa5s.paint-roller", color=self.fg_color))
-        self.display_button.clicked.connect(lambda: self.main_widget.setCurrentIndex(2))
+        self.display_button.clicked.connect(lambda: self.main_widget.slideInIdx(2))
         self.display_button.setIconSize(QSize(48, 48))
         self.main_layout.addWidget(self.display_button)
 
         self.robot_button = haptics.HPushButton("Robot Settings")
         self.robot_button.setStyleSheet("text-align: left;")
         self.robot_button.setIcon(qta.icon("fa5s.robot", color=self.fg_color))
-        self.robot_button.clicked.connect(lambda: self.main_widget.setCurrentIndex(3))
+        self.robot_button.clicked.connect(lambda: self.main_widget.slideInIdx(3))
         self.robot_button.setIconSize(QSize(48, 48))
         self.main_layout.addWidget(self.robot_button)
 
         self.remote_button = haptics.HPushButton("Remote Settings")
         self.remote_button.setStyleSheet("text-align: left;")
         self.remote_button.setIcon(qta.icon("fa5s.tablet-alt", color=self.fg_color))
-        self.remote_button.clicked.connect(lambda: self.main_widget.setCurrentIndex(5))
+        self.remote_button.clicked.connect(lambda: self.main_widget.slideInIdx(5))
         self.remote_button.setIconSize(QSize(48, 48))
         self.main_layout.addWidget(self.remote_button)
 
         self.web_button = haptics.HPushButton("Browser Settings")
         self.web_button.setStyleSheet("text-align: left;")
         self.web_button.setIcon(qta.icon("fa5s.globe", color=self.fg_color))
-        self.web_button.clicked.connect(lambda: self.main_widget.setCurrentIndex(4))
+        self.web_button.clicked.connect(lambda: self.main_widget.slideInIdx(4))
         self.web_button.setIconSize(QSize(48, 48))
         self.main_layout.addWidget(self.web_button)
 
@@ -319,7 +319,7 @@ class MainWindow(QMainWindow):
             self.ss_box_layout.addWidget(self.preview_ss_button)
 
         self.exit_themes = haptics.HPushButton()
-        self.exit_themes.clicked.connect(lambda: self.main_widget.setCurrentIndex(0))
+        self.exit_themes.clicked.connect(lambda: self.main_widget.slideInIdx(0))
         self.exit_themes.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
         self.exit_themes.setFixedSize(QSize(36, 36))
         self.exit_themes.setIconSize(QSize(32, 32))
@@ -367,7 +367,7 @@ class MainWindow(QMainWindow):
         self.cam_layout.addWidget(self.cam_validate)
 
         self.exit_robot = haptics.HPushButton()
-        self.exit_robot.clicked.connect(lambda: self.main_widget.setCurrentIndex(0))
+        self.exit_robot.clicked.connect(lambda: self.main_widget.slideInIdx(0))
         self.exit_robot.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
         self.exit_robot.setFixedSize(QSize(36, 36))
         self.exit_robot.setIconSize(QSize(32, 32))
@@ -386,7 +386,7 @@ class MainWindow(QMainWindow):
         self.homepage_layout.addWidget(self.homepage_line)
 
         self.exit_web = haptics.HPushButton()
-        self.exit_web.clicked.connect(lambda: self.main_widget.setCurrentIndex(0))
+        self.exit_web.clicked.connect(lambda: self.main_widget.slideInIdx(0))
         self.exit_web.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
         self.exit_web.setFixedSize(QSize(36, 36))
         self.exit_web.setIconSize(QSize(32, 32))
@@ -426,7 +426,7 @@ class MainWindow(QMainWindow):
             self.large_joy_radio.setChecked(True)
 
         self.exit_remote = haptics.HPushButton()
-        self.exit_remote.clicked.connect(lambda: self.main_widget.setCurrentIndex(0))
+        self.exit_remote.clicked.connect(lambda: self.main_widget.slideInIdx(0))
         self.exit_remote.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
         self.exit_remote.setFixedSize(QSize(36, 36))
         self.exit_remote.setIconSize(QSize(32, 32))
