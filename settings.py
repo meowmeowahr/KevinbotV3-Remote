@@ -47,7 +47,8 @@ THEME_PAIRS = [
     ("QDarkTheme Dark", "qdarktheme"),
     ("QDarkTheme Light", "qdarktheme_light"),
     ("Breeze Dark", "breeze_dark"),
-    ("Breeze Light", "breeze_light")
+    ("Breeze Light", "breeze_light"),
+    ("System (Debug)", "null")
 ]
 
 haptics.init(21)
