@@ -57,12 +57,14 @@ def load_theme(widget, theme="classic"):
         import qdarktheme
         widget.setStyleSheet(qdarktheme.load_stylesheet(theme="light"))
     elif theme == "breeze_dark":
+        # noinspection PyUnresolvedReferences
         import breeze_resources
         file = QFile(":/dark/stylesheet.qss")
         file.open(QFile.ReadOnly | QFile.Text)
         stream = QTextStream(file)
         widget.setStyleSheet(stream.readAll())
     elif theme == "breeze_light":
+        # noinspection PyUnresolvedReferences
         import breeze_resources
         file = QFile(":/light/stylesheet.qss")
         file.open(QFile.ReadOnly | QFile.Text)

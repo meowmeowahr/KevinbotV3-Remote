@@ -25,6 +25,7 @@ SETTINGS = json.load(open("settings.json", "r"))
 
 haptics.init(21)
 
+
 class MainWindow(QMainWindow):
     # noinspection PyUnresolvedReferences,PyArgumentList
     def __init__(self):

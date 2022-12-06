@@ -53,7 +53,7 @@ with open("settings.json", "r") as f:
 if "joystick_size" in settings:
     JOYSTICK_SIZE = settings["joystick_size"]
 else:
-    settings["joystick_size"] = 80 # save default
+    settings["joystick_size"] = 80  # save default
     JOYSTICK_SIZE = settings["joystick_size"]
     with open('settings.json', 'w') as file:
         json.dump(settings, file, indent=2)
@@ -62,7 +62,7 @@ else:
 if "warning_voltage" in settings:
     warning_voltage = settings["warning_voltage"]
 else:
-    settings["warning_voltage"] = 10 # save default
+    settings["warning_voltage"] = 10  # save default
     warning_voltage = settings["warning_voltage"]
     with open('settings.json', 'w') as file:
         json.dump(settings, file, indent=2)
@@ -185,7 +185,7 @@ def rx_data():
 
                     if float(data[1].split(",")[0]) > HIGH_MOTOR_TEMP:
                         window.left_temp.setStyleSheet("background-color: #df574d;")
-                        window.dpad.setDisabled(True)
+                        window.motor_stick.setDisabled(True)
                         if not disable_temp_modal:
                             com.txmot([1500, 1500])
                             window.motTempModalText.setText(strings.MOT_TEMP_HIGH)
@@ -195,7 +195,7 @@ def rx_data():
 
                     if float(data[1].split(",")[1]) > HIGH_MOTOR_TEMP:
                         window.right_temp.setStyleSheet("background-color: #df574d;")
-                        window.dpad.setDisabled(True)
+                        window.motor_stick.setDisabled(True)
                         if not disable_temp_modal:
                             com.txmot([1500, 1500])
                             window.motTempModalText.setText(strings.MOT_TEMP_HIGH)
@@ -1643,14 +1643,18 @@ class RemoteUI(QMainWindow):
             com.txmot((map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, settings["max_us"]),
                        map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, settings["max_us"])))
         elif direction == "S":
-            com.txmot((map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, 2000 - (settings["max_us"] - 1000)),
-                       map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, 2000 - (settings["max_us"] - 1000))))
+            com.txmot((map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, 2000 -
+                                 (settings["max_us"] - 1000)),
+                       map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, 2000 -
+                                 (settings["max_us"] - 1000))))
         elif direction == "W":
-            com.txmot((map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, 2000 - (settings["max_us"] - 1000)),
+            com.txmot((map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, 2000 -
+                                 (settings["max_us"] - 1000)),
                        map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, settings["max_us"])))
         elif direction == "E":
             com.txmot((map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, settings["max_us"]),
-                       map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, 2000 - (settings["max_us"] - 1000))))
+                       map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, 2000 -
+                                 (settings["max_us"] - 1000))))
 
 
 def init_robot():

@@ -341,6 +341,7 @@ class MainWindow(QMainWindow):
         # noinspection PyAttributeOutsideInit
         self.upd_worker = Worker()
         self.upd_worker.moveToThread(self.upd_thread)
+        # noinspection PyUnresolvedReferences
         self.upd_thread.started.connect(self.upd_worker.run)
         self.upd_worker.finished.connect(self.upd_thread.quit)
         self.upd_worker.finished.connect(self.upd_worker.deleteLater)

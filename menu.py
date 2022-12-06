@@ -29,13 +29,16 @@ if platform.system() == "Windows":
 SETTINGS = json.load(open("settings.json", "r"))
 APPS = json.load(open("apps.json", "r"))
 try:
-    logging.basicConfig(filename='menu.log', filemode='w', level=SETTINGS["log_level"], format=f'{__file__}:%(levelname)s - %(message)s')
+    logging.basicConfig(filename='menu.log', filemode='w', level=SETTINGS["log_level"], format=f'{__file__}:%('
+                                                                                               f'levelname)s - %('
+                                                                                               f'message)s')
 except KeyError:
-    logging.basicConfig(filename='menu.log', filemode='w', level=logging.INFO, format=f'{__file__}:%(levelname)s - %(message)s')
+    logging.basicConfig(filename='menu.log', filemode='w', level=logging.INFO, format=f'{__file__}:%(levelname)s - %('
+                                                                                      f'message)s')
     logging.warning("log level has not been set")
     SETTINGS["log_level"] = 20
     with open('settings.json', 'w') as file:
-            json.dump(SETTINGS, file, indent=2)
+        json.dump(SETTINGS, file, indent=2)
 
 haptics.init(21)
 

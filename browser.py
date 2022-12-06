@@ -120,9 +120,11 @@ class MainWindow(QMainWindow):
 
         # More difficult! We only want to update the url when it's from the
         # correct tab
+        # noinspection PyUnresolvedReferences
         browser.urlChanged.connect(lambda qurl, browser=browser:
                                    self.update_urlbar(qurl, browser))
 
+        # noinspection PyUnresolvedReferences
         browser.loadFinished.connect(lambda _, i=i, browser=browser:
                                      self.tabs.setTabText(i, browser.page().title()))
 

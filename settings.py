@@ -37,7 +37,7 @@ APPS = json.load(open("apps.json", "r"))
 if "joystick_size" in SETTINGS:
     JOYSTICK_SIZE = SETTINGS["joystick_size"]
 else:
-    SETTINGS["joystick_size"] = 80 # save default
+    SETTINGS["joystick_size"] = 80  # save default
     JOYSTICK_SIZE = SETTINGS["joystick_size"]
     with open('settings.json', 'w') as file:
         json.dump(SETTINGS, file, indent=2)
@@ -52,6 +52,7 @@ THEME_PAIRS = [
 ]
 
 haptics.init(21)
+
 
 def uri_validator(x):
     try:
@@ -433,7 +434,6 @@ class MainWindow(QMainWindow):
         self.exit_remote.setIconSize(QSize(32, 32))
         self.remote_layout.addWidget(self.exit_remote)
 
-
         # Exit
         self.exit_layout = QHBoxLayout()
         self.exit_button = haptics.HPushButton()
@@ -484,7 +484,8 @@ class MainWindow(QMainWindow):
         with open('settings.json', 'w') as file:
             json.dump(SETTINGS, file, indent=2)
 
-    def set_joy_size(self, value):
+    @staticmethod
+    def set_joy_size(value):
         SETTINGS["joystick_size"] = value
         with open('settings.json', 'w') as file:
             json.dump(SETTINGS, file, indent=2)

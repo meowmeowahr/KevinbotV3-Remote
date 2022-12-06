@@ -55,6 +55,7 @@ class QSpinner(QWidget):
     def setSuffix(self, suffix: str):
         self.spinbox.setSuffix(suffix)
 
+
 class QNamedLineEdit(QWidget):
     def __init__(self, text: str = ""):
         super().__init__()
