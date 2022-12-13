@@ -1167,7 +1167,7 @@ class RemoteUI(QMainWindow):
 
         self.shutdown = QPushButton()
         self.shutdown.setObjectName("Kevinbot3_RemoteUI_ShutdownButton")
-        self.shutdown.setIcon(qta.icon("fa5.window-close", color=self.fg_color))
+        self.shutdown.setIcon(qta.icon("fa5s.window-close", color=self.fg_color))
         self.shutdown.setIconSize(QSize(32, 32))
         self.shutdown.clicked.connect(self.shutdown_action)
         self.shutdown.setFixedSize(QSize(36, 36))
