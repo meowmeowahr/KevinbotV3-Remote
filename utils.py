@@ -52,10 +52,10 @@ def load_theme(widget, theme="classic"):
             widget.setStyleSheet(file.read())
     elif theme == "qdarktheme":
         import qdarktheme
-        widget.setStyleSheet(qdarktheme.load_stylesheet())
+        widget.setStyleSheet(qdarktheme.setup_theme())
     elif theme == "qdarktheme_light":
         import qdarktheme
-        widget.setStyleSheet(qdarktheme.load_stylesheet(theme="light"))
+        widget.setStyleSheet(qdarktheme.setup_theme(theme="light"))
     elif theme == "breeze_dark":
         # noinspection PyUnresolvedReferences
         import breeze_resources
