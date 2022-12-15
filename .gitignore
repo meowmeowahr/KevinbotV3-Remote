@@ -15,3 +15,6 @@ qdarktheme/themes/dark/__pycache__/*
 qdarktheme/themes/__pycache__/*
 qdarktheme/themes/light/__pycache__/*
 menu.log
+qdarktheme/_icon/__pycache__/*
+qdarktheme/_resources/__pycache__/*
+qdarktheme/_template/__pycache__/*
