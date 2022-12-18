@@ -7,3 +7,4 @@ RPi.GPIO
 Qt.py
 QtAwesome
 xscreensaver-config
+darkdetect
