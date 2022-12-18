@@ -111,9 +111,6 @@ class Worker(QObject):
                                                                                             .replace("$USER",
                                                                                                      os.getenv("USER")),
                                                                                             file))
-                elif file == "version.txt":
-                    # version = open(os.path.join("/tmp/Kevinbot3_Temp", file), "r").read()
-                    pass
 
                 elif file == "requirements.txt":
                     requirements = os.path.join("/tmp/Kevinbot3_Temp", file)
