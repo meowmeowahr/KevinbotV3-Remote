@@ -11,6 +11,7 @@ import threading
 import strings
 import sys
 import com
+from queue import Queue
 
 __version__ = "v1.0.0"
 __author__ = "Kevin Ahr"
@@ -18,6 +19,7 @@ __author__ = "Kevin Ahr"
 START_FULL_SCREEN = False
 EMULATE_REAL_REMOTE = True
 
+command_queue = Queue()
 
 class Window(QWidget):
     # noinspection PyArgumentList
@@ -86,6 +88,10 @@ class Window(QWidget):
         self.shutdown.setFixedSize(QSize(36, 36))
         self.bottom_layout.addWidget(self.shutdown)
 
+        self.update_timer = QTimer()
+        self.update_timer.timeout.connect(self.add_to_textbox)
+        self.update_timer.start(10)
+
         self.serial_th = threading.Thread(target=self.target, daemon=True)
         self.serial_th.start()
 
@@ -99,10 +105,11 @@ class Window(QWidget):
             self.show()
 
     def display(self, s):
-        try:
-            self.textbox.append(s)
-        except NameError:
-            pass
+        command_queue.put(s)
+
+    def add_to_textbox(self):
+        if not command_queue.empty():
+            self.textbox.append(command_queue.get())
 
     def ser_in(self, s):  # Write incoming serial data to screen
         self.display(s)
