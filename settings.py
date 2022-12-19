@@ -42,6 +42,12 @@ else:
     with open('settings.json', 'w') as file:
         json.dump(SETTINGS, file, indent=2)
 
+# load runner theme flat setting
+if not "theme_flat" in APPS:
+    APPS["theme_flat"] = False  # save default
+    with open('apps.json', 'w') as file:
+        json.dump(APPS, file, indent=2)
+
 THEME_PAIRS = [
     ("Kevinbot Dark (Deprecated)", "classic"),
     ("QDarkTheme Dark", "qdarktheme"),
@@ -239,7 +245,7 @@ class MainWindow(QMainWindow):
 
         self.theme_box = QGroupBox("Runner Theme")
         self.theme_box.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.theme_layout = QVBoxLayout()
+        self.theme_layout = QHBoxLayout()
         self.theme_box.setLayout(self.theme_layout)
         self.display_layout.addWidget(self.theme_box)
 
@@ -249,6 +255,12 @@ class MainWindow(QMainWindow):
         self.theme_picker.currentIndexChanged.connect(self.change_theme)
         self.theme_picker.setFixedHeight(36)
         self.theme_layout.addWidget(self.theme_picker)
+
+        self.runner_theme_flat = QCheckBox("Flat")
+        self.runner_theme_flat.setFixedWidth(self.runner_theme_flat.sizeHint().width())
+        self.runner_theme_flat.setChecked(APPS["theme_flat"])
+        self.runner_theme_flat.clicked.connect(self.runner_theme_flat_changed)
+        self.theme_layout.addWidget(self.runner_theme_flat)
 
         self.app_theme_box = QGroupBox("App Theme")
         self.app_theme_box.setObjectName("Kevinbot3_RemoteUI_Group")
@@ -547,6 +559,10 @@ class MainWindow(QMainWindow):
         with open('settings.json', 'w') as file:
             json.dump(SETTINGS, file, indent=2)
 
+    def runner_theme_flat_changed(self):
+        APPS["theme_flat"] = self.runner_theme_flat.isChecked()
+        with open('apps.json', 'w') as file:
+            json.dump(APPS, file, indent=2)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

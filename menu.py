@@ -42,6 +42,11 @@ except KeyError:
 
 haptics.init(21)
 
+# load runner theme flat setting
+if not "theme_flat" in APPS:
+    APPS["theme_flat"] = False  # save default
+    with open('apps.json', 'w') as file:
+        json.dump(APPS, file, indent=2)
 
 class Handler(FileSystemEventHandler):
     @staticmethod
@@ -115,9 +120,9 @@ class MainWindow(QMainWindow):
                     widget_effect[i].setColor(QColor().fromRgb(hex2rgb(is_color[0][1:])[0],
                                                                hex2rgb(is_color[0][1:])[1],
                                                                hex2rgb(is_color[0][1:])[2]))
-
-        for e in widget_effect:
-            self.main_widget.setGraphicsEffect(e)
+        if not APPS["theme_flat"]:
+            for e in widget_effect:
+                self.main_widget.setGraphicsEffect(e)
 
         layout = QVBoxLayout()
         self.main_widget.setLayout(layout)
@@ -190,11 +195,15 @@ class MainWindow(QMainWindow):
                         widget_effect[i].setColor(QColor().fromRgb(hex2rgb(is_color[0][1:])[0],
                                                                 hex2rgb(is_color[0][1:])[1],
                                                                 hex2rgb(is_color[0][1:])[2]))
-
-            for e in widget_effect:
-                self.main_widget.setGraphicsEffect(e)
+            if not APPS["theme_flat"]:
+                for e in widget_effect:
+                    self.main_widget.setGraphicsEffect(e)
         else:
             self.main_widget.setGraphicsEffect(None)
+
+        if APPS["theme_flat"]:
+                for e in widget_effect:
+                    self.main_widget.setGraphicsEffect(None)
 
     def shutdown(self):
         # confirm shutdown

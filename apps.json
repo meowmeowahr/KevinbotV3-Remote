@@ -2,6 +2,7 @@
   "theme": "geoblue.qss",
   "theme_effect": "shadow:b15:c5b5555",
   "theme_name": "Geometric Blue",
+  "theme_flat": true,
   "themes": [
     "Classic Dark",
     "Blue",
