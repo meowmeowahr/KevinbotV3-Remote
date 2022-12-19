@@ -21,6 +21,7 @@ EMULATE_REAL_REMOTE = True
 
 command_queue = Queue()
 
+
 class Window(QWidget):
     # noinspection PyArgumentList
     def __init__(self, *args):

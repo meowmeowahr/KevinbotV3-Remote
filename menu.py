@@ -23,6 +23,7 @@ EMULATE_REAL_REMOTE = True
 # windows support
 if platform.system() == "Windows":
     import ctypes
+
     appid = 'kevinbot.kevinbot.runner._'  # arbitrary string
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(appid)
 
@@ -47,6 +48,7 @@ if not "theme_flat" in APPS:
     APPS["theme_flat"] = False  # save default
     with open('apps.json', 'w') as file:
         json.dump(APPS, file, indent=2)
+
 
 class Handler(FileSystemEventHandler):
     @staticmethod
@@ -78,12 +80,11 @@ def extract_digits(string):
 
 
 def hex2rgb(h):
-    t = tuple(int(h[i:i+2], 16) for i in (0, 2, 4))
+    t = tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
     return t[0], t[1], t[2]
 
 
 class MainWindow(QMainWindow):
-
     updateTheme = pyqtSignal()
 
     # noinspection PyUnresolvedReferences
@@ -145,7 +146,7 @@ class MainWindow(QMainWindow):
             else:
                 button.setIcon(QIcon().fromTheme(link["icon"].replace("*", "")))
             button.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
-            
+
             self.grid.addWidget(button, link["row"], link["col"])
 
         layout.addStretch()
@@ -193,8 +194,8 @@ class MainWindow(QMainWindow):
 
                     if is_color[0].startswith('c'):
                         widget_effect[i].setColor(QColor().fromRgb(hex2rgb(is_color[0][1:])[0],
-                                                                hex2rgb(is_color[0][1:])[1],
-                                                                hex2rgb(is_color[0][1:])[2]))
+                                                                   hex2rgb(is_color[0][1:])[1],
+                                                                   hex2rgb(is_color[0][1:])[2]))
             if not APPS["theme_flat"]:
                 for e in widget_effect:
                     self.main_widget.setGraphicsEffect(e)
@@ -218,7 +219,7 @@ class MainWindow(QMainWindow):
         # if yes, shutdown
         if ret == QMessageBox.Yes:
             os.system(SETTINGS["shutdown_command"])
-        
+
     def reboot(self):
         # confirm reboot
         msg = QMessageBox(self)

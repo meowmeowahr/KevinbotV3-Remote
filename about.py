@@ -4,8 +4,11 @@ import json
 import platform
 import sys
 
+# noinspection PyPackageRequirements
 from PyQt5.QtCore import *
+# noinspection PyPackageRequirements
 from PyQt5.QtGui import *
+# noinspection PyPackageRequirements
 from PyQt5.QtWidgets import *
 from utils import load_theme, detect_dark
 

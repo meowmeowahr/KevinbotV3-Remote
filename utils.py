@@ -2,6 +2,7 @@ import re
 import math
 import statistics
 from shutil import which
+# noinspection PyPackageRequirements
 from PyQt5.QtCore import QFile, QTextStream
 
 
