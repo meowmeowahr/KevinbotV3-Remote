@@ -202,8 +202,7 @@ class MainWindow(QMainWindow):
             self.main_widget.setGraphicsEffect(None)
 
         if APPS["theme_flat"]:
-                for e in widget_effect:
-                    self.main_widget.setGraphicsEffect(None)
+            self.main_widget.setGraphicsEffect(None)
 
     def shutdown(self):
         # confirm shutdown
