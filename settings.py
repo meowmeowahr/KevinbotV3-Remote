@@ -434,6 +434,10 @@ class MainWindow(QMainWindow):
         self.large_joy_radio.clicked.connect(lambda: self.set_joy_size(80))
         self.joy_size_layout.addWidget(self.large_joy_radio)
 
+        self.xlarge_joy_radio = QRadioButton("X-Large")
+        self.xlarge_joy_radio.clicked.connect(lambda: self.set_joy_size(86))
+        self.joy_size_layout.addWidget(self.xlarge_joy_radio)
+
         if SETTINGS["joystick_size"] == 60:
             self.small_joy_radio.setChecked(True)
         elif SETTINGS["joystick_size"] == 80:
