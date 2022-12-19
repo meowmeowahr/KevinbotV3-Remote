@@ -13,11 +13,10 @@ from PyQt5.QtWidgets import *
 from QCustomWidgets import QSpinner, QNamedLineEdit
 from SlidingStackedWidget import SlidingStackedWidget
 from json_editor import Editor
-from utils import load_theme, detect_dark, is_tool
+from utils import load_theme, detect_dark, is_tool, is_pi
 import qtawesome as qta
 import xscreensaver_config.ConfigParser as xSc
 
-from com import is_pi
 import haptics
 import strings
 

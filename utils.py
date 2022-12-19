@@ -92,3 +92,12 @@ def is_tool(name):
     """Check whether `name` is on PATH and marked as executable."""
 
     return which(name) is not None
+
+def is_pi():
+    try:
+        if "Raspberry" in open("/sys/firmware/devicetree/base/model", "r").readline():
+            return True
+        else:
+            return False
+    except IOError:
+        return False

@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QPushButton, QToolButton
-from com import is_pi
+from utils import is_pi
 import time
 import threading
 
