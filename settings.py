@@ -19,6 +19,7 @@ import xscreensaver_config.ConfigParser as xSc
 
 from com import is_pi
 import haptics
+import strings
 
 START_FULL_SCREEN = False
 EMULATE_REAL_REMOTE = True
@@ -107,7 +108,7 @@ class MainWindow(QMainWindow):
         self.home_widget = QWidget()
         self.main_widget.addWidget(self.home_widget)
 
-        self.adv_widget = QGroupBox("Advanced Settings")
+        self.adv_widget = QGroupBox(strings.SETTINGS_ADV_G)
         self.adv_widget.setObjectName("Kevinbot3_RemoteUI_Group")
         self.main_widget.addWidget(self.adv_widget)
 
@@ -152,7 +153,7 @@ class MainWindow(QMainWindow):
         self.adv_collapse_all_button.setFixedSize(QSize(36, 36))
         self.adv_bottom_layout.addWidget(self.adv_collapse_all_button)
 
-        self.warning = QLabel("WARNING: Changing some of these settings may damage your remote or robot.")
+        self.warning = QLabel(strings.SETTINGS_ADV_WARNING)
         self.warning.setObjectName("Kevinbot3_RemoteUI_Warning")
         self.warning.setFixedHeight(36)
         self.warning.setAlignment(Qt.AlignCenter)
@@ -185,35 +186,35 @@ class MainWindow(QMainWindow):
         self.main_layout = QVBoxLayout()
         self.home_widget.setLayout(self.main_layout)
 
-        self.display_button = haptics.HPushButton("Display and Theme Settings")
+        self.display_button = haptics.HPushButton(strings.SETTINGS_DISPLAY_OPT)
         self.display_button.setStyleSheet("text-align: left;")
         self.display_button.setIcon(qta.icon("fa5s.paint-roller", color=self.fg_color))
         self.display_button.clicked.connect(lambda: self.main_widget.slideInIdx(2))
         self.display_button.setIconSize(QSize(48, 48))
         self.main_layout.addWidget(self.display_button)
 
-        self.robot_button = haptics.HPushButton("Robot Settings")
+        self.robot_button = haptics.HPushButton(strings.SETTINGS_ROBOT_OPT)
         self.robot_button.setStyleSheet("text-align: left;")
         self.robot_button.setIcon(qta.icon("fa5s.robot", color=self.fg_color))
         self.robot_button.clicked.connect(lambda: self.main_widget.slideInIdx(3))
         self.robot_button.setIconSize(QSize(48, 48))
         self.main_layout.addWidget(self.robot_button)
 
-        self.remote_button = haptics.HPushButton("Remote Settings")
+        self.remote_button = haptics.HPushButton(strings.SETTINGS_REMOTE_OPT)
         self.remote_button.setStyleSheet("text-align: left;")
         self.remote_button.setIcon(qta.icon("fa5s.tablet-alt", color=self.fg_color))
         self.remote_button.clicked.connect(lambda: self.main_widget.slideInIdx(5))
         self.remote_button.setIconSize(QSize(48, 48))
         self.main_layout.addWidget(self.remote_button)
 
-        self.web_button = haptics.HPushButton("Browser Settings")
+        self.web_button = haptics.HPushButton(strings.SETTINGS_BROWSER_OPT)
         self.web_button.setStyleSheet("text-align: left;")
         self.web_button.setIcon(qta.icon("fa5s.globe", color=self.fg_color))
         self.web_button.clicked.connect(lambda: self.main_widget.slideInIdx(4))
         self.web_button.setIconSize(QSize(48, 48))
         self.main_layout.addWidget(self.web_button)
 
-        self.adv_button = haptics.HPushButton("Advanced Settings")
+        self.adv_button = haptics.HPushButton(strings.SETTINGS_ADVANCED_OPT)
         self.adv_button.setStyleSheet("text-align: left;")
         self.adv_button.setIcon(qta.icon("fa5s.tools", color=self.fg_color))
         self.adv_button.setObjectName("Kevinbot3_RemoteUI_Button")
@@ -222,7 +223,7 @@ class MainWindow(QMainWindow):
         self.main_layout.addWidget(self.adv_button)
 
         # Screen Brightness
-        self.screen_bright_box = QGroupBox("Screen Brightness")
+        self.screen_bright_box = QGroupBox(strings.SETTINGS_SCREEN_BR_G)
         self.screen_bright_box.setObjectName("Kevinbot3_RemoteUI_Group")
         self.screen_bright_layout = QVBoxLayout()
         self.screen_bright_box.setLayout(self.screen_bright_layout)
@@ -243,7 +244,7 @@ class MainWindow(QMainWindow):
 
         self.display_layout.addWidget(self.screen_bright_box)
 
-        self.theme_box = QGroupBox("Runner Theme")
+        self.theme_box = QGroupBox(strings.SETTINGS_RUN_THEME_G)
         self.theme_box.setObjectName("Kevinbot3_RemoteUI_Group")
         self.theme_layout = QHBoxLayout()
         self.theme_box.setLayout(self.theme_layout)
@@ -256,13 +257,13 @@ class MainWindow(QMainWindow):
         self.theme_picker.setFixedHeight(36)
         self.theme_layout.addWidget(self.theme_picker)
 
-        self.runner_theme_flat = QCheckBox("Flat")
+        self.runner_theme_flat = QCheckBox(strings.SETTINGS_TICK_FLAT)
         self.runner_theme_flat.setFixedWidth(self.runner_theme_flat.sizeHint().width())
         self.runner_theme_flat.setChecked(APPS["theme_flat"])
         self.runner_theme_flat.clicked.connect(self.runner_theme_flat_changed)
         self.theme_layout.addWidget(self.runner_theme_flat)
 
-        self.app_theme_box = QGroupBox("App Theme")
+        self.app_theme_box = QGroupBox(strings.SETTINGS_APP_THEME_G)
         self.app_theme_box.setObjectName("Kevinbot3_RemoteUI_Group")
         self.app_theme_layout = QVBoxLayout()
         self.app_theme_box.setLayout(self.app_theme_layout)
@@ -287,7 +288,7 @@ class MainWindow(QMainWindow):
                 self.app_theme_picker.setCurrentText(pair[0])
         self.app_theme_picker.blockSignals(False)
 
-        self.animation_box = QGroupBox("Animation Speed")
+        self.animation_box = QGroupBox(strings.SETTINGS_ANIM_SPD_G)
         self.animation_box.setObjectName("Kevinbot3_RemoteUI_Group")
         self.animation_layout = QVBoxLayout()
         self.animation_box.setLayout(self.animation_layout)
@@ -302,7 +303,7 @@ class MainWindow(QMainWindow):
         self.animation_layout.addWidget(self.animation_spinner)
 
         if is_tool("xscreensaver"):
-            self.ss_box = QGroupBox("Screensaver")
+            self.ss_box = QGroupBox(strings.SETTINGS_XSC_G)
             self.ss_box.setObjectName("Kevinbot3_RemoteUI_Group")
             self.ss_box_layout = QVBoxLayout()
             self.ss_box.setLayout(self.ss_box_layout)
@@ -310,15 +311,15 @@ class MainWindow(QMainWindow):
 
             self.xsc_config = xSc.ConfigParser("/home/$USER/.xscreensaver".replace("$USER", os.getenv("USER")))
 
-            self.preview_ss_button = QPushButton("Preview Screensaver")
+            self.preview_ss_button = QPushButton(strings.SETTINGS_XSC_PREVIEW_B)
             self.preview_ss_button.clicked.connect(lambda: os.system("xscreensaver-command -activate"))
 
-            self.ss_timeout_spinner = QSpinner("Screen Timeout: ")
-            self.ss_timeout_spinner.setSuffix(" minutes")
+            self.ss_timeout_spinner = QSpinner(strings.SETTINGS_XSC_TIME_S)
+            self.ss_timeout_spinner.setSuffix(strings.SETTINGS_XSC_TIME_SUF)
             self.ss_timeout_spinner.spinbox.valueChanged.connect(self.ss_timeout_changed)
             self.ss_timeout_spinner.setValue(int(self.xsc_config.read()["timeout"].split(":")[1]))
 
-            self.ss_enable_checkbox = QCheckBox("Enable")
+            self.ss_enable_checkbox = QCheckBox(strings.SETTINGS_TICK_ENABLE)
             self.ss_enable_checkbox.stateChanged.connect(self.ss_enable_changed)
             
             if self.xsc_config.read()["mode"] == "one":
@@ -339,13 +340,13 @@ class MainWindow(QMainWindow):
         self.exit_themes.setIconSize(QSize(32, 32))
         self.display_layout.addWidget(self.exit_themes)
 
-        self.speed_box = QGroupBox("Robot Speed")
+        self.speed_box = QGroupBox(strings.SETTINGS_SPEED_G)
         self.speed_box.setObjectName("Kevinbot3_RemoteUI_Group")
         self.speed_layout = QHBoxLayout()
         self.speed_box.setLayout(self.speed_layout)
         self.robot_layout.addWidget(self.speed_box)
 
-        self.max_us_label = QLabel("Max µS:")
+        self.max_us_label = QLabel(strings.SETTINGS_MAX_US_L)
         self.max_us_label.setObjectName("Kevinbot3_RemoteUI_Label")
         self.speed_layout.addWidget(self.max_us_label)
 
@@ -359,7 +360,7 @@ class MainWindow(QMainWindow):
 
         # Camera URL
 
-        self.cam_url = QGroupBox("Camera URL")
+        self.cam_url = QGroupBox(strings.SETTINGS_CAM_URL_G)
         self.cam_url.setObjectName("Kevinbot3_RemoteUI_Group")
         self.cam_layout = QHBoxLayout()
         self.cam_url.setLayout(self.cam_layout)
@@ -373,7 +374,7 @@ class MainWindow(QMainWindow):
         self.cam_url_input.setStyleSheet("font-size: 14px;")
         self.cam_layout.addWidget(self.cam_url_input)
 
-        self.cam_validate = QPushButton("Validate URL")
+        self.cam_validate = QPushButton(strings.SETTINGS_VALIDATE_URL_B)
         self.cam_validate.setFixedHeight(32)
         self.cam_validate.setFixedWidth(self.cam_validate.sizeHint().width() + 10)
         self.cam_validate.clicked.connect(self.validate_url)
@@ -387,7 +388,7 @@ class MainWindow(QMainWindow):
         self.exit_robot.setIconSize(QSize(32, 32))
         self.robot_layout.addWidget(self.exit_robot)
 
-        self.homepage_box = QGroupBox("Homepage")
+        self.homepage_box = QGroupBox(strings.SETTINGS_HOMEPAGE_G)
         self.homepage_box.setObjectName("Kevinbot3_RemoteUI_Group")
         self.homepage_layout = QVBoxLayout()
         self.homepage_box.setLayout(self.homepage_layout)
@@ -406,13 +407,13 @@ class MainWindow(QMainWindow):
         self.exit_web.setIconSize(QSize(32, 32))
         self.web_layout.addWidget(self.exit_web)
 
-        self.remote_box = QGroupBox("Remote")
+        self.remote_box = QGroupBox(strings.SETTINGS_REMOTE_G)
         self.remote_box.setObjectName("Kevinbot3_RemoteUI_Group")
         self.remote_box_layout = QVBoxLayout()
         self.remote_box.setLayout(self.remote_box_layout)
         self.remote_layout.addWidget(self.remote_box)
 
-        self.name_edit = QNamedLineEdit("Remote Nickname:")
+        self.name_edit = QNamedLineEdit(strings.SETTINGS_NICKNAME_L)
         self.remote_box_layout.addWidget(self.name_edit)
         try:
             self.name_edit.lineedit.setText(SETTINGS["name"])
@@ -423,18 +424,18 @@ class MainWindow(QMainWindow):
         self.joy_size_layout = QHBoxLayout()
         self.remote_box_layout.addLayout(self.joy_size_layout)
 
-        self.joy_size_label = QLabel("Joystick Size:")
+        self.joy_size_label = QLabel(strings.SETTINGS_STICK_SIZE_L)
         self.joy_size_layout.addWidget(self.joy_size_label)
 
-        self.small_joy_radio = QRadioButton("Small")
+        self.small_joy_radio = QRadioButton(strings.SETTINGS_RAD_SMALL)
         self.small_joy_radio.clicked.connect(lambda: self.set_joy_size(60))
         self.joy_size_layout.addWidget(self.small_joy_radio)
 
-        self.large_joy_radio = QRadioButton("Large")
+        self.large_joy_radio = QRadioButton(strings.SETTINGS_RAD_LARGE)
         self.large_joy_radio.clicked.connect(lambda: self.set_joy_size(80))
         self.joy_size_layout.addWidget(self.large_joy_radio)
 
-        self.xlarge_joy_radio = QRadioButton("X-Large")
+        self.xlarge_joy_radio = QRadioButton(strings.SETTINGS_RAD_XLARGE)
         self.xlarge_joy_radio.clicked.connect(lambda: self.set_joy_size(86))
         self.joy_size_layout.addWidget(self.xlarge_joy_radio)
 
@@ -480,14 +481,14 @@ class MainWindow(QMainWindow):
         if uri_validator(self.cam_url_input.text()):
             message = QMessageBox(self)
             message.setIcon(QMessageBox.Information)
-            message.setText("URL is Valid")
-            message.setWindowTitle("URL Validation")
+            message.setText(strings.SETTINGS_MSG_VALID_URL)
+            message.setWindowTitle(settings.SETTINGS_WIN_URL_VALIDATOR)
             message.exec_()
         else:
             message = QMessageBox(self)
             message.setIcon(QMessageBox.Warning)
-            message.setText("URL is Invalid")
-            message.setWindowTitle("URL Validation")
+            message.setText(strings.SETTINGS_MSG_INVAL_URL)
+            message.setWindowTitle(strings.SETTINGS_WIN_URL_VALIDATOR)
             message.exec_()
 
     def save_url(self):
