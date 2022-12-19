@@ -115,7 +115,6 @@ class MainWindow(QMainWindow):
                     widget_effect[i].setColor(QColor().fromRgb(hex2rgb(is_color[0][1:])[0],
                                                                hex2rgb(is_color[0][1:])[1],
                                                                hex2rgb(is_color[0][1:])[2]))
-                    print(effect_type[1][1:].strip("'"))
 
         for e in widget_effect:
             self.main_widget.setGraphicsEffect(e)
@@ -174,6 +173,28 @@ class MainWindow(QMainWindow):
         # load theme
         with open(APPS["theme"], "r") as file:
             self.setStyleSheet(file.read())
+
+        effects = APPS["theme_effect"].strip().split()
+        if not effects == ['none']:
+            widget_effect = []
+            for i in range(len(effects)):
+                effect_type = effects[i].split(":")
+                if effect_type[0] == "shadow":
+                    widget_effect.append(QGraphicsDropShadowEffect())
+                    is_blur = [i for i in effect_type if i.startswith('b')]
+                    is_color = [i for i in effect_type if i.startswith('c')]
+                    if is_blur[0].startswith('b'):
+                        widget_effect[i].setBlurRadius(extract_digits(effect_type[1])[0])
+
+                    if is_color[0].startswith('c'):
+                        widget_effect[i].setColor(QColor().fromRgb(hex2rgb(is_color[0][1:])[0],
+                                                                hex2rgb(is_color[0][1:])[1],
+                                                                hex2rgb(is_color[0][1:])[2]))
+
+            for e in widget_effect:
+                self.main_widget.setGraphicsEffect(e)
+        else:
+            self.main_widget.setGraphicsEffect(None)
 
     def shutdown(self):
         # confirm shutdown
