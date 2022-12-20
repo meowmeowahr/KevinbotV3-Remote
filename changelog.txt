@@ -1,3 +1,5 @@
+PRE-GIT CHANGELOG
+
 Kevinbot_7-3-22 (07/03/2022)
 
     A test of the new Software Updater and Runner (very buggy)
@@ -153,3 +155,6 @@ Kevinbot_7-3-22 (07/03/2022)
 
     Settings editor no longer uses QScintilla
     
+1.0-b21 +
+
+    Changes are now tracked with Git
