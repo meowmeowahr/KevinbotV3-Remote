@@ -481,7 +481,7 @@ class MainWindow(QMainWindow):
             message = QMessageBox(self)
             message.setIcon(QMessageBox.Information)
             message.setText(strings.SETTINGS_MSG_VALID_URL)
-            message.setWindowTitle(settings.SETTINGS_WIN_URL_VALIDATOR)
+            message.setWindowTitle(strings.SETTINGS_WIN_URL_VALIDATOR)
             message.exec_()
         else:
             message = QMessageBox(self)
