@@ -3,6 +3,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+import qtawesome as qta
 import sys
 import os
 import re
@@ -10,7 +11,7 @@ import json
 import time
 import platform
 from functools import partial
-from utils import load_theme
+from utils import load_theme, detect_dark
 import haptics
 import logging
 
@@ -29,6 +30,16 @@ if platform.system() == "Windows":
 
 SETTINGS = json.load(open("settings.json", "r"))
 APPS = json.load(open("apps.json", "r"))
+
+# load dev mode settings
+if "dev_mode" in SETTINGS:
+    DEV_MODE = SETTINGS["dev_mode"]
+else:
+    SETTINGS["dev_mode"] = False  # save default
+    DEV_MODE = SETTINGS["dev_mode"]
+    with open('settings.json', 'w') as file:
+        json.dump(SETTINGS, file, indent=2)
+
 try:
     logging.basicConfig(filename='menu.log', filemode='w', level=SETTINGS["log_level"], format=f'{__file__}:%('
                                                                                                f'levelname)s - %('
@@ -93,13 +104,24 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Kevinbot Runner")
         self.setObjectName("Kevinbot3_RemoteUI")
 
+        self.ensurePolished()
+        if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],
+                        QColor(self.palette().color(QPalette.Window)).getRgb()[1],
+                        QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
+            self.fg_color = Qt.GlobalColor.white
+        else:
+            self.fg_color = Qt.GlobalColor.black
+
         if EMULATE_REAL_REMOTE:
             self.setWindowFlags(Qt.FramelessWindowHint)
             self.setFixedSize(QSize(800, 480))
 
+        self.root_widget = QStackedWidget()
+        self.setCentralWidget(self.root_widget)
+
         self.main_widget = QGroupBox("Kevinbot Runner | {}".format(time.strftime("%I:%M %p")))
         self.main_widget.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.setCentralWidget(self.main_widget)
+        self.root_widget.addWidget(self.main_widget)
 
         self.load_theme()
 
@@ -158,12 +180,51 @@ class MainWindow(QMainWindow):
         shutdown.setMinimumHeight(48)
         layout.addWidget(shutdown)
 
-        reboot = QPushButton("Reboot")
-        reboot.clicked.connect(self.reboot)
-        reboot.setObjectName("Kevinbot3_RemoteUI_Button")
-        reboot.setStyleSheet("font-size: 20px;")
-        reboot.setMinimumHeight(48)
-        layout.addWidget(reboot)
+
+        if not DEV_MODE:
+            reboot = QPushButton("Reboot")
+            reboot.clicked.connect(self.reboot)
+            reboot.setObjectName("Kevinbot3_RemoteUI_Button")
+            reboot.setStyleSheet("font-size: 20px;")
+            reboot.setMinimumHeight(48)
+            layout.addWidget(reboot)
+        else:
+            self.reboot_layout = QHBoxLayout()
+            layout.addLayout(self.reboot_layout)
+
+            reboot = QPushButton("Reboot")
+            reboot.clicked.connect(self.reboot)
+            reboot.setObjectName("Kevinbot3_RemoteUI_Button")
+            reboot.setStyleSheet("font-size: 20px;")
+            reboot.setMinimumHeight(48)
+            self.reboot_layout.addWidget(reboot)
+
+            self.dev_button = QPushButton("Dev Options")
+            self.dev_button.clicked.connect(self.open_dev)
+            self.dev_button.setObjectName("Kevinbot3_RemoteUI_Button")
+            self.dev_button.setStyleSheet("font-size: 20px;")
+            self.dev_button.setMinimumHeight(48)
+            self.reboot_layout.addWidget(self.dev_button)
+
+            self.dev_widget = QWidget()
+            self.root_widget.addWidget(self.dev_widget)
+
+            self.dev_root_layout = QHBoxLayout()
+            self.dev_widget.setLayout(self.dev_root_layout)
+
+            self.exit_dev = haptics.HPushButton()
+            self.exit_dev.clicked.connect(lambda: self.root_widget.setCurrentIndex(0))
+            self.exit_dev.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
+            self.exit_dev.setFixedSize(QSize(36, 36))
+            self.exit_dev.setIconSize(QSize(32, 32))
+            self.dev_root_layout.addWidget(self.exit_dev)
+
+            self.dev_layout = QVBoxLayout()
+            self.dev_root_layout.addLayout(self.dev_layout)
+
+            self.dev_close = haptics.HPushButton("Close Kevinbot Runner")
+            self.dev_close.clicked.connect(self.close)
+            self.dev_layout.addWidget(self.dev_close)
 
         # timer to update time
         self.timer = QTimer()
@@ -234,6 +295,9 @@ class MainWindow(QMainWindow):
         # if yes, reboot
         if ret == QMessageBox.Yes:
             os.system(SETTINGS["reboot_command"])
+
+    def open_dev(self):
+        self.root_widget.setCurrentIndex(1)
 
     def update_time(self):
         self.main_widget.setTitle("Kevinbot Runner | {}".format(time.strftime("%I:%M %p")))
