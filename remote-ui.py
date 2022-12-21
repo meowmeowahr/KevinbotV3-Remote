@@ -694,7 +694,7 @@ class RemoteUI(QMainWindow):
                     effect_button = QPushButton(capitalize(settings["body_effects"][i]))
                     effect_button.setObjectName("Kevinbot3_RemoteUI_BodyEffectButtonEgg")
                     effect_button.clicked.connect(partial(self.body_effect_action, i))
-                    self.bodyEffectsLayout.addWidget(effect_button, i // 2, i % 2)
+                    self.bodyEffectsLayout.addWidget(effect_button, (i // 2) + 1, i % 2)
 
         self.bodyBrightPlus = QPushButton("Bright+")
         self.bodyBrightPlus.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
@@ -777,7 +777,7 @@ class RemoteUI(QMainWindow):
                     effect_button = QPushButton(capitalize(settings["base_effects"][i]))
                     effect_button.setObjectName("Kevinbot3_RemoteUI_BodyEffectButtonEgg")
                     effect_button.clicked.connect(partial(self.base_effect_action, i))
-                    self.baseEffectsLayout.addWidget(effect_button, i // 2, i % 2)
+                    self.baseEffectsLayout.addWidget(effect_button, (i // 2) + 1, i % 2)
 
         self.baseBrightPlus = QPushButton("Bright+")
         self.baseBrightPlus.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
