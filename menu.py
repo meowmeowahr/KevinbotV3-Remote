@@ -226,6 +226,17 @@ class MainWindow(QMainWindow):
             self.dev_close.clicked.connect(self.close)
             self.dev_layout.addWidget(self.dev_close)
 
+            try:
+                with open("version.txt") as f:
+                    version = f.read()
+            except FileNotFoundError:
+                version = "Unknown"
+
+            self.dev_version = QLabel(f"RemoteVersion: {version}")
+            self.dev_layout.addWidget(self.dev_version)
+
+            self.dev_layout.addStretch()
+
         # timer to update time
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_time)
