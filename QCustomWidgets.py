@@ -24,18 +24,19 @@ class QSpinner(QWidget):
 
         self.spinbox = QSpinBox()
         self.spinbox.setButtonSymbols(QAbstractSpinBox.ButtonSymbols.NoButtons)
+        self.spinbox.setFixedHeight(32)
         self.__layout.addWidget(self.spinbox)
 
         self.add_button = QPushButton()
-        self.add_button.setFixedSize(QSize(32, 28))
-        self.add_button.setIconSize(QSize(32, 28))
+        self.add_button.setFixedSize(QSize(32, 32))
+        self.add_button.setIconSize(QSize(32, 32))
         self.add_button.setIcon(QIcon("icons/add.svg"))
         self.add_button.clicked.connect(self.spinbox.stepUp)
         self.__layout.addWidget(self.add_button)
 
         self.remove_button = QPushButton()
-        self.remove_button.setFixedSize(QSize(32, 28))
-        self.remove_button.setIconSize(QSize(32, 28))
+        self.remove_button.setFixedSize(QSize(32, 32))
+        self.remove_button.setIconSize(QSize(32, 32))
         self.remove_button.setIcon(QIcon("icons/subtract.svg"))
         self.remove_button.clicked.connect(self.spinbox.stepDown)
         self.__layout.addWidget(self.remove_button)
