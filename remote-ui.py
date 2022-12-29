@@ -1029,22 +1029,40 @@ class RemoteUI(QMainWindow):
         self.eyeConfigSizeLayout.addWidget(self.eyeConfigSizeSlider)
 
         # eye move speed group box
-        self.eyeConfigSpeed = QGroupBox(strings.EYE_CONFIG_SP_G)
-        self.eyeConfigSpeed.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.eyeConfigGroupLayout.addWidget(self.eyeConfigSpeed, 2, 0, 1, 2)
+        self.eyeConfigBright = QGroupBox(strings.EYE_CONFIG_SP_G)
+        self.eyeConfigBright.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.eyeConfigGroupLayout.addWidget(self.eyeConfigBright, 2, 0)
         self.eyeConfigSpeedLayout = QHBoxLayout()
-        self.eyeConfigSpeed.setLayout(self.eyeConfigSpeedLayout)
+        self.eyeConfigBright.setLayout(self.eyeConfigSpeedLayout)
 
         # eye speed slider
-        self.eyeConfigSpeedSlider = QSlider(Qt.Horizontal)
-        self.eyeConfigSpeedSlider.setObjectName("Kevinbot3_RemoteUI_EyeConfigSlider")
-        self.eyeConfigSpeedSlider.setMinimum(1)
-        self.eyeConfigSpeedSlider.setMaximum(16)
-        self.eyeConfigSpeedSlider.setValue(5)
-        self.eyeConfigSpeedSlider.setTickPosition(QSlider.NoTicks)
-        self.eyeConfigSpeedSlider.setTickInterval(1)
-        self.eyeConfigSpeedSlider.valueChanged.connect(self.eye_config_speed_slider_value_changed)
-        self.eyeConfigSpeedLayout.addWidget(self.eyeConfigSpeedSlider)
+        self.eyeConfigBrightSlider = QSlider(Qt.Horizontal)
+        self.eyeConfigBrightSlider.setObjectName("Kevinbot3_RemoteUI_EyeConfigSlider")
+        self.eyeConfigBrightSlider.setMinimum(1)
+        self.eyeConfigBrightSlider.setMaximum(16)
+        self.eyeConfigBrightSlider.setValue(5)
+        self.eyeConfigBrightSlider.setTickPosition(QSlider.NoTicks)
+        self.eyeConfigBrightSlider.setTickInterval(1)
+        self.eyeConfigBrightSlider.valueChanged.connect(self.eye_config_speed_slider_value_changed)
+        self.eyeConfigSpeedLayout.addWidget(self.eyeConfigBrightSlider)
+
+        # eye brightness group box
+        self.eyeConfigBright = QGroupBox(strings.EYE_CONFIG_BR_G)
+        self.eyeConfigBright.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.eyeConfigGroupLayout.addWidget(self.eyeConfigBright, 2, 1)
+        self.eyeConfigSpeedLayout = QHBoxLayout()
+        self.eyeConfigBright.setLayout(self.eyeConfigSpeedLayout)
+
+        # eye brightness slider
+        self.eyeConfigBrightSlider = QSlider(Qt.Horizontal)
+        self.eyeConfigBrightSlider.setObjectName("Kevinbot3_RemoteUI_EyeConfigSlider")
+        self.eyeConfigBrightSlider.setMinimum(1)
+        self.eyeConfigBrightSlider.setMaximum(255)
+        self.eyeConfigBrightSlider.setValue(255)
+        self.eyeConfigBrightSlider.setTickPosition(QSlider.NoTicks)
+        self.eyeConfigBrightSlider.setTickInterval(1)
+        self.eyeConfigBrightSlider.valueChanged.connect(self.eye_config_bright_slider_value_changed)
+        self.eyeConfigSpeedLayout.addWidget(self.eyeConfigBrightSlider)
 
         # Sensors
         self.sensorsBack = QPushButton()
@@ -1628,6 +1646,10 @@ class RemoteUI(QMainWindow):
     @staticmethod
     def eye_config_speed_slider_value_changed(value):
         com.txcv("eye_speed", value)
+
+    @staticmethod
+    def eye_config_bright_slider_value_changed(value):
+        com.txcv("eye_brightness", value)
 
     def motor_action(self):
         x, y = self.motor_stick.getXY()

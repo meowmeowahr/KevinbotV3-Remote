@@ -63,6 +63,7 @@ EYE_CONFIG_P_G = "Eye Pupil"
 EYE_CONFIG_I_G = "Eye Iris"
 EYE_CONFIG_S_G = "Eye Size"
 EYE_CONFIG_SP_G = "Eye Speed"
+EYE_CONFIG_BR_G = "Eye Backlight"
 
 SAVE = "Save"
 SAVE_SUCESS = "Saved Successfully"
