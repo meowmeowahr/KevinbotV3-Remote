@@ -100,7 +100,7 @@ def rx_data():
         # older battery data format
         if data[0] == "batt_volt1":
             if window is not None:
-                window.batt_volt1.setText(strings.BATT_VOLT1.format(int(data[1]) / 10))
+                window.batt_volt1.setText(strings.BATT_VOLT1.format(int(data[1]) / 10) + "V")
                 window.battery1_label.setText(strings.BATT_VOLT1.format(int(data[1]) / 10))
 
                 if int(data[1]) / 10 < warning_voltage:
@@ -115,6 +115,7 @@ def rx_data():
                         window.batt_modal.show()
         elif data[0] == "batt_volt2" and ENABLE_BATT2:
             if window is not None:
+                window.batt_volt2.setText(strings.BATT_VOLT2.format(float(volt2) / 10) + "V")
                 window.battery2_label.setText(strings.BATT_VOLT2.format(int(data[1]) / 10))
 
                 if int(data[1]) / 10 < warning_voltage:
@@ -131,7 +132,7 @@ def rx_data():
         elif data[0] == "batt_volts":
             if window is not None:
                 volt1, volt2 = data[1].split(",")
-                window.batt_volt1.setText(strings.BATT_VOLT1.format(float(volt1) / 10))
+                window.batt_volt1.setText(strings.BATT_VOLT1.format(float(volt1) / 10) + "V")
                 window.battery1_label.setText(strings.BATT_VOLT1.format(float(volt1) / 10))
 
                 if float(volt1) / 10 < warning_voltage:
@@ -140,6 +141,7 @@ def rx_data():
                     window.battery1_label.setStyleSheet("")
 
                 if ENABLE_BATT2:
+                    window.batt_volt2.setText(strings.BATT_VOLT2.format(float(volt2) / 10) + "V")
                     window.battery2_label.setText(strings.BATT_VOLT2.format(float(volt2) / 10))
                     if float(volt2) / 10 < warning_voltage:
                         window.battery2_label.setStyleSheet("background-color: #df574d;")
@@ -1085,7 +1087,7 @@ class RemoteUI(QMainWindow):
         self.sensorBoxLayout.addLayout(self.bmeLayout)
 
         # Battery 1
-        self.battery1_label = QLabel(strings.BATT_VOLT1[:-1].format("Not Installed / Unknown"))
+        self.battery1_label = QLabel(strings.BATT_VOLT1.format("Not Installed / Unknown"))
         self.battery1_label.setFrameShape(QFrame.Shape.Box)
         self.battery1_label.setObjectName("Kevinbot3_RemoteUI_SensorData")
         self.battery1_label.setFixedHeight(32)
@@ -1093,7 +1095,7 @@ class RemoteUI(QMainWindow):
         self.battLayout.addWidget(self.battery1_label)
 
         # Battery 2
-        self.battery2_label = QLabel(strings.BATT_VOLT2[:-1].format("Not Installed / Unknown"))
+        self.battery2_label = QLabel(strings.BATT_VOLT2.format("Not Installed / Unknown"))
         self.battery2_label.setFrameShape(QFrame.Shape.Box)
         self.battery2_label.setObjectName("Kevinbot3_RemoteUI_SensorData")
         self.battery2_label.setFixedHeight(32)
@@ -1190,9 +1192,6 @@ class RemoteUI(QMainWindow):
         self.shutdown.clicked.connect(self.shutdown_action)
         self.shutdown.setFixedSize(QSize(36, 36))
 
-        self.remote_version = QLabel(strings.REMOTE_VERSION + __version__)
-        self.remote_version.setObjectName("Kevinbot3_RemoteUI_SmallText")
-
         # icons
         self.pageFlipLeft.setIcon(qta.icon("fa5s.thermometer-half", color=self.fg_color))
         self.pageFlipRight.setIcon(qta.icon("fa5s.camera", color=self.fg_color))
@@ -1200,6 +1199,10 @@ class RemoteUI(QMainWindow):
         # batt_volt1
         self.batt_volt1 = QLabel(strings.BATT_VOLT1.format("Unknown"))
         self.batt_volt1.setObjectName("Kevinbot3_RemoteUI_VoltageText")
+
+        # batt_volt2
+        self.batt_volt2 = QLabel(strings.BATT_VOLT2.format("Unknown"))
+        self.batt_volt2.setObjectName("Kevinbot3_RemoteUI_VoltageText")
 
         # width/height
         self.pageFlipLeft.setFixedSize(36, 36)
@@ -1219,7 +1222,7 @@ class RemoteUI(QMainWindow):
         self.pageFlipLayout1.addStretch()
         self.pageFlipLayout1.addWidget(self.shutdown)
         self.pageFlipLayout1.addStretch()
-        self.pageFlipLayout1.addWidget(self.remote_version)
+        self.pageFlipLayout1.addWidget(self.batt_volt2)
         self.pageFlipLayout1.addStretch()
         self.pageFlipLayout1.addWidget(self.pageFlipRight)
 
@@ -1711,10 +1714,10 @@ if __name__ == '__main__':
         app.setApplicationVersion(__version__)
         window = RemoteUI()
         ex = app.exec()
-    except Exception as e:
-        com.txcv("no-pass.remote.status", "error")
-        com.txcv("no-pass.remote.error", e)
-        error = True
+    #except Exception as e:
+    #    com.txcv("no-pass.remote.status", "error")
+    #    com.txcv("no-pass.remote.error", e)
+    #    error = True
     finally:
         if not error:
             com.txcv("no-pass.remote.status", "disconnected")

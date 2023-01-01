@@ -73,8 +73,8 @@ SHUTDOWN_TITLE = "Shutdown"
 
 ROBOT_VERSION = "Robot Version: "
 REMOTE_VERSION = "Remote Version: "
-BATT_VOLT1 = "Battery #1 Voltage: {}V"
-BATT_VOLT2 = "Battery #2 Voltage: {}V"
+BATT_VOLT1 = "Battery #1 Voltage: {}"
+BATT_VOLT2 = "Battery #2 Voltage: {}"
 BATT_LOW = "One or More Batteries are Low"
 
 ##-- Remote UI Volt Waring --##
