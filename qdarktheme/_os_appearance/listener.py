@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import darkdetect
 
+from qdarktheme import _os_appearance
 from qdarktheme.qtpy.QtCore import QCoreApplication, QEvent, QObject, QThread, Signal
 
 
@@ -16,6 +17,7 @@ class OSThemeSwitchListener(QThread):
         super().__init__()
         self.setProperty("is_running", True)
         self._theme = darkdetect.theme()
+        self._accent = _os_appearance.accent()
         self.sig_run.connect(lambda state: self.setProperty("is_running", state))
         self._sig_listen_os_theme.connect(callable)
 
@@ -31,9 +33,11 @@ class OSThemeSwitchListener(QThread):
             and q_object == QCoreApplication.instance()
             and event.type() == QEvent.Type.ApplicationPaletteChange
         ):
+            accent = _os_appearance.accent()
             theme = darkdetect.theme()
-            if self._theme != theme:
+            if self._theme != theme or self._accent != accent:
                 self._theme = theme
+                self._accent = accent
                 self._sig_listen_os_theme.emit()
                 return True
         return super().eventFilter(q_object, event)
