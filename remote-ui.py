@@ -173,6 +173,7 @@ def rx_data():
                         com.txmot([1500, 1500])
                         window.battModalText.setText(strings.BATT_LOW)
                         window.batt_modal.show()
+        # bme280 sensor
         elif data[0] == "bme":
             if window is not None:
                 try:
@@ -184,6 +185,7 @@ def rx_data():
                 except RuntimeError:
                     # user quit out  of program
                     pass
+        # motor, body temps
         elif data[0] == "temps":
             if window is not None:
                 try:
@@ -241,6 +243,17 @@ def rx_data():
                 else:
                     window.level.label.setStyleSheet("")
                     window.level.setLineColor(Qt.white)
+        # remote disable
+        elif data[0] == "remote.disableui":
+            if str(data[1]).lower() == "true":
+                window.armGroup.setDisabled(True)
+                window.ledGroup.setDisabled(True)
+                window.mainGroup.setDisabled(True)
+                
+            else:
+                window.armGroup.setDisabled(False)
+                window.ledGroup.setDisabled(False)
+                window.mainGroup.setDisabled(False)
 
         if not ENABLED:
             break
