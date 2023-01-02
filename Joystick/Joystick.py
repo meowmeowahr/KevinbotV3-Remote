@@ -75,7 +75,7 @@ class Joystick(QWidget):
         if self.grabCenter:
             self.movingOffset = self._boundJoystick(event.pos())
             self.update()
-        self.xyChanged()
+            self.xyChanged()
 
     def getXY(self):
         return self.joystickDirection()
