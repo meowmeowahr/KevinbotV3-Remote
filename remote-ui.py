@@ -1716,8 +1716,10 @@ class RemoteUI(QMainWindow):
             left = magnitude * (math.sin(theta) + math.cos(theta) / turn_damping)
             right = magnitude * (math.sin(theta) - math.cos(theta) / turn_damping)
 
-            left = map_range_limit(left, -1, 1, 1000, 2000)
-            right = map_range_limit(right, -1, 1, 1000, 2000)
+            us_change = abs(1000 - settings["max_us"])
+
+            left = map_range_limit(left, -1, 1, 1000 + us_change, 2000 - us_change)
+            right = map_range_limit(right, -1, 1, 1000 + us_change, 2000 - us_change)
 
             com.txmot((int(right), int(left)))
 
