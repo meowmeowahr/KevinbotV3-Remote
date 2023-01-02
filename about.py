@@ -77,6 +77,7 @@ class MainWindow(QMainWindow):
         self.layout.addWidget(self.version)
 
         self.credits_box = QTextEdit()
+        self.credits_box.setReadOnly(True)
         self.credits_box.setText("<p>Kevinbot and Kevinbot Software created by Kevin Ahr <br>"
                                  "PyQtDarkTheme created by Yunosuke Ohsugi <br>"
                                  "BreezeStyleSheets created by Alexander Huszagh </p>")
