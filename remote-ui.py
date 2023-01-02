@@ -1677,8 +1677,6 @@ class RemoteUI(QMainWindow):
 
             direction = direction_lookup(x, 0, y, 0)[0]
 
-            #print(x, y)
-            #print(direction)
             distance = round(math.dist((0, 0), (x, y)))
 
             if direction == "N":
@@ -1704,19 +1702,8 @@ class RemoteUI(QMainWindow):
             x, y = self.motor_stick.getXY()
             x, y = x / self.motor_stick.getMaxDistance(), y / self.motor_stick.getMaxDistance()
 
-            #print(f'x:{x}, y:{y}')
-
-            # method 1
-
-            left = x * math.sqrt(2.0)/2.0 + y * math.sqrt(2.0)/2.0
-            right = -x * math.sqrt(2.0)/2.0 + y * math.sqrt(2.0)/2.0
-            #print(f'left: {left}, right: {right}')
-
-            # method 2
-
             theta = math.atan2(y, x)
             r = math.sqrt(x * x + y * y)
-            #print(f'theta: {theta}, r: {r}')
 
             if abs(x) > abs(y):
                 max_r = abs(r / x)
@@ -1724,7 +1711,6 @@ class RemoteUI(QMainWindow):
                 max_r = abs(r / y)
 
             magnitude = r / max_r
-            #print(f'magnitude: {magnitude}')
 
             turn_damping = 3.0
             left = magnitude * (math.sin(theta) + math.cos(theta) / turn_damping)
@@ -1732,7 +1718,6 @@ class RemoteUI(QMainWindow):
 
             left = map_range_limit(left, -1, 1, 1000, 2000)
             right = map_range_limit(right, -1, 1, 1000, 2000)
-            #print(f'left: {left}, right: {right}')
 
             com.txmot((int(right), int(left)))
 
