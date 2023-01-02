@@ -1,5 +1,5 @@
 {
-    "version": "1.0-b33",
+    "version": "1.0-b34",
     "removed_files": ["icons/bool.png", "icons/window-close.svg", "icons/arrow-alt-circle-left.svg", 
                       "icons/arrow-alt-circle-right.svg", "QSpinner.py", "icons/camera.svg", 
                       "icons/sensors.svg"]
