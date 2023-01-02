@@ -42,6 +42,22 @@ else:
     with open('settings.json', 'w') as file:
         json.dump(SETTINGS, file, indent=2)
 
+# load stick mode settings
+if "joystick_type" in SETTINGS:
+    if SETTINGS["joystick_type"] == "digital":
+        ANALOG_STICK = False
+    else:
+        ANALOG_STICK = True
+
+else:
+    SETTINGS["joystick_type"] = "analog"  # save default
+    if SETTINGS["joystick_type"] == "digital":
+        ANALOG_STICK = False
+    else:
+        ANALOG_STICK = True
+    with open('settings.json', 'w') as file:
+        json.dump(SETTINGS, file, indent=2)
+
 # load runner theme flat setting
 if not "theme_flat" in APPS:
     APPS["theme_flat"] = False  # save default
@@ -443,6 +459,33 @@ class MainWindow(QMainWindow):
         elif SETTINGS["joystick_size"] == 80:
             self.large_joy_radio.setChecked(True)
 
+        self.line = QFrame()
+        self.line.setFrameShape(QFrame.Shape.HLine)
+        self.remote_box_layout.addWidget(self.line)
+
+        self.joy_mode_group = QButtonGroup()
+
+        self.joy_mode_layout = QHBoxLayout()
+        self.remote_box_layout.addLayout(self.joy_mode_layout)
+
+        self.joy_mode_label = QLabel(strings.SETTINGS_STICK_MODE_L)
+        self.joy_mode_layout.addWidget(self.joy_mode_label)
+
+        self.analog_joy_radio = QRadioButton(strings.SETTINGS_RAD_ANALOG)
+        self.analog_joy_radio.clicked.connect(lambda: self.set_joy_mode("analog"))
+        self.joy_mode_group.addButton(self.analog_joy_radio)
+        self.joy_mode_layout.addWidget(self.analog_joy_radio)
+
+        self.digital_joy_radio = QRadioButton(strings.SETTINGS_RAD_DIGITAL)
+        self.digital_joy_radio.clicked.connect(lambda: self.set_joy_mode("digital"))
+        self.joy_mode_group.addButton(self.digital_joy_radio)
+        self.joy_mode_layout.addWidget(self.digital_joy_radio)
+
+        if SETTINGS["joystick_type"] == "analog":
+            self.analog_joy_radio.setChecked(True)
+        elif SETTINGS["joystick_type"] == "digital":
+            self.digital_joy_radio.setChecked(True)
+
         self.exit_remote = haptics.HPushButton()
         self.exit_remote.clicked.connect(lambda: self.main_widget.slideInIdx(0))
         self.exit_remote.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
@@ -503,6 +546,12 @@ class MainWindow(QMainWindow):
     @staticmethod
     def set_joy_size(value):
         SETTINGS["joystick_size"] = value
+        with open('settings.json', 'w') as file:
+            json.dump(SETTINGS, file, indent=2)
+
+    @staticmethod
+    def set_joy_mode(value):
+        SETTINGS["joystick_type"] = value
         with open('settings.json', 'w') as file:
             json.dump(SETTINGS, file, indent=2)
 
