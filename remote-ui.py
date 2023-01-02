@@ -35,6 +35,8 @@ CURRENT_ARM_POS = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 2 5dof arms
 HIGH_MOTOR_TEMP = 50
 HIGH_INSIDE_TEMP = 45
 
+ANALOG_STICK = True
+
 ROBOT_VERSION = "Unknown"
 ENABLED = True
 
@@ -1655,31 +1657,70 @@ class RemoteUI(QMainWindow):
         com.txcv("eye_brightness", value)
 
     def motor_action(self):
-        x, y = self.motor_stick.getXY()
-        y = -y
+        if not ANALOG_STICK:
+            x, y = self.motor_stick.getXY()
+            y = -y
 
-        direction = direction_lookup(x, 0, y, 0)[0]
+            direction = direction_lookup(x, 0, y, 0)[0]
 
-        print(x, y)
-        print(direction)
-        distance = round(math.dist((0, 0), (x, y)))
+            #print(x, y)
+            #print(direction)
+            distance = round(math.dist((0, 0), (x, y)))
 
-        if direction == "N":
-            com.txmot((map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, settings["max_us"]),
-                       map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, settings["max_us"])))
-        elif direction == "S":
-            com.txmot((map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, 2000 -
-                                 (settings["max_us"] - 1000)),
-                       map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, 2000 -
-                                 (settings["max_us"] - 1000))))
-        elif direction == "W":
-            com.txmot((map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, 2000 -
-                                 (settings["max_us"] - 1000)),
-                       map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, settings["max_us"])))
-        elif direction == "E":
-            com.txmot((map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, settings["max_us"]),
-                       map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, 2000 -
-                                 (settings["max_us"] - 1000))))
+            if direction == "N":
+                com.txmot((map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, settings["max_us"]),
+                        map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, settings["max_us"])))
+            elif direction == "S":
+                com.txmot((map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, 2000 -
+                                    (settings["max_us"] - 1000)),
+                        map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, 2000 -
+                                    (settings["max_us"] - 1000))))
+            elif direction == "W":
+                com.txmot((map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, 2000 -
+                                    (settings["max_us"] - 1000)),
+                        map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, settings["max_us"])))
+            elif direction == "E":
+                com.txmot((map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, settings["max_us"]),
+                        map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, 2000 -
+                                    (settings["max_us"] - 1000))))
+        elif ANALOG_STICK:
+            # EXPERIMENTAL ANALOG CONTROL
+
+            # get values
+            x, y = self.motor_stick.getXY()
+            x, y = x / self.motor_stick.getMaxDistance(), y / self.motor_stick.getMaxDistance()
+
+            #print(f'x:{x}, y:{y}')
+
+            # method 1
+
+            left = x * math.sqrt(2.0)/2.0 + y * math.sqrt(2.0)/2.0
+            right = -x * math.sqrt(2.0)/2.0 + y * math.sqrt(2.0)/2.0
+            #print(f'left: {left}, right: {right}')
+
+            # method 2
+
+            theta = math.atan2(y, x)
+            r = math.sqrt(x * x + y * y)
+            #print(f'theta: {theta}, r: {r}')
+
+            if abs(x) > abs(y):
+                max_r = abs(r / x)
+            else:
+                max_r = abs(r / y)
+
+            magnitude = r / max_r
+            #print(f'magnitude: {magnitude}')
+
+            turn_damping = 3.0
+            left = magnitude * (math.sin(theta) + math.cos(theta) / turn_damping)
+            right = magnitude * (math.sin(theta) - math.cos(theta) / turn_damping)
+
+            left = map_range_limit(left, -1, 1, 1000, 2000)
+            right = map_range_limit(right, -1, 1, 1000, 2000)
+            #print(f'left: {left}, right: {right}')
+
+            com.txmot((int(right), int(left)))
 
 
 def init_robot():
