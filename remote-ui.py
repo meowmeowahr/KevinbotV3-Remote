@@ -35,8 +35,6 @@ CURRENT_ARM_POS = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 2 5dof arms
 HIGH_MOTOR_TEMP = 50
 HIGH_INSIDE_TEMP = 45
 
-ANALOG_STICK = True
-
 ROBOT_VERSION = "Unknown"
 ENABLED = True
 
@@ -60,7 +58,23 @@ else:
     with open('settings.json', 'w') as file:
         json.dump(settings, file, indent=2)
 
-# load stick size settings
+# load stick mode settings
+if "joystick_type" in settings:
+    if settings["joystick_type"] == "digital":
+        ANALOG_STICK = False
+    else:
+        ANALOG_STICK = True
+
+else:
+    settings["joystick_type"] = "analog"  # save default
+    if settings["joystick_type"] == "digital":
+        ANALOG_STICK = False
+    else:
+        ANALOG_STICK = True
+    with open('settings.json', 'w') as file:
+        json.dump(settings, file, indent=2)
+
+# load voltage warning settings
 if "warning_voltage" in settings:
     warning_voltage = settings["warning_voltage"]
 else:

@@ -193,6 +193,7 @@
     "color2"
   ],
   "homepage": "https://www.google.com/",
+  "joystick_type": "analog",
   "joystick_size": 80,
   "log_level": 20,
   "max_us": 1200,
