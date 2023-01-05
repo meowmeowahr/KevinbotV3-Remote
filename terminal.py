@@ -1,23 +1,31 @@
 #!/usr/bin/python
 
-from xbee.backend.base import TimeoutException as XBee_Timeout
+# Import Qt
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-from settings import SETTINGS
-from utils import load_theme, detect_dark
 import qtawesome as qta
+import sys
+
+# Import xbee stuff
+from xbee.backend.base import TimeoutException as XBee_Timeout
+import com
+
+# Import Misc
+from utils import load_theme, detect_dark
+from queue import Queue
 import threading
 import strings
-import sys
-import com
-from queue import Queue
+import json
+
 
 __version__ = "v1.0.0"
 __author__ = "Kevin Ahr"
 
 START_FULL_SCREEN = False
 EMULATE_REAL_REMOTE = True
+
+settings = json.load(open("settings.json", "r"))
 
 command_queue = Queue()
 
@@ -27,7 +35,7 @@ class Window(QWidget):
     def __init__(self, *args):
         QWidget.__init__(self, *args)
 
-        load_theme(self, SETTINGS["window_properties"]["theme"])
+        load_theme(self, settings["window_properties"]["theme"])
 
         self.ensurePolished()
         if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],

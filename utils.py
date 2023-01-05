@@ -93,6 +93,7 @@ def is_tool(name):
 
     return which(name) is not None
 
+
 def is_pi():
     try:
         if "Raspberry" in open("/sys/firmware/devicetree/base/model", "r").readline():

@@ -1316,7 +1316,7 @@ class RemoteUI(QMainWindow):
         self.modalIcon.setObjectName("Kevinbot3_RemoteUI_ModalIcon")
         self.modalLayout.addWidget(self.modalIcon, 0, 0, 1, 2)
 
-        self.modalText = QLabel(strings.SAVE_SUCESS)
+        self.modalText = QLabel(strings.SAVE_SUCCESS)
         self.modalText.setObjectName("Kevinbot3_RemoteUI_ModalText")
         self.modalText.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.modalText.setWordWrap(True)

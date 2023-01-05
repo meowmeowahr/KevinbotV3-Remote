@@ -35,7 +35,7 @@ def init(callback=None):
         try:
             # noinspection PyUnresolvedReferences
             import sys
-            # noinspection PyUnresolvedReferences
+            # noinspection PyUnresolvedReferences,PyPackageRequirements
             from PyQt5.QtWidgets import QApplication, QMessageBox
             _ = QApplication(sys.argv)
             mess = QMessageBox()

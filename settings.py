@@ -30,39 +30,39 @@ if platform.system() == "Windows":
     app_id = 'kevinbot.kevinbot.runner._'  # arbitrary string
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(app_id)
 
-SETTINGS = json.load(open("settings.json", "r"))
-APPS = json.load(open("apps.json", "r"))
+settings = json.load(open("settings.json", "r"))
+app_settings = json.load(open("apps.json", "r"))
 
 # load stick size settings
-if "joystick_size" in SETTINGS:
-    JOYSTICK_SIZE = SETTINGS["joystick_size"]
+if "joystick_size" in settings:
+    JOYSTICK_SIZE = settings["joystick_size"]
 else:
-    SETTINGS["joystick_size"] = 80  # save default
-    JOYSTICK_SIZE = SETTINGS["joystick_size"]
+    settings["joystick_size"] = 80  # save default
+    JOYSTICK_SIZE = settings["joystick_size"]
     with open('settings.json', 'w') as file:
-        json.dump(SETTINGS, file, indent=2)
+        json.dump(settings, file, indent=2)
 
 # load stick mode settings
-if "joystick_type" in SETTINGS:
-    if SETTINGS["joystick_type"] == "digital":
+if "joystick_type" in settings:
+    if settings["joystick_type"] == "digital":
         ANALOG_STICK = False
     else:
         ANALOG_STICK = True
 
 else:
-    SETTINGS["joystick_type"] = "analog"  # save default
-    if SETTINGS["joystick_type"] == "digital":
+    settings["joystick_type"] = "analog"  # save default
+    if settings["joystick_type"] == "digital":
         ANALOG_STICK = False
     else:
         ANALOG_STICK = True
     with open('settings.json', 'w') as file:
-        json.dump(SETTINGS, file, indent=2)
+        json.dump(settings, file, indent=2)
 
 # load runner theme flat setting
-if not "theme_flat" in APPS:
-    APPS["theme_flat"] = False  # save default
+if not "theme_flat" in app_settings:
+    app_settings["theme_flat"] = False  # save default
     with open('apps.json', 'w') as file:
-        json.dump(APPS, file, indent=2)
+        json.dump(app_settings, file, indent=2)
 
 THEME_PAIRS = [
     ("Kevinbot Dark (Deprecated)", "classic"),
@@ -103,7 +103,7 @@ class MainWindow(QMainWindow):
         self.slider_style = SliderProxyStyle(QSlider().style())
         self.setWindowTitle("Kevinbot Remote Settings")
         self.setObjectName("Kevinbot3_RemoteUI")
-        load_theme(self, SETTINGS["window_properties"]["theme"])
+        load_theme(self, settings["window_properties"]["theme"])
 
         if EMULATE_REAL_REMOTE:
             self.setWindowFlags(Qt.FramelessWindowHint)
@@ -253,7 +253,7 @@ class MainWindow(QMainWindow):
         if not is_pi():
             pass
         else:
-            result = subprocess.result = subprocess.run(['cat', SETTINGS["backlight_dir"] + "brightness"],
+            result = subprocess.result = subprocess.run(['cat', settings["backlight_dir"] + "brightness"],
                                                         stdout=subprocess.PIPE)
             self.screen_bright_slider.setValue(int(result.stdout))
 
@@ -274,7 +274,7 @@ class MainWindow(QMainWindow):
 
         self.runner_theme_flat = QCheckBox(strings.SETTINGS_TICK_FLAT)
         self.runner_theme_flat.setFixedWidth(self.runner_theme_flat.sizeHint().width())
-        self.runner_theme_flat.setChecked(APPS["theme_flat"])
+        self.runner_theme_flat.setChecked(app_settings["theme_flat"])
         self.runner_theme_flat.clicked.connect(self.runner_theme_flat_changed)
         self.theme_layout.addWidget(self.runner_theme_flat)
 
@@ -291,15 +291,15 @@ class MainWindow(QMainWindow):
         self.app_theme_picker.setFixedHeight(36)
         self.app_theme_layout.addWidget(self.app_theme_picker)
 
-        for name in APPS["themes"]:
+        for name in app_settings["themes"]:
             self.theme_picker.addItem(name)
-        self.theme_picker.setCurrentIndex(APPS["themes"].index(APPS["theme_name"]))
+        self.theme_picker.setCurrentIndex(app_settings["themes"].index(app_settings["theme_name"]))
         self.theme_picker.blockSignals(False)
 
         for pair in THEME_PAIRS:
             self.app_theme_picker.addItem(pair[0])
 
-            if pair[1] == SETTINGS["window_properties"]["theme"]:
+            if pair[1] == settings["window_properties"]["theme"]:
                 self.app_theme_picker.setCurrentText(pair[0])
         self.app_theme_picker.blockSignals(False)
 
@@ -314,7 +314,7 @@ class MainWindow(QMainWindow):
         self.animation_spinner.spinbox.setMinimum(50)
         self.animation_spinner.spinbox.setSingleStep(25)
         self.animation_spinner.spinbox.valueChanged.connect(self.set_animation_speed)
-        self.animation_spinner.setValue(SETTINGS["window_properties"]["animation_speed"])
+        self.animation_spinner.setValue(settings["window_properties"]["animation_speed"])
         self.animation_layout.addWidget(self.animation_spinner)
 
         if is_tool("xscreensaver"):
@@ -369,7 +369,7 @@ class MainWindow(QMainWindow):
         self.max_us_spinner.setMaximum(1400)
         self.max_us_spinner.setMinimum(1000)
         self.max_us_spinner.setSingleStep(25)
-        self.max_us_spinner.setValue(SETTINGS["max_us"])
+        self.max_us_spinner.setValue(settings["max_us"])
         self.max_us_spinner.spinbox.valueChanged.connect(self.max_us_changed)
         self.speed_layout.addWidget(self.max_us_spinner)
 
@@ -383,7 +383,7 @@ class MainWindow(QMainWindow):
 
         self.cam_url_input = QLineEdit()
         self.cam_url_input.setObjectName("Kevinbot3_RemoteUI_SpeechInput")
-        self.cam_url_input.setText(SETTINGS["camera_url"])
+        self.cam_url_input.setText(settings["camera_url"])
         self.cam_url_input.setFixedHeight(32)
         self.cam_url_input.textChanged.connect(self.save_url)
         self.cam_url_input.setStyleSheet("font-size: 14px;")
@@ -411,7 +411,7 @@ class MainWindow(QMainWindow):
 
         self.homepage_line = QLineEdit()
         self.homepage_line.setPlaceholderText("http://www.example.com")
-        self.homepage_line.setText(SETTINGS["homepage"])
+        self.homepage_line.setText(settings["homepage"])
         self.homepage_line.textChanged.connect(self.update_homepage)
         self.homepage_layout.addWidget(self.homepage_line)
 
@@ -431,7 +431,7 @@ class MainWindow(QMainWindow):
         self.name_edit = QNamedLineEdit(strings.SETTINGS_NICKNAME_L)
         self.remote_box_layout.addWidget(self.name_edit)
         try:
-            self.name_edit.lineedit.setText(SETTINGS["name"])
+            self.name_edit.lineedit.setText(settings["name"])
         except KeyError:
             self.name_edit.lineedit.setText("KBOT_REMOTE")
         self.name_edit.lineedit.textChanged.connect(self.name_change)
@@ -450,13 +450,13 @@ class MainWindow(QMainWindow):
         self.large_joy_radio.clicked.connect(lambda: self.set_joy_size(80))
         self.joy_size_layout.addWidget(self.large_joy_radio)
 
-        self.xlarge_joy_radio = QRadioButton(strings.SETTINGS_RAD_XLARGE)
+        self.xlarge_joy_radio = QRadioButton(strings.SETTINGS_RAD_X_LARGE)
         self.xlarge_joy_radio.clicked.connect(lambda: self.set_joy_size(86))
         self.joy_size_layout.addWidget(self.xlarge_joy_radio)
 
-        if SETTINGS["joystick_size"] == 60:
+        if settings["joystick_size"] == 60:
             self.small_joy_radio.setChecked(True)
-        elif SETTINGS["joystick_size"] == 80:
+        elif settings["joystick_size"] == 80:
             self.large_joy_radio.setChecked(True)
 
         self.line = QFrame()
@@ -481,9 +481,9 @@ class MainWindow(QMainWindow):
         self.joy_mode_group.addButton(self.digital_joy_radio)
         self.joy_mode_layout.addWidget(self.digital_joy_radio)
 
-        if SETTINGS["joystick_type"] == "analog":
+        if settings["joystick_type"] == "analog":
             self.analog_joy_radio.setChecked(True)
-        elif SETTINGS["joystick_type"] == "digital":
+        elif settings["joystick_type"] == "digital":
             self.digital_joy_radio.setChecked(True)
 
         self.exit_remote = haptics.HPushButton()
@@ -515,7 +515,7 @@ class MainWindow(QMainWindow):
 
     def change_backlight(self):
         if is_pi():
-            os.system(f"echo {self.screen_bright_slider.value()} > {SETTINGS['backlight_dir']}brightness")
+            os.system(f"echo {self.screen_bright_slider.value()} > {settings['backlight_dir']}brightness")
         else:
             print(f"Brightness: {self.screen_bright_slider.value()}")
 
@@ -529,65 +529,65 @@ class MainWindow(QMainWindow):
         else:
             message = QMessageBox(self)
             message.setIcon(QMessageBox.Warning)
-            message.setText(strings.SETTINGS_MSG_INVAL_URL)
+            message.setText(strings.SETTINGS_MSG_INVALID_URL)
             message.setWindowTitle(strings.SETTINGS_WIN_URL_VALIDATOR)
             message.exec_()
 
     def save_url(self):
-        SETTINGS["camera_url"] = self.cam_url_input.text()
+        settings["camera_url"] = self.cam_url_input.text()
         with open('settings.json', 'w') as file:
-            json.dump(SETTINGS, file, indent=2)
+            json.dump(settings, file, indent=2)
 
     def max_us_changed(self):
-        SETTINGS["max_us"] = self.max_us_spinner.spinbox.value()
+        settings["max_us"] = self.max_us_spinner.spinbox.value()
         with open('settings.json', 'w') as file:
-            json.dump(SETTINGS, file, indent=2)
+            json.dump(settings, file, indent=2)
 
     @staticmethod
     def set_joy_size(value):
-        SETTINGS["joystick_size"] = value
+        settings["joystick_size"] = value
         with open('settings.json', 'w') as file:
-            json.dump(SETTINGS, file, indent=2)
+            json.dump(settings, file, indent=2)
 
     @staticmethod
     def set_joy_mode(value):
-        SETTINGS["joystick_type"] = value
+        settings["joystick_type"] = value
         with open('settings.json', 'w') as file:
-            json.dump(SETTINGS, file, indent=2)
+            json.dump(settings, file, indent=2)
 
     def change_theme(self):
         index = self.theme_picker.currentIndex()
-        file_name = APPS["theme_files"][index]
-        effect = APPS["theme_effects"][index]
-        APPS["theme"] = file_name
-        APPS["theme_effect"] = effect
-        APPS["theme_name"] = self.theme_picker.currentText()
+        file_name = app_settings["theme_files"][index]
+        effect = app_settings["theme_effects"][index]
+        app_settings["theme"] = file_name
+        app_settings["theme_effect"] = effect
+        app_settings["theme_name"] = self.theme_picker.currentText()
 
         with open('apps.json', 'w') as file:
-            json.dump(APPS, file, indent=2)
+            json.dump(app_settings, file, indent=2)
 
     def change_app_theme(self):
         combo_val = self.app_theme_picker.currentText()
         for pair in THEME_PAIRS:
             if pair[0] == combo_val:
-                SETTINGS["window_properties"]["theme"] = pair[1]
+                settings["window_properties"]["theme"] = pair[1]
 
         with open('settings.json', 'w') as file:
-            json.dump(SETTINGS, file, indent=2)
+            json.dump(settings, file, indent=2)
 
-        load_theme(self, SETTINGS["window_properties"]["theme"])
+        load_theme(self, settings["window_properties"]["theme"])
 
     def update_homepage(self):
-        SETTINGS["homepage"] = self.homepage_line.text()
+        settings["homepage"] = self.homepage_line.text()
 
         with open('settings.json', 'w') as file:
-            json.dump(SETTINGS, file, indent=2)
+            json.dump(settings, file, indent=2)
 
     def set_animation_speed(self):
-        SETTINGS["window_properties"]["animation_speed"] = self.animation_spinner.spinbox.value()
+        settings["window_properties"]["animation_speed"] = self.animation_spinner.spinbox.value()
 
         with open('settings.json', 'w') as file:
-            json.dump(SETTINGS, file, indent=2)
+            json.dump(settings, file, indent=2)
 
     def ss_timeout_changed(self):
         value = self.ss_timeout_spinner.spinbox.value()
@@ -607,15 +607,15 @@ class MainWindow(QMainWindow):
 
     def name_change(self):
         name = self.name_edit.lineedit.text()
-        SETTINGS["name"] = name
+        settings["name"] = name
 
         with open('settings.json', 'w') as file:
-            json.dump(SETTINGS, file, indent=2)
+            json.dump(settings, file, indent=2)
 
     def runner_theme_flat_changed(self):
-        APPS["theme_flat"] = self.runner_theme_flat.isChecked()
+        app_settings["theme_flat"] = self.runner_theme_flat.isChecked()
         with open('apps.json', 'w') as file:
-            json.dump(APPS, file, indent=2)
+            json.dump(app_settings, file, indent=2)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

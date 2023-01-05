@@ -55,7 +55,7 @@ except KeyError:
 haptics.init(21)
 
 # load runner theme flat setting
-if not "theme_flat" in APPS:
+if "theme_flat" not in APPS:
     APPS["theme_flat"] = False  # save default
     with open('apps.json', 'w') as file:
         json.dump(APPS, file, indent=2)
@@ -180,7 +180,6 @@ class MainWindow(QMainWindow):
         shutdown.setMinimumHeight(48)
         layout.addWidget(shutdown)
 
-
         if not DEV_MODE:
             reboot = QPushButton("Reboot")
             reboot.clicked.connect(self.reboot)
@@ -281,30 +280,30 @@ class MainWindow(QMainWindow):
         # confirm shutdown
         msg = QMessageBox(self)
         load_theme(msg, SETTINGS["window_properties"]["theme"])
-        msg.setIcon(QMessageBox.Warning)
+        msg.setIcon(QMessageBox.Icon.Warning)
         msg.setText("Are you sure you want to shutdown?")
         msg.setInformativeText("This will shutdown the computer.")
         msg.setWindowTitle("Shutdown")
-        msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         ret = msg.exec_()
 
         # if yes, shutdown
-        if ret == QMessageBox.Yes:
+        if ret == QMessageBox.StandardButton.Yes:
             os.system(SETTINGS["shutdown_command"])
 
     def reboot(self):
         # confirm reboot
         msg = QMessageBox(self)
         load_theme(msg, SETTINGS["window_properties"]["theme"])
-        msg.setIcon(QMessageBox.Warning)
+        msg.setIcon(QMessageBox.Icon.Warning)
         msg.setText("Are you sure you want to reboot?")
         msg.setInformativeText("This will reboot the computer.")
         msg.setWindowTitle("Reboot")
-        msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         ret = msg.exec_()
 
         # if yes, reboot
-        if ret == QMessageBox.Yes:
+        if ret == QMessageBox.StandardButton.Yes:
             os.system(SETTINGS["reboot_command"])
 
     def open_dev(self):
