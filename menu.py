@@ -66,7 +66,7 @@ class Handler(FileSystemEventHandler):
         if event.is_directory:
             return None
         elif event.event_type == 'modified':
-            print("Reloading Theme")
+            print("Reloading Settings")
             global settings
             time.sleep(0.1)  # wait a while
             # Event is modified, you can process it now
@@ -76,7 +76,6 @@ class Handler(FileSystemEventHandler):
 
 observer = Observer()
 path = os.path.join(sys.argv[1] if len(sys.argv) > 1 else '.', "settings.json")
-print(path)
 observer.schedule(Handler(), path, recursive=True)
 observer.start()
 
@@ -114,6 +113,13 @@ class MainWindow(QMainWindow):
         if EMULATE_REAL_REMOTE:
             self.setWindowFlags(Qt.FramelessWindowHint)
             self.setFixedSize(QSize(800, 480))
+
+        self.editMode = False
+        self.editBtn = None
+        self.btn_index_list = []
+
+        for app in settings["apps"]["apps"]:
+            self.btn_index_list.append(app["id"])
 
         self.root_widget = QStackedWidget()
         self.setCentralWidget(self.root_widget)
@@ -153,22 +159,7 @@ class MainWindow(QMainWindow):
         self.grid = QGridLayout()
         layout.addLayout(self.grid)
 
-        # app buttons
-        for link in settings["apps"]["apps"]:
-            button = haptics.HToolButton()
-            button.setText(link["name"])
-            button.clicked.connect(partial(run_app, link["launch"]))
-            button.setObjectName("Kevinbot3_RemoteUI_Button")
-            button.setStyleSheet("font-size: 17px; padding: 10px;")
-            button.setFixedSize(QSize(116, 116))
-            button.setIconSize(QSize(48, 48))
-            if "*" not in link["icon"]:
-                button.setIcon(QIcon(os.path.join("icons", link["icon"])))
-            else:
-                button.setIcon(QIcon().fromTheme(link["icon"].replace("*", "")))
-            button.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
-
-            self.grid.addWidget(button, link["row"], link["col"])
+        self.add_apps(self.grid)
 
         layout.addStretch()
 
@@ -311,6 +302,105 @@ class MainWindow(QMainWindow):
     def update_time(self):
         self.main_widget.setTitle("Kevinbot Runner | {}".format(time.strftime("%I:%M %p")))
         self.timer.start(1000)
+
+    def check_hold(self, btn, index):
+        if btn.isDown():
+            self.editMode = True
+            self.editBtn = btn
+
+            self.edit_toolbar = QToolBar(self)
+            self.edit_toolbar.setMovable(False)
+            self.edit_toolbar.setMinimumWidth(150)
+
+            self.edit_toolbar.move(QPoint(btn.pos().x() + int((btn.geometry().width() - self.edit_toolbar.geometry().width()) / 2), btn.pos().y() + btn.geometry().height() + 2))
+            self.edit_toolbar.show()
+
+            self.edit_left_action = QAction("LFT")
+            self.edit_left_action.triggered.connect(lambda: self.left_edit_mode(index))
+            self.edit_toolbar.addAction(self.edit_left_action)
+
+            self.edit_right_action = QAction("RT")
+            self.edit_right_action.triggered.connect(lambda: self.right_edit_mode(index))
+            self.edit_toolbar.addAction(self.edit_right_action)
+
+            self.edit_exit_action = QAction("END")
+            self.edit_exit_action.triggered.connect(self.exit_edit_mode)
+            self.edit_toolbar.addAction(self.edit_exit_action)
+
+    def right_edit_mode(self, index):
+        index_pos = self.btn_index_list.index(index)
+        self.btn_index_list.remove(index)
+        self.btn_index_list.insert(index_pos+1, index)
+
+        for pos in range(len(settings["apps"]["apps"])):
+            if settings["apps"]["apps"][pos]["id"] == index:
+                app_item = settings["apps"]["apps"][pos]
+                settings["apps"]["apps"].pop(pos)
+                settings["apps"]["apps"].insert(pos+1, app_item)
+                break
+
+        with open('settings.json', 'w') as file:
+            json.dump(settings, file, indent=2)
+
+        self.exit_edit_mode()
+        self.add_apps(self.grid)
+
+    def left_edit_mode(self, index):
+        index_pos = self.btn_index_list.index(index)
+        self.btn_index_list.remove(index)
+        self.btn_index_list.insert(index_pos-1, index)
+
+        for pos in range(len(settings["apps"]["apps"])):
+            if settings["apps"]["apps"][pos]["id"] == index:
+                app_item = settings["apps"]["apps"][pos]
+                settings["apps"]["apps"].pop(pos)
+                settings["apps"]["apps"].insert(pos-1, app_item)
+                break
+
+        with open('settings.json', 'w') as file:
+            json.dump(settings, file, indent=2)
+
+        self.exit_edit_mode()
+        self.add_apps(self.grid)
+
+    def exit_edit_mode(self):
+        self.edit_left_action.deleteLater()
+        self.edit_right_action.deleteLater()
+        self.edit_exit_action.deleteLater()
+        self.edit_toolbar.deleteLater()
+        self.editMode = False
+
+    def start_check_hold(self, cmd, btn, index):
+        if not self.editMode:
+            QTimer.singleShot(1000, lambda: self.check_hold(btn, index))
+
+    def button_released(self, cmd):
+        if not self.editMode:
+            run_app(cmd)
+
+    def add_apps(self, grid, max_x=5):
+        for i in reversed(range(self.grid.count())): 
+            self.grid.itemAt(i).widget().setParent(None)
+
+        # app buttons
+        btn_idx = 0
+        for link in settings["apps"]["apps"]:
+            button = haptics.HToolButton()
+            button.setText(link["name"])
+            button.pressed.connect(partial(self.start_check_hold, link["launch"], button, link["id"]))
+            button.released.connect(partial(self.button_released, link["launch"]))
+            button.setObjectName("Kevinbot3_RemoteUI_Button")
+            button.setStyleSheet("font-size: 17px; padding: 10px;")
+            button.setFixedSize(QSize(116, 116))
+            button.setIconSize(QSize(48, 48))
+            if "*" not in link["icon"]:
+                button.setIcon(QIcon(os.path.join("icons", link["icon"])))
+            else:
+                button.setIcon(QIcon().fromTheme(link["icon"].replace("*", "")))
+            button.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
+
+            self.grid.addWidget(button, btn_idx // max_x, btn_idx % max_x)
+            btn_idx += 1
 
 
 if __name__ == "__main__":

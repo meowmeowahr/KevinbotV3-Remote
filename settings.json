@@ -2,46 +2,40 @@
   "apps": {
     "apps": [
       {
-        "col": 0,
         "icon": "icon.svg",
+        "id": 0,
         "launch": "./remote-ui.py &",
-        "name": "Remote",
-        "row": 0
+        "name": "Remote"
       },
       {
-        "col": 1,
         "icon": "system-software-update.svg",
+        "id": 1,
         "launch": "./updater.py &",
-        "name": "Software\nUpdate",
-        "row": 0
+        "name": "Software\nUpdate"
       },
       {
-        "col": 2,
         "icon": "terminal.svg",
+        "id": 2,
         "launch": "./terminal.py &",
-        "name": "XBee\nTerminal",
-        "row": 0
+        "name": "XBee\nTerminal"
       },
       {
-        "col": 3,
         "icon": "settings.svg",
+        "id": 3,
         "launch": "./settings.py &",
-        "name": "Settings",
-        "row": 0
+        "name": "Settings"
       },
       {
-        "col": 4,
+        "id": 4,
         "icon": "browser.svg",
         "launch": "./browser.py &",
-        "name": "Browser\n(Beta)",
-        "row": 0
+        "name": "Browser\n(Beta)"
       },
       {
-        "col": 0,
+        "id": 5,
         "icon": "about.svg",
         "launch": "./about.py &",
-        "name": "About",
-        "row": 1
+        "name": "About"
       }
     ],
     "theme": "geoblue.qss",
