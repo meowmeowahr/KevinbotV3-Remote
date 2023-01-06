@@ -35,13 +35,6 @@
   ],
   "apps": [
     {
-      "name": "Remote",
-      "icon": "icon.svg",
-      "launch": "./remote-ui.py &",
-      "row": 0,
-      "col": 0
-    },
-    {
       "name": "Software\nUpdate",
       "icon": "system-software-update.svg",
       "launch": "./updater.py &",
@@ -49,31 +42,10 @@
       "col": 1
     },
     {
-      "name": "XBee\nTerminal",
-      "icon": "terminal.svg",
-      "launch": "./terminal.py &",
+      "name": "PLEASE REBOOT\nto update",
+      "icon": "null",
+      "launch": "true",
       "row": 0,
-      "col": 2
-    },
-    {
-      "name": "Settings",
-      "icon": "settings.svg",
-      "launch": "./settings.py &",
-      "row": 0,
-      "col": 3
-    },
-    {
-      "name": "Browser\n(Beta)",
-      "icon": "browser.svg",
-      "launch": "./browser.py &",
-      "row": 0,
-      "col": 4
-    },
-    {
-      "name": "About",
-      "icon": "about.svg",
-      "launch": "./about.py &",
-      "row": 1,
       "col": 0
     }
   ]

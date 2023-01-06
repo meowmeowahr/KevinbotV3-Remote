@@ -1,4 +1,84 @@
 {
+  "apps": {
+    "apps": [
+      {
+        "col": 0,
+        "icon": "icon.svg",
+        "launch": "./remote-ui.py &",
+        "name": "Remote",
+        "row": 0
+      },
+      {
+        "col": 1,
+        "icon": "system-software-update.svg",
+        "launch": "./updater.py &",
+        "name": "Software\nUpdate",
+        "row": 0
+      },
+      {
+        "col": 2,
+        "icon": "terminal.svg",
+        "launch": "./terminal.py &",
+        "name": "XBee\nTerminal",
+        "row": 0
+      },
+      {
+        "col": 3,
+        "icon": "settings.svg",
+        "launch": "./settings.py &",
+        "name": "Settings",
+        "row": 0
+      },
+      {
+        "col": 4,
+        "icon": "browser.svg",
+        "launch": "./browser.py &",
+        "name": "Browser\n(Beta)",
+        "row": 0
+      },
+      {
+        "col": 0,
+        "icon": "about.svg",
+        "launch": "./about.py &",
+        "name": "About",
+        "row": 1
+      }
+    ],
+    "theme": "geoblue.qss",
+    "theme_effect": "shadow:b15:c5b5555",
+    "theme_effects": [
+      "none",
+      "shadow:b20:c555555",
+      "shadow:b20:c555555",
+      "shadow:b20:c555555",
+      "shadow:b20:c555555",
+      "shadow:b15:c5b5555",
+      "shadow:b15:c565555",
+      "shadow:b15:c555555"
+    ],
+    "theme_files": [
+      "theme.qss",
+      "blue.qss",
+      "green.qss",
+      "yellow.qss",
+      "purple.qss",
+      "geoblue.qss",
+      "geogreen.qss",
+      "geo.qss"
+    ],
+    "theme_flat": true,
+    "theme_name": "Geometric Blue",
+    "themes": [
+      "Classic Dark",
+      "Blue",
+      "Green",
+      "Yellow",
+      "Purple",
+      "Geometric Blue",
+      "Geometric Green",
+      "Geometric"
+    ]
+  },
   "arm_dof": 5,
   "arm_min_max": [
     [
@@ -193,8 +273,8 @@
     "color2"
   ],
   "homepage": "https://www.google.com/",
-  "joystick_type": "analog",
   "joystick_size": 80,
+  "joystick_type": "analog",
   "log_level": 20,
   "max_us": 1200,
   "media_dir": "/media/",

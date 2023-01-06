@@ -28,37 +28,36 @@ if platform.system() == "Windows":
     appid = 'kevinbot.kevinbot.runner._'  # arbitrary string
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(appid)
 
-SETTINGS = json.load(open("settings.json", "r"))
-APPS = json.load(open("apps.json", "r"))
+settings = json.load(open("settings.json", "r"))
 
 # load dev mode settings
-if "dev_mode" in SETTINGS:
-    DEV_MODE = SETTINGS["dev_mode"]
+if "dev_mode" in settings:
+    DEV_MODE = settings["dev_mode"]
 else:
-    SETTINGS["dev_mode"] = False  # save default
-    DEV_MODE = SETTINGS["dev_mode"]
+    settings["dev_mode"] = False  # save default
+    DEV_MODE = settings["dev_mode"]
     with open('settings.json', 'w') as file:
-        json.dump(SETTINGS, file, indent=2)
+        json.dump(settings, file, indent=2)
 
 try:
-    logging.basicConfig(filename='menu.log', filemode='w', level=SETTINGS["log_level"], format=f'{__file__}:%('
+    logging.basicConfig(filename='menu.log', filemode='w', level=settings["log_level"], format=f'{__file__}:%('
                                                                                                f'levelname)s - %('
                                                                                                f'message)s')
 except KeyError:
     logging.basicConfig(filename='menu.log', filemode='w', level=logging.INFO, format=f'{__file__}:%(levelname)s - %('
                                                                                       f'message)s')
     logging.warning("log level has not been set")
-    SETTINGS["log_level"] = 20
+    settings["log_level"] = 20
     with open('settings.json', 'w') as file:
-        json.dump(SETTINGS, file, indent=2)
+        json.dump(settings, file, indent=2)
 
 haptics.init(21)
 
 # load runner theme flat setting
-if "theme_flat" not in APPS:
-    APPS["theme_flat"] = False  # save default
-    with open('apps.json', 'w') as file:
-        json.dump(APPS, file, indent=2)
+if "theme_flat" not in settings["apps"]:
+    settings["apps"]["theme_flat"] = False  # save default
+    with open('settings.json', 'w') as file:
+        json.dump(settings, file, indent=2)
 
 
 class Handler(FileSystemEventHandler):
@@ -68,16 +67,16 @@ class Handler(FileSystemEventHandler):
             return None
         elif event.event_type == 'modified':
             print("Reloading Theme")
-            global SETTINGS, APPS
+            global settings
             time.sleep(0.1)  # wait a while
             # Event is modified, you can process it now
-            SETTINGS = json.load(open("settings.json", "r"))
-            APPS = json.load(open("apps.json", "r"))
+            settings = json.load(open("settings.json", "r"))
             window.updateTheme.emit()
 
 
 observer = Observer()
-path = os.path.join(sys.argv[1] if len(sys.argv) > 1 else '.', "apps.json")
+path = os.path.join(sys.argv[1] if len(sys.argv) > 1 else '.', "settings.json")
+print(path)
 observer.schedule(Handler(), path, recursive=True)
 observer.start()
 
@@ -127,7 +126,7 @@ class MainWindow(QMainWindow):
 
         self.updateTheme.connect(self.load_theme)
 
-        effects = APPS["theme_effect"].strip().split()
+        effects = settings["apps"]["theme_effect"].strip().split()
 
         widget_effect = []
         for i in range(len(effects)):
@@ -143,7 +142,7 @@ class MainWindow(QMainWindow):
                     widget_effect[i].setColor(QColor().fromRgb(hex2rgb(is_color[0][1:])[0],
                                                                hex2rgb(is_color[0][1:])[1],
                                                                hex2rgb(is_color[0][1:])[2]))
-        if not APPS["theme_flat"]:
+        if not settings["apps"]["theme_flat"]:
             for e in widget_effect:
                 self.main_widget.setGraphicsEffect(e)
 
@@ -155,7 +154,7 @@ class MainWindow(QMainWindow):
         layout.addLayout(self.grid)
 
         # app buttons
-        for link in APPS["apps"]:
+        for link in settings["apps"]["apps"]:
             button = haptics.HToolButton()
             button.setText(link["name"])
             button.clicked.connect(partial(run_app, link["launch"]))
@@ -248,10 +247,10 @@ class MainWindow(QMainWindow):
 
     def load_theme(self):
         # load theme
-        with open(APPS["theme"], "r") as file:
+        with open(settings["apps"]["theme"], "r") as file:
             self.setStyleSheet(file.read())
 
-        effects = APPS["theme_effect"].strip().split()
+        effects = settings["apps"]["theme_effect"].strip().split()
         if not effects == ['none']:
             widget_effect = []
             for i in range(len(effects)):
@@ -267,19 +266,19 @@ class MainWindow(QMainWindow):
                         widget_effect[i].setColor(QColor().fromRgb(hex2rgb(is_color[0][1:])[0],
                                                                    hex2rgb(is_color[0][1:])[1],
                                                                    hex2rgb(is_color[0][1:])[2]))
-            if not APPS["theme_flat"]:
+            if not settings["apps"]["theme_flat"]:
                 for e in widget_effect:
                     self.main_widget.setGraphicsEffect(e)
         else:
             self.main_widget.setGraphicsEffect(None)
 
-        if APPS["theme_flat"]:
+        if settings["apps"]["theme_flat"]:
             self.main_widget.setGraphicsEffect(None)
 
     def shutdown(self):
         # confirm shutdown
         msg = QMessageBox(self)
-        load_theme(msg, SETTINGS["window_properties"]["theme"])
+        load_theme(msg, settings["window_properties"]["theme"])
         msg.setIcon(QMessageBox.Icon.Warning)
         msg.setText("Are you sure you want to shutdown?")
         msg.setInformativeText("This will shutdown the computer.")
@@ -289,12 +288,12 @@ class MainWindow(QMainWindow):
 
         # if yes, shutdown
         if ret == QMessageBox.StandardButton.Yes:
-            os.system(SETTINGS["shutdown_command"])
+            os.system(settings["shutdown_command"])
 
     def reboot(self):
         # confirm reboot
         msg = QMessageBox(self)
-        load_theme(msg, SETTINGS["window_properties"]["theme"])
+        load_theme(msg, settings["window_properties"]["theme"])
         msg.setIcon(QMessageBox.Icon.Warning)
         msg.setText("Are you sure you want to reboot?")
         msg.setInformativeText("This will reboot the computer.")
@@ -304,7 +303,7 @@ class MainWindow(QMainWindow):
 
         # if yes, reboot
         if ret == QMessageBox.StandardButton.Yes:
-            os.system(SETTINGS["reboot_command"])
+            os.system(settings["reboot_command"])
 
     def open_dev(self):
         self.root_widget.setCurrentIndex(1)

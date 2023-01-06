@@ -59,10 +59,10 @@ else:
         json.dump(settings, file, indent=2)
 
 # load runner theme flat setting
-if not "theme_flat" in app_settings:
-    app_settings["theme_flat"] = False  # save default
-    with open('apps.json', 'w') as file:
-        json.dump(app_settings, file, indent=2)
+if not "theme_flat" in settings["apps"]:
+    settings["apps"]["theme_flat"] = False  # save default
+    with open('settings.json', 'w') as file:
+        json.dump(settings, file, indent=2)
 
 THEME_PAIRS = [
     ("Kevinbot Dark (Deprecated)", "classic"),
@@ -274,7 +274,7 @@ class MainWindow(QMainWindow):
 
         self.runner_theme_flat = QCheckBox(strings.SETTINGS_TICK_FLAT)
         self.runner_theme_flat.setFixedWidth(self.runner_theme_flat.sizeHint().width())
-        self.runner_theme_flat.setChecked(app_settings["theme_flat"])
+        self.runner_theme_flat.setChecked(settings["apps"]["theme_flat"])
         self.runner_theme_flat.clicked.connect(self.runner_theme_flat_changed)
         self.theme_layout.addWidget(self.runner_theme_flat)
 
@@ -291,9 +291,9 @@ class MainWindow(QMainWindow):
         self.app_theme_picker.setFixedHeight(36)
         self.app_theme_layout.addWidget(self.app_theme_picker)
 
-        for name in app_settings["themes"]:
+        for name in settings["apps"]["themes"]:
             self.theme_picker.addItem(name)
-        self.theme_picker.setCurrentIndex(app_settings["themes"].index(app_settings["theme_name"]))
+        self.theme_picker.setCurrentIndex(settings["apps"]["themes"].index(settings["apps"]["theme_name"]))
         self.theme_picker.blockSignals(False)
 
         for pair in THEME_PAIRS:
@@ -557,14 +557,14 @@ class MainWindow(QMainWindow):
 
     def change_theme(self):
         index = self.theme_picker.currentIndex()
-        file_name = app_settings["theme_files"][index]
-        effect = app_settings["theme_effects"][index]
-        app_settings["theme"] = file_name
-        app_settings["theme_effect"] = effect
-        app_settings["theme_name"] = self.theme_picker.currentText()
+        file_name = settings["apps"]["theme_files"][index]
+        effect = settings["apps"]["theme_effects"][index]
+        settings["apps"]["theme"] = file_name
+        settings["apps"]["theme_effect"] = effect
+        settings["apps"]["theme_name"] = self.theme_picker.currentText()
 
-        with open('apps.json', 'w') as file:
-            json.dump(app_settings, file, indent=2)
+        with open('settings.json', 'w') as file:
+            json.dump(settings, file, indent=2)
 
     def change_app_theme(self):
         combo_val = self.app_theme_picker.currentText()
@@ -613,9 +613,9 @@ class MainWindow(QMainWindow):
             json.dump(settings, file, indent=2)
 
     def runner_theme_flat_changed(self):
-        app_settings["theme_flat"] = self.runner_theme_flat.isChecked()
-        with open('apps.json', 'w') as file:
-            json.dump(app_settings, file, indent=2)
+        settings["apps"]["theme_flat"] = self.runner_theme_flat.isChecked()
+        with open('settings.json', 'w') as file:
+            json.dump(settings, file, indent=2)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
