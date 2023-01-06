@@ -310,21 +310,25 @@ class MainWindow(QMainWindow):
 
             self.edit_toolbar = QToolBar(self)
             self.edit_toolbar.setMovable(False)
-            self.edit_toolbar.setMinimumWidth(150)
+            self.edit_toolbar.setMinimumWidth(130)
+            self.edit_toolbar.setIconSize(QSize(32, 32))
 
             self.edit_toolbar.move(QPoint(btn.pos().x() + int((btn.geometry().width() - self.edit_toolbar.geometry().width()) / 2), btn.pos().y() + btn.geometry().height() + 2))
             self.edit_toolbar.show()
 
-            self.edit_left_action = QAction("LFT")
+            self.edit_left_action = QAction("Left")
             self.edit_left_action.triggered.connect(lambda: self.left_edit_mode(index))
+            self.edit_left_action.setIcon(QIcon(qta.icon("fa5s.caret-left", color=QColor("#0024ff"))))
             self.edit_toolbar.addAction(self.edit_left_action)
 
-            self.edit_right_action = QAction("RT")
+            self.edit_right_action = QAction("Right")
             self.edit_right_action.triggered.connect(lambda: self.right_edit_mode(index))
+            self.edit_right_action.setIcon(QIcon(qta.icon("fa5s.caret-right", color=QColor("#0024ff"))))
             self.edit_toolbar.addAction(self.edit_right_action)
 
-            self.edit_exit_action = QAction("END")
+            self.edit_exit_action = QAction("Cancel")
             self.edit_exit_action.triggered.connect(self.exit_edit_mode)
+            self.edit_exit_action.setIcon(QIcon(qta.icon("fa5s.backspace", color=QColor("#0024ff"))))
             self.edit_toolbar.addAction(self.edit_exit_action)
 
     def right_edit_mode(self, index):
