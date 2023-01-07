@@ -283,6 +283,7 @@
     "animation_dir": 0,
     "animation_speed": 500,
     "error_animation_speed": 80,
-    "theme": "qdarktheme"
+    "theme": "qdarktheme",
+    "theme_colors": "Purple"
   }
 }

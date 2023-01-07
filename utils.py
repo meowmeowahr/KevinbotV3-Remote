@@ -47,13 +47,16 @@ def detect_dark(rgb):
         return True
 
 
-def load_theme(widget, theme="classic"):
+def load_theme(widget, theme="classic", theme_style="default"):
     if theme == "classic":
         with open("theme.qss", 'r') as file:
             widget.setStyleSheet(file.read())
     elif theme == "qdarktheme":
         import qdarktheme
-        widget.setStyleSheet(qdarktheme.load_stylesheet())
+        if theme_style.lower() == "default":
+            widget.setStyleSheet(qdarktheme.load_stylesheet())
+        elif theme_style.lower() == "purple":
+            widget.setStyleSheet(qdarktheme.load_stylesheet(custom_colors={"primary": "#d970d5"}))
     elif theme == "highcontrast":
         import qdarktheme
         widget.setStyleSheet(qdarktheme.load_stylesheet(custom_colors={"primary": "#ffffff", 

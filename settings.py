@@ -66,7 +66,7 @@ if not "theme_flat" in settings["apps"]:
 
 THEME_PAIRS = [
     ("Kevinbot Dark (Deprecated)", "classic"),
-    ("QDarkTheme Dark", "qdarktheme"),
+    ("QDarkTheme Dark (Customizable)", "qdarktheme", ["Default", "Purple"]),
     ("QDarkTheme Light", "qdarktheme_light"),
     ("High Contrast Dark", "highcontrast"),
     ("Breeze Dark", "breeze_dark"),
@@ -104,7 +104,10 @@ class MainWindow(QMainWindow):
         self.slider_style = SliderProxyStyle(QSlider().style())
         self.setWindowTitle("Kevinbot Remote Settings")
         self.setObjectName("Kevinbot3_RemoteUI")
-        load_theme(self, settings["window_properties"]["theme"])
+        try:
+            load_theme(self, settings["window_properties"]["theme"], settings["window_properties"]["theme_colors"])
+        except NameError:
+            load_theme(self, settings["window_properties"]["theme"])
 
         if EMULATE_REAL_REMOTE:
             self.setWindowFlags(Qt.FramelessWindowHint)
@@ -281,7 +284,7 @@ class MainWindow(QMainWindow):
 
         self.app_theme_box = QGroupBox(strings.SETTINGS_APP_THEME_G)
         self.app_theme_box.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.app_theme_layout = QVBoxLayout()
+        self.app_theme_layout = QHBoxLayout()
         self.app_theme_box.setLayout(self.app_theme_layout)
         self.display_layout.addWidget(self.app_theme_box)
 
@@ -292,6 +295,12 @@ class MainWindow(QMainWindow):
         self.app_theme_picker.setFixedHeight(36)
         self.app_theme_layout.addWidget(self.app_theme_picker)
 
+        self.app_theme_customizer = QComboBox()
+        self.app_theme_customizer.setPlaceholderText("Default")
+        self.app_theme_customizer.setFixedWidth(120)
+        self.app_theme_customizer.currentIndexChanged.connect(self.change_app_theme)
+        self.app_theme_layout.addWidget(self.app_theme_customizer)
+
         for name in settings["apps"]["themes"]:
             self.theme_picker.addItem(name)
         self.theme_picker.setCurrentIndex(settings["apps"]["themes"].index(settings["apps"]["theme_name"]))
@@ -299,10 +308,21 @@ class MainWindow(QMainWindow):
 
         for pair in THEME_PAIRS:
             self.app_theme_picker.addItem(pair[0])
-
             if pair[1] == settings["window_properties"]["theme"]:
                 self.app_theme_picker.setCurrentText(pair[0])
+                if "custom" in str(pair[0]).lower():
+                    self.app_theme_customizer.setEnabled(True)
+                    self.app_theme_customizer.addItems(pair[2])
+                else:
+                    self.app_theme_customizer.setEnabled(False)
+                    for i in range(self.app_theme_customizer.count()):
+                        self.app_theme_customizer.removeItem(i)
         self.app_theme_picker.blockSignals(False)
+
+        try:
+            self.app_theme_customizer.setCurrentText(settings["window_properties"]["theme_colors"])
+        except NameError:
+            pass
 
         self.animation_box = QGroupBox(strings.SETTINGS_ANIM_SPD_G)
         self.animation_box.setObjectName("Kevinbot3_RemoteUI_Group")
@@ -510,10 +530,6 @@ class MainWindow(QMainWindow):
         else:
             self.show()
 
-    def load_theme(self):
-        with open("theme.qss", "r") as file:
-            self.setStyleSheet(file.read())
-
     def change_backlight(self):
         if is_pi():
             os.system(f"echo {self.screen_bright_slider.value()} > {settings['backlight_dir']}brightness")
@@ -572,11 +588,21 @@ class MainWindow(QMainWindow):
         for pair in THEME_PAIRS:
             if pair[0] == combo_val:
                 settings["window_properties"]["theme"] = pair[1]
+                    
+                if "custom" in str(pair[0]).lower():
+                    self.app_theme_customizer.setEnabled(True)
+                    if settings["window_properties"]["theme_colors"] == "null":
+                        settings["window_properties"]["theme_colors"] = pair[2][0]
+                else:
+                    self.app_theme_customizer.setEnabled(False)
+                    settings["window_properties"]["theme_colors"] = "null"
+
+        settings["window_properties"]["theme_colors"] = self.app_theme_customizer.currentText()
 
         with open('settings.json', 'w') as file:
             json.dump(settings, file, indent=2)
 
-        load_theme(self, settings["window_properties"]["theme"])
+        load_theme(self, settings["window_properties"]["theme"], settings["window_properties"]["theme_colors"])
 
     def update_homepage(self):
         settings["homepage"] = self.homepage_line.text()

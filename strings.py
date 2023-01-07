@@ -117,6 +117,7 @@ SETTINGS_ADVANCED_OPT = "Advanced Settings"
 
 SETTINGS_XSC_PREVIEW_B = "Preview Screensaver"
 SETTINGS_VALIDATE_URL_B = "Validate URL"
+SETTINGS_CUSTOMIZER_B = "Customizer"
 
 SETTINGS_XSC_TIME_S = "Screen Timeout: "
 SETTINGS_XSC_TIME_SUF = " minutes"
