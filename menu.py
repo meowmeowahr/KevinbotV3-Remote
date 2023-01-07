@@ -68,7 +68,7 @@ class Handler(FileSystemEventHandler):
         elif event.event_type == 'modified':
             print("Reloading Settings")
             global settings
-            time.sleep(0.1)  # wait a while
+            time.sleep(0.2)  # wait a while
             # Event is modified, you can process it now
             settings = json.load(open("settings.json", "r"))
             window.updateTheme.emit()
