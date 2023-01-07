@@ -17,7 +17,13 @@ def is_pi():
 
 
 if is_pi():
-    PORT = "/dev/ttyS0"
+    try:
+        import json
+        with open("settings.json", "r") as f:
+            settings = json.load(f)
+        PORT = settings["serial_port"]
+    except KeyError:
+        PORT = "/dev/ttyS0"
 else:
     PORT = '/dev/ttyUSB0'
 
