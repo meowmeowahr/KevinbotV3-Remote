@@ -284,7 +284,10 @@ class RemoteUI(QMainWindow):
             self.setFixedSize(800, 480)
 
         # load theme
-        load_theme(self, theme=settings["window_properties"]["theme"])
+        try:
+            load_theme(self, settings["window_properties"]["theme"], settings["window_properties"]["theme_colors"])
+        except NameError:
+            load_theme(self, settings["window_properties"]["theme"])
 
         self.init_ui()
 

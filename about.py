@@ -24,7 +24,7 @@ if platform.system() == "Windows":
     app_id = 'kevinbot.kevinbot.remote.about'  # arbitrary string
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(app_id)
 
-SETTINGS = json.load(open("settings.json", "r"))
+settings = json.load(open("settings.json", "r"))
 
 haptics.init(21)
 
@@ -36,7 +36,11 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("About Kevinbot Remote")
         self.setObjectName("Kevinbot3_RemoteUI")
-        load_theme(self, SETTINGS["window_properties"]["theme"])
+        
+        try:
+            load_theme(self, settings["window_properties"]["theme"], settings["window_properties"]["theme_colors"])
+        except NameError:
+            load_theme(self, settings["window_properties"]["theme"])
 
         if EMULATE_REAL_REMOTE:
             self.setWindowFlags(Qt.FramelessWindowHint)

@@ -35,7 +35,10 @@ class Window(QWidget):
     def __init__(self, *args):
         QWidget.__init__(self, *args)
 
-        load_theme(self, settings["window_properties"]["theme"])
+        try:
+            load_theme(self, settings["window_properties"]["theme"], settings["window_properties"]["theme_colors"])
+        except NameError:
+            load_theme(self, settings["window_properties"]["theme"])
 
         self.ensurePolished()
         if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],
