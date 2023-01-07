@@ -226,6 +226,18 @@ class MainWindow(QMainWindow):
 
             self.dev_layout.addStretch()
 
+        # Edit Toolbar
+        self.edit_toolbar = QToolBar(self)
+        self.edit_toolbar.setMovable(False)
+        self.edit_toolbar.setMinimumWidth(130)
+        self.edit_toolbar.setIconSize(QSize(32, 32))
+        self.edit_toolbar.hide()
+
+        self.edit_exit_action = QAction("Cancel")
+        self.edit_exit_action.triggered.connect(self.exit_edit_mode)
+        self.edit_exit_action.setIcon(QIcon(qta.icon("fa5s.backspace", color=QColor("#0024ff"))))
+        self.edit_toolbar.addAction(self.edit_exit_action)
+
         # timer to update time
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_time)
@@ -308,11 +320,6 @@ class MainWindow(QMainWindow):
             self.editMode = True
             self.editBtn = btn
 
-            self.edit_toolbar = QToolBar(self)
-            self.edit_toolbar.setMovable(False)
-            self.edit_toolbar.setMinimumWidth(130)
-            self.edit_toolbar.setIconSize(QSize(32, 32))
-
             self.edit_toolbar.move(QPoint(btn.pos().x() + int((btn.geometry().width() - self.edit_toolbar.geometry().width()) / 2), btn.pos().y() + btn.geometry().height() + 2))
             self.edit_toolbar.show()
 
@@ -325,11 +332,6 @@ class MainWindow(QMainWindow):
             self.edit_right_action.triggered.connect(lambda: self.right_edit_mode(index))
             self.edit_right_action.setIcon(QIcon(qta.icon("fa5s.caret-right", color=QColor("#0024ff"))))
             self.edit_toolbar.addAction(self.edit_right_action)
-
-            self.edit_exit_action = QAction("Cancel")
-            self.edit_exit_action.triggered.connect(self.exit_edit_mode)
-            self.edit_exit_action.setIcon(QIcon(qta.icon("fa5s.backspace", color=QColor("#0024ff"))))
-            self.edit_toolbar.addAction(self.edit_exit_action)
 
     def right_edit_mode(self, index):
         index_pos = self.btn_index_list.index(index)
@@ -368,11 +370,8 @@ class MainWindow(QMainWindow):
         self.add_apps(self.grid)
 
     def exit_edit_mode(self):
-        self.edit_left_action.deleteLater()
-        self.edit_right_action.deleteLater()
-        self.edit_exit_action.deleteLater()
-        self.edit_toolbar.deleteLater()
         self.editMode = False
+        self.edit_toolbar.hide()
 
     def start_check_hold(self, cmd, btn, index):
         if not self.editMode:
