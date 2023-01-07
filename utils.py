@@ -54,6 +54,16 @@ def load_theme(widget, theme="classic"):
     elif theme == "qdarktheme":
         import qdarktheme
         widget.setStyleSheet(qdarktheme.load_stylesheet())
+    elif theme == "highcontrast":
+        import qdarktheme
+        widget.setStyleSheet(qdarktheme.load_stylesheet(custom_colors={"primary": "#ffffff", 
+                                                                       "background": "#000000",
+                                                                       "border": "#ffffff",
+                                                                       "input.background": "#000000",
+                                                                       "foreground": "#efefef",
+                                                                       "foreground>icon": "#ffffff",
+                                                                       "scrollbarSlider.background": "#757575"}))
+    
     elif theme == "qdarktheme_light":
         import qdarktheme
         widget.setStyleSheet(qdarktheme.load_stylesheet(theme="light"))

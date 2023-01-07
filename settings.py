@@ -68,6 +68,7 @@ THEME_PAIRS = [
     ("Kevinbot Dark (Deprecated)", "classic"),
     ("QDarkTheme Dark", "qdarktheme"),
     ("QDarkTheme Light", "qdarktheme_light"),
+    ("High Contrast Dark", "highcontrast"),
     ("Breeze Dark", "breeze_dark"),
     ("Breeze Light", "breeze_light"),
     ("System (Debug)", "null")
