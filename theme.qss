@@ -110,7 +110,7 @@
     background-color: #222238;
     color: #ffffff;
     font-weight: bold;
-    font-size: 12px;
+    font-size: 13px;
     border-radius: 5px;
     padding: 8px;
 }
@@ -280,7 +280,7 @@
     color: #ffffff;
 }
 
-#Kevinbot3_RemoteUI_SpeechRadio {
+QRadioButton {
     color: #ffffff;
     font-weight: bold;
     font-size: 13px;
@@ -288,21 +288,26 @@
     padding: 6px;
 }
 
-#Kevinbot3_RemoteUI_SpeechRadio::indicator {
+QRadioButton::indicator {
     width: 24px;
     height: 24px;
 }
 
-#Kevinbot3_RemoteUI_SpeechRadio::indicator::unchecked {
+QRadioButton::indicator::unchecked {
     image: url(icons/radio-button-off-icon.png);
 }
 
-#Kevinbot3_RemoteUI_SpeechRadio::indicator::checked {
+QRadioButton::indicator::checked {
     image: url(icons/radio-button-on-icon.png);
 }
 
 #Kevinbot3_RemoteUI_SmallText {
     font-size: 12px;
+    color: #ffffff;
+}
+
+QLabel {
+    font-size: 14px;
     color: #ffffff;
 }
 
@@ -366,24 +371,21 @@
 }
 
 
-#Kevinbot3_RemoteUI_CheckBox {
+#Kevinbot3_RemoteUI_CheckBox, QCheckBox {
     color: #ffffff;
-    font-weight: bold;
-    font-size: 16px;
-    border-radius: 5px;
-    padding: 6px;
+    font-size: 14px;
 }
 
-#Kevinbot3_RemoteUI_CheckBox::indicator {
-    width: 32px;
-    height: 32px;
+#Kevinbot3_RemoteUI_CheckBox::indicator, QCheckBox::indicator {
+    width: 18px;
+    height: 18px;
 }
 
-#Kevinbot3_RemoteUI_CheckBox::indicator:unchecked {
+#Kevinbot3_RemoteUI_CheckBox::indicator:unchecked, QCheckBox::indicator:unchecked {
     image: url(icons/radio-button-off-icon.png);
 }
 
-#Kevinbot3_RemoteUI_CheckBox::indicator:checked {
+#Kevinbot3_RemoteUI_CheckBox::indicator:checked, QCheckBox::indicator:checked {
     image: url(icons/radio-button-on-icon.png);
 }
 
@@ -585,4 +587,5 @@ QToolButton {
     padding: 5px;
     padding-right: 1px;
     margin-right: 18px;
+    font-size: 14px;
 }
