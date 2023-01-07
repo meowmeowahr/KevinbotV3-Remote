@@ -66,7 +66,7 @@ if not "theme_flat" in settings["apps"]:
 
 THEME_PAIRS = [
     ("Kevinbot Dark (Deprecated)", "classic"),
-    ("QDarkTheme Dark (Customizable)", "qdarktheme", ["Default", "Purple"]),
+    ("QDarkTheme Dark (Customizable)", "qdarktheme", ["Default", "Teal", "Green", "Purple", "Orange", "Red"]),
     ("QDarkTheme Light", "qdarktheme_light"),
     ("High Contrast Dark", "highcontrast"),
     ("Breeze Dark", "breeze_dark"),
