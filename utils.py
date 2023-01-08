@@ -58,7 +58,7 @@ def load_theme(widget, theme="classic", theme_style="default"):
         elif theme_style.lower() == "purple":
             widget.setStyleSheet(qdarktheme.load_stylesheet(custom_colors={"primary": "#d970d5"}))
         elif theme_style.lower() == "green":
-            widget.setStyleSheet(qdarktheme.load_stylesheet(custom_colors={"primary": "#56bba4"}))
+            widget.setStyleSheet(qdarktheme.load_stylesheet(custom_colors={"primary": "#56bb74"}))
         elif theme_style.lower() == "orange":
             widget.setStyleSheet(qdarktheme.load_stylesheet(custom_colors={"primary": "#ffa348"}))
         elif theme_style.lower() == "teal":
