@@ -585,6 +585,10 @@ class MainWindow(QMainWindow):
 
     def change_app_theme(self):
         combo_val = self.app_theme_picker.currentText()
+
+        theme_color = self.app_theme_customizer.currentText()
+        settings["window_properties"]["theme_colors"] = self.app_theme_customizer.currentText()
+
         for pair in THEME_PAIRS:
             if pair[0] == combo_val:
                 settings["window_properties"]["theme"] = pair[1]
@@ -597,7 +601,21 @@ class MainWindow(QMainWindow):
                     self.app_theme_customizer.setEnabled(False)
                     settings["window_properties"]["theme_colors"] = "null"
 
-        settings["window_properties"]["theme_colors"] = self.app_theme_customizer.currentText()
+        self.app_theme_customizer.blockSignals(True)
+        self.app_theme_customizer.clear()
+        self.app_theme_customizer.blockSignals(False)
+
+        for pair in THEME_PAIRS:
+            print(pair)
+            if pair[1] == settings["window_properties"]["theme"]:
+                print(pair[1])
+                if "custom" in str(pair[0]).lower():
+                    self.app_theme_customizer.addItems(pair[2])
+                    print(pair[2])
+
+        self.app_theme_customizer.blockSignals(True)
+        self.app_theme_customizer.setCurrentText(theme_color)
+        self.app_theme_customizer.blockSignals(False)
 
         with open('settings.json', 'w') as file:
             json.dump(settings, file, indent=2)

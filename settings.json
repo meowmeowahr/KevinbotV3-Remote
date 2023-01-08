@@ -1,290 +1,290 @@
 {
-   "apps": {
-      "apps": [
-         {
-            "icon": "icon.svg",
-            "id": 0,
-            "launch": "./remote-ui.py &",
-            "name": "Remote"
-         },
-         {
-            "icon": "system-software-update.svg",
-            "id": 1,
-            "launch": "./updater.py &",
-            "name": "Software\nUpdate"
-         },
-         {
-            "icon": "terminal.svg",
-            "id": 2,
-            "launch": "./terminal.py &",
-            "name": "XBee\nTerminal"
-         },
-         {
-            "icon": "settings.svg",
-            "id": 3,
-            "launch": "./settings.py &",
-            "name": "Settings"
-         },
-         {
-            "icon": "browser.svg",
-            "id": 4,
-            "launch": "./browser.py &",
-            "name": "Browser\n(Beta)"
-         },
-         {
-            "icon": "about.svg",
-            "id": 5,
-            "launch": "./about.py &",
-            "name": "About"
-         }
-      ],
-      "theme": "geoblue.qss",
-      "theme_effect": "shadow:b15:c5b5555",
-      "theme_effects": [
-         "none",
-         "shadow:b20:c555555",
-         "shadow:b20:c555555",
-         "shadow:b20:c555555",
-         "shadow:b20:c555555",
-         "shadow:b15:c5b5555",
-         "shadow:b15:c565555",
-         "shadow:b15:c555555"
-      ],
-      "theme_files": [
-         "theme.qss",
-         "blue.qss",
-         "green.qss",
-         "yellow.qss",
-         "purple.qss",
-         "geoblue.qss",
-         "geogreen.qss",
-         "geo.qss"
-      ],
-      "theme_flat": true,
-      "theme_name": "Geometric Blue",
-      "themes": [
-         "Classic Dark",
-         "Blue",
-         "Green",
-         "Yellow",
-         "Purple",
-         "Geometric Blue",
-         "Geometric Green",
-         "Geometric"
-      ]
-   },
-   "arm_dof": 5,
-   "arm_min_max": [
-      [
-         0,
-         180
-      ],
-      [
-         0,
-         180
-      ],
-      [
-         0,
-         180
-      ],
-      [
-         0,
-         180
-      ],
-      [
-         0,
-         180
-      ],
-      [
-         0,
-         180
-      ],
-      [
-         0,
-         180
-      ],
-      [
-         0,
-         180
-      ],
-      [
-         0,
-         180
-      ],
-      [
-         0,
-         180
-      ]
-   ],
-   "arm_prog": [
-      [
-         109,
-         90,
-         2,
-         160,
-         88,
-         51,
-         178,
-         12,
-         76,
-         55
-      ],
-      [
-         1,
-         115,
-         117,
-         65,
-         0,
-         23,
-         0,
-         156,
-         0,
-         44
-      ],
-      [
-         2,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0
-      ],
-      [
-         3,
-         0,
-         87,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0
-      ],
-      [
-         4,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0
-      ],
-      [
-         5,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0
-      ],
-      [
-         6,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0
-      ],
-      [
-         7,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0
-      ],
-      [
-         8,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0
-      ]
-   ],
-   "arm_servos": 10,
-   "backlight_dir": "/sys/class/backlight/10-0045/",
-   "backup_dir": "/home/$USER/Kbot3RemoteBackups/",
-   "base_effects": [
-      "magic",
-      "rainbow",
-      "fire",
-      "twinkle",
-      "swipe",
-      "flash",
-      "fade",
-      "jump3",
-      "color1",
-      "color2",
-      "effect10*c"
-   ],
-   "body_effects": [
-      "magic",
-      "rainbow",
-      "fire",
-      "twinkle",
-      "swipe",
-      "flash",
-      "fade",
-      "jump3",
-      "color1",
-      "color2",
-      "effect10*c"
-   ],
-   "camera_url": "http://kevinbotv3/stream",
-   "data_dir": "/home/$USER/KbotV3/",
-   "dev_mode": false,
-   "head_effects": [
-      "flash",
-      "fade",
-      "jump3",
-      "twinkle",
-      "color1",
-      "color2"
-   ],
-   "homepage": "https://www.google.com/",
-   "joystick_size": 80,
-   "joystick_type": "analog",
-   "log_level": 20,
-   "max_us": 1200,
-   "media_dir": "/media/",
-   "name": "REMOTE",
-   "reboot_command": "sudo shutdown -r now",
-   "serial_port": "/dev/S0",
-   "shutdown_command": "sudo shutdown now",
-   "speech": {
-      "text": "Hi"
-   },
-   "warning_voltage": 10,
-   "window_properties": {
-      "animation_dir": 0,
-      "animation_speed": 500,
-      "error_animation_speed": 80,
-      "theme": "qdarktheme",
-      "theme_colors": "Default"
-   }
+  "apps": {
+    "apps": [
+      {
+        "icon": "icon.svg",
+        "id": 0,
+        "launch": "./remote-ui.py &",
+        "name": "Remote"
+      },
+      {
+        "icon": "system-software-update.svg",
+        "id": 1,
+        "launch": "./updater.py &",
+        "name": "Software\nUpdate"
+      },
+      {
+        "icon": "terminal.svg",
+        "id": 2,
+        "launch": "./terminal.py &",
+        "name": "XBee\nTerminal"
+      },
+      {
+        "icon": "settings.svg",
+        "id": 3,
+        "launch": "./settings.py &",
+        "name": "Settings"
+      },
+      {
+        "icon": "browser.svg",
+        "id": 4,
+        "launch": "./browser.py &",
+        "name": "Browser\n(Beta)"
+      },
+      {
+        "icon": "about.svg",
+        "id": 5,
+        "launch": "./about.py &",
+        "name": "About"
+      }
+    ],
+    "theme": "geoblue.qss",
+    "theme_effect": "shadow:b15:c5b5555",
+    "theme_effects": [
+      "none",
+      "shadow:b20:c555555",
+      "shadow:b20:c555555",
+      "shadow:b20:c555555",
+      "shadow:b20:c555555",
+      "shadow:b15:c5b5555",
+      "shadow:b15:c565555",
+      "shadow:b15:c555555"
+    ],
+    "theme_files": [
+      "theme.qss",
+      "blue.qss",
+      "green.qss",
+      "yellow.qss",
+      "purple.qss",
+      "geoblue.qss",
+      "geogreen.qss",
+      "geo.qss"
+    ],
+    "theme_flat": true,
+    "theme_name": "Geometric Blue",
+    "themes": [
+      "Classic Dark",
+      "Blue",
+      "Green",
+      "Yellow",
+      "Purple",
+      "Geometric Blue",
+      "Geometric Green",
+      "Geometric"
+    ]
+  },
+  "arm_dof": 5,
+  "arm_min_max": [
+    [
+      0,
+      180
+    ],
+    [
+      0,
+      180
+    ],
+    [
+      0,
+      180
+    ],
+    [
+      0,
+      180
+    ],
+    [
+      0,
+      180
+    ],
+    [
+      0,
+      180
+    ],
+    [
+      0,
+      180
+    ],
+    [
+      0,
+      180
+    ],
+    [
+      0,
+      180
+    ],
+    [
+      0,
+      180
+    ]
+  ],
+  "arm_prog": [
+    [
+      109,
+      90,
+      2,
+      160,
+      88,
+      51,
+      178,
+      12,
+      76,
+      55
+    ],
+    [
+      1,
+      115,
+      117,
+      65,
+      0,
+      23,
+      0,
+      156,
+      0,
+      44
+    ],
+    [
+      2,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      3,
+      0,
+      87,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      4,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      6,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      7,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      8,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  ],
+  "arm_servos": 10,
+  "backlight_dir": "/sys/class/backlight/10-0045/",
+  "backup_dir": "/home/$USER/Kbot3RemoteBackups/",
+  "base_effects": [
+    "magic",
+    "rainbow",
+    "fire",
+    "twinkle",
+    "swipe",
+    "flash",
+    "fade",
+    "jump3",
+    "color1",
+    "color2",
+    "effect10*c"
+  ],
+  "body_effects": [
+    "magic",
+    "rainbow",
+    "fire",
+    "twinkle",
+    "swipe",
+    "flash",
+    "fade",
+    "jump3",
+    "color1",
+    "color2",
+    "effect10*c"
+  ],
+  "camera_url": "http://kevinbotv3/stream",
+  "data_dir": "/home/$USER/KbotV3/",
+  "dev_mode": false,
+  "head_effects": [
+    "flash",
+    "fade",
+    "jump3",
+    "twinkle",
+    "color1",
+    "color2"
+  ],
+  "homepage": "https://www.google.com/",
+  "joystick_size": 80,
+  "joystick_type": "analog",
+  "log_level": 20,
+  "max_us": 1200,
+  "media_dir": "/media/",
+  "name": "REMOTE",
+  "reboot_command": "sudo shutdown -r now",
+  "serial_port": "/dev/S0",
+  "shutdown_command": "sudo shutdown now",
+  "speech": {
+    "text": "Hi"
+  },
+  "warning_voltage": 10,
+  "window_properties": {
+    "animation_dir": 0,
+    "animation_speed": 500,
+    "error_animation_speed": 80,
+    "theme": "qdarktheme",
+    "theme_colors": "Default"
+  }
 }
