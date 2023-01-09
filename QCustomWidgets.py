@@ -72,7 +72,7 @@ class QNamedLineEdit(QWidget):
 
 
 class KBModalBar(QFrame):
-    def __init__(self, parent, width = 400, height = 64, gap = 16, centerText = True):
+    def __init__(self, parent, width = 400, height = 64, gap = 16, centerText = True, opacity = 90):
         super().__init__()
 
         self.gap = gap
@@ -82,6 +82,11 @@ class KBModalBar(QFrame):
         self.setFrameStyle(QFrame.Shape.Box)
         self.setFixedSize(QSize(width, height))
         self.setParent(parent)
+
+        op = QGraphicsOpacityEffect(self)
+        op.setOpacity(opacity / 100) #0 to 1 will cause the fade effect to kick in
+        self.setGraphicsEffect(op)
+        self.setAutoFillBackground(True)
 
         self.move(int(parent.width() / 2 - self.width() / 2),
                   int(parent.height() - height - gap))
