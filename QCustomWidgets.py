@@ -69,3 +69,85 @@ class QNamedLineEdit(QWidget):
 
         self.lineedit = QLineEdit()
         self.__layout.addWidget(self.lineedit)
+
+
+class KBModalBar(QFrame):
+    def __init__(self, parent, width = 400, height = 64, gap = 16, centerText = True):
+        super().__init__()
+
+        self.gap = gap
+        self.parent = parent
+
+        self.setObjectName("Kevinbot3_RemoteUI_ModalBar")
+        self.setFrameStyle(QFrame.Shape.Box)
+        self.setFixedSize(QSize(width, height))
+        self.setParent(parent)
+
+        self.move(int(parent.width() / 2 - self.width() / 2),
+                  int(parent.height() - height - gap))
+
+        self.__layout = QHBoxLayout()
+        self.setLayout(self.__layout)
+
+        self.__icon = QLabel()
+        self.__layout.addWidget(self.__icon)
+
+        if centerText:
+            self.__layout.addStretch()
+
+        self.__labels_layout = QVBoxLayout()
+        self.__layout.addLayout(self.__labels_layout)
+
+        self.__name = QLabel()
+        self.__labels_layout.addWidget(self.__name)
+
+        self.__description = QLabel()
+        self.__labels_layout.addWidget(self.__description)
+
+        self.__layout.addStretch()
+
+        self.hide()
+
+    def setTitle(self, text):
+        self.__name.setText(text)
+
+    def setDescription(self, text):
+        self.__description.setText(text)
+
+    def setPixmap(self, pixmap):
+        self.__icon.setPixmap(pixmap)
+
+    def closeToast(self, closeSpeed = 750):
+        self.__anim = QPropertyAnimation(self, b"pos")
+        self.__anim.setEasingCurve(QEasingCurve.InOutCubic)
+        self.__anim.setEndValue(QPoint(int(self.parent.width() / 2 - self.width() / 2),
+                                self.parent.height() + self.height() + 25))
+        self.__anim.setDuration(closeSpeed)
+        self.__anim.start()
+
+    def changeIndex(self, newIndex, moveSpeed = 750, easingCurve = QEasingCurve.OutCubic):
+        self.posIndex = newIndex
+        self.__anim = QPropertyAnimation(self, b"pos")
+        self.__anim.setEasingCurve(easingCurve)
+        self.__anim.setEndValue(QPoint(int(self.parent.width() / 2 - self.width() / 2),
+                                     int(self.parent.height() - ((self.height() + self.gap) * newIndex))))
+        self.__anim.setDuration(moveSpeed)
+        self.__anim.start()
+
+    def getIndex(self):
+        return self.posIndex
+
+    def popToast(self, popSpeed = 750, easingCurve = QEasingCurve.OutCubic, posIndex = 1):
+
+        self.posIndex = posIndex
+
+        self.move(int(self.parent.width() / 2 - self.width() / 2),
+                 self.parent.height() + self.height())
+        self.show()
+
+        self.__anim = QPropertyAnimation(self, b"pos")
+        self.__anim.setEasingCurve(easingCurve)
+        self.__anim.setEndValue(QPoint(int(self.parent.width() / 2 - self.width() / 2),
+                                     int(self.parent.height() - (self.height() + self.gap) * posIndex)))
+        self.__anim.setDuration(popSpeed)
+        self.__anim.start()

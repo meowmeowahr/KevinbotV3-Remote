@@ -14,6 +14,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtWidgets import *
+from QCustomWidgets import KBModalBar
 import qtawesome as qta
 
 import Joystick.Joystick as Joystick
@@ -288,6 +289,10 @@ class RemoteUI(QMainWindow):
             load_theme(self, settings["window_properties"]["theme"], settings["window_properties"]["theme_colors"])
         except NameError:
             load_theme(self, settings["window_properties"]["theme"])
+
+        # vars
+        self.modal_count = 0
+        self.modals = []
 
         self.init_ui()
 
@@ -1637,14 +1642,33 @@ class RemoteUI(QMainWindow):
                 json.dump(settings, file, indent=2)
 
     def save_speech(self, text):
+        def close_modal():
+            # close this modal, move other modals
+            modal_bar.closeToast()
+            self.modal_count -= 1
+
+            self.modals.remove(modal_bar)
+
+            for modal in self.modals:
+                modal.changeIndex(modal.getIndex() - 1, moveSpeed = 600)
+
         settings["speech"]["text"] = text
         with open('settings.json', 'w') as file:
             json.dump(settings, file, indent=2)
 
         # show modal
-        self.modal.show()
-        # noinspection PyTypeChecker
-        QTimer.singleShot(1000, self.slide_out_modal)
+        if self.modal_count < 6:
+            modal_bar = KBModalBar(self)
+            self.modals.append(modal_bar)
+            self.modal_count += 1
+            modal_bar.setTitle(strings.SAVE_SUCCESS)
+            modal_bar.setDescription("Speech Preset Saved")
+            modal_bar.setPixmap(qta.icon("fa5.save", color=self.fg_color).pixmap(36))
+
+            modal_bar.popToast(popSpeed = 500, posIndex = self.modal_count)
+            
+            modal_timeout = QTimer()
+            modal_timeout.singleShot(5000, close_modal)
 
     def about_action(self):
         pass
