@@ -541,22 +541,26 @@ class RemoteUI(QMainWindow):
         self.speechButton = QPushButton(strings.SPEECH_BUTTON)
         self.speechButton.setObjectName("Kevinbot3_RemoteUI_SpeechButton")
         self.speechButton.clicked.connect(lambda: com.txcv("no-pass.speech", self.speechInput.text()))
+        self.speechButton.setShortcut(QKeySequence("Ctrl+Shift+S"))
         self.speechGrid.addWidget(self.speechButton, 1, 0, 1, 1)
 
         self.speechSave = QPushButton(strings.SPEECH_SAVE)
         self.speechSave.setObjectName("Kevinbot3_RemoteUI_SpeechButton")
         self.speechSave.clicked.connect(lambda: self.save_speech(self.speechInput.text()))
+        self.speechSave.setShortcut(QKeySequence("Ctrl+S"))
         self.speechGrid.addWidget(self.speechSave, 1, 1, 1, 1)
 
         self.espeakRadio = QRadioButton(strings.SPEECH_ESPEAK)
         self.espeakRadio.setObjectName("Kevinbot3_RemoteUI_SpeechRadio")
         self.espeakRadio.setChecked(True)
         self.espeakRadio.toggled.connect(lambda: com.txcv("no-pass.speech-engine", "espeak"))
+        self.espeakRadio.setShortcut(QKeySequence("Ctrl+Shift+E"))
         self.speechGrid.addWidget(self.espeakRadio, 2, 0, 1, 1)
 
         self.festivalRadio = QRadioButton(strings.SPEECH_FESTIVAL)
         self.festivalRadio.setObjectName("Kevinbot3_RemoteUI_SpeechRadio")
         self.festivalRadio.toggled.connect(lambda: com.txcv("no-pass.speech-engine", "festival"))
+        self.festivalRadio.setShortcut(QKeySequence("Ctrl+Shift+F"))
         self.speechGrid.addWidget(self.festivalRadio, 2, 1, 1, 1)
 
         self.speechWidget.setFixedHeight(self.speechWidget.sizeHint().height())
