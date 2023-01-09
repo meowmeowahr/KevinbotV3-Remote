@@ -1668,7 +1668,7 @@ class RemoteUI(QMainWindow):
             modal_bar.popToast(popSpeed = 500, posIndex = self.modal_count)
             
             modal_timeout = QTimer()
-            modal_timeout.singleShot(5000, close_modal)
+            modal_timeout.singleShot(1500, close_modal)
 
     def about_action(self):
         pass

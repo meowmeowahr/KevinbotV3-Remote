@@ -130,6 +130,9 @@ class KBModalBar(QFrame):
         self.__anim.setDuration(closeSpeed)
         self.__anim.start()
 
+        timer = QTimer()
+        timer.singleShot(closeSpeed, self.deleteLater)
+
     def changeIndex(self, newIndex, moveSpeed = 750, easingCurve = QEasingCurve.OutCubic):
         self.posIndex = newIndex
         self.__anim = QPropertyAnimation(self, b"pos")
