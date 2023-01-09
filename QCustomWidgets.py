@@ -72,7 +72,7 @@ class QNamedLineEdit(QWidget):
 
 
 class KBModalBar(QFrame):
-    def __init__(self, parent, width = 400, height = 64, gap = 16, centerText = True, opacity = 90):
+    def __init__(self, parent, width = 400, height = 64, gap = 16, centerText = True, opacity = 90, bgColor = None):
         super().__init__()
 
         self.gap = gap
@@ -90,6 +90,9 @@ class KBModalBar(QFrame):
 
         self.move(int(parent.width() / 2 - self.width() / 2),
                   int(parent.height() - height - gap))
+
+        if bgColor:
+            self.setStyleSheet(f"background-color: {bgColor}")
 
         self.__layout = QHBoxLayout()
         self.setLayout(self.__layout)
