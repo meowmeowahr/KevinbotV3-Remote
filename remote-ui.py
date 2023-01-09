@@ -377,7 +377,6 @@ class RemoteUI(QMainWindow):
         # Modal
 
         self.ensurePolished()
-        self.init_modal()
         self.init_batt_modal()
         self.init_mot_temp_modal()
 
@@ -1307,34 +1306,6 @@ class RemoteUI(QMainWindow):
         com.xb.halt()
         event.accept()
 
-    def init_modal(self):
-        # a main_widget floating in the middle of the window
-        self.modal = QWidget(self)
-        self.modal.setObjectName("Kevinbot3_RemoteUI_Modal")
-        self.modal.setStyleSheet("#Kevinbot3_RemoteUI_Modal { border: 1px solid " + QColor(
-            self.palette().color(QPalette.ColorRole.ButtonText)).name() + "; }")
-        self.modal.setFixedSize(QSize(400, 200))
-        self.modal.move(int(self.width() / 2 - self.modal.width() / 2),
-                        int(self.height() / 2 - self.modal.height() / 2))
-        self.modal.hide()
-
-        self.modalLayout = QGridLayout()
-        self.modal.setLayout(self.modalLayout)
-
-        self.modalIcon = QLabel()
-        self.modalIcon.setPixmap(QPixmap("icons/check-circle.svg"))
-        self.modalIcon.setFixedSize(QSize(128, 128))
-        self.modalIcon.setScaledContents(True)
-        self.modalIcon.setObjectName("Kevinbot3_RemoteUI_ModalIcon")
-        self.modalLayout.addWidget(self.modalIcon, 0, 0, 1, 2)
-
-        self.modalText = QLabel(strings.SAVE_SUCCESS)
-        self.modalText.setObjectName("Kevinbot3_RemoteUI_ModalText")
-        self.modalText.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.modalText.setWordWrap(True)
-        self.modalLayout.addWidget(self.modalText, 0, 1, 1, 2)
-
-    # noinspection PyArgumentList,PyUnresolvedReferences
     def init_batt_modal(self):
         # a main_widget floating in the middle of the window
         self.batt_modal = QWidget(self)
@@ -1426,17 +1397,6 @@ class RemoteUI(QMainWindow):
         self.motTempModalShutdown.clicked.connect(lambda: self.shutdown_robot_modal_action(self.slide_out_temp_modal()))
         self.motTempModalButtonLayout.addWidget(self.motTempModalShutdown)
 
-    def slide_out_modal(self):
-        # animate modal to slide to the top and then close
-        self.anim = QPropertyAnimation(self.modal, b"pos")
-        self.anim.setEndValue(QPoint(int(self.modal.pos().x()),
-                                     int(self.modal.pos().y() - self.modal.height() -
-                                         self.modal.geometry().height() / 1.6)))
-        self.anim.setEasingCurve(QEasingCurve.Type.OutSine)
-        self.anim.setDuration(settings["window_properties"]["animation_speed"])
-        self.anim.finished.connect(self.hide_modal)
-        self.anim.start()
-
     def slide_out_batt_modal(self, disable=False):
         global disable_batt_modal
         if disable:
@@ -1464,11 +1424,6 @@ class RemoteUI(QMainWindow):
         self.anim.setDuration(settings["window_properties"]["animation_speed"])
         self.anim.finished.connect(lambda: self.hide_temp_modal((not disable)))
         self.anim.start()
-
-    def hide_modal(self):
-        self.modal.hide()
-        self.modal.move(int(self.width() / 2 - self.modal.width() / 2),
-                        int(self.height() / 2 - self.modal.height() / 2))
 
     def hide_batt_modal(self, end=False):
         global disable_batt_modal
