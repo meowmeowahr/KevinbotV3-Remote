@@ -36,9 +36,6 @@ CURRENT_ARM_POS = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 2 5dof arms
 HIGH_MOTOR_TEMP = 50
 HIGH_INSIDE_TEMP = 45
 
-ROBOT_VERSION = "Unknown"
-ENABLED = True
-
 __version__ = "v1.0.0"
 __author__ = "Kevin Ahr"
 
@@ -100,8 +97,6 @@ except KeyError:
 def rx_data():
     time.sleep(1)  # wait for window to open
 
-    global ENABLED
-    global ROBOT_VERSION
     global window
     global disable_batt_modal
     while True:
@@ -132,7 +127,7 @@ def rx_data():
                         window.batt_modal.show()
         elif data[0] == "batt_volt2" and ENABLE_BATT2:
             if window is not None:
-                window.batt_volt2.setText(strings.BATT_VOLT2.format(float(volt2) / 10) + "V")
+                window.batt_volt2.setText(strings.BATT_VOLT2.format(int(data[1]) / 10) + "V")
                 window.battery2_label.setText(strings.BATT_VOLT2.format(int(data[1]) / 10))
 
                 if int(data[1]) / 10 < warning_voltage:
@@ -250,14 +245,11 @@ def rx_data():
                 window.armGroup.setDisabled(True)
                 window.ledGroup.setDisabled(True)
                 window.mainGroup.setDisabled(True)
-                
+
             else:
                 window.armGroup.setDisabled(False)
                 window.ledGroup.setDisabled(False)
                 window.mainGroup.setDisabled(False)
-
-        if not ENABLED:
-            break
 
 
 class SliderProxyStyle(QProxyStyle):
@@ -361,18 +353,18 @@ class RemoteUI(QMainWindow):
         self.eyeConfigWidget.setLayout(self.eyeConfigLayout)
         self.widget.addWidget(self.eyeConfigWidget)
 
-        self.sensorLayout = QHBoxLayout()
-        self.sensorsWidget.setLayout(self.sensorLayout)
+        self.sensor_layout = QHBoxLayout()
+        self.sensorsWidget.setLayout(self.sensor_layout)
         self.widget.addWidget(self.sensorsWidget)
 
         self.widget.setCurrentIndex(0)
 
-        self.armGroup = QGroupBox(strings.ARM_PRESET_G)
-        self.armGroup.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.layout.addWidget(self.armGroup)
+        self.arm_group = QGroupBox(strings.ARM_PRESET_G)
+        self.arm_group.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.layout.addWidget(self.arm_group)
 
-        self.armLayout = QHBoxLayout()
-        self.armGroup.setLayout(self.armLayout)
+        self.arm_layout = QHBoxLayout()
+        self.arm_group.setLayout(self.arm_layout)
 
         # Modal
 
@@ -382,78 +374,78 @@ class RemoteUI(QMainWindow):
 
         # Arm Presets
 
-        self.armPreset1 = QPushButton(strings.ARM_PRESETS[0])
-        self.armPreset1.setObjectName("Kevinbot3_RemoteUI_ArmButton")
+        self.arm_preset1 = QPushButton(strings.ARM_PRESETS[0])
+        self.arm_preset1.setObjectName("Kevinbot3_RemoteUI_ArmButton")
 
-        self.armPreset2 = QPushButton(strings.ARM_PRESETS[1])
-        self.armPreset2.setObjectName("Kevinbot3_RemoteUI_ArmButton")
+        self.arm_preset2 = QPushButton(strings.ARM_PRESETS[1])
+        self.arm_preset2.setObjectName("Kevinbot3_RemoteUI_ArmButton")
 
-        self.armPreset3 = QPushButton(strings.ARM_PRESETS[2])
-        self.armPreset3.setObjectName("Kevinbot3_RemoteUI_ArmButton")
+        self.arm_preset3 = QPushButton(strings.ARM_PRESETS[2])
+        self.arm_preset3.setObjectName("Kevinbot3_RemoteUI_ArmButton")
 
-        self.armPreset4 = QPushButton(strings.ARM_PRESETS[3])
-        self.armPreset4.setObjectName("Kevinbot3_RemoteUI_ArmButton")
+        self.arm_preset4 = QPushButton(strings.ARM_PRESETS[3])
+        self.arm_preset4.setObjectName("Kevinbot3_RemoteUI_ArmButton")
 
-        self.armPreset5 = QPushButton(strings.ARM_PRESETS[4])
-        self.armPreset5.setObjectName("Kevinbot3_RemoteUI_ArmButton")
+        self.arm_preset5 = QPushButton(strings.ARM_PRESETS[4])
+        self.arm_preset5.setObjectName("Kevinbot3_RemoteUI_ArmButton")
 
-        self.armPreset6 = QPushButton(strings.ARM_PRESETS[5])
-        self.armPreset6.setObjectName("Kevinbot3_RemoteUI_ArmButton")
+        self.arm_preset6 = QPushButton(strings.ARM_PRESETS[5])
+        self.arm_preset6.setObjectName("Kevinbot3_RemoteUI_ArmButton")
 
-        self.armPreset7 = QPushButton(strings.ARM_PRESETS[6])
-        self.armPreset7.setObjectName("Kevinbot3_RemoteUI_ArmButton")
+        self.arm_preset7 = QPushButton(strings.ARM_PRESETS[6])
+        self.arm_preset7.setObjectName("Kevinbot3_RemoteUI_ArmButton")
 
-        self.armPreset8 = QPushButton(strings.ARM_PRESETS[7])
-        self.armPreset8.setObjectName("Kevinbot3_RemoteUI_ArmButton")
+        self.arm_preset8 = QPushButton(strings.ARM_PRESETS[7])
+        self.arm_preset8.setObjectName("Kevinbot3_RemoteUI_ArmButton")
 
-        self.armPreset9 = QPushButton(strings.ARM_PRESETS[8])
-        self.armPreset9.setObjectName("Kevinbot3_RemoteUI_ArmButton")
+        self.arm_preset9 = QPushButton(strings.ARM_PRESETS[8])
+        self.arm_preset9.setObjectName("Kevinbot3_RemoteUI_ArmButton")
 
         self.armSetPreset = QPushButton(strings.ARM_SET_PRESET)
         self.armSetPreset.setObjectName("Kevinbot3_RemoteUI_ArmButton")
 
-        self.armPreset1.setFixedSize(60, 50)
-        self.armPreset2.setFixedSize(60, 50)
-        self.armPreset3.setFixedSize(60, 50)
-        self.armPreset4.setFixedSize(60, 50)
-        self.armPreset5.setFixedSize(60, 50)
-        self.armPreset6.setFixedSize(60, 50)
-        self.armPreset7.setFixedSize(60, 50)
-        self.armPreset8.setFixedSize(60, 50)
-        self.armPreset9.setFixedSize(60, 50)
+        self.arm_preset1.setFixedSize(60, 50)
+        self.arm_preset2.setFixedSize(60, 50)
+        self.arm_preset3.setFixedSize(60, 50)
+        self.arm_preset4.setFixedSize(60, 50)
+        self.arm_preset5.setFixedSize(60, 50)
+        self.arm_preset6.setFixedSize(60, 50)
+        self.arm_preset7.setFixedSize(60, 50)
+        self.arm_preset8.setFixedSize(60, 50)
+        self.arm_preset9.setFixedSize(60, 50)
         self.armSetPreset.setFixedSize(60, 50)
 
-        self.armPreset1.clicked.connect(lambda: self.arm_action(0))
-        self.armPreset2.clicked.connect(lambda: self.arm_action(1))
-        self.armPreset3.clicked.connect(lambda: self.arm_action(2))
-        self.armPreset4.clicked.connect(lambda: self.arm_action(3))
-        self.armPreset5.clicked.connect(lambda: self.arm_action(4))
-        self.armPreset6.clicked.connect(lambda: self.arm_action(5))
-        self.armPreset7.clicked.connect(lambda: self.arm_action(6))
-        self.armPreset8.clicked.connect(lambda: self.arm_action(7))
-        self.armPreset9.clicked.connect(lambda: self.arm_action(8))
+        self.arm_preset1.clicked.connect(lambda: self.arm_action(0))
+        self.arm_preset2.clicked.connect(lambda: self.arm_action(1))
+        self.arm_preset3.clicked.connect(lambda: self.arm_action(2))
+        self.arm_preset4.clicked.connect(lambda: self.arm_action(3))
+        self.arm_preset5.clicked.connect(lambda: self.arm_action(4))
+        self.arm_preset6.clicked.connect(lambda: self.arm_action(5))
+        self.arm_preset7.clicked.connect(lambda: self.arm_action(6))
+        self.arm_preset8.clicked.connect(lambda: self.arm_action(7))
+        self.arm_preset9.clicked.connect(lambda: self.arm_action(8))
         self.armSetPreset.clicked.connect(self.arm_edit_action)
 
-        self.armPreset1.setShortcut("1")
-        self.armPreset2.setShortcut("2")
-        self.armPreset3.setShortcut("3")
-        self.armPreset4.setShortcut("4")
-        self.armPreset5.setShortcut("5")
-        self.armPreset6.setShortcut("6")
-        self.armPreset7.setShortcut("7")
-        self.armPreset8.setShortcut("8")
-        self.armPreset9.setShortcut("9")
+        self.arm_preset1.setShortcut("1")
+        self.arm_preset2.setShortcut("2")
+        self.arm_preset3.setShortcut("3")
+        self.arm_preset4.setShortcut("4")
+        self.arm_preset5.setShortcut("5")
+        self.arm_preset6.setShortcut("6")
+        self.arm_preset7.setShortcut("7")
+        self.arm_preset8.setShortcut("8")
+        self.arm_preset9.setShortcut("9")
 
-        self.armLayout.addWidget(self.armPreset1)
-        self.armLayout.addWidget(self.armPreset2)
-        self.armLayout.addWidget(self.armPreset3)
-        self.armLayout.addWidget(self.armPreset4)
-        self.armLayout.addWidget(self.armPreset5)
-        self.armLayout.addWidget(self.armPreset6)
-        self.armLayout.addWidget(self.armPreset7)
-        self.armLayout.addWidget(self.armPreset8)
-        self.armLayout.addWidget(self.armPreset9)
-        self.armLayout.addWidget(self.armSetPreset)
+        self.arm_layout.addWidget(self.arm_preset1)
+        self.arm_layout.addWidget(self.arm_preset2)
+        self.arm_layout.addWidget(self.arm_preset3)
+        self.arm_layout.addWidget(self.arm_preset4)
+        self.arm_layout.addWidget(self.arm_preset5)
+        self.arm_layout.addWidget(self.arm_preset6)
+        self.arm_layout.addWidget(self.arm_preset7)
+        self.arm_layout.addWidget(self.arm_preset8)
+        self.arm_layout.addWidget(self.arm_preset9)
+        self.arm_layout.addWidget(self.armSetPreset)
 
         # LED Options
 
@@ -1113,13 +1105,13 @@ class RemoteUI(QMainWindow):
         self.sensorsBack.setFixedSize(QSize(36, 36))
         self.sensorsBack.setIconSize(QSize(32, 32))
         self.sensorsBack.clicked.connect(lambda: self.widget.slideInIdx(0))
-        self.sensorLayout.addWidget(self.sensorsBack)
+        self.sensor_layout.addWidget(self.sensorsBack)
 
         self.sensorsBox = QGroupBox(strings.SENSORS_G)
         self.sensorsBox.setObjectName("Kevinbot3_RemoteUI_Group")
         self.sensorBoxLayout = QVBoxLayout()
         self.sensorsBox.setLayout(self.sensorBoxLayout)
-        self.sensorLayout.addWidget(self.sensorsBox)
+        self.sensor_layout.addWidget(self.sensorsBox)
 
         self.battLayout = QHBoxLayout()
         self.bmeLayout = QHBoxLayout()
@@ -1250,12 +1242,6 @@ class RemoteUI(QMainWindow):
         self.pageFlipLeft.setIconSize(QSize(32, 32))
         self.pageFlipRight.setIconSize(QSize(32, 32))
 
-        self.aboutButton = QPushButton()
-        self.aboutButton.setObjectName("Kevinbot3_RemoteUI_AboutButton")
-        self.aboutButton.clicked.connect(self.about_action)
-        self.aboutButton.setIcon(qta.icon("fa5s.info-circle", color=self.fg_color))
-        self.aboutButton.setIconSize(QSize(32, 32))
-        self.aboutButton.setFixedSize(QSize(36, 36))
         self.pageFlipLayout1.addWidget(self.pageFlipLeft)
         self.pageFlipLayout1.addStretch()
         self.pageFlipLayout1.addWidget(self.batt_volt1)
@@ -1301,8 +1287,6 @@ class RemoteUI(QMainWindow):
         self.pageFlipLayout2.addWidget(self.pageFlipRight2)
 
     def closeEvent(self, event):
-        global ENABLED
-        ENABLED = False
         com.xb.halt()
         event.accept()
 
@@ -1567,6 +1551,16 @@ class RemoteUI(QMainWindow):
             self.right_knobs[i].value() for i in range(len(self.right_knobs))]
 
     def arm_preset_save_action(self):
+        def close_modal():
+            # close this modal, move other modals
+            modal_bar.closeToast()
+            self.modal_count -= 1
+
+            self.modals.remove(modal_bar)
+
+            for modal in self.modals:
+                modal.changeIndex(modal.getIndex() - 1, moveSpeed=600)
+
         if not extract_digits(self.armPresetLabel.text()):
             # animate self.armPresetLabel to shake using QPropertyAnimation
             self.anim = QPropertyAnimation(self.widget, b"pos")
@@ -1585,9 +1579,19 @@ class RemoteUI(QMainWindow):
             self.anim_group.addAnimation(self.anim_3)
             self.anim_group.start()
         else:
-            self.modal.show()
-            # noinspection PyTypeChecker
-            QTimer.singleShot(1000, self.slide_out_modal)
+            if self.modal_count < 6:
+                modal_bar = KBModalBar(self)
+                self.modals.append(modal_bar)
+                self.modal_count += 1
+                modal_bar.setTitle(strings.SAVE_SUCCESS)
+                modal_bar.setDescription("Speech Preset Saved")
+                modal_bar.setPixmap(qta.icon("fa5.save", color=self.fg_color).pixmap(36))
+
+                modal_bar.popToast(popSpeed=500, posIndex=self.modal_count)
+
+                modal_timeout = QTimer()
+                modal_timeout.singleShot(1500, close_modal)
+
             for i in range(len(settings["arm_prog"][extract_digits(self.armPresetLabel.text())[0] - 1])):
                 if i < settings["arm_dof"]:
                     settings["arm_prog"][extract_digits(self.armPresetLabel.text())[0] - 1][i] = self.left_knobs[
@@ -1609,7 +1613,7 @@ class RemoteUI(QMainWindow):
             self.modals.remove(modal_bar)
 
             for modal in self.modals:
-                modal.changeIndex(modal.getIndex() - 1, moveSpeed = 600)
+                modal.changeIndex(modal.getIndex() - 1, moveSpeed=600)
 
         settings["speech"]["text"] = text
         with open('settings.json', 'w') as file:
@@ -1624,13 +1628,10 @@ class RemoteUI(QMainWindow):
             modal_bar.setDescription("Speech Preset Saved")
             modal_bar.setPixmap(qta.icon("fa5.save", color=self.fg_color).pixmap(36))
 
-            modal_bar.popToast(popSpeed = 500, posIndex = self.modal_count)
-            
+            modal_bar.popToast(popSpeed=500, posIndex=self.modal_count)
+
             modal_timeout = QTimer()
             modal_timeout.singleShot(1500, close_modal)
-
-    def about_action(self):
-        pass
 
     def set_speed(self, speed):
         self.speed = speed
@@ -1680,20 +1681,20 @@ class RemoteUI(QMainWindow):
 
             if direction == "N":
                 com.txmot((map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, settings["max_us"]),
-                        map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, settings["max_us"])))
+                           map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, settings["max_us"])))
             elif direction == "S":
                 com.txmot((map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, 2000 -
-                                    (settings["max_us"] - 1000)),
-                        map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, 2000 -
-                                    (settings["max_us"] - 1000))))
+                                     (settings["max_us"] - 1000)),
+                           map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, 2000 -
+                                     (settings["max_us"] - 1000))))
             elif direction == "W":
                 com.txmot((map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, 2000 -
-                                    (settings["max_us"] - 1000)),
-                        map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, settings["max_us"])))
+                                     (settings["max_us"] - 1000)),
+                           map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, settings["max_us"])))
             elif direction == "E":
                 com.txmot((map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, settings["max_us"]),
-                        map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, 2000 -
-                                    (settings["max_us"] - 1000))))
+                           map_range(distance, 0, self.motor_stick.getMaxDistance(), 1500, 2000 -
+                                     (settings["max_us"] - 1000))))
         elif ANALOG_STICK:
             # EXPERIMENTAL ANALOG CONTROL
 
@@ -1755,10 +1756,11 @@ if __name__ == '__main__':
         app.setApplicationVersion(__version__)
         window = RemoteUI()
         ex = app.exec()
-    #except Exception as e:
-    #    com.txcv("no-pass.remote.status", "error")
-    #    com.txcv("no-pass.remote.error", e)
-    #    error = True
+    # noinspection PyBroadException
+    except Exception as e:
+        com.txcv("no-pass.remote.status", "error")
+        com.txcv("no-pass.remote.error", e)
+        error = True
     finally:
         if not error:
             com.txcv("no-pass.remote.status", "disconnected")
