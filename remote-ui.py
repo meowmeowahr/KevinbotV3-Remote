@@ -1562,22 +1562,18 @@ class RemoteUI(QMainWindow):
                 modal.changeIndex(modal.getIndex() - 1, moveSpeed=600)
 
         if not extract_digits(self.armPresetLabel.text()):
-            # animate self.armPresetLabel to shake using QPropertyAnimation
-            self.anim = QPropertyAnimation(self.widget, b"pos")
-            self.anim.setEndValue(QPoint(self.widget.pos().x() + 100, self.widget.pos().y()))
-            self.anim.setEasingCurve(QEasingCurve.Type.Linear)
-            self.anim.setDuration(settings["window_properties"]["error_animation_speed"])
-            self.anim_2 = QPropertyAnimation(self.widget, b"pos")
-            self.anim_2.setEndValue(QPoint(self.widget.pos().x() - 100, self.widget.pos().y()))
-            self.anim_2.setDuration(settings["window_properties"]["error_animation_speed"])
-            self.anim_3 = QPropertyAnimation(self.widget, b"pos")
-            self.anim_3.setEndValue(QPoint(0, 0))
-            self.anim_3.setDuration(settings["window_properties"]["error_animation_speed"])
-            self.anim_group = QSequentialAnimationGroup()
-            self.anim_group.addAnimation(self.anim)
-            self.anim_group.addAnimation(self.anim_2)
-            self.anim_group.addAnimation(self.anim_3)
-            self.anim_group.start()
+            if self.modal_count < 6:
+                modal_bar = KBModalBar(self)
+                self.modals.append(modal_bar)
+                self.modal_count += 1
+                modal_bar.setTitle(strings.SAVE_SUCCESS)
+                modal_bar.setDescription(strings.SAVE_WARN_1)
+                modal_bar.setPixmap(qta.icon("fa5s.exclamation-triangle", color=self.fg_color).pixmap(36))
+
+                modal_bar.popToast(popSpeed=500, posIndex=self.modal_count)
+
+                modal_timeout = QTimer()
+                modal_timeout.singleShot(1500, close_modal)
         else:
             if self.modal_count < 6:
                 modal_bar = KBModalBar(self)

@@ -67,6 +67,7 @@ EYE_CONFIG_BR_G = "Eye Backlight"
 
 SAVE = "Save"
 SAVE_SUCCESS = "Saved Successfully"
+SAVE_WARN_1 = "Please Select a Preset before saving"
 
 SHUTDOWN_MESSAGE = "Are you sure you want to shutdown the remote?"
 SHUTDOWN_TITLE = "Shutdown"
