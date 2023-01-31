@@ -14,7 +14,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtWidgets import *
-from QCustomWidgets import KBModalBar
+from QCustomWidgets import KBModalBar, KBMainWindow
 import qtawesome as qta
 
 import Joystick.Joystick as Joystick
@@ -263,7 +263,7 @@ class SliderProxyStyle(QProxyStyle):
 
 
 # noinspection PyAttributeOutsideInit,PyArgumentList
-class RemoteUI(QMainWindow):
+class RemoteUI(KBMainWindow):
     # noinspection PyArgumentList
     def __init__(self, parent=None):
         super(RemoteUI, self).__init__(parent)
@@ -287,6 +287,9 @@ class RemoteUI(QMainWindow):
         self.modals = []
 
         self.init_ui()
+
+        if settings["dev_mode"]:
+            self.createDevTools()
 
         if START_FULL_SCREEN:
             self.showFullScreen()

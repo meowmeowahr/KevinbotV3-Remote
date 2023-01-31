@@ -71,6 +71,27 @@ class QNamedLineEdit(QWidget):
         self.__layout.addWidget(self.lineedit)
 
 
+class KBMainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self._windowify_action = QAction("Window Mode")
+        self._windowify_action.triggered.connect(self._windowModeToggle)
+        self._windowify_action.setCheckable(True)
+
+    def _windowModeToggle(self):
+        if self._windowify_action.isChecked():
+            self.setWindowFlags(self.windowFlags() & ~Qt.FramelessWindowHint)
+        else:
+            self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
+
+        self.show()
+
+    def createDevTools(self):
+        """ Create a right-click Debug Menu in app """
+        self.centralWidget().setContextMenuPolicy(Qt.ActionsContextMenu)
+        self.centralWidget().addAction(self._windowify_action)
+
+
 class KBModalBar(QFrame):
     def __init__(self, parent, width = 400, height = 64, gap = 16, centerText = True, opacity = 90, bgColor = None):
         super().__init__()

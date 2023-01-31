@@ -3,6 +3,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+from QCustomWidgets import KBMainWindow
 import qtawesome as qta
 import sys
 import os
@@ -93,7 +94,7 @@ def hex2rgb(h):
     return t[0], t[1], t[2]
 
 
-class MainWindow(QMainWindow):
+class MainWindow(KBMainWindow):
     updateTheme = pyqtSignal()
 
     # noinspection PyUnresolvedReferences
@@ -242,6 +243,9 @@ class MainWindow(QMainWindow):
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_time)
         self.timer.start(1000)
+
+        if settings["dev_mode"]:
+            self.createDevTools()
 
         if START_FULL_SCREEN:
             self.showFullScreen()

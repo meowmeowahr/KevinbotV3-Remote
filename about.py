@@ -14,6 +14,9 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 # noinspection PyPackageRequirements
 from PyQt5.QtWidgets import *
+
+from QCustomWidgets import KBMainWindow
+
 from utils import load_theme, detect_dark
 
 import haptics
@@ -33,7 +36,7 @@ settings = json.load(open("settings.json", encoding="utf-8"))
 haptics.init(21)
 
 
-class MainWindow(QMainWindow):
+class MainWindow(KBMainWindow):
     """ Kevinbot About App Window """
     # noinspection PyUnresolvedReferences,PyArgumentList
     def __init__(self):
@@ -126,6 +129,9 @@ class MainWindow(QMainWindow):
         self.close_animation.setDuration(100)
         self.close_animation.start()
         self.close_animation.finished.connect(self.credits_box.hide)
+
+        if settings["dev_mode"]:
+            self.createDevTools()
 
         if START_FULL_SCREEN:
             self.showFullScreen()

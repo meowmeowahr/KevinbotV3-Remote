@@ -13,6 +13,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+from QCustomWidgets import KBMainWindow
 import qtawesome as qta
 from utils import detect_dark, load_theme
 import platform
@@ -34,7 +35,7 @@ if platform.system() == "Windows":
     myappid = 'kevinbot.kevinbot.updater._'  # arbitrary string
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
-SETTINGS = json.load(open("settings.json", "r"))
+settings = json.load(open("settings.json", "r"))
 
 version = None
 
@@ -50,25 +51,25 @@ class Worker(QObject):
         global version
         # make a backup of the current files
         # create a backup directory if it doesn't exist
-        if not os.path.exists(SETTINGS["backup_dir"].replace("$USER", os.getenv("USER"))):
-            os.makedirs(SETTINGS["backup_dir"].replace("$USER", os.getenv("USER")))
+        if not os.path.exists(settings["backup_dir"].replace("$USER", os.getenv("USER"))):
+            os.makedirs(settings["backup_dir"].replace("$USER", os.getenv("USER")))
 
         self.set_prog(12)
 
         # make a zip file of the current files
-        shutil.make_archive(os.path.join(SETTINGS["backup_dir"].replace("$USER", os.getenv("USER")),
+        shutil.make_archive(os.path.join(settings["backup_dir"].replace("$USER", os.getenv("USER")),
                                          "Kevinbot3_Backup_{}".format(datetime.datetime.now()
                                                                       .strftime("%Y-%m-%d_%H-%M-%S"))),
-                            "zip", os.path.join(SETTINGS["data_dir"].replace("$USER", os.getenv("USER"))))
+                            "zip", os.path.join(settings["data_dir"].replace("$USER", os.getenv("USER"))))
 
         self.set_prog(25)
 
         backups = []
 
         # if there are more than two backups, delete the oldest one
-        if len(os.listdir(SETTINGS["backup_dir"].replace("$USER", os.getenv("USER")))) > 2:
+        if len(os.listdir(settings["backup_dir"].replace("$USER", os.getenv("USER")))) > 2:
             # make a list of the files in the backup directory
-            for file in os.listdir(SETTINGS["backup_dir"].replace("$USER", os.getenv("USER"))):
+            for file in os.listdir(settings["backup_dir"].replace("$USER", os.getenv("USER"))):
                 if file.endswith(".zip"):
                     backups.append(file)
 
@@ -78,7 +79,7 @@ class Worker(QObject):
 
         # remove the files
         for file in backups:
-            os.remove(os.path.join(SETTINGS["backup_dir"].replace("$USER", os.getenv("USER")), file))
+            os.remove(os.path.join(settings["backup_dir"].replace("$USER", os.getenv("USER")), file))
 
         self.set_prog(37)
 
@@ -89,7 +90,7 @@ class Worker(QObject):
         self.set_prog(50)
 
         # extract the file to the temporary directory
-        with tarfile.open(os.path.join(SETTINGS["media_dir"].replace("$USER", os.getenv("USER")),
+        with tarfile.open(os.path.join(settings["media_dir"].replace("$USER", os.getenv("USER")),
                                        window.drive_combo.currentText(), window.file_combo.currentText()),
                           "r:gz") as tar:
             tar.extractall(path="/tmp/Kevinbot3_Temp")
@@ -107,7 +108,7 @@ class Worker(QObject):
                         continue
                     # if the dont_copy_settings checkbox is not checked, copy the file
                     else:
-                        shutil.copy(os.path.join("/tmp/Kevinbot3_Temp", file), os.path.join(SETTINGS["data_dir"]
+                        shutil.copy(os.path.join("/tmp/Kevinbot3_Temp", file), os.path.join(settings["data_dir"]
                                                                                             .replace("$USER",
                                                                                                      os.getenv("USER")),
                                                                                             file))
@@ -119,7 +120,7 @@ class Worker(QObject):
                     version = manifest["version"]
 
                 else:
-                    shutil.copy(os.path.join("/tmp/Kevinbot3_Temp", file), os.path.join(SETTINGS["data_dir"]
+                    shutil.copy(os.path.join("/tmp/Kevinbot3_Temp", file), os.path.join(settings["data_dir"]
                                                                                         .replace("$USER",
                                                                                                  os.getenv("USER")),
                                                                                         file))
@@ -128,18 +129,18 @@ class Worker(QObject):
         for folder in os.listdir("/tmp/Kevinbot3_Temp"):
             if os.path.isdir(os.path.join("/tmp/Kevinbot3_Temp", folder)):
                 try:
-                    shutil.rmtree(os.path.join(SETTINGS["data_dir"].replace("$USER", os.getenv("USER")), folder))
+                    shutil.rmtree(os.path.join(settings["data_dir"].replace("$USER", os.getenv("USER")), folder))
                 except FileNotFoundError:
                     pass
 
-                shutil.copytree(os.path.join("/tmp/Kevinbot3_Temp", folder), os.path.join(SETTINGS["data_dir"]
+                shutil.copytree(os.path.join("/tmp/Kevinbot3_Temp", folder), os.path.join(settings["data_dir"]
                                                                                           .replace("$USER",
                                                                                                    os.getenv("USER")),
                                                                                           folder))
         if manifest:
             for filename in manifest["removed_files"]:
                 try:
-                    os.remove(os.path.join(SETTINGS["data_dir"].replace("$USER", os.getenv("USER")), filename))
+                    os.remove(os.path.join(settings["data_dir"].replace("$USER", os.getenv("USER")), filename))
                 except FileNotFoundError:
                     pass
 
@@ -159,12 +160,12 @@ class Worker(QObject):
 
 
 # noinspection PyArgumentList
-class MainWindow(QMainWindow):
+class MainWindow(KBMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Kevinbot Updater")
         self.setObjectName("Kevinbot3_RemoteUI")
-        load_theme(self, SETTINGS["window_properties"]["theme"])
+        load_theme(self, settings["window_properties"]["theme"])
 
         if EMULATE_REAL_REMOTE:
             self.setWindowFlags(Qt.FramelessWindowHint)
@@ -233,13 +234,13 @@ class MainWindow(QMainWindow):
         self.file_layout.addWidget(self.file_button)
 
         # applying updates to ... label
-        self.apply_label = QLabel("Applying updates to: {}".format(SETTINGS["data_dir"]))
+        self.apply_label = QLabel("Applying updates to: {}".format(settings["data_dir"]))
         self.apply_label.setObjectName("Kevinbot3_RemoteUI_Label")
         self.apply_label.setFixedHeight(24)
         self.layout.addWidget(self.apply_label)
 
         # backing up to ... label
-        self.backup_label = QLabel("Backing up to: {}".format(SETTINGS["backup_dir"]))
+        self.backup_label = QLabel("Backing up to: {}".format(settings["backup_dir"]))
         self.backup_label.setObjectName("Kevinbot3_RemoteUI_Label")
         self.backup_label.setFixedHeight(24)
         self.layout.addWidget(self.backup_label)
@@ -278,6 +279,9 @@ class MainWindow(QMainWindow):
         self.refresh_drives()
         self.refresh_files()
 
+        if settings["dev_mode"]:
+            self.createDevTools()
+
         if FULLSCREEN:
             self.showFullScreen()
         else:
@@ -292,36 +296,43 @@ class MainWindow(QMainWindow):
         # clear drive combo
         self.drive_combo.clear()
 
-        # get drives
-        drives = []
-        for drive in os.listdir(SETTINGS["media_dir"].replace("$USER", os.getenv("USER"))):
-            # if it has files in it
-            if os.path.isdir(os.path.join(SETTINGS["media_dir"].replace("$USER", os.getenv("USER")), drive)):
-                drives.append(drive)
+        if not platform.system() == "Windows":
+            # get drives
+            drives = []
+            for drive in os.listdir(settings["media_dir"].replace("$USER", os.getenv("USER"))):
+                # if it has files in it
+                if os.path.isdir(os.path.join(settings["media_dir"].replace("$USER", os.getenv("USER")), drive)):
+                    drives.append(drive)
 
-        # add drives to combo
-        for drive in drives:
-            self.drive_combo.addItem(drive)
+            # add drives to combo
+            for drive in drives:
+                self.drive_combo.addItem(drive)
+        else:
+            self.drive_combo.addItem("Windows is not Supported!")
 
     def refresh_files(self):
         # clear file combo
         self.file_combo.clear()
 
-        # get files
-        files = []
-        for file in os.listdir(os.path.join(SETTINGS["media_dir"].replace("$USER", os.getenv("USER")),
-                                            self.drive_combo.currentText())):
-            if file.endswith(".tar.gz"):
-                files.append(file)
+        if not platform.system() == "Windows":
+            # get files
+            files = []
+            for file in os.listdir(os.path.join(settings["media_dir"].replace("$USER", os.getenv("USER")),
+                                                self.drive_combo.currentText())):
+                if file.endswith(".tar.gz"):
+                    files.append(file)
 
-        # add files to combo
-        for file in files:
-            self.file_combo.addItem(file)
+            # add files to combo
+            for file in files:
+                self.file_combo.addItem(file)
 
-        if len(files) == 0:
-            self.update_button.setEnabled(False)
+            if len(files) == 0:
+                self.update_button.setEnabled(False)
+            else:
+                self.update_button.setEnabled(True)
         else:
-            self.update_button.setEnabled(True)
+            self.drive_combo.addItem("Windows is not Supported!")
+            self.update_button.setEnabled(False)
 
     def run_update(self):
         # noinspection PyAttributeOutsideInit

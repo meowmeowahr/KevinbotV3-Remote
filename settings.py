@@ -10,7 +10,7 @@ from urllib.parse import urlparse
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from QCustomWidgets import QSpinner, QNamedLineEdit
+from QCustomWidgets import QSpinner, QNamedLineEdit, KBMainWindow
 from SlidingStackedWidget import SlidingStackedWidget
 from json_editor import Editor
 from utils import load_theme, detect_dark, is_tool, is_pi
@@ -96,7 +96,7 @@ class SliderProxyStyle(QProxyStyle):
 
 
 # noinspection PyUnresolvedReferences
-class MainWindow(QMainWindow):
+class MainWindow(KBMainWindow):
     # noinspection PyArgumentList
     def __init__(self):
         # noinspection PyArgumentList
@@ -524,6 +524,9 @@ class MainWindow(QMainWindow):
         self.exit_button.setFixedSize(QSize(36, 36))
         self.exit_layout.addWidget(self.exit_button)
         self.main_layout.addLayout(self.exit_layout)
+
+        if settings["dev_mode"]:
+            self.createDevTools()
 
         if START_FULL_SCREEN:
             self.showFullScreen()

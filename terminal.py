@@ -4,6 +4,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+from QCustomWidgets import KBMainWindow
 import qtawesome as qta
 import sys
 
@@ -30,10 +31,10 @@ settings = json.load(open("settings.json", "r"))
 command_queue = Queue()
 
 
-class Window(QWidget):
+class Window(KBMainWindow):
     # noinspection PyArgumentList
     def __init__(self, *args):
-        QWidget.__init__(self, *args)
+        super().__init__()
 
         try:
             load_theme(self, settings["window_properties"]["theme"], settings["window_properties"]["theme_colors"])
@@ -52,10 +53,15 @@ class Window(QWidget):
 
         self.setObjectName("Kevinbot3_RemoteUI")
 
+        self.widget = QWidget()
+        self.setCentralWidget(self.widget)
+
+        self.layout = QVBoxLayout()
+        self.widget.setLayout(self.layout)
+
         self.textbox = QTextEdit()
         self.textbox.setObjectName("Kevinbot3_RemoteUI_TextEdit")
         self.textbox.setReadOnly(True)
-        self.layout = QVBoxLayout()
 
         self.bottom_layout = QHBoxLayout()
         self.top_layout = QHBoxLayout()
@@ -63,7 +69,6 @@ class Window(QWidget):
         self.layout.addLayout(self.top_layout)
         self.layout.addWidget(self.textbox)
         self.layout.addLayout(self.bottom_layout)
-        self.setLayout(self.layout)
 
         self.tx_line = QLineEdit()
         self.tx_line.setObjectName("Kevinbot3_RemoteUI_SpeechInput")
@@ -106,6 +111,9 @@ class Window(QWidget):
 
         self.serial_th = threading.Thread(target=self.target, daemon=True)
         self.serial_th.start()
+
+        if settings["dev_mode"]:
+            self.createDevTools()
 
         if EMULATE_REAL_REMOTE:
             self.setFixedSize(QSize(800, 480))

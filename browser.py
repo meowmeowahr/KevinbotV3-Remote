@@ -4,6 +4,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtWebEngineWidgets import *
+from QCustomWidgets import KBMainWindow
 import qtawesome as qta
 
 import os
@@ -27,7 +28,7 @@ if platform.system() == "Windows":
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("Kevinbot3 Remote")
 
 
-class MainWindow(QMainWindow):
+class MainWindow(KBMainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
 
@@ -104,6 +105,9 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Kevinbot Browser")
         self.setWindowIcon(QIcon("icons/browser.svg"))
         self.setObjectName("Kevinbot3_RemoteUI")
+
+        if settings["dev_mode"]:
+            self.createDevTools()
 
         if START_FULL_SCREEN:
             self.showFullScreen()
