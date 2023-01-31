@@ -3,6 +3,7 @@ import time
 import serial
 from serial.serialutil import SerialException
 import xbee as xbee_com
+import platform
 
 
 # detect if an actual raspberry pi is being used
@@ -21,11 +22,20 @@ if is_pi():
         import json
         with open("settings.json", "r") as f:
             settings = json.load(f)
-        PORT = settings["serial_port"]
+        PORT = settings["ports"]["pi_port"]
     except KeyError:
         PORT = "/dev/ttyS0"
 else:
-    PORT = '/dev/ttyUSB0'
+    try:
+        import json
+        with open("settings.json", "r") as f:
+            settings = json.load(f)
+            if platform.system() == "Windows":
+                PORT = settings["ports"]["win_port"]
+            else:
+                PORT = settings["ports"]["linux_port"]
+    except KeyError:
+        PORT = "/dev/ttyS0"
 
 BAUD = 230400
 

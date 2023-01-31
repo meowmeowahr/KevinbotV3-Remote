@@ -274,7 +274,11 @@
   "media_dir": "/media/",
   "name": "REMOTE",
   "reboot_command": "sudo shutdown -r now",
-  "serial_port": "/dev/S0",
+  "ports": {
+    "pi_port": "/dev/S0",
+    "win_port": "COM3",
+    "linux_port": "/dev/ttyUSB0"
+  },
   "shutdown_command": "sudo shutdown now",
   "speech": {
     "text": "Hi"
