@@ -230,7 +230,7 @@ class MainWindow(KBMainWindow):
         # Edit Toolbar
         self.edit_toolbar = QToolBar(self)
         self.edit_toolbar.setMovable(False)
-        self.edit_toolbar.setMinimumWidth(130)
+        self.edit_toolbar.setMinimumWidth(125)
         self.edit_toolbar.setIconSize(QSize(32, 32))
         self.edit_toolbar.hide()
 
