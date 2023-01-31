@@ -265,8 +265,8 @@ class SliderProxyStyle(QProxyStyle):
 # noinspection PyAttributeOutsideInit,PyArgumentList
 class RemoteUI(KBMainWindow):
     # noinspection PyArgumentList
-    def __init__(self, parent=None):
-        super(RemoteUI, self).__init__(parent)
+    def __init__(self):
+        super(RemoteUI, self).__init__()
 
         self.setObjectName("Kevinbot3_RemoteUI")
         self.setWindowTitle(strings.WIN_TITLE)
