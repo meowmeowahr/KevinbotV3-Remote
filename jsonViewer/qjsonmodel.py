@@ -7,6 +7,7 @@ and providing functionalities to manipulate QJsonNode objects within the model
 from PyQt5 import QtCore, QtGui
 from .qjsonnode import QJsonNode
 import os
+import platform
 
 FILE_ICON = QtGui.QIcon("icons/file.svg")
 FOLDER_ICON = QtGui.QIcon("icons/folder.svg")
@@ -75,14 +76,16 @@ class QJsonModel(QtCore.QAbstractItemModel):
                     return node.integerIcon
                 elif isinstance(node.value, str) and node.value.startswith("http"):
                     return node.urlIcon
-                elif isinstance(node.value, str) and os.path.isdir(str(node.value).replace("$USER",
-                                                                                           os.environ["USER"])):
-                    return node.folderIcon
-                elif isinstance(node.value, str) and os.path.isfile(str(node.value).replace("$USER",
-                                                                                            os.environ["USER"])):
-                    return node.fileIcon
                 elif isinstance(node.value, str) and not node.value == "":
                     return node.stringIcon
+
+                if not platform.system() == "Windows":
+                    if isinstance(node.value, str) and os.path.isdir(str(node.value).replace("$USER",
+                                                                                               os.environ["USER"])):
+                        return node.folderIcon
+                    elif isinstance(node.value, str) and os.path.isfile(str(node.value).replace("$USER",
+                                                                                                os.environ["USER"])):
+                        return node.fileIcon
 
         elif role == QJsonModel.sortRole:
             return node.key

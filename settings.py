@@ -609,12 +609,9 @@ class MainWindow(KBMainWindow):
         self.app_theme_customizer.blockSignals(False)
 
         for pair in THEME_PAIRS:
-            print(pair)
             if pair[1] == settings["window_properties"]["theme"]:
-                print(pair[1])
                 if "custom" in str(pair[0]).lower():
                     self.app_theme_customizer.addItems(pair[2])
-                    print(pair[2])
 
         self.app_theme_customizer.blockSignals(True)
         self.app_theme_customizer.setCurrentText(theme_color)
@@ -664,6 +661,7 @@ class MainWindow(KBMainWindow):
         settings["apps"]["theme_flat"] = self.runner_theme_flat.isChecked()
         with open('settings.json', 'w') as file:
             json.dump(settings, file, indent=2)
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
