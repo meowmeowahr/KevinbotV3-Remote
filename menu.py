@@ -41,16 +41,14 @@ else:
         json.dump(settings, file, indent=2)
 
 try:
-    logging.basicConfig(filename='menu.log', filemode='w', level=settings["log_level"], format=f'{__file__}:%('
-                                                                                               f'levelname)s - %('
-                                                                                               f'message)s')
-except KeyError:
-    logging.basicConfig(filename='menu.log', filemode='w', level=logging.INFO, format=f'{__file__}:%(levelname)s - %('
-                                                                                      f'message)s')
+    logging.basicConfig(filename='menu.log', filemode='w', level=settings["log_level"])
+except KeyError as e:
+    logging.basicConfig(filename='menu.log', filemode='w', level=logging.INFO)
     logging.warning("log level has not been set")
     settings["log_level"] = 20
     with open('settings.json', 'w') as file:
         json.dump(settings, file, indent=2)
+    print(e)
 
 haptics.init(21)
 
@@ -66,19 +64,12 @@ class Handler(FileSystemEventHandler):
         if event.is_directory:
             return None
         else:
-            print("Reloading Settings")
+            logging.debug("Reloaded Settings")
             global settings
             time.sleep(0.2)  # wait a while
             # Event is modified, you can process it now
             settings = json.load(open("settings.json", "r"))
             window.updateTheme.emit()
-
-
-observer = Observer()
-path = os.getcwd()
-print(path)
-observer.schedule(Handler(), path, recursive=True)
-observer.start()
 
 
 def run_app(command):
@@ -119,8 +110,8 @@ class MainWindow(KBMainWindow):
         self.editBtn = None
         self.btn_index_list = []
 
-        for app in settings["apps"]["apps"]:
-            self.btn_index_list.append(app["id"])
+        for btn in settings["apps"]["apps"]:
+            self.btn_index_list.append(btn["id"])
 
         self.root_widget = QStackedWidget()
         self.setCentralWidget(self.root_widget)
@@ -417,4 +408,11 @@ if __name__ == "__main__":
     app.setApplicationName("Kevinbot Runner")
     app.setApplicationVersion("1.0")
     window = MainWindow()
+
+    # File Observer
+    observer = Observer()
+    path = os.getcwd()
+    observer.schedule(Handler(), path, recursive=True)
+    observer.start()
+
     app.exec_()
