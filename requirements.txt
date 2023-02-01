@@ -8,3 +8,4 @@ Qt.py
 QtAwesome
 xscreensaver-config
 darkdetect
+PyQt5

@@ -62,11 +62,10 @@ if "theme_flat" not in settings["apps"]:
 
 
 class Handler(FileSystemEventHandler):
-    @staticmethod
-    def on_any_event(event):
+    def on_modified(self, event):
         if event.is_directory:
             return None
-        elif event.event_type == 'modified':
+        else:
             print("Reloading Settings")
             global settings
             time.sleep(0.2)  # wait a while
@@ -76,7 +75,8 @@ class Handler(FileSystemEventHandler):
 
 
 observer = Observer()
-path = os.path.join(sys.argv[1] if len(sys.argv) > 1 else '.', "settings.json")
+path = os.getcwd()
+print(path)
 observer.schedule(Handler(), path, recursive=True)
 observer.start()
 
@@ -160,7 +160,7 @@ class MainWindow(KBMainWindow):
         self.grid = QGridLayout()
         layout.addLayout(self.grid)
 
-        self.add_apps(self.grid)
+        self.add_apps()
 
         layout.addStretch()
 
@@ -324,7 +324,9 @@ class MainWindow(KBMainWindow):
             self.editMode = True
             self.editBtn = btn
 
-            self.edit_toolbar.move(QPoint(btn.pos().x() + int((btn.geometry().width() - self.edit_toolbar.geometry().width()) / 2), btn.pos().y() + btn.geometry().height() + 2))
+            self.edit_toolbar.move(QPoint(btn.pos().x() +
+                                          int((btn.geometry().width() - self.edit_toolbar.geometry().width()) / 2),
+                                          btn.pos().y() + btn.geometry().height() + 2))
             self.edit_toolbar.show()
 
             self.edit_left_action = QAction("Left")
@@ -353,7 +355,7 @@ class MainWindow(KBMainWindow):
             json.dump(settings, file, indent=2)
 
         self.exit_edit_mode()
-        self.add_apps(self.grid)
+        self.add_apps()
 
     def left_edit_mode(self, index):
         index_pos = self.btn_index_list.index(index)
@@ -371,13 +373,13 @@ class MainWindow(KBMainWindow):
             json.dump(settings, file, indent=2)
 
         self.exit_edit_mode()
-        self.add_apps(self.grid)
+        self.add_apps()
 
     def exit_edit_mode(self):
         self.editMode = False
         self.edit_toolbar.hide()
 
-    def start_check_hold(self, cmd, btn, index):
+    def start_check_hold(self, btn, index):
         if not self.editMode:
             QTimer.singleShot(1000, lambda: self.check_hold(btn, index))
 
@@ -385,7 +387,7 @@ class MainWindow(KBMainWindow):
         if not self.editMode:
             run_app(cmd)
 
-    def add_apps(self, grid, max_x=5):
+    def add_apps(self, max_x=5):
         for i in reversed(range(self.grid.count())): 
             self.grid.itemAt(i).widget().setParent(None)
 
@@ -394,7 +396,7 @@ class MainWindow(KBMainWindow):
         for link in settings["apps"]["apps"]:
             button = haptics.HToolButton()
             button.setText(link["name"])
-            button.pressed.connect(partial(self.start_check_hold, link["launch"], button, link["id"]))
+            button.pressed.connect(partial(self.start_check_hold, button, link["id"]))
             button.released.connect(partial(self.button_released, link["launch"]))
             button.setObjectName("Kevinbot3_RemoteUI_Button")
             button.setStyleSheet("font-size: 17px; padding: 10px;")
