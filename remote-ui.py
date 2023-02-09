@@ -1569,7 +1569,7 @@ class RemoteUI(KBMainWindow):
                 modal_bar = KBModalBar(self)
                 self.modals.append(modal_bar)
                 self.modal_count += 1
-                modal_bar.setTitle(strings.SAVE_SUCCESS)
+                modal_bar.setTitle(strings.SAVE_ERROR)
                 modal_bar.setDescription(strings.SAVE_WARN_1)
                 modal_bar.setPixmap(qta.icon("fa5s.exclamation-triangle", color=self.fg_color).pixmap(36))
 
