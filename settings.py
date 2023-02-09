@@ -67,8 +67,8 @@ if "theme_flat" not in settings["apps"]:
 
 THEME_PAIRS = [
     ("Kevinbot Dark (Deprecated)", "classic"),
-    ("QDarkTheme Dark (Customizable)", "qdarktheme", ["Default", "Teal", "Green", "Purple", "Orange", "Red"]),
-    ("QDarkTheme Light", "qdarktheme_light"),
+    ("QDarkTheme Dark (Customizable)", "qdarktheme", ["Default", "Teal", "Green", "Purple", "Orange", "Red", "White"]),
+    ("QDarkTheme Light", "qdarktheme_light", ["Default", "Teal", "Green", "Purple", "Orange", "Red", "Black"]),
     ("High Contrast Dark", "highcontrast"),
     ("Breeze Dark", "breeze_dark"),
     ("Breeze Light", "breeze_light"),
@@ -287,6 +287,11 @@ class MainWindow(KBMainWindow):
         self.theme_picker.currentIndexChanged.connect(self.change_theme)
         self.theme_picker.setFixedHeight(36)
         self.theme_layout.addWidget(self.theme_picker)
+
+        for name in settings["apps"]["themes"]:
+            self.theme_picker.addItem(name)
+        self.theme_picker.setCurrentIndex(settings["apps"]["themes"].index(settings["apps"]["theme_name"]))
+        self.theme_picker.blockSignals(False)
 
         self.runner_theme_flat = QCheckBox(strings.SETTINGS_TICK_FLAT)
         self.runner_theme_flat.setFixedWidth(self.runner_theme_flat.sizeHint().width())

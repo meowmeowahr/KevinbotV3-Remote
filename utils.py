@@ -67,6 +67,8 @@ def load_theme(widget, theme="classic", theme_style="default"):
             widget.setStyleSheet(qdarktheme.load_stylesheet(custom_colors={"primary": "#56bbca"}))
         elif theme_style.lower() == "red":
             widget.setStyleSheet(qdarktheme.load_stylesheet(custom_colors={"primary": "#e65c4d"}))
+        elif theme_style.lower() == "white":
+            widget.setStyleSheet(qdarktheme.load_stylesheet(custom_colors={"primary": "#ffffff"}))
         else:
             widget.setStyleSheet(qdarktheme.load_stylesheet())
     elif theme == "highcontrast":
@@ -81,7 +83,22 @@ def load_theme(widget, theme="classic", theme_style="default"):
 
     elif theme == "qdarktheme_light":
         import qdarktheme
-        widget.setStyleSheet(qdarktheme.load_stylesheet(theme="light"))
+        if theme_style.lower() == "default":
+            widget.setStyleSheet(qdarktheme.load_stylesheet(theme="light"))
+        elif theme_style.lower() == "purple":
+            widget.setStyleSheet(qdarktheme.load_stylesheet(theme="light", custom_colors={"primary": "#a63da3"}))
+        elif theme_style.lower() == "green":
+            widget.setStyleSheet(qdarktheme.load_stylesheet(theme="light", custom_colors={"primary": "#349952"}))
+        elif theme_style.lower() == "orange":
+            widget.setStyleSheet(qdarktheme.load_stylesheet(theme="light", custom_colors={"primary": "#dd8126"}))
+        elif theme_style.lower() == "teal":
+            widget.setStyleSheet(qdarktheme.load_stylesheet(theme="light", custom_colors={"primary": "#3499a8"}))
+        elif theme_style.lower() == "red":
+            widget.setStyleSheet(qdarktheme.load_stylesheet(theme="light", custom_colors={"primary": "#c43a2b"}))
+        elif theme_style.lower() == "black":
+            widget.setStyleSheet(qdarktheme.load_stylesheet(theme="light", custom_colors={"primary": "#000000"}))
+        else:
+            widget.setStyleSheet(qdarktheme.load_stylesheet(theme="light"))
     elif theme == "breeze_dark":
         # noinspection PyUnresolvedReferences
         import breeze_resources
