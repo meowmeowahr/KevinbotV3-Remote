@@ -92,15 +92,15 @@ class MainWindow(KBMainWindow):
         self.urlbar.setObjectName("Kevinbot3_Remote_UI_URLBar")
         navtb.addWidget(self.urlbar)
 
+        self.new_button = QAction(qta.icon("fa5s.plus-circle", color=self.fg_color), "Close", self)
+        self.new_button.triggered.connect(lambda: self.add_new_tab("Blank"))
+        navtb.addAction(self.new_button)
+
         self.close_button = QAction(qta.icon("fa5s.window-close", color=self.fg_color), "Close", self)
         self.close_button.triggered.connect(self.close)
         navtb.addAction(self.close_button)
 
-        try:
-            self.add_new_tab(QUrl(settings["homepage"]), "Home")
-        except KeyError:
-            # settings must and older version
-            self.add_new_tab(QUrl('https://www.google.com'), 'Google')
+        self.add_new_tab()
 
         self.setWindowTitle("Kevinbot Browser")
         self.setWindowIcon(QIcon("icons/browser.svg"))
@@ -114,10 +114,12 @@ class MainWindow(KBMainWindow):
         else:
             self.show()
 
-    def add_new_tab(self, qurl=None, label="Blank"):
-
-        if qurl is None:
-            qurl = QUrl('')
+    def add_new_tab(self, label="Blank"):
+        try:
+            qurl = QUrl(settings["homepage"])
+        except KeyError:
+            # support for older settings
+            qurl = QUrl('https://www.google.com')
 
         browser = QWebEngineView()
         browser.setUrl(qurl)
