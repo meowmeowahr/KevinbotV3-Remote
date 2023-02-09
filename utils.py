@@ -73,13 +73,22 @@ def load_theme(widget, theme="classic", theme_style="default"):
             widget.setStyleSheet(qdarktheme.load_stylesheet())
     elif theme == "highcontrast":
         import qdarktheme
-        widget.setStyleSheet(qdarktheme.load_stylesheet(custom_colors={"primary": "#ffffff", 
-                                                                       "background": "#000000",
-                                                                       "border": "#ffffff",
-                                                                       "input.background": "#000000",
-                                                                       "foreground": "#efefef",
-                                                                       "foreground>icon": "#ffffff",
-                                                                       "scrollbarSlider.background": "#757575"}))
+        if theme_style.lower() == "default":
+            widget.setStyleSheet(qdarktheme.load_stylesheet(custom_colors={"primary": "#ffffff",
+                                                                           "background": "#000000",
+                                                                           "border": "#ffffff",
+                                                                           "input.background": "#000000",
+                                                                           "foreground": "#efefef",
+                                                                           "foreground>icon": "#ffffff",
+                                                                           "scrollbarSlider.background": "#757575"}))
+        elif theme_style.lower() == "light":
+            widget.setStyleSheet(qdarktheme.load_stylesheet(custom_colors={"primary": "#000000",
+                                                                           "background": "#ffffff",
+                                                                           "border": "#000000",
+                                                                           "input.background": "#ffffff",
+                                                                           "foreground": "#010101",
+                                                                           "foreground>icon": "#000000",
+                                                                           "scrollbarSlider.background": "#8a8a8a"}))
 
     elif theme == "qdarktheme_light":
         import qdarktheme
