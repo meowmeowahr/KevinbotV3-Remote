@@ -118,6 +118,7 @@ SETTINGS_BROWSER_OPT = "Browser Settings"
 SETTINGS_ADVANCED_OPT = "Advanced Settings"
 
 SETTINGS_APP_THEMES = "App Theme Gallery"
+SETTINGS_RUNNER_THEMES = "Runner Theme Gallery"
 
 SETTINGS_XSC_PREVIEW_B = "Preview Screensaver"
 SETTINGS_VALIDATE_URL_B = "Validate URL"

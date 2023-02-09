@@ -200,17 +200,23 @@ class MainWindow(KBMainWindow):
         self.web_widget = QWidget()
         self.main_widget.addWidget(self.web_widget)
 
-        self.runner_theme_widget = QWidget()
-        self.main_widget.addWidget(self.runner_theme_widget)
+        self.app_theme_widget = QWidget()
+        self.main_widget.addWidget(self.app_theme_widget)
 
         self.remote_widget = QWidget()
         self.main_widget.addWidget(self.remote_widget)
+
+        self.runner_theme_widget = QWidget()
+        self.main_widget.addWidget(self.runner_theme_widget)
 
         self.remote_layout = QVBoxLayout()
         self.remote_widget.setLayout(self.remote_layout)
 
         self.web_layout = QVBoxLayout()
         self.web_widget.setLayout(self.web_layout)
+
+        self.app_theme_layout = QVBoxLayout()
+        self.app_theme_widget.setLayout(self.app_theme_layout)
 
         self.runner_theme_layout = QVBoxLayout()
         self.runner_theme_widget.setLayout(self.runner_theme_layout)
@@ -235,7 +241,7 @@ class MainWindow(KBMainWindow):
         self.remote_button = haptics.HPushButton(strings.SETTINGS_REMOTE_OPT)
         self.remote_button.setStyleSheet("text-align: left;")
         self.remote_button.setIcon(qta.icon("fa5s.tablet-alt", color=self.fg_color))
-        self.remote_button.clicked.connect(lambda: self.main_widget.slideInIdx(5))
+        self.remote_button.clicked.connect(lambda: self.main_widget.slideInIdx(6))
         self.remote_button.setIconSize(QSize(48, 48))
         self.main_layout.addWidget(self.remote_button)
 
@@ -276,30 +282,6 @@ class MainWindow(KBMainWindow):
 
         self.display_layout.addWidget(self.screen_bright_box)
 
-        self.theme_box = QGroupBox(strings.SETTINGS_RUN_THEME_G)
-        self.theme_box.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.theme_layout = QHBoxLayout()
-        self.theme_box.setLayout(self.theme_layout)
-        self.display_layout.addWidget(self.theme_box)
-
-        self.theme_picker = QComboBox()
-        self.theme_picker.setObjectName("Kevinbot3_RemoteUI_Combo")
-        self.theme_picker.blockSignals(True)
-        self.theme_picker.currentIndexChanged.connect(self.change_theme)
-        self.theme_picker.setFixedHeight(36)
-        self.theme_layout.addWidget(self.theme_picker)
-
-        for name in settings["apps"]["themes"]:
-            self.theme_picker.addItem(name)
-        self.theme_picker.setCurrentIndex(settings["apps"]["themes"].index(settings["apps"]["theme_name"]))
-        self.theme_picker.blockSignals(False)
-
-        self.runner_theme_flat = QCheckBox(strings.SETTINGS_TICK_FLAT)
-        self.runner_theme_flat.setFixedWidth(self.runner_theme_flat.sizeHint().width())
-        self.runner_theme_flat.setChecked(settings["apps"]["theme_flat"])
-        self.runner_theme_flat.clicked.connect(self.runner_theme_flat_changed)
-        self.theme_layout.addWidget(self.runner_theme_flat)
-
         self.animation_box = QGroupBox(strings.SETTINGS_ANIM_SPD_G)
         self.animation_box.setObjectName("Kevinbot3_RemoteUI_Group")
         self.animation_layout = QVBoxLayout()
@@ -326,7 +308,7 @@ class MainWindow(KBMainWindow):
         self.app_themes_scroll = QScrollArea()
         QScroller.grabGesture(self.app_themes_scroll, QScroller.LeftMouseButtonGesture)  # enable single-touch scroll
         self.app_themes_scroll.setWidgetResizable(True)
-        self.runner_theme_layout.addWidget(self.app_themes_scroll)
+        self.app_theme_layout.addWidget(self.app_themes_scroll)
 
         self.app_theme_scroll_widget = QWidget()
         self.app_themes_scroll.setWidget(self.app_theme_scroll_widget)
@@ -378,12 +360,79 @@ class MainWindow(KBMainWindow):
             else:
                 enable.clicked.connect(partial(self.activate_theme, THEME_PAIRS[i][1], enable))
 
+        # Runner Themes
+
+        self.runner_themes_button = haptics.HPushButton(strings.SETTINGS_RUNNER_THEMES)
+        self.runner_themes_button.setStyleSheet("text-align: left;")
+        self.runner_themes_button.setIcon(qta.icon("fa5s.rocket", color=self.fg_color))
+        self.runner_themes_button.clicked.connect(lambda: self.main_widget.slideInIdx(7))
+        self.runner_themes_button.setIconSize(QSize(36, 36))
+        self.display_layout.addWidget(self.runner_themes_button)
+
+        self.runner_themes_scroll = QScrollArea()
+        QScroller.grabGesture(self.runner_themes_scroll,
+                              QScroller.LeftMouseButtonGesture)  # enable single-touch scroll
+        self.runner_themes_scroll.setWidgetResizable(True)
+        self.runner_theme_layout.addWidget(self.runner_themes_scroll)
+
+        self.runner_theme_scroll_widget = QWidget()
+        self.runner_themes_scroll.setWidget(self.runner_theme_scroll_widget)
+
+        self.runner_themes_scroll_layout = QGridLayout()
+        self.runner_theme_scroll_widget.setLayout(self.runner_themes_scroll_layout)
+
+        for i in range(len(settings["apps"]["themes"])):
+            frame = QFrame()
+            frame.setFrameStyle(QFrame.Shape.Box)
+            self.runner_themes_scroll_layout.addWidget(frame, i // 3, i % 3)
+    
+            frame_layout = QVBoxLayout()
+            frame.setLayout(frame_layout)
+    
+            image = QLabel()
+            image.setAlignment(Qt.AlignCenter)
+            image.setPixmap(QPixmap(os.path.join(os.curdir, "res/runner_theme_previews",
+                                                 settings["apps"]["themes"][i] + ".png")))
+            frame_layout.addWidget(image)
+    
+            label = QLabel(settings["apps"]["themes"][i])
+            label.setAlignment(Qt.AlignCenter)
+            label.setStyleSheet("font-size: 14px")
+            frame_layout.addWidget(label)
+    
+            button_layout = QHBoxLayout()
+            frame_layout.addLayout(button_layout)
+    
+            enable = haptics.HPushButton("Enable")
+            enable.clicked.connect(partial(self.set_runner_theme, i, enable))
+            if settings["apps"]["theme_name"] == settings["apps"]["themes"][i]:
+                enable.setText("Active")
+                enable.setEnabled(False)
+            button_layout.addWidget(enable)
+    
+        self.exit_app_themes = haptics.HPushButton()
+        self.exit_app_themes.clicked.connect(lambda: self.main_widget.slideInIdx(2))
+        self.exit_app_themes.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
+        self.exit_app_themes.setFixedSize(QSize(36, 36))
+        self.exit_app_themes.setIconSize(QSize(32, 32))
+        self.app_theme_layout.addWidget(self.exit_app_themes)
+
+        self.runner_themes_bottom = QHBoxLayout()
+        self.runner_theme_layout.addLayout(self.runner_themes_bottom)
+
         self.exit_runner_themes = haptics.HPushButton()
         self.exit_runner_themes.clicked.connect(lambda: self.main_widget.slideInIdx(2))
         self.exit_runner_themes.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
         self.exit_runner_themes.setFixedSize(QSize(36, 36))
         self.exit_runner_themes.setIconSize(QSize(32, 32))
-        self.runner_theme_layout.addWidget(self.exit_runner_themes)
+        self.runner_themes_bottom.addWidget(self.exit_runner_themes)
+
+        self.runner_themes_bottom.addStretch()
+
+        self.runner_theme_flat = QCheckBox(strings.SETTINGS_TICK_FLAT)
+        self.runner_theme_flat.setChecked(settings["apps"]["theme_flat"])
+        self.runner_theme_flat.clicked.connect(self.runner_theme_flat_changed)
+        self.runner_themes_bottom.addWidget(self.runner_theme_flat)
 
         if is_tool("xscreensaver"):
             self.ss_box = QGroupBox(strings.SETTINGS_XSC_G)
@@ -621,6 +670,24 @@ class MainWindow(KBMainWindow):
         settings["joystick_type"] = value
         with open('settings.json', 'w') as file:
             json.dump(settings, file, indent=2)
+
+    def set_runner_theme(self, index, button):
+        file_name = settings["apps"]["theme_files"][index]
+        effect = settings["apps"]["theme_effects"][index]
+        settings["apps"]["theme"] = file_name
+        settings["apps"]["theme_effect"] = effect
+        settings["apps"]["theme_name"] = settings["apps"]["themes"][index]
+        with open('settings.json', 'w') as file:
+            json.dump(settings, file, indent=2)
+
+        for i in range(self.runner_themes_scroll_layout.count()):
+            self.runner_themes_scroll_layout.itemAt(i).widget().layout().itemAt(2).layout().itemAt(0).widget()\
+                .setEnabled(True)  # enable button
+            self.runner_themes_scroll_layout.itemAt(i).widget().layout().itemAt(2).layout().itemAt(0).widget() \
+                .setText("Enable")  # set button text
+
+        button.setText("Active")
+        button.setEnabled(False)
 
     def change_theme(self):
         index = self.theme_picker.currentIndex()

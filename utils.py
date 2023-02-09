@@ -127,6 +127,8 @@ def load_theme(widget, theme="classic", theme_style="default"):
         file.open(QFile.ReadOnly | QFile.Text)
         stream = QTextStream(file)
         widget.setStyleSheet(stream.readAll())
+    else:
+        widget.setStyleSheet("")
 
 
 def direction_lookup(destination_x, origin_x, destination_y, origin_y):
