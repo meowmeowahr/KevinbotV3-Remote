@@ -275,7 +275,7 @@
   "name": "REMOTE",
   "reboot_command": "sudo shutdown -r now",
   "ports": {
-    "pi_port": "/dev/S0",
+    "pi_port": "/dev/ttyS0",
     "win_port": "COM3",
     "linux_port": "/dev/ttyUSB0"
   },
