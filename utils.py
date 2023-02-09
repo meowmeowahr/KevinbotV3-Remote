@@ -1,6 +1,8 @@
+import os
 import re
 import math
 import statistics
+import threading
 from shutil import which
 # noinspection PyPackageRequirements
 from PyQt5.QtCore import QFile, QTextStream
@@ -113,7 +115,6 @@ def direction_lookup(destination_x, origin_x, destination_y, origin_y):
 
 def is_tool(name):
     """Check whether `name` is on PATH and marked as executable."""
-
     return which(name) is not None
 
 
@@ -125,3 +126,30 @@ def is_pi():
             return False
     except IOError:
         return False
+
+
+def is_using_venv():
+    """Check if a virtual environment is being used"""
+    return os.path.isdir(os.path.join(os.path.curdir, "venv"))
+
+class AppLauncher:
+    def __init__(self):
+        super().__init__()
+        self.__done = None
+        self.__thread = None
+        self.__script = None
+
+    def launch(self):
+        self.__thread = threading.Thread(target=self.__launch_thread)
+        self.__thread.start()
+
+    def set_script(self, script):
+        self.__script = script
+
+    def set_finnished(self, func):
+        self.__done = func
+
+    def __launch_thread(self):
+        os.system(self.__script)
+        if self.__done:
+            self.__done()

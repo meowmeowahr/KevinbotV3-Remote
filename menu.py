@@ -12,7 +12,7 @@ import json
 import time
 import platform
 from functools import partial
-from utils import load_theme, detect_dark
+from utils import load_theme, detect_dark, AppLauncher, is_using_venv
 import haptics
 import logging
 
@@ -73,7 +73,16 @@ class Handler(FileSystemEventHandler):
 
 
 def run_app(command):
-    os.system(command)
+    if is_using_venv():
+        if platform.system() == "Windows":
+            command = command.replace("python3", os.path.join(os.curdir, "venv\\Scripts\\python.exe"))
+        elif platform.system() == "Linux":
+            command = command.replace("python3", os.path.join(os.curdir, "venv\\bin\\python"))
+
+    window.main_widget.setEnabled(False)
+    launcher.set_script(command)
+    launcher.set_finnished(lambda: window.main_widget.setEnabled(True))
+    launcher.launch()
 
 
 def extract_digits(string):
@@ -333,13 +342,13 @@ class MainWindow(KBMainWindow):
     def right_edit_mode(self, index):
         index_pos = self.btn_index_list.index(index)
         self.btn_index_list.remove(index)
-        self.btn_index_list.insert(index_pos+1, index)
+        self.btn_index_list.insert(index_pos + 1, index)
 
         for pos in range(len(settings["apps"]["apps"])):
             if settings["apps"]["apps"][pos]["id"] == index:
                 app_item = settings["apps"]["apps"][pos]
                 settings["apps"]["apps"].pop(pos)
-                settings["apps"]["apps"].insert(pos+1, app_item)
+                settings["apps"]["apps"].insert(pos + 1, app_item)
                 break
 
         with open('settings.json', 'w') as file:
@@ -351,13 +360,13 @@ class MainWindow(KBMainWindow):
     def left_edit_mode(self, index):
         index_pos = self.btn_index_list.index(index)
         self.btn_index_list.remove(index)
-        self.btn_index_list.insert(index_pos-1, index)
+        self.btn_index_list.insert(index_pos - 1, index)
 
         for pos in range(len(settings["apps"]["apps"])):
             if settings["apps"]["apps"][pos]["id"] == index:
                 app_item = settings["apps"]["apps"][pos]
                 settings["apps"]["apps"].pop(pos)
-                settings["apps"]["apps"].insert(pos-1, app_item)
+                settings["apps"]["apps"].insert(pos - 1, app_item)
                 break
 
         with open('settings.json', 'w') as file:
@@ -379,7 +388,7 @@ class MainWindow(KBMainWindow):
             run_app(cmd)
 
     def add_apps(self, max_x=5):
-        for i in reversed(range(self.grid.count())): 
+        for i in reversed(range(self.grid.count())):
             self.grid.itemAt(i).widget().setParent(None)
 
         # app buttons
@@ -414,5 +423,8 @@ if __name__ == "__main__":
     path = os.getcwd()
     observer.schedule(Handler(), path, recursive=True)
     observer.start()
+
+    # App Launcher
+    launcher = AppLauncher()
 
     app.exec_()

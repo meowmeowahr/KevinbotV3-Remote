@@ -4,37 +4,37 @@
       {
         "icon": "icon.svg",
         "id": 0,
-        "launch": "python3 remote-ui.py &",
+        "launch": "python3 remote-ui.py",
         "name": "Remote"
       },
       {
         "icon": "system-software-update.svg",
         "id": 1,
-        "launch": "python3 updater.py &",
+        "launch": "python3 updater.py",
         "name": "Software\nUpdate"
       },
       {
         "icon": "terminal.svg",
         "id": 2,
-        "launch": "python3 terminal.py &",
+        "launch": "python3 terminal.py",
         "name": "XBee\nTerminal"
       },
       {
         "icon": "settings.svg",
         "id": 3,
-        "launch": "python3 settings.py &",
+        "launch": "python3 settings.py",
         "name": "Settings"
       },
       {
         "icon": "browser.svg",
         "id": 4,
-        "launch": "python3 browser.py &",
+        "launch": "python3 browser.py",
         "name": "Browser\n(Beta)"
       },
       {
         "icon": "about.svg",
         "id": 5,
-        "launch": "python3 about.py &",
+        "launch": "python3 about.py",
         "name": "About"
       }
     ],
