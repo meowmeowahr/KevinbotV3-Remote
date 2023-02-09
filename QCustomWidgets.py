@@ -1,3 +1,5 @@
+import os.path
+
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -77,6 +79,9 @@ class KBMainWindow(QMainWindow):
         self._windowify_action = QAction("Window Mode")
         self._windowify_action.triggered.connect(self._windowModeToggle)
         self._windowify_action.setCheckable(True)
+
+        self.setWindowIcon(QIcon(os.path.join(os.curdir, "icons/application-default-icon.svg")))
+        self.setWindowTitle("Kevinbot Application")
 
     def _windowModeToggle(self):
         if self._windowify_action.isChecked():
