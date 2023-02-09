@@ -9,7 +9,8 @@ try:
 except ImportError:
     # noinspection PyPep8Naming
     try:
-        from RPiSim.GPIO import GPIO as io
+        # from RPiSim.GPIO import GPIO as io
+        pass  # do not use GPIO sim
     except ImportError:
         pass
 
