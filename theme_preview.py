@@ -9,7 +9,7 @@ class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
 
-        load_theme(self, "qdarktheme")
+        load_theme(self, "qdarktheme_kbot")
 
         self.setWindowTitle("Theme Preview")
         self.setObjectName("Kevinbot3_RemoteUI")

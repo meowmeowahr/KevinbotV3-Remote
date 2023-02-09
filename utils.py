@@ -71,6 +71,11 @@ def load_theme(widget, theme="classic", theme_style="default"):
             widget.setStyleSheet(qdarktheme.load_stylesheet(custom_colors={"primary": "#ffffff"}))
         else:
             widget.setStyleSheet(qdarktheme.load_stylesheet())
+    elif theme == "qdarktheme_kbot":
+        import qdarktheme
+        widget.setStyleSheet(qdarktheme.load_stylesheet(custom_colors={"background": "#111114", "primary": "#afbfcf",
+                                                                       "primary>button.activeBackground": "#333348",
+                                                                       "primary>button.hoverBackground": "222238"}))
     elif theme == "highcontrast":
         import qdarktheme
         if theme_style.lower() == "default":

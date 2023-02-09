@@ -66,12 +66,13 @@ if "theme_flat" not in settings["apps"]:
         json.dump(settings, file, indent=2)
 
 THEME_PAIRS = [
-    ("Kevinbot Dark (Deprecated)", "classic"),
+    ("Kevinbot Dark", "qdarktheme_kbot"),
     ("QDarkTheme Dark", "qdarktheme", ["Default", "Teal", "Green", "Purple", "Orange", "Red", "White"]),
     ("QDarkTheme Light", "qdarktheme_light", ["Default", "Teal", "Green", "Purple", "Orange", "Red", "Black"]),
     ("High Contrast", "highcontrast", ["Default", "Light"]),
     ("Breeze Dark", "breeze_dark"),
     ("Breeze Light", "breeze_light"),
+    ("Kevinbot Dark (Old)", "classic"),
     ("System (Debug)", "null")
 ]
 
