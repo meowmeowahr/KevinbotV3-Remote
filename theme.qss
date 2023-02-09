@@ -1,13 +1,13 @@
-#Kevinbot3_RemoteUI {
+#Kevinbot3_RemoteUI, QWidget, QMainWindow {
     background-color: #111114;
 }
 
-#Kevinbot3_RemoteUI_Group {
+QGroupBox {
     color: #ffffff;
     font-weight: bold;
 }
 
-#Kevinbot3_RemoteUI_ArmButton, #Kevinbot3_RemoteUI_Button, QPushButton {
+QPushButton {
     background-color: #222238;
     color: #ffffff;
     font-weight: bold;
@@ -15,14 +15,14 @@
     border-radius: 5px;
 }
 
-#Kevinbot3_RemoteUI_ArmButton:hover, #Kevinbot3_RemoteUI_Button:hover, QPushButton:hover {
+QPushButton:hover {
     background-color: #333348;
     color: #ffffff;
     font-weight: bold;
     border-radius: 5px;
 }
 
-#Kevinbot3_RemoteUI_ArmButton:pressed, #Kevinbot3_RemoteUI_Button:pressed, QPushButton:pressed {
+QPushButton:pressed {
     background-color: #444458;
     color: #ffffff;
     font-weight: bold;
@@ -51,62 +51,7 @@
     border-radius: 5px;
 }
 
-#Kevinbot3_RemoteUI_PageFlipButton, #Kevinbot3_RemoteUI_AboutButton, #Kevinbot3_RemoteUI_ShutdownButton {
-    background-color: #222238;
-    color: #ffffff;
-    font-weight: bold;
-    font-size: 14px;
-    border-radius: 5px;
-    text-align: center;
-}
-
-#Kevinbot3_RemoteUI_PageFlipButton:hover, #Kevinbot3_RemoteUI_AboutButton:hover, #Kevinbot3_RemoteUI_ShutdownButton:hover {
-    background-color: #333348;
-    color: #ffffff;
-    font-weight: bold;
-    border-radius: 5px;
-}
-
-#Kevinbot3_RemoteUI_LedButton , #Kevinbot3_RemoteUI_NumberBoard_Key{
-    background-color: #222238;
-    color: #ffffff;
-    font-weight: bold;
-    font-size: 12px;
-    border-radius: 5px;
-    border: 1px solid #ffffff;
-}
-
-#Kevinbot3_RemoteUI_LedButton:hover, #Kevinbot3_RemoteUI_NumberBoard_Key:hover {
-    border: 2px solid #ffffff;
-}
-
-#Kevinbot3_DPad_Button {
-    background-color: #323339;
-    color: #ffffff;
-    font-weight: bold;
-    font-size: 12px;
-    border-radius: 5px;
-    border: 1px solid #ffffff;
-}
-
-#Kevinbot3_DPad_Button:hover {
-    border: 2px solid #ffffff;
-    background-color: #424349;
-}
-
-#Kevinbot3_DPad_Button:pressed {
-    background-color: #53535a;
-    color: #ffffff;
-    font-weight: bold;
-    border-radius: 5px;
-    border: 1px solid #ffffff;
-}
-
-#Kevinbot3_DPad_Button:disabled {
-    background-color: #df574d;
-}
-
-#Kevinbot3_RemoteUI_SpeechInput, #Kevinbot3_RemoteUI_JSONEdit, QLineEdit {
+QLineEdit, QTextEdit, QPlainTextEdit {
     background-color: #222238;
     color: #ffffff;
     font-weight: bold;
@@ -115,30 +60,7 @@
     padding: 8px;
 }
 
-#Kevinbot3_RemoteUI_SpeechButton {
-    background-color: #222238;
-    color: #ffffff;
-    font-weight: bold;
-    font-size: 12px;
-    border-radius: 5px;
-    padding: 9px;
-}
-
-#Kevinbot3_RemoteUI_SpeechButton:hover {
-    background-color: #333348;
-    color: #ffffff;
-    font-weight: bold;
-    border-radius: 5px;
-}
-
-#Kevinbot3_RemoteUI_SpeechButton:pressed {
-    background-color: #444458;
-    color: #ffffff;
-    font-weight: bold;
-    border-radius: 5px;
-}
-
-#Kevinbot3_RemoteUI_CameraLedSlider, #Kevinbot3_RemoteUI_Slider {
+QSlider {
     color: #ffffff;
     font-weight: bold;
     font-size: 12px;
@@ -146,75 +68,52 @@
     padding: 6px;
 }
 
-#Kevinbot3_RemoteUI_CameraLedSlider:handle, #Kevinbot3_RemoteUI_Slider:handle {
+QSlider:handle {
     background-color: #fad010;
     border-radius: 5px;
 }
 
-#Kevinbot3_RemoteUI_CameraLedSlider:handle:hover, #Kevinbot3_RemoteUI_Slider:handle:hover {
+QSlider:handle:hover {
     background-color: #d8d000;
 }
 
-#Kevinbot3_RemoteUI_CameraLedSlider::handle:disabled, #Kevinbot3_RemoteUI_Slider::handle:disabled {
+QSlider::handle:disabled {
     background-color: #010110;
 }
 
-#Kevinbot3_RemoteUI_HeadEffectButton, #Kevinbot3_RemoteUI_BodyEffectButton {
-    background-color: #222238;
-    color: #ffffff;
-    font-weight: bold;
-    font-size: 11px;
-    border-radius: 5px;
-    border: 1px solid #ffffff;
-}
-
-#Kevinbot3_RemoteUI_HeadEffectButton:hover, #Kevinbot3_RemoteUI_BodyEffectButton:hover {
-    background-color: #333348;
-    color: #ffffff;
-    font-weight: bold;
-    border-radius: 5px;
-}
-
-#Kevinbot3_RemoteUI_HeadEffectButton:pressed, #Kevinbot3_RemoteUI_BodyEffectButton:pressed {
-    background-color: #444458;
-    color: #ffffff;
-    font-weight: bold;
-    border-radius: 5px;
-}
-
-#Kevinbot3_RemoteUI_Menu {
+QMenu {
     background-color: #212121;
     color: #ffffff;
 }
 
-#Kevinbot3_RemoteUI_Menu::item {
+QMenu::item {
     padding: 3px 5px;
     background: transparent;
     border-radius: 4px;
 }
 
-#Kevinbot3_RemoteUI_Menu::item:selected { /* when selected using mouse or keyboard */
+QMenu::item:selected { /* when selected using mouse or keyboard */
     background: #383838;
 }
 
-#Kevinbot3_RemoteUI_Menu::item:pressed {
+QMenu::item:pressed {
     background: #888888;
 }
 
-#Kevinbot3_RemoteUI_MenuItem {
+QMenuItem {
     background-color: #232a2f; /* sets background of the menu */
     border: 1px solid black;
     color: #ffffff;
     font-size: 14px;
 }
 
-#Kevinbot3_RemoteUI_MenuItem::item {
+QMenuItem::item {
     /* sets background of menu item. set this to something non-transparent
         if you want menu color and menu item color to be different */
     background-color: transparent;
 }
 
-#Kevinbot3_RemoteUI_MenuItem::item:selected { /* when user selects item using mouse or keyboard */
+QMenuItem::item:selected { /* when user selects item using mouse or keyboard */
     background-color: #654321;
 }
 
@@ -237,7 +136,7 @@
     background: #000000;
 }
 
-#Kevinbot3_RemoteUI_Label {
+QLabel {
     color: #ffffff;
     font-weight: bold;
     font-size: 13px;
