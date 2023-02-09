@@ -19,6 +19,7 @@ import xscreensaver_config.ConfigParser as xSc
 
 import haptics
 import strings
+from functools import partial
 
 START_FULL_SCREEN = False
 EMULATE_REAL_REMOTE = True
@@ -198,6 +199,9 @@ class MainWindow(KBMainWindow):
         self.web_widget = QWidget()
         self.main_widget.addWidget(self.web_widget)
 
+        self.runner_theme_widget = QWidget()
+        self.main_widget.addWidget(self.runner_theme_widget)
+
         self.remote_widget = QWidget()
         self.main_widget.addWidget(self.remote_widget)
 
@@ -206,6 +210,9 @@ class MainWindow(KBMainWindow):
 
         self.web_layout = QVBoxLayout()
         self.web_widget.setLayout(self.web_layout)
+
+        self.runner_theme_layout = QVBoxLayout()
+        self.runner_theme_widget.setLayout(self.runner_theme_layout)
 
         self.main_layout = QVBoxLayout()
         self.home_widget.setLayout(self.main_layout)
@@ -287,48 +294,6 @@ class MainWindow(KBMainWindow):
         self.runner_theme_flat.clicked.connect(self.runner_theme_flat_changed)
         self.theme_layout.addWidget(self.runner_theme_flat)
 
-        self.app_theme_box = QGroupBox(strings.SETTINGS_APP_THEME_G)
-        self.app_theme_box.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.app_theme_layout = QHBoxLayout()
-        self.app_theme_box.setLayout(self.app_theme_layout)
-        self.display_layout.addWidget(self.app_theme_box)
-
-        self.app_theme_picker = QComboBox()
-        self.app_theme_picker.setObjectName("Kevinbot3_RemoteUI_Combo")
-        self.app_theme_picker.blockSignals(True)
-        self.app_theme_picker.currentIndexChanged.connect(self.change_app_theme)
-        self.app_theme_picker.setFixedHeight(36)
-        self.app_theme_layout.addWidget(self.app_theme_picker)
-
-        self.app_theme_customizer = QComboBox()
-        self.app_theme_customizer.setPlaceholderText("Default")
-        self.app_theme_customizer.setFixedWidth(120)
-        self.app_theme_customizer.currentIndexChanged.connect(self.change_app_theme)
-        self.app_theme_layout.addWidget(self.app_theme_customizer)
-
-        for name in settings["apps"]["themes"]:
-            self.theme_picker.addItem(name)
-        self.theme_picker.setCurrentIndex(settings["apps"]["themes"].index(settings["apps"]["theme_name"]))
-        self.theme_picker.blockSignals(False)
-
-        for pair in THEME_PAIRS:
-            self.app_theme_picker.addItem(pair[0])
-            if pair[1] == settings["window_properties"]["theme"]:
-                self.app_theme_picker.setCurrentText(pair[0])
-                if "custom" in str(pair[0]).lower():
-                    self.app_theme_customizer.setEnabled(True)
-                    self.app_theme_customizer.addItems(pair[2])
-                else:
-                    self.app_theme_customizer.setEnabled(False)
-                    for i in range(self.app_theme_customizer.count()):
-                        self.app_theme_customizer.removeItem(i)
-        self.app_theme_picker.blockSignals(False)
-
-        try:
-            self.app_theme_customizer.setCurrentText(settings["window_properties"]["theme_colors"])
-        except NameError:
-            pass
-
         self.animation_box = QGroupBox(strings.SETTINGS_ANIM_SPD_G)
         self.animation_box.setObjectName("Kevinbot3_RemoteUI_Group")
         self.animation_layout = QVBoxLayout()
@@ -342,6 +307,77 @@ class MainWindow(KBMainWindow):
         self.animation_spinner.spinbox.valueChanged.connect(self.set_animation_speed)
         self.animation_spinner.setValue(settings["window_properties"]["animation_speed"])
         self.animation_layout.addWidget(self.animation_spinner)
+
+        # App Themes
+
+        self.app_themes_button = haptics.HPushButton(strings.SETTINGS_APP_THEMES)
+        self.app_themes_button.setStyleSheet("text-align: left;")
+        self.app_themes_button.setIcon(qta.icon("fa5s.palette", color=self.fg_color))
+        self.app_themes_button.clicked.connect(lambda: self.main_widget.slideInIdx(5))
+        self.app_themes_button.setIconSize(QSize(36, 36))
+        self.display_layout.addWidget(self.app_themes_button)
+
+        self.app_themes_scroll = QScrollArea()
+        QScroller.grabGesture(self.app_themes_scroll, QScroller.LeftMouseButtonGesture)  # enable single-touch scroll
+        self.app_themes_scroll.setWidgetResizable(True)
+        self.runner_theme_layout.addWidget(self.app_themes_scroll)
+
+        self.app_theme_scroll_widget = QWidget()
+        self.app_themes_scroll.setWidget(self.app_theme_scroll_widget)
+
+        self.app_themes_scroll_layout = QGridLayout()
+        self.app_theme_scroll_widget.setLayout(self.app_themes_scroll_layout)
+
+        for i in range(len(THEME_PAIRS)):
+            frame = QFrame()
+            frame.setFrameStyle(QFrame.Shape.Box)
+            self.app_themes_scroll_layout.addWidget(frame, i // 3, i % 3)
+
+            frame_layout = QVBoxLayout()
+            frame.setLayout(frame_layout)
+
+            image = QLabel()
+            image.setAlignment(Qt.AlignCenter)
+            image.setPixmap(QPixmap(os.path.join(os.curdir, "res/theme_previews", THEME_PAIRS[i][1] + ".png")))
+            frame_layout.addWidget(image)
+
+            label = QLabel(THEME_PAIRS[i][0])
+            label.setAlignment(Qt.AlignCenter)
+            label.setStyleSheet("font-size: 14px")
+            frame_layout.addWidget(label)
+
+            button_layout = QHBoxLayout()
+            frame_layout.addLayout(button_layout)
+
+            enable = haptics.HPushButton("Enable")
+            if settings["window_properties"]["theme"] == THEME_PAIRS[i][1]:
+                enable.setText("Active")
+                enable.setEnabled(False)
+            button_layout.addWidget(enable)
+
+            if len(THEME_PAIRS[i]) == 3:
+                customizer = QComboBox()
+                customizer.setPlaceholderText("Default")
+                customizer.setFixedWidth(120)
+                customizer.setEnabled(not enable.isEnabled())
+                customizer.currentIndexChanged.connect(partial(self.activate_custom, THEME_PAIRS[i][1], customizer))
+                button_layout.addWidget(customizer)
+
+                for item in THEME_PAIRS[i][2]:
+                    customizer.addItem(item)
+                    if settings["window_properties"]["theme"] == THEME_PAIRS[i][1] and len(THEME_PAIRS[i]) == 3:
+                        customizer.setCurrentText(settings["window_properties"]["theme_colors"])
+
+                enable.clicked.connect(partial(self.activate_theme, THEME_PAIRS[i][1], enable, customizer))
+            else:
+                enable.clicked.connect(partial(self.activate_theme, THEME_PAIRS[i][1], enable))
+
+        self.exit_runner_themes = haptics.HPushButton()
+        self.exit_runner_themes.clicked.connect(lambda: self.main_widget.slideInIdx(2))
+        self.exit_runner_themes.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
+        self.exit_runner_themes.setFixedSize(QSize(36, 36))
+        self.exit_runner_themes.setIconSize(QSize(32, 32))
+        self.runner_theme_layout.addWidget(self.exit_runner_themes)
 
         if is_tool("xscreensaver"):
             self.ss_box = QGroupBox(strings.SETTINGS_XSC_G)
@@ -362,7 +398,7 @@ class MainWindow(KBMainWindow):
 
             self.ss_enable_checkbox = QCheckBox(strings.SETTINGS_TICK_ENABLE)
             self.ss_enable_checkbox.stateChanged.connect(self.ss_enable_changed)
-            
+
             if self.xsc_config.read()["mode"] == "one":
                 self.ss_timeout_spinner.setDisabled(False)
                 self.ss_enable_checkbox.setChecked(True)
@@ -591,6 +627,39 @@ class MainWindow(KBMainWindow):
         with open('settings.json', 'w') as file:
             json.dump(settings, file, indent=2)
 
+    def activate_theme(self, theme, button, customizer=None):
+        settings["window_properties"]["theme"] = theme
+
+        with open('settings.json', 'w') as file:
+            json.dump(settings, file, indent=2)
+
+        load_theme(self, settings["window_properties"]["theme"], settings["window_properties"]["theme_colors"])
+
+        for i in range(self.app_themes_scroll_layout.count()):
+            self.app_themes_scroll_layout.itemAt(i).widget().layout().itemAt(2).layout().itemAt(0).widget()\
+                .setEnabled(True)  # enable button
+            self.app_themes_scroll_layout.itemAt(i).widget().layout().itemAt(2).layout().itemAt(0).widget() \
+                .setText("Enable")  # set button text
+            if len(self.app_themes_scroll_layout.itemAt(i).widget().layout().itemAt(2).layout()) > 1:
+                self.app_themes_scroll_layout.itemAt(i).widget().layout().itemAt(2).layout().itemAt(1).widget() \
+                    .setEnabled(False)  # disable combobox
+                self.app_themes_scroll_layout.itemAt(i).widget().layout().itemAt(2).layout().itemAt(1).widget() \
+                    .setCurrentIndex(0)  # set current index
+
+        button.setText("Active")
+        button.setEnabled(False)
+
+        if customizer:
+            customizer.setEnabled(True)
+
+    def activate_custom(self, theme, customizer: QComboBox):
+        settings["window_properties"]["theme_colors"] = customizer.currentText()
+
+        with open('settings.json', 'w') as file:
+            json.dump(settings, file, indent=2)
+
+        load_theme(self, settings["window_properties"]["theme"], settings["window_properties"]["theme_colors"])
+
     def change_app_theme(self):
         combo_val = self.app_theme_picker.currentText()
 
@@ -600,7 +669,7 @@ class MainWindow(KBMainWindow):
         for pair in THEME_PAIRS:
             if pair[0] == combo_val:
                 settings["window_properties"]["theme"] = pair[1]
-                    
+
                 if "custom" in str(pair[0]).lower():
                     self.app_theme_customizer.setEnabled(True)
                     if settings["window_properties"]["theme_colors"] == "null":
@@ -641,19 +710,19 @@ class MainWindow(KBMainWindow):
 
     def ss_timeout_changed(self):
         value = self.ss_timeout_spinner.spinbox.value()
-        self.xsc_config.update({"timeout": "0:{}:0".format(value)})   
-        self.xsc_config.save()     
+        self.xsc_config.update({"timeout": "0:{}:0".format(value)})
+        self.xsc_config.save()
 
     def ss_enable_changed(self):
         enabled = self.ss_enable_checkbox.isChecked()
         if enabled:
             self.ss_timeout_spinner.setDisabled(False)
-            self.xsc_config.update({"mode": "one"})   
+            self.xsc_config.update({"mode": "one"})
         else:
             self.ss_timeout_spinner.setDisabled(True)
             self.xsc_config.update({"mode": "off"})
-         
-        self.xsc_config.save()     
+
+        self.xsc_config.save()
 
     def name_change(self):
         name = self.name_edit.lineedit.text()
