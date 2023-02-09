@@ -950,6 +950,7 @@ class RemoteUI(KBMainWindow):
         self.armPresetBack.setFixedSize(QSize(36, 36))
         self.armPresetBack.setIconSize(QSize(32, 32))
         self.armPresetBack.clicked.connect(lambda: self.widget.slideInIdx(0))
+        self.armPresetBack.setFlat(True)
         self.armBottomLayout.addWidget(self.armPresetBack)
 
         self.armPresetSave = QPushButton("    " + strings.SAVE)
@@ -968,6 +969,7 @@ class RemoteUI(KBMainWindow):
         self.eyeConfigBack.setFixedSize(QSize(36, 36))
         self.eyeConfigBack.setIconSize(QSize(32, 32))
         self.eyeConfigBack.clicked.connect(lambda: self.widget.slideInIdx(0))
+        self.eyeConfigBack.setFlat(True)
         self.eyeConfigLayout.addWidget(self.eyeConfigBack)
 
         # group box
@@ -1644,6 +1646,7 @@ class RemoteUI(KBMainWindow):
 
     def shutdown_action(self):
         self.close()
+        app.quit()
 
     @staticmethod
     def eye_config_palette_selected(color):
@@ -1763,4 +1766,3 @@ if __name__ == '__main__':
     finally:
         if not error:
             com.txcv("no-pass.remote.status", "disconnected")
-    sys.exit()
