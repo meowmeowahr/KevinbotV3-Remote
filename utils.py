@@ -132,6 +132,7 @@ def is_using_venv():
     """Check if a virtual environment is being used"""
     return os.path.isdir(os.path.join(os.path.curdir, "venv"))
 
+
 class AppLauncher:
     def __init__(self):
         super().__init__()

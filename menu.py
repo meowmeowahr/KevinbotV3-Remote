@@ -274,8 +274,8 @@ class MainWindow(KBMainWindow):
                                                                    hex2rgb(is_color[0][1:])[1],
                                                                    hex2rgb(is_color[0][1:])[2]))
             if not settings["apps"]["theme_flat"]:
-                for e in widget_effect:
-                    self.main_widget.setGraphicsEffect(e)
+                for effect in widget_effect:
+                    self.main_widget.setGraphicsEffect(effect)
         else:
             self.main_widget.setGraphicsEffect(None)
 

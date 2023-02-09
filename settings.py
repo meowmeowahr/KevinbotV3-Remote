@@ -60,7 +60,7 @@ else:
         json.dump(settings, file, indent=2)
 
 # load runner theme flat setting
-if not "theme_flat" in settings["apps"]:
+if "theme_flat" not in settings["apps"]:
     settings["apps"]["theme_flat"] = False  # save default
     with open('settings.json', 'w') as file:
         json.dump(settings, file, indent=2)
@@ -360,7 +360,7 @@ class MainWindow(KBMainWindow):
                 customizer.setPlaceholderText("Default")
                 customizer.setFixedWidth(120)
                 customizer.setEnabled(not enable.isEnabled())
-                customizer.currentIndexChanged.connect(partial(self.activate_custom, THEME_PAIRS[i][1], customizer))
+                customizer.currentIndexChanged.connect(partial(self.activate_custom, customizer))
                 button_layout.addWidget(customizer)
 
                 for item in THEME_PAIRS[i][2]:
@@ -652,7 +652,7 @@ class MainWindow(KBMainWindow):
         if customizer:
             customizer.setEnabled(True)
 
-    def activate_custom(self, theme, customizer: QComboBox):
+    def activate_custom(self, customizer: QComboBox):
         settings["window_properties"]["theme_colors"] = customizer.currentText()
 
         with open('settings.json', 'w') as file:
