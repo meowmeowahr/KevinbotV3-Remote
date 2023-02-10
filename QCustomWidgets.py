@@ -80,6 +80,9 @@ class KBMainWindow(QMainWindow):
         self._windowify_action.triggered.connect(self._windowModeToggle)
         self._windowify_action.setCheckable(True)
 
+        self._close_action = QAction("Quit")
+        self._close_action.triggered.connect(self.close)
+
         self.setWindowIcon(QIcon(os.path.join(os.curdir, "icons/application-default-icon.svg")))
         self.setWindowTitle("Kevinbot Application")
 
@@ -95,6 +98,7 @@ class KBMainWindow(QMainWindow):
         """ Create a right-click Debug Menu in app """
         self.centralWidget().setContextMenuPolicy(Qt.ActionsContextMenu)
         self.centralWidget().addAction(self._windowify_action)
+        self.centralWidget().addAction(self._close_action)
 
 
 class KBModalBar(QFrame):

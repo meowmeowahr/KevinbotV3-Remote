@@ -21,6 +21,7 @@ QSS = """
     font-weight: bold;
     font-size: 12px;
     border-radius: 24px;
+    font-family: Lato;
 }
 
 #Kevinbot3_RemoteUI_Button:hover {
