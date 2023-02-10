@@ -1,5 +1,5 @@
 #Kevinbot3_RemoteUI {
-    background-image: url("bg/GeoBlue.png");
+    background-image: url("res/bg/GeoBlue.png");
     background-repeat: no-repeat;
 }
 

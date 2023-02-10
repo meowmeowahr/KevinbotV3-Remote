@@ -1,5 +1,5 @@
 #Kevinbot3_RemoteUI {
-    background-image: url("bg/Teal.png");
+    background-image: url("res/bg/Teal.png");
     background-repeat: no-repeat;
 }
 
