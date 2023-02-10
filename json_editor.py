@@ -49,6 +49,7 @@ class Editor(QSplitter):
         self.setMinimumSize(400, 190)
 
         self.ui_view_edit = JSONEditor()
+        QScroller.grabGesture(self.ui_view_edit, QScroller.LeftMouseButtonGesture)  # enable single-touch scroll
         self.ui_view_edit.setStyleSheet(STYLE_1_QSS)
         self.highlight = JsonHighlighter(self.ui_view_edit.document(), STYLE_1)
         self.ui_view_edit.setReadOnly(True)
