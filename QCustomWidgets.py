@@ -80,6 +80,9 @@ class KBMainWindow(QMainWindow):
         self._windowify_action.triggered.connect(self._windowModeToggle)
         self._windowify_action.setCheckable(True)
 
+        self._title_action = QAction("-- Dev Menu --")
+        self._title_action.setEnabled(False)
+
         self._close_action = QAction("Quit")
         self._close_action.triggered.connect(self.close)
 
@@ -97,6 +100,7 @@ class KBMainWindow(QMainWindow):
     def createDevTools(self):
         """ Create a right-click Debug Menu in app """
         self.centralWidget().setContextMenuPolicy(Qt.ActionsContextMenu)
+        self.centralWidget().addAction(self._title_action)
         self.centralWidget().addAction(self._windowify_action)
         self.centralWidget().addAction(self._close_action)
 
