@@ -48,17 +48,7 @@
       "geogreen.py",
       "geo.py"
     ],
-    "theme_flat": true,
-    "theme_name": "Geometric Blue",
-    "themes": [
-      "Blue",
-      "Green",
-      "Yellow",
-      "Purple",
-      "Geometric Blue",
-      "Geometric Green",
-      "Geometric"
-    ]
+    "theme_flat": true
   },
   "arm_dof": 5,
   "arm_min_max": [

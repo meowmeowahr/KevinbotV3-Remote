@@ -1,6 +1,6 @@
-""" Gemoetric Theme """
+""" Geometric Theme """
 
-Name = "Gemoetric"
+NAME = "Geometric"
 
 QSS = """#Kevinbot3_RemoteUI {
     background-image: url("res/bg/GeoColors.png");

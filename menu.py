@@ -243,7 +243,6 @@ class MainWindow(KBMainWindow):
             if not theme.EFFECTS == ['none']:
                 widget_effect = None
                 effect_type = theme.EFFECTS.split(":")
-                print(effect_type)
                 if effect_type[0] == "shadow":
                     widget_effect = QGraphicsDropShadowEffect()
                     is_blur = [i for i in effect_type if i.startswith('b')]
@@ -253,8 +252,8 @@ class MainWindow(KBMainWindow):
 
                     if is_color[0].startswith('c'):
                         widget_effect.setColor(QColor().fromRgb(hex2rgb(is_color[0][1:])[0],
-                                                                   hex2rgb(is_color[0][1:])[1],
-                                                                   hex2rgb(is_color[0][1:])[2]))
+                                                                hex2rgb(is_color[0][1:])[1],
+                                                                hex2rgb(is_color[0][1:])[2]))
                 if not settings["apps"]["theme_flat"]:
                     self.main_widget.setGraphicsEffect(widget_effect)
             else:

@@ -1,5 +1,5 @@
 #!/usr/bin/python
-
+import importlib
 import json
 import os
 import platform
@@ -381,7 +381,14 @@ class MainWindow(KBMainWindow):
         self.runner_themes_scroll_layout = QGridLayout()
         self.runner_theme_scroll_widget.setLayout(self.runner_themes_scroll_layout)
 
-        for i in range(len(settings["apps"]["themes"])):
+        runner_theme_pairs = []
+
+        for filename in os.listdir(os.path.join(os.curdir, "themepacks")):
+            if not filename == "__pycache__":
+                theme = importlib.import_module(f"themepacks.{filename[:-3]}")
+                runner_theme_pairs.append((filename, theme.NAME))
+
+        for i in range(len(runner_theme_pairs)):
             frame = QFrame()
             frame.setFrameStyle(QFrame.Shape.Box)
             self.runner_themes_scroll_layout.addWidget(frame, i // 3, i % 3)
@@ -392,14 +399,14 @@ class MainWindow(KBMainWindow):
             image = QLabel()
             image.setAlignment(Qt.AlignCenter)
             if os.path.exists(os.path.join(os.curdir, "res/runner_theme_previews",
-                                           settings["apps"]["themes"][i].replace(" ", "_") + ".png")):
+                                           runner_theme_pairs[i][1].replace(" ", "_") + ".png")):
                 image.setPixmap(QPixmap(os.path.join(os.curdir, "res/runner_theme_previews",
-                                                     settings["apps"]["themes"][i].replace(" ", "_") + ".png")))
+                                                     runner_theme_pairs[i][1].replace(" ", "_") + ".png")))
             else:
                 image.setPixmap(QPixmap(os.path.join(os.curdir, "res/runner_theme_previews/unknown.png")))
             frame_layout.addWidget(image)
 
-            label = QLabel(settings["apps"]["themes"][i])
+            label = QLabel(runner_theme_pairs[i][1])
             label.setAlignment(Qt.AlignCenter)
             label.setStyleSheet("font-size: 14px")
             frame_layout.addWidget(label)
@@ -408,8 +415,8 @@ class MainWindow(KBMainWindow):
             frame_layout.addLayout(button_layout)
 
             enable = haptics.HPushButton("Enable")
-            enable.clicked.connect(partial(self.set_runner_theme, i, enable))
-            if settings["apps"]["theme_name"] == settings["apps"]["themes"][i]:
+            enable.clicked.connect(partial(self.set_runner_theme, runner_theme_pairs[i][0], enable))
+            if settings["apps"]["theme"] == runner_theme_pairs[i][0]:
                 enable.setText("Active")
                 enable.setEnabled(False)
             button_layout.addWidget(enable)
@@ -675,10 +682,8 @@ class MainWindow(KBMainWindow):
         with open('settings.json', 'w') as file:
             json.dump(settings, file, indent=2)
 
-    def set_runner_theme(self, index, button):
-        file_name = settings["apps"]["theme_files"][index]
-        settings["apps"]["theme"] = file_name
-        settings["apps"]["theme_name"] = settings["apps"]["themes"][index]
+    def set_runner_theme(self, name, button):
+        settings["apps"]["theme"] = name
         with open('settings.json', 'w') as file:
             json.dump(settings, file, indent=2)
 
