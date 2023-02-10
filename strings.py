@@ -101,7 +101,7 @@ MOT_TEMP_HIGH = "One or More Motors are Overheating"
 SETTINGS_SCREEN_BR_G = "Screen Brightness"
 SETTINGS_RUN_THEME_G = "Runner Theme"
 SETTINGS_APP_THEME_G = "App Theme"
-SETTINGS_ANIM_SPD_G = "Animation Speed"
+SETTINGS_ANIM_G = "Animations"
 SETTINGS_XSC_G = "Screensaver"
 SETTINGS_SPEED_G = "Robot Speed"
 SETTINGS_CAM_URL_G = "Camera URL"
@@ -144,6 +144,8 @@ SETTINGS_RAD_ANALOG = "Analog"
 SETTINGS_MSG_VALID_URL = "URL is Valid"
 SETTINGS_MSG_INVALID_URL = "URL is Invalid"
 SETTINGS_WIN_URL_VALIDATOR = "URL Validator"
+
+SETTINGS_ANIM_SPEED = "Animation Speed"
 
 # -- Misc -- #
 

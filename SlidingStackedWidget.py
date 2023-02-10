@@ -5,7 +5,7 @@ CURRENT_DIRECTION = 0
 
 
 class SlidingStackedWidget(QStackedWidget):
-    def __init__(self, parent=None, anim=QEasingCurve.Type.OutExpo, speed=300):
+    def __init__(self, parent=None, anim=QEasingCurve.Type.OutSine, speed=300):
         super(SlidingStackedWidget, self).__init__(parent)
 
         self.m_animation_type = anim

@@ -282,13 +282,13 @@ class MainWindow(KBMainWindow):
 
         self.display_layout.addWidget(self.screen_bright_box)
 
-        self.animation_box = QGroupBox(strings.SETTINGS_ANIM_SPD_G)
+        self.animation_box = QGroupBox(strings.SETTINGS_ANIM_G)
         self.animation_box.setObjectName("Kevinbot3_RemoteUI_Group")
         self.animation_layout = QVBoxLayout()
         self.animation_box.setLayout(self.animation_layout)
         self.display_layout.addWidget(self.animation_box)
 
-        self.animation_spinner = QSpinner()
+        self.animation_spinner = QSpinner(text=strings.SETTINGS_ANIM_SPEED)
         self.animation_spinner.spinbox.setMaximum(500)
         self.animation_spinner.spinbox.setMinimum(50)
         self.animation_spinner.spinbox.setSingleStep(25)
