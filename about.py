@@ -99,7 +99,9 @@ class MainWindow(KBMainWindow):
         self.credits_box.setReadOnly(True)
         self.credits_box.setText("<p>Kevinbot and Kevinbot Software created by Kevin Ahr <br>"
                                  "PyQtDarkTheme created by Yunosuke Ohsugi <br>"
-                                 "BreezeStyleSheets created by Alexander Huszagh </p>")
+                                 "BreezeStyleSheets created by Alexander Huszagh <br>"
+                                 "Syntax Highlighting based on: "
+                                 "https://github.com/art1415926535/PyQt5-syntax-highlighting </p>")
         self.credits_box.setVerticalScrollBarPolicy(
             Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.credits_box.hide()

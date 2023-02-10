@@ -174,16 +174,16 @@ class MainWindow(KBMainWindow):
         self.adv_collapse_all_button.setFixedSize(QSize(36, 36))
         self.adv_bottom_layout.addWidget(self.adv_collapse_all_button)
 
-        self.warning = QLabel(strings.SETTINGS_ADV_WARNING)
-        self.warning.setObjectName("Kevinbot3_RemoteUI_Warning")
-        self.warning.setStyleSheet("color: #ffffff;"
+        self.adv_warning = QLabel(strings.SETTINGS_ADV_WARNING)
+        self.adv_warning.setObjectName("Kevinbot3_RemoteUI_Warning")
+        self.adv_warning.setStyleSheet("color: #ffffff;"
                                    "background-color: #df574d;"
                                    "height: 36px;"
                                    "font-weight: bold;")
-        self.warning.setFixedHeight(36)
-        self.warning.setFrameStyle(QFrame.Shape.Box)
-        self.warning.setAlignment(Qt.AlignCenter)
-        self.adv_bottom_layout.addWidget(self.warning)
+        self.adv_warning.setFixedHeight(36)
+        self.adv_warning.setFrameStyle(QFrame.Shape.Box)
+        self.adv_warning.setAlignment(Qt.AlignCenter)
+        self.adv_bottom_layout.addWidget(self.adv_warning)
 
         self.display_widget = QWidget()
         self.main_widget.addWidget(self.display_widget)
@@ -385,35 +385,35 @@ class MainWindow(KBMainWindow):
             frame = QFrame()
             frame.setFrameStyle(QFrame.Shape.Box)
             self.runner_themes_scroll_layout.addWidget(frame, i // 3, i % 3)
-    
+
             frame_layout = QVBoxLayout()
             frame.setLayout(frame_layout)
-    
+
             image = QLabel()
             image.setAlignment(Qt.AlignCenter)
             if os.path.exists(os.path.join(os.curdir, "res/runner_theme_previews",
-                                                 settings["apps"]["themes"][i].replace(" ", "_") + ".png")):
+                                           settings["apps"]["themes"][i].replace(" ", "_") + ".png")):
                 image.setPixmap(QPixmap(os.path.join(os.curdir, "res/runner_theme_previews",
                                                      settings["apps"]["themes"][i].replace(" ", "_") + ".png")))
             else:
                 image.setPixmap(QPixmap(os.path.join(os.curdir, "res/runner_theme_previews/unknown.png")))
             frame_layout.addWidget(image)
-    
+
             label = QLabel(settings["apps"]["themes"][i])
             label.setAlignment(Qt.AlignCenter)
             label.setStyleSheet("font-size: 14px")
             frame_layout.addWidget(label)
-    
+
             button_layout = QHBoxLayout()
             frame_layout.addLayout(button_layout)
-    
+
             enable = haptics.HPushButton("Enable")
             enable.clicked.connect(partial(self.set_runner_theme, i, enable))
             if settings["apps"]["theme_name"] == settings["apps"]["themes"][i]:
                 enable.setText("Active")
                 enable.setEnabled(False)
             button_layout.addWidget(enable)
-    
+
         self.exit_app_themes = haptics.HPushButton()
         self.exit_app_themes.clicked.connect(lambda: self.main_widget.slideInIdx(2))
         self.exit_app_themes.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
@@ -685,7 +685,7 @@ class MainWindow(KBMainWindow):
             json.dump(settings, file, indent=2)
 
         for i in range(self.runner_themes_scroll_layout.count()):
-            self.runner_themes_scroll_layout.itemAt(i).widget().layout().itemAt(2).layout().itemAt(0).widget()\
+            self.runner_themes_scroll_layout.itemAt(i).widget().layout().itemAt(2).layout().itemAt(0).widget() \
                 .setEnabled(True)  # enable button
             self.runner_themes_scroll_layout.itemAt(i).widget().layout().itemAt(2).layout().itemAt(0).widget() \
                 .setText("Enable")  # set button text
@@ -713,7 +713,7 @@ class MainWindow(KBMainWindow):
         load_theme(self, settings["window_properties"]["theme"], settings["window_properties"]["theme_colors"])
 
         for i in range(self.app_themes_scroll_layout.count()):
-            self.app_themes_scroll_layout.itemAt(i).widget().layout().itemAt(2).layout().itemAt(0).widget()\
+            self.app_themes_scroll_layout.itemAt(i).widget().layout().itemAt(2).layout().itemAt(0).widget() \
                 .setEnabled(True)  # enable button
             self.app_themes_scroll_layout.itemAt(i).widget().layout().itemAt(2).layout().itemAt(0).widget() \
                 .setText("Enable")  # set button text

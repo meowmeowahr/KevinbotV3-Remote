@@ -24,6 +24,8 @@ from jsonViewer.qjsonmodel import QJsonModel
 from jsonViewer.qjsonnode import QJsonNode
 from jsonViewer.qjsonview import QJsonView
 
+from syntax import JsonHighlighter, STYLE_1, STYLE_1_QSS
+
 # Set UI file
 MODULE_PATH = os.path.dirname(os.path.abspath(__file__))
 UI_PATH = os.path.join(MODULE_PATH, 'ui', 'jsonEditor.ui')
@@ -47,6 +49,8 @@ class Editor(QSplitter):
         self.setMinimumSize(400, 190)
 
         self.ui_view_edit = JSONEditor()
+        self.ui_view_edit.setStyleSheet(STYLE_1_QSS)
+        self.highlight = JsonHighlighter(self.ui_view_edit.document(), STYLE_1)
         self.ui_view_edit.setReadOnly(True)
         self.addWidget(self.ui_view_edit)
 
