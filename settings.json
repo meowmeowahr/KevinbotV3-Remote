@@ -38,32 +38,19 @@
         "name": "About"
       }
     ],
-    "theme": "geoblue.qss",
-    "theme_effect": "shadow:b15:c5b5555",
-    "theme_effects": [
-      "none",
-      "shadow:b20:c555555",
-      "shadow:b20:c555555",
-      "shadow:b20:c555555",
-      "shadow:b20:c555555",
-      "shadow:b15:c5b5555",
-      "shadow:b15:c565555",
-      "shadow:b15:c555555"
-    ],
+    "theme": "geoblue.py",
     "theme_files": [
-      "theme.qss",
-      "blue.qss",
-      "green.qss",
-      "yellow.qss",
-      "purple.qss",
-      "geoblue.qss",
-      "geogreen.qss",
-      "geo.qss"
+      "blue.py",
+      "green.py",
+      "yellow.py",
+      "purple.py",
+      "geoblue.py",
+      "geogreen.py",
+      "geo.py"
     ],
     "theme_flat": true,
     "theme_name": "Geometric Blue",
     "themes": [
-      "Classic Dark",
       "Blue",
       "Green",
       "Yellow",
@@ -257,7 +244,7 @@
   ],
   "camera_url": "http://kevinbotv3/stream",
   "data_dir": "/home/$USER/KbotV3/",
-  "dev_mode": false,
+  "dev_mode": true,
   "head_effects": [
     "flash",
     "fade",
@@ -273,12 +260,12 @@
   "max_us": 1200,
   "media_dir": "/media/",
   "name": "REMOTE",
-  "reboot_command": "sudo shutdown -r now",
   "ports": {
+    "linux_port": "/dev/ttyUSB0",
     "pi_port": "/dev/ttyS0",
-    "win_port": "COM3",
-    "linux_port": "/dev/ttyUSB0"
+    "win_port": "COM3"
   },
+  "reboot_command": "sudo shutdown -r now",
   "shutdown_command": "sudo shutdown now",
   "speech": {
     "text": "Hi"

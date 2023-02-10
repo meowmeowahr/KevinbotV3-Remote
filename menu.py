@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import importlib
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -133,26 +134,6 @@ class MainWindow(KBMainWindow):
 
         self.updateTheme.connect(self.load_theme)
 
-        effects = settings["apps"]["theme_effect"].strip().split()
-
-        widget_effect = []
-        for i in range(len(effects)):
-            effect_type = effects[i].split(":")
-            if effect_type[0] == "shadow":
-                widget_effect.append(QGraphicsDropShadowEffect())
-                is_blur = [i for i in effect_type if i.startswith('b')]
-                is_color = [i for i in effect_type if i.startswith('c')]
-                if is_blur[0].startswith('b'):
-                    widget_effect[i].setBlurRadius(extract_digits(effect_type[1])[0])
-
-                if is_color[0].startswith('c'):
-                    widget_effect[i].setColor(QColor().fromRgb(hex2rgb(is_color[0][1:])[0],
-                                                               hex2rgb(is_color[0][1:])[1],
-                                                               hex2rgb(is_color[0][1:])[2]))
-        if not settings["apps"]["theme_flat"]:
-            for e in widget_effect:
-                self.main_widget.setGraphicsEffect(e)
-
         layout = QVBoxLayout()
         self.main_widget.setLayout(layout)
 
@@ -253,34 +234,36 @@ class MainWindow(KBMainWindow):
             self.show()
 
     def load_theme(self):
-        # load theme
-        with open(settings["apps"]["theme"], "r") as file:
-            self.setStyleSheet(file.read())
+        try:
+            # load theme from module
+            theme = importlib.import_module(f"themepacks.{settings['apps']['theme'][:-3]}")
 
-        effects = settings["apps"]["theme_effect"].strip().split()
-        if not effects == ['none']:
-            widget_effect = []
-            for i in range(len(effects)):
-                effect_type = effects[i].split(":")
+            self.setStyleSheet(theme.QSS)  # set style sheet
+
+            if not theme.EFFECTS == ['none']:
+                widget_effect = None
+                effect_type = theme.EFFECTS.split(":")
+                print(effect_type)
                 if effect_type[0] == "shadow":
-                    widget_effect.append(QGraphicsDropShadowEffect())
+                    widget_effect = QGraphicsDropShadowEffect()
                     is_blur = [i for i in effect_type if i.startswith('b')]
                     is_color = [i for i in effect_type if i.startswith('c')]
                     if is_blur[0].startswith('b'):
-                        widget_effect[i].setBlurRadius(extract_digits(effect_type[1])[0])
+                        widget_effect.setBlurRadius(extract_digits(effect_type[1])[0])
 
                     if is_color[0].startswith('c'):
-                        widget_effect[i].setColor(QColor().fromRgb(hex2rgb(is_color[0][1:])[0],
+                        widget_effect.setColor(QColor().fromRgb(hex2rgb(is_color[0][1:])[0],
                                                                    hex2rgb(is_color[0][1:])[1],
                                                                    hex2rgb(is_color[0][1:])[2]))
-            if not settings["apps"]["theme_flat"]:
-                for effect in widget_effect:
-                    self.main_widget.setGraphicsEffect(effect)
-        else:
-            self.main_widget.setGraphicsEffect(None)
+                if not settings["apps"]["theme_flat"]:
+                    self.main_widget.setGraphicsEffect(widget_effect)
+            else:
+                self.main_widget.setGraphicsEffect(None)
 
-        if settings["apps"]["theme_flat"]:
-            self.main_widget.setGraphicsEffect(None)
+            if settings["apps"]["theme_flat"]:
+                self.main_widget.setGraphicsEffect(None)
+        except (ModuleNotFoundError, NameError) as err:
+            print(f"Theme could not be loaded {err}")
 
     def shutdown(self):
         # confirm shutdown

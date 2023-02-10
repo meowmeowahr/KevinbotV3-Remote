@@ -677,9 +677,7 @@ class MainWindow(KBMainWindow):
 
     def set_runner_theme(self, index, button):
         file_name = settings["apps"]["theme_files"][index]
-        effect = settings["apps"]["theme_effects"][index]
         settings["apps"]["theme"] = file_name
-        settings["apps"]["theme_effect"] = effect
         settings["apps"]["theme_name"] = settings["apps"]["themes"][index]
         with open('settings.json', 'w') as file:
             json.dump(settings, file, indent=2)
@@ -696,9 +694,7 @@ class MainWindow(KBMainWindow):
     def change_theme(self):
         index = self.theme_picker.currentIndex()
         file_name = settings["apps"]["theme_files"][index]
-        effect = settings["apps"]["theme_effects"][index]
         settings["apps"]["theme"] = file_name
-        settings["apps"]["theme_effect"] = effect
         settings["apps"]["theme_name"] = self.theme_picker.currentText()
 
         with open('settings.json', 'w') as file:
