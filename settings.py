@@ -391,8 +391,12 @@ class MainWindow(KBMainWindow):
     
             image = QLabel()
             image.setAlignment(Qt.AlignCenter)
-            image.setPixmap(QPixmap(os.path.join(os.curdir, "res/runner_theme_previews",
-                                                 settings["apps"]["themes"][i] + ".png")))
+            if os.path.exists(os.path.join(os.curdir, "res/runner_theme_previews",
+                                                 settings["apps"]["themes"][i].replace(" ", "_") + ".png")):
+                image.setPixmap(QPixmap(os.path.join(os.curdir, "res/runner_theme_previews",
+                                                     settings["apps"]["themes"][i].replace(" ", "_") + ".png")))
+            else:
+                image.setPixmap(QPixmap(os.path.join(os.curdir, "res/runner_theme_previews/unknown.png")))
             frame_layout.addWidget(image)
     
             label = QLabel(settings["apps"]["themes"][i])
