@@ -5,6 +5,7 @@ Kevinbot About App
 """
 
 import json
+import os.path
 import platform
 import sys
 
@@ -55,6 +56,8 @@ class MainWindow(KBMainWindow):
             self.setWindowFlags(Qt.FramelessWindowHint)
             self.setFixedSize(QSize(800, 480))
 
+        self.ee_count = 0
+
         self.ensurePolished()
         if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],
                         QColor(self.palette().color(
@@ -78,6 +81,7 @@ class MainWindow(KBMainWindow):
         self.icon.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.icon.setScaledContents(True)
         self.icon.setFixedSize(QSize(192, 192))
+        self.icon.mousePressEvent = self.ee_click
         self.icon_layout.addWidget(self.icon)
 
         self.name_text = QLabel("Kevinbot v3 Remote")
@@ -151,6 +155,14 @@ class MainWindow(KBMainWindow):
         else:
             # noinspection PyAttributeOutsideInit
             self.close_animation.start()
+
+    def ee_click(self, event):
+        self.ee_count += 1
+
+        if self.ee_count == 10:
+            self.ee_count = 0
+            # easter egg
+            self.icon.setPixmap(QPixmap(os.path.join(os.curdir, "icons/bot-trans.png")))
 
 
 if __name__ == "__main__":
