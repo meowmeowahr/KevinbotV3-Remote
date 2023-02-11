@@ -2,5 +2,6 @@
     "version": "1.0-b37",
     "removed_files": ["icons/bool.png", "icons/window-close.svg", "icons/arrow-alt-circle-left.svg", 
                       "icons/arrow-alt-circle-right.svg", "QSpinner.py", "icons/camera.svg", 
-                      "icons/sensors.svg", "icons/refresh.svg"]
+                      "icons/sensors.svg", "icons/refresh.svg", "blue.qss", "yellow.qss", "green.qss",
+                      "geo.qss", "geoblue.qss", "geogreen.qss", "purple.qss"]
 }
