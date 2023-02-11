@@ -197,6 +197,7 @@ class MainWindow(KBMainWindow):
             self.dev_root_layout.addLayout(self.dev_layout)
 
             self.dev_close = haptics.HPushButton("Close Kevinbot Runner")
+            self.dev_close.setIcon(qta.icon("fa5s.window-close", color=self.fg_color))
             self.dev_close.clicked.connect(self.close)
             self.dev_layout.addWidget(self.dev_close)
 
@@ -207,6 +208,7 @@ class MainWindow(KBMainWindow):
                 version = "Unknown"
 
             self.dev_sysinfo = haptics.HPushButton("Launch System Info App")
+            self.dev_sysinfo.setIcon(qta.icon("fa5s.search", color=self.fg_color))
             self.dev_sysinfo.clicked.connect(lambda: run_app("python3 sysinfo.py", gui=False))
             self.dev_layout.addWidget(self.dev_sysinfo)
 
