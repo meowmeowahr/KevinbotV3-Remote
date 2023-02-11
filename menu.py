@@ -73,16 +73,19 @@ class Handler(FileSystemEventHandler):
             window.updateTheme.emit()
 
 
-def run_app(command):
+def run_app(command, gui=True):
     if is_using_venv():
         if platform.system() == "Windows":
             command = command.replace("python3", os.path.join(os.curdir, "venv\\Scripts\\python.exe"))
         elif platform.system() == "Linux":
             command = command.replace("python3", os.path.join(os.curdir, "venv\\bin\\python"))
 
-    window.main_widget.setEnabled(False)
+    if gui:
+        window.main_widget.setEnabled(False)
+
     launcher.set_script(command)
-    launcher.set_finnished(lambda: window.main_widget.setEnabled(True))
+    if gui:
+        launcher.set_finnished(lambda: window.main_widget.setEnabled(True))
     launcher.launch()
 
 
@@ -98,7 +101,7 @@ def hex2rgb(h):
 class MainWindow(KBMainWindow):
     updateTheme = pyqtSignal()
 
-    # noinspection PyUnresolvedReferences
+    # noinspection PyUnresolvedReferences,PyArgumentList
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Kevinbot Runner")
@@ -203,8 +206,9 @@ class MainWindow(KBMainWindow):
             except FileNotFoundError:
                 version = "Unknown"
 
-            self.dev_version = QLabel(f"RemoteVersion: {version}")
-            self.dev_layout.addWidget(self.dev_version)
+            self.dev_sysinfo = haptics.HPushButton("Launch System Info App")
+            self.dev_sysinfo.clicked.connect(lambda: run_app("python3 sysinfo.py", gui=False))
+            self.dev_layout.addWidget(self.dev_sysinfo)
 
             self.dev_layout.addStretch()
 
@@ -268,30 +272,30 @@ class MainWindow(KBMainWindow):
         # confirm shutdown
         msg = QMessageBox(self)
         load_theme(msg, settings["window_properties"]["theme"])
-        msg.setIcon(QMessageBox.Icon.Warning)
+        msg.setIcon(QMessageBox.Warning)
         msg.setText("Are you sure you want to shutdown?")
         msg.setInformativeText("This will shutdown the computer.")
         msg.setWindowTitle("Shutdown")
-        msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
         ret = msg.exec_()
 
         # if yes, shutdown
-        if ret == QMessageBox.StandardButton.Yes:
+        if ret == QMessageBox.Yes:
             os.system(settings["shutdown_command"])
 
     def reboot(self):
         # confirm reboot
         msg = QMessageBox(self)
         load_theme(msg, settings["window_properties"]["theme"])
-        msg.setIcon(QMessageBox.Icon.Warning)
+        msg.setIcon(QMessageBox.Warning)
         msg.setText("Are you sure you want to reboot?")
         msg.setInformativeText("This will reboot the computer.")
         msg.setWindowTitle("Reboot")
-        msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
         ret = msg.exec_()
 
         # if yes, reboot
-        if ret == QMessageBox.StandardButton.Yes:
+        if ret == QMessageBox.Yes:
             os.system(settings["reboot_command"])
 
     def open_dev(self):
@@ -405,8 +409,6 @@ if __name__ == "__main__":
     QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Lato-Regular.ttf"))
     QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Lato-Bold.ttf"))
 
-    window = MainWindow()
-
     # File Observer
     observer = Observer()
     path = os.getcwd()
@@ -415,5 +417,7 @@ if __name__ == "__main__":
 
     # App Launcher
     launcher = AppLauncher()
+
+    window = MainWindow()
 
     app.exec_()

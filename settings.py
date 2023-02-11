@@ -177,9 +177,9 @@ class MainWindow(KBMainWindow):
         self.adv_warning = QLabel(strings.SETTINGS_ADV_WARNING)
         self.adv_warning.setObjectName("Kevinbot3_RemoteUI_Warning")
         self.adv_warning.setStyleSheet("color: #ffffff;"
-                                   "background-color: #df574d;"
-                                   "height: 36px;"
-                                   "font-weight: bold;")
+                                       "background-color: #df574d;"
+                                       "height: 36px;"
+                                       "font-weight: bold;")
         self.adv_warning.setFixedHeight(36)
         self.adv_warning.setFrameStyle(QFrame.Shape.Box)
         self.adv_warning.setAlignment(Qt.AlignCenter)

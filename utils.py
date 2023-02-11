@@ -166,6 +166,18 @@ def is_using_venv():
     return os.path.isdir(os.path.join(os.path.curdir, "venv"))
 
 
+def get_size(start_path='.'):
+    total_size = 0
+    for dirpath, dirnames, filenames in os.walk(start_path):
+        for f in filenames:
+            fp = os.path.join(dirpath, f)
+            # skip if it is symbolic link
+            if not os.path.islink(fp):
+                total_size += os.path.getsize(fp)
+
+    return total_size
+
+
 class AppLauncher:
     def __init__(self):
         super().__init__()
@@ -177,8 +189,11 @@ class AppLauncher:
         self.__thread = threading.Thread(target=self.__launch_thread)
         self.__thread.start()
 
-    def set_script(self, script):
+    def set_script(self, script, launch=False):
         self.__script = script
+
+        if launch:
+            self.launch()
 
     def set_finnished(self, func):
         self.__done = func
