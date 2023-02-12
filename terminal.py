@@ -35,7 +35,7 @@ command_queue = Queue()
 
 class Window(KBMainWindow):
     # noinspection PyArgumentList
-    def __init__(self, *args):
+    def __init__(self):
         super().__init__()
 
         try:
