@@ -105,7 +105,9 @@ class MainWindow(KBMainWindow):
                                  "PyQtDarkTheme created by Yunosuke Ohsugi <br>"
                                  "BreezeStyleSheets created by Alexander Huszagh <br>"
                                  "Syntax Highlighting based on: "
-                                 "https://github.com/art1415926535/PyQt5-syntax-highlighting </p>")
+                                 "https://github.com/art1415926535/PyQt5-syntax-highlighting <br>"
+                                 "QSuperDial based on: "
+                                 "https://github.com/Vampouille/superboucle/blob/master/superboucle/qsuperdial.py </p>")
         self.credits_box.setVerticalScrollBarPolicy(
             Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.credits_box.hide()

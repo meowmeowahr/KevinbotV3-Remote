@@ -488,3 +488,8 @@ QToolButton {
     margin-right: 18px;
     font-size: 14px;
 }
+
+QDial {
+    background-color: #fad010;
+    color: #111114;
+}

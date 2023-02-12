@@ -14,7 +14,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtWidgets import *
-from QCustomWidgets import KBModalBar, KBMainWindow
+from QCustomWidgets import KBModalBar, KBMainWindow, QSuperDial
 import qtawesome as qta
 
 import Joystick.Joystick as Joystick
@@ -899,7 +899,7 @@ class RemoteUI(KBMainWindow):
             layout = QVBoxLayout()
             self.armPresetEditorLeftLayout.addLayout(layout)
             # knob
-            self.left_knobs.append(QDial())
+            self.left_knobs.append(QSuperDial(knob_radius=8, knob_margin=7))
             self.left_knobs[i].setObjectName("Kevinbot3_RemoteUI_ArmKnob")
             self.left_knobs[i].setRange(settings["arm_min_max"][i][0], settings["arm_min_max"][i][1])
             self.left_knobs[i].setValue(settings["arm_prog"][0][i])
@@ -920,7 +920,7 @@ class RemoteUI(KBMainWindow):
             layout = QVBoxLayout()
             self.armPresetEditorRightLayout.addLayout(layout)
             # knob
-            self.right_knobs.append(QDial())
+            self.right_knobs.append(QSuperDial(knob_radius=8, knob_margin=7))
             self.right_knobs[i].setObjectName("Kevinbot3_RemoteUI_ArmKnob")
             self.right_knobs[i].setRange(settings["arm_min_max"][i + settings["arm_dof"]][0],
                                          settings["arm_min_max"][i + settings["arm_dof"]][1])

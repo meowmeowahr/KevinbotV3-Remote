@@ -1,4 +1,5 @@
 import os.path
+import math
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -25,7 +26,7 @@ class QSpinner(QWidget):
             self.__layout.addWidget(self.text)
 
         self.spinbox = QSpinBox()
-        self.spinbox.setButtonSymbols(QAbstractSpinBox.ButtonSymbols.NoButtons)
+        self.spinbox.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.spinbox.setFixedHeight(32)
         self.__layout.addWidget(self.spinbox)
 
@@ -106,19 +107,19 @@ class KBMainWindow(QMainWindow):
 
 
 class KBModalBar(QFrame):
-    def __init__(self, parent, width = 400, height = 64, gap = 16, centerText = True, opacity = 90, bgColor = None):
-        super().__init__()
+    def __init__(self, parent, width=400, height=64, gap=16, centerText=True, opacity=90, bgColor=None):
+        super(KBModalBar, self).__init__()
 
         self.gap = gap
         self.parent = parent
 
         self.setObjectName("Kevinbot3_RemoteUI_ModalBar")
-        self.setFrameStyle(QFrame.Shape.Box)
+        self.setFrameStyle(QFrame.Box)
         self.setFixedSize(QSize(width, height))
         self.setParent(parent)
 
         op = QGraphicsOpacityEffect(self)
-        op.setOpacity(opacity / 100) #0 to 1 will cause the fade effect to kick in
+        op.setOpacity(opacity / 100)  # 0 to 1 will cause the fade effect to kick in
         self.setGraphicsEffect(op)
         self.setAutoFillBackground(True)
 
@@ -196,3 +197,67 @@ class KBModalBar(QFrame):
                                      int(self.parent.height() - (self.height() + self.gap) * posIndex)))
         self.__anim.setDuration(popSpeed)
         self.__anim.start()
+
+
+# https://github.com/Vampouille/superboucle/blob/master/superboucle/qsuperdial.py
+class QSuperDial(QDial):
+    """Overload QDial with correct stylesheet support
+    QSuperDial support background-color and color stylesheet
+    properties and do NOT add "shadow"
+    QSuperDial draw ellipse if width and height are different
+    """
+
+    _degree270 = 1.5 * math.pi
+    _degree225 = 1.25 * math.pi
+
+    def __init__(self, knob_radius=5, knob_margin=5):
+        super(QSuperDial, self).__init__()
+        self.knobRadius = knob_radius
+        self.knobMargin = knob_margin
+        self.setRange(0, 100)
+
+    def paintEvent(self, event):
+        # From Peter, thanks !
+        # http://thecodeinn.blogspot.fr/2015/02/customizing-qdials-in-qt-part-1.html
+
+        painter = QPainter(self)
+
+        # So that we can use the background color
+        painter.setBackgroundMode(1)
+
+        # Smooth out the circle
+        painter.setRenderHint(QPainter.Antialiasing)
+
+        # Use background color
+        painter.setBrush(painter.background())
+
+        # Store color from stylesheet, pen will be overriden
+        point_color = QColor(painter.pen().color())
+
+        # No border
+        painter.setPen(QPen(Qt.NoPen))
+
+        # Draw first circle
+        painter.drawEllipse(0, 0, self.width(), self.height())
+
+        # Reset color to point_color from stylesheet
+        painter.setBrush(QBrush(point_color))
+
+        # Get ratio between current value and maximum to calculate angle
+        ratio = self.value() / self.maximum()
+
+        # The maximum amount of degrees is 270, offset by 225
+        angle = ratio * self._degree270 - self._degree225
+
+        # Radius of background circle
+        rx = self.width() / 2
+        ry = self.height() / 2
+
+        # Add r to have (0,0) in center of dial
+        y = math.sin(angle) * (ry - self.knobRadius - self.knobMargin) + ry
+        x = math.cos(angle) * (rx - self.knobRadius - self.knobMargin) + rx
+
+        # Draw the ellipse
+        painter.drawEllipse(QPointF(x, y),
+                            self.knobRadius,
+                            self.knobRadius)
