@@ -4,6 +4,8 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+
+import haptics
 from QCustomWidgets import KBMainWindow
 import qtawesome as qta
 import sys
@@ -59,6 +61,8 @@ class Window(KBMainWindow):
         self.layout = QVBoxLayout()
         self.widget.setLayout(self.layout)
 
+        self.top_layout = QHBoxLayout()
+
         self.textbox = QTextEdit()
         self.textbox.setObjectName("Kevinbot3_RemoteUI_TextEdit")
         self.textbox.setReadOnly(True)
@@ -75,6 +79,10 @@ class Window(KBMainWindow):
         self.tx_line.setPlaceholderText("Data to Send")
         self.tx_line.returnPressed.connect(self.tx_data)
         self.top_layout.addWidget(self.tx_line)
+
+        self.send = QPushButton("Send")
+        self.send.clicked.connect(self.tx_data)
+        self.top_layout.addWidget(self.send)
 
         self.clear_button = QPushButton(strings.CLEAR)
         self.clear_button.setObjectName("Kevinbot3_RemoteUI_Button")
