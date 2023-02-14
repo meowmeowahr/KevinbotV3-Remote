@@ -411,6 +411,9 @@ if __name__ == "__main__":
     QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Lato-Regular.ttf"))
     QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Lato-Bold.ttf"))
 
+    # Window
+    window = MainWindow()
+
     # File Observer
     observer = Observer()
     path = os.getcwd()
@@ -419,7 +422,5 @@ if __name__ == "__main__":
 
     # App Launcher
     launcher = AppLauncher()
-
-    window = MainWindow()
 
     app.exec_()
