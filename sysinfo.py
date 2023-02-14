@@ -18,7 +18,7 @@ EMULATE_REAL_REMOTE = True
 if platform.system() == "Windows":
     import ctypes
 
-    WIN_APP_ID = 'kevinbot.kevinbot.remote.about'  # arbitrary string
+    WIN_APP_ID = 'kevinbot.kevinbot.remote.sysinfo'  # arbitrary string
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(WIN_APP_ID)
 
 settings = json.load(open("settings.json", encoding="utf-8"))
