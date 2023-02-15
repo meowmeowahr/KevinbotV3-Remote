@@ -248,7 +248,7 @@
   "joystick_type": "analog",
   "log_level": 20,
   "max_us": 1200,
-  "media_dir": "/media/",
+  "media_dir": "/media/$USER/",
   "name": "REMOTE",
   "ports": {
     "linux_port": "/dev/ttyUSB0",
