@@ -112,6 +112,7 @@ class MainWindow(KBMainWindow):
                                  "Lato Font by Łukasz Dziedzic</p>")
         self.credits_box.setVerticalScrollBarPolicy(
             Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        QScroller.grabGesture(self.credits_box, QScroller.LeftMouseButtonGesture)  # enable single-touch scroll
         self.credits_box.hide()
         self.layout.addWidget(self.credits_box)
 
