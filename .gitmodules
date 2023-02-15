@@ -1,0 +1,3 @@
+[submodule "docs/KevinbotV3-RemoteDocs"]
+	path = docs/KevinbotV3-RemoteDocs
+	url = https://github.com/meowmeowahr/KevinbotV3-RemoteDocs
