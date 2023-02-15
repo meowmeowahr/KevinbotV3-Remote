@@ -107,7 +107,9 @@ class MainWindow(KBMainWindow):
                                  "Syntax Highlighting based on: "
                                  "https://github.com/art1415926535/PyQt5-syntax-highlighting <br>"
                                  "QSuperDial based on: "
-                                 "https://github.com/Vampouille/superboucle/blob/master/superboucle/qsuperdial.py </p>")
+                                 "https://github.com/Vampouille/superboucle/blob/master/superboucle/qsuperdial.py <br>"
+                                 "Roboto Font by Christian Robertson<br>"
+                                 "Lato Font by Łukasz Dziedzic</p>")
         self.credits_box.setVerticalScrollBarPolicy(
             Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.credits_box.hide()
