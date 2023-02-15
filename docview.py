@@ -60,7 +60,7 @@ class MainWindow(KBMainWindow):
         self.browser = QWebEngineView()
         self.layout.addWidget(self.browser)
 
-        self.browser.load(QUrl().fromLocalFile(os.path.split(os.path.abspath(__file__))[0] + r'\built_docs\index.html'))
+        self.browser.load(QUrl().fromLocalFile(os.path.split(os.path.abspath(__file__))[0] + r'/built_docs/index.html'))
 
         self.close_button = QPushButton()
         self.close_button.setIcon(qta.icon("fa5s.window-close", color=self.fg_color))
