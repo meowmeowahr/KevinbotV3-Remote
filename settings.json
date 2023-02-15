@@ -32,6 +32,12 @@
         "name": "Browser\n(Beta)"
       },
       {
+        "icon": "help.svg",
+        "id": 5,
+        "launch": "python3 docview.py",
+        "name": "Help"
+      },
+      {
         "icon": "about.svg",
         "id": 5,
         "launch": "python3 about.py",
