@@ -288,7 +288,7 @@ class MainWindow(KBMainWindow):
         self.animation_box.setLayout(self.animation_layout)
         self.display_layout.addWidget(self.animation_box)
 
-        self.animation_spinner = QSpinner(text=strings.SETTINGS_ANIM_SPEED)
+        self.animation_spinner = QSpinner(text=strings.SETTINGS_ANIM_SPEED, icon_color=self.fg_color)
         self.animation_spinner.spinbox.setMaximum(500)
         self.animation_spinner.spinbox.setMinimum(50)
         self.animation_spinner.spinbox.setSingleStep(25)
@@ -457,7 +457,7 @@ class MainWindow(KBMainWindow):
             self.preview_ss_button = QPushButton(strings.SETTINGS_XSC_PREVIEW_B)
             self.preview_ss_button.clicked.connect(lambda: os.system("xscreensaver-command -activate"))
 
-            self.ss_timeout_spinner = QSpinner(strings.SETTINGS_XSC_TIME_S)
+            self.ss_timeout_spinner = QSpinner(strings.SETTINGS_XSC_TIME_S, icon_color=self.fg_color)
             self.ss_timeout_spinner.setSuffix(strings.SETTINGS_XSC_TIME_SUF)
             self.ss_timeout_spinner.spinbox.valueChanged.connect(self.ss_timeout_changed)
             self.ss_timeout_spinner.setValue(int(self.xsc_config.read()["timeout"].split(":")[1]))
@@ -493,7 +493,7 @@ class MainWindow(KBMainWindow):
         self.max_us_label.setObjectName("Kevinbot3_RemoteUI_Label")
         self.speed_layout.addWidget(self.max_us_label)
 
-        self.max_us_spinner = QSpinner()
+        self.max_us_spinner = QSpinner(icon_color=self.fg_color)
         self.max_us_spinner.setMaximum(1400)
         self.max_us_spinner.setMinimum(1000)
         self.max_us_spinner.setSingleStep(25)

@@ -4,6 +4,7 @@ import math
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+import qtawesome as qta
 
 
 class QPushToolButton(QToolButton):
@@ -14,7 +15,7 @@ class QPushToolButton(QToolButton):
 
 class QSpinner(QWidget):
     # noinspection PyArgumentList
-    def __init__(self, text=None):
+    def __init__(self, text=None, icon_color=Qt.GlobalColor.white):
         super().__init__()
 
         self.__layout = QHBoxLayout()
@@ -32,15 +33,15 @@ class QSpinner(QWidget):
 
         self.add_button = QPushButton()
         self.add_button.setFixedSize(QSize(32, 32))
-        self.add_button.setIconSize(QSize(32, 32))
-        self.add_button.setIcon(QIcon("icons/add.svg"))
+        self.add_button.setIconSize(QSize(24, 24))
+        self.add_button.setIcon(qta.icon("fa5s.plus", color=icon_color))
         self.add_button.clicked.connect(self.spinbox.stepUp)
         self.__layout.addWidget(self.add_button)
 
         self.remove_button = QPushButton()
         self.remove_button.setFixedSize(QSize(32, 32))
-        self.remove_button.setIconSize(QSize(32, 32))
-        self.remove_button.setIcon(QIcon("icons/subtract.svg"))
+        self.remove_button.setIconSize(QSize(24, 24))
+        self.remove_button.setIcon(qta.icon("fa5s.minus", color=icon_color))
         self.remove_button.clicked.connect(self.spinbox.stepDown)
         self.__layout.addWidget(self.remove_button)
 
