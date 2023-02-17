@@ -29,8 +29,8 @@ if platform.system() == "Windows":
 
 
 class MainWindow(KBMainWindow):
-    def __init__(self, *args, **kwargs):
-        super(MainWindow, self).__init__(*args, **kwargs)
+    def __init__(self):
+        super(MainWindow, self).__init__()
 
         if EMULATE_REAL_REMOTE:
             self.setWindowFlags(Qt.Window | Qt.FramelessWindowHint)
@@ -82,7 +82,7 @@ class MainWindow(KBMainWindow):
         navtb.addSeparator()
 
         self.httpsicon = QLabel()
-        self.httpsicon.setPixmap(QPixmap(os.path.join('icons', 'lock-nossl.svg')))
+        self.httpsicon.setPixmap(qta.icon("fa5s.unlock", color=self.fg_color).pixmap(32, 32))
         self.httpsicon.setScaledContents(True)
         self.httpsicon.setFixedSize(22, 22)
         navtb.addWidget(self.httpsicon)
@@ -169,11 +169,11 @@ class MainWindow(KBMainWindow):
 
         if q.scheme() == 'https':
             # Secure padlock icon
-            self.httpsicon.setPixmap(QPixmap(os.path.join('icons', 'lock-ssl.svg')))
+            self.httpsicon.setPixmap(qta.icon("fa5s.lock", color=self.fg_color).pixmap(32, 32))
 
         else:
             # Insecure padlock icon
-            self.httpsicon.setPixmap(QPixmap(os.path.join('icons', 'lock-nossl.svg')))
+            self.httpsicon.setPixmap(qta.icon("fa5s.unlock", color=self.fg_color).pixmap(32, 32))
 
         self.urlbar.setText(q.toString())
         self.urlbar.setCursorPosition(0)
