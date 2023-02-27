@@ -9,3 +9,4 @@ QtAwesome
 xscreensaver-config
 darkdetect
 PyQt5
+qt-thread-updater

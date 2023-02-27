@@ -14,6 +14,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtWidgets import *
+from qt_thread_updater import get_updater
 from QCustomWidgets import KBModalBar, KBMainWindow, QSuperDial
 import qtawesome as qta
 
@@ -33,7 +34,7 @@ DEVEL_OPTIONS = True
 ENABLE_BATT2 = True
 THEME_FILE = "theme.qss"
 CURRENT_ARM_POS = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 2 5dof arms
-HIGH_MOTOR_TEMP = 50
+HIGH_MOTOR_TEMP = 20
 HIGH_INSIDE_TEMP = 45
 
 __version__ = "v1.0.0"
@@ -109,147 +110,108 @@ def rx_data():
 
         print("Received: " + str(data))
 
-        # older battery data format
-        if data[0] == "batt_volt1":
-            if window is not None:
-                window.batt_volt1.setText(strings.BATT_VOLT1.format(int(data[1]) / 10) + "V")
-                window.battery1_label.setText(strings.BATT_VOLT1.format(int(data[1]) / 10))
-
-                if int(data[1]) / 10 < warning_voltage:
-                    window.battery1_label.setStyleSheet("background-color: #df574d;")
-                else:
-                    window.battery1_label.setStyleSheet("")
-
-                if not disable_batt_modal:
-                    if int(data[1]) / 10 < warning_voltage:
-                        com.txmot([1500, 1500])
-                        window.battModalText.setText(strings.BATT_LOW)
-                        window.batt_modal.show()
-        elif data[0] == "batt_volt2" and ENABLE_BATT2:
-            if window is not None:
-                window.batt_volt2.setText(strings.BATT_VOLT2.format(int(data[1]) / 10) + "V")
-                window.battery2_label.setText(strings.BATT_VOLT2.format(int(data[1]) / 10))
-
-                if int(data[1]) / 10 < warning_voltage:
-                    window.battery2_label.setStyleSheet("background-color: #df574d;")
-                else:
-                    window.battery2_label.setStyleSheet("")
-
-                if not disable_batt_modal:
-                    if int(data[1]) / 10 < warning_voltage:
-                        com.txmot([1500, 1500])
-                        window.battModalText.setText(strings.BATT_LOW)
-                        window.batt_modal.show()
-        # newer battery data format
-        elif data[0] == "batt_volts":
+        if data[0] == "batt_volts":
             if window is not None:
                 volt1, volt2 = data[1].split(",")
-                window.batt_volt1.setText(strings.BATT_VOLT1.format(float(volt1) / 10) + "V")
-                window.battery1_label.setText(strings.BATT_VOLT1.format(float(volt1) / 10))
+                get_updater().call_latest(window.batt_volt1.setText, strings.BATT_VOLT1.format(float(volt1) / 10) + "V")
+                get_updater().call_latest(window.battery1_label.setText, strings.BATT_VOLT1.format(float(volt1) / 10))
 
                 if float(volt1) / 10 < warning_voltage:
-                    window.battery1_label.setStyleSheet("background-color: #df574d;")
+                    get_updater().call_latest(window.battery1_label.setStyleSheet, "background-color: #df574d;")
                 else:
-                    window.battery1_label.setStyleSheet("")
+                    get_updater().call_latest(window.battery1_label.setStyleSheet, "")
 
                 if ENABLE_BATT2:
-                    window.batt_volt2.setText(strings.BATT_VOLT2.format(float(volt2) / 10) + "V")
-                    window.battery2_label.setText(strings.BATT_VOLT2.format(float(volt2) / 10))
+                    get_updater().call_latest(window.batt_volt2.setText, strings.BATT_VOLT2.format(float(volt2) / 10) + "V")
+                    get_updater().call_latest(window.battery2_label.setText, strings.BATT_VOLT2.format(float(volt2) / 10))
                     if float(volt2) / 10 < warning_voltage:
-                        window.battery2_label.setStyleSheet("background-color: #df574d;")
+                        get_updater().call_latest(window.battery2_label.setStyleSheet, "background-color: #df574d;")
                     else:
-                        window.battery2_label.setStyleSheet("")
+                        get_updater().call_latest(window.battery2_label.setStyleSheet, "")
 
                 if not disable_batt_modal:
                     if float(volt1) / 10 < 11:
                         com.txmot([1500, 1500])
-                        window.battModalText.setText(strings.BATT_LOW)
-                        window.batt_modal.show()
+                        get_updater().call_latest(window.battModalText.setText, strings.BATT_LOW)
+                        get_updater().call_latest(window.batt_modal.show)
                     elif float(volt2) / 10 < 11:
                         com.txmot([1500, 1500])
-                        window.battModalText.setText(strings.BATT_LOW)
-                        window.batt_modal.show()
+                        get_updater().call_latest(window.battModalText, strings.BATT_LOW)
+                        get_updater().call_latest(window.batt_modal.show)
         # bme280 sensor
         elif data[0] == "bme":
             if window is not None:
-                try:
-                    window.outside_temp.setText(strings.OUTSIDE_TEMP.format(str(data[1].split(",")[0])
-                                                                            + "℃ (" + str(
-                        data[1].split(",")[1]) + "℉)"))
-                    window.outside_humi.setText(strings.OUTSIDE_HUMI.format(data[1].split(",")[2]))
-                    window.outside_hpa.setText(strings.OUTSIDE_PRES.format(data[1].split(",")[3]))
-                except RuntimeError:
-                    # user quit out  of program
-                    pass
+                get_updater().call_latest(window.outside_temp.setText,
+                                          strings.OUTSIDE_TEMP.format(str(data[1].split(",")[0]) + "℃ (" + str(
+                                          data[1].split(",")[1]) + "℉)"))
+                get_updater().call_latest(window.outside_humi.setText,
+                                          strings.OUTSIDE_HUMI.format(data[1].split(",")[2]))
+                get_updater().call_latest(window.outside_hpa.setText,
+                                          strings.OUTSIDE_PRES.format(data[1].split(",")[3]))
         # motor, body temps
         elif data[0] == "temps":
             if window is not None:
-                try:
-                    window.left_temp.setText(strings.LEFT_TEMP.format(rstr(data[1].split(",")[0]) + "℃ (" +
-                                                                      rstr(convert_c_to_f(
-                                                                          float(data[1].split(",")[0])))
-                                                                      + "℉)"))
-                    window.right_temp.setText(strings.RIGHT_TEMP.format(rstr(data[1].split(",")[1]) + "℃ (" +
-                                                                        rstr(convert_c_to_f(
-                                                                            float(data[1].split(",")[1])))
-                                                                        + "℉)"))
+                get_updater().call_latest(window.left_temp.setText,
+                                          strings.LEFT_TEMP.format(rstr(data[1].split(",")[0]) + "℃ (" +
+                                                                   rstr(convert_c_to_f(
+                                                                       float(data[1].split(",")[0]))) + "℉)"))
+                get_updater().call_latest(window.right_temp.setText,
+                                          strings.RIGHT_TEMP.format(rstr(data[1].split(",")[1]) + "℃ (" +
+                                                                    rstr(convert_c_to_f(
+                                                                        float(data[1].split(",")[1]))) + "℉)"))
 
-                    window.robot_temp.setText(strings.INSIDE_TEMP.format(rstr(data[1].split(",")[2]) + "℃ (" +
-                                                                         rstr(convert_c_to_f(
-                                                                             float(data[1].split(",")[2])))
-                                                                         + "℉)"))
+                get_updater().call_latest(window.robot_temp.setText,
+                                          strings.INSIDE_TEMP.format(rstr(data[1].split(",")[2]) + "℃ (" +
+                                                                     rstr(convert_c_to_f(
+                                                                         float(data[1].split(",")[2]))) + "℉)"))
 
-                    if float(data[1].split(",")[0]) > HIGH_MOTOR_TEMP:
-                        window.left_temp.setStyleSheet("background-color: #df574d;")
-                        window.motor_stick.setDisabled(True)
-                        if not disable_temp_modal:
-                            com.txmot([1500, 1500])
-                            window.motTempModalText.setText(strings.MOT_TEMP_HIGH)
-                            window.motTemp_modal.show()
-                    else:
-                        window.left_temp.setStyleSheet("")
+                if float(data[1].split(",")[0]) > HIGH_MOTOR_TEMP:
+                    get_updater().call_latest(window.left_temp.setStyleSheet, "background-color: #df574d;")
+                    get_updater().call_latest(window.motor_stick.setDisabled, True)
+                    if not disable_temp_modal:
+                        com.txmot([1500, 1500])
+                        get_updater().call_latest(window.motTempModalText.setText, strings.MOT_TEMP_HIGH)
+                        get_updater().call_latest(window.motTemp_modal.show)
+                else:
+                    get_updater().call_latest(window.left_temp.setStyleSheet, "")
 
-                    if float(data[1].split(",")[1]) > HIGH_MOTOR_TEMP:
-                        window.right_temp.setStyleSheet("background-color: #df574d;")
-                        window.motor_stick.setDisabled(True)
-                        if not disable_temp_modal:
-                            com.txmot([1500, 1500])
-                            window.motTempModalText.setText(strings.MOT_TEMP_HIGH)
-                            window.motTemp_modal.show()
-                    else:
-                        window.right_temp.setStyleSheet("")
+                if float(data[1].split(",")[1]) > HIGH_MOTOR_TEMP:
+                    get_updater().call_latest(window.right_temp.setStyleSheet, "background-color: #df574d;")
+                    get_updater().call_latest(window.motor_stick.setDisabled, True)
+                    if not disable_temp_modal:
+                        com.txmot([1500, 1500])
+                        get_updater().call_latest(window.motTempModalText.setText, strings.MOT_TEMP_HIGH)
+                        get_updater().call_latest(window.motTemp_modal.show)
+                else:
+                    get_updater().call_latest(window.right_temp.setStyleSheet, "")
 
-                    if float(data[1].split(",")[2]) > HIGH_INSIDE_TEMP:
-                        window.robot_temp.setStyleSheet("background-color: #df574d;")
-                    else:
-                        window.robot_temp.setStyleSheet("")
-
-                except RuntimeError:
-                    # user quit out  of program
-                    pass
+                if float(data[1].split(",")[2]) > HIGH_INSIDE_TEMP:
+                    get_updater().call_latest(window.robot_temp.setStyleSheet, "background-color: #df574d;")
+                else:
+                    get_updater().call_latest(window.robot_temp.setStyleSheet, "")
         elif data[0] == "angle":
             if window is not None:
-                window.level.setAngle(int(data[1]))
+                get_updater().call_latest(window.level.setAngle, int(data[1]))
                 if int(data[1]) > 18:
-                    window.level.label.setStyleSheet("background-color: #df574d;")
-                    window.level.setLineColor(QColor("#df574d"))
+                    get_updater().call_latest(window.level.label.setStyleSheet, "background-color: #df574d;")
+                    get_updater().call_latest(window.level.setLineColor, QColor("#df574d"))
                 elif int(data[1]) > 10:
-                    window.level.label.setStyleSheet("background-color: #eebc2a;")
-                    window.level.setLineColor(QColor("#eebc2a"))
+                    get_updater().call_latest(window.level.label.setStyleSheet, "background-color: #eebc2a;")
+                    get_updater().call_latest(window.level.setLineColor, QColor("#eebc2a"))
                 else:
-                    window.level.label.setStyleSheet("")
-                    window.level.setLineColor(Qt.white)
+                    get_updater().call_latest(window.level.label.setStyleSheet, "")
+                    get_updater().call_latest(window.level.setLineColor, Qt.white)
         # remote disable
         elif data[0] == "remote.disableui":
             if str(data[1]).lower() == "true":
-                window.armGroup.setDisabled(True)
-                window.ledGroup.setDisabled(True)
-                window.mainGroup.setDisabled(True)
+                get_updater().call_latest(window.arm_group.setDisabled, True)
+                get_updater().call_latest(window.ledGroup.setDisabled, True)
+                get_updater().call_latest(window.mainGroup.setDisabled, True)
 
             else:
-                window.armGroup.setDisabled(False)
-                window.ledGroup.setDisabled(False)
-                window.mainGroup.setDisabled(False)
+                get_updater().call_latest(window.arm_group.setDisabled, False)
+                get_updater().call_latest(window.ledGroup.setDisabled, False)
+                get_updater().call_latest(window.mainGroup.setDisabled, False)
 
 
 class SliderProxyStyle(QProxyStyle):
