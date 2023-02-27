@@ -34,7 +34,6 @@ DEVEL_OPTIONS = True
 ENABLE_BATT2 = True
 THEME_FILE = "theme.qss"
 CURRENT_ARM_POS = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 2 5dof arms
-HIGH_MOTOR_TEMP = 20
 HIGH_INSIDE_TEMP = 45
 
 __version__ = "v1.0.0"
@@ -63,7 +62,6 @@ if "joystick_type" in settings:
         ANALOG_STICK = False
     else:
         ANALOG_STICK = True
-
 else:
     settings["joystick_type"] = "analog"  # save default
     if settings["joystick_type"] == "digital":
@@ -79,6 +77,15 @@ if "warning_voltage" in settings:
 else:
     settings["warning_voltage"] = 10  # save default
     warning_voltage = settings["warning_voltage"]
+    with open('settings.json', 'w') as file:
+        json.dump(settings, file, indent=2)
+
+# load temp warning settings
+if "motor_temp_warning" in settings:
+    motor_temp_warning = settings["motor_temp_warning"]
+else:
+    settings["motor_temp_warning"] = 50  # save default
+    HIGH_MOTOR_TEMP = settings["motor_temp_warning"]
     with open('settings.json', 'w') as file:
         json.dump(settings, file, indent=2)
 
