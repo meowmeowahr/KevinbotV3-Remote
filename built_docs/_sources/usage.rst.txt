@@ -21,7 +21,7 @@ Setup
 .. note::
     This guide assumes that you have fully set up Raspberry Pi OS Lite
 
-- Configure WiFi and Serial Port
+- Configure Wi-Fi and Serial Port
 
     .. code-block:: console
 
@@ -116,7 +116,7 @@ Setup
       $ mkdir ~/KbotV3
       $ cd ~/KbotV3
 
-    3. Insert a USB Drive with the 1.0-b40.tar.gz update file
+    3. Insert a USB Drive with the 1.0-b41.tar.gz update file
 
     .. warning::
       Make sure that you only have one USB Storage device connected
@@ -134,7 +134,7 @@ Setup
 
     .. code-block:: console
 
-      $ tar -xvf /media/<YOUR USER>/<DRIVE NAME>/1.0-b40.tar.gz
+      $ tar -xvf /media/<YOUR USER>/<DRIVE NAME>/1.0-b41.tar.gz
 
     6. Install Requirements
     
