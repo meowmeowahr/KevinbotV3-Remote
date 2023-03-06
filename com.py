@@ -52,16 +52,11 @@ def init(callback=None):
             # noinspection PyUnresolvedReferences
             import sys
             # noinspection PyUnresolvedReferences,PyPackageRequirements
-            from PyQt5.QtWidgets import QApplication, QMessageBox
+            from PyQt5.QtWidgets import QApplication, QMessageBox, QInputDialog
             _ = QApplication(sys.argv)
-            mess = QMessageBox()
-            mess.setText(f"Port {PORT} Not Found\nClick Yes to use console as serial port")
-            mess.setDetailedText("If you are on a Raspberry Pi, try turning on the serial port.\nIf you are on a PC, "
-                                 "make sure that an xbee if connected.")
-            mess.setStandardButtons(QMessageBox.Close | QMessageBox.Yes)
-            resp = mess.exec_()
-            if resp == QMessageBox.Yes:
-                ser = serial.Serial("/dev/tty", BAUD)
+            # noinspection PyTypeChecker
+            resp, _ = QInputDialog.getText(None, f"Port Not Found", "Type the correct port")
+            ser = serial.Serial(resp, BAUD)
         except ImportError:
             print(f"Port \"{PORT}\" Not Found")
     xb = xbee_com.XBee(ser, escaped=False, callback=callback)
