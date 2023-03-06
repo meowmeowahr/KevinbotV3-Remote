@@ -103,7 +103,7 @@ class MainWindow(KBMainWindow):
 
     # noinspection PyUnresolvedReferences,PyArgumentList
     def __init__(self):
-        super().__init__()
+        super(MainWindow, self).__init__()
         self.setWindowTitle("Kevinbot Runner")
         self.setObjectName("Kevinbot3_RemoteUI")
 
@@ -201,12 +201,6 @@ class MainWindow(KBMainWindow):
             self.dev_close.clicked.connect(self.close)
             self.dev_layout.addWidget(self.dev_close)
 
-            try:
-                with open("version.txt") as f:
-                    version = f.read()
-            except FileNotFoundError:
-                version = "Unknown"
-
             self.dev_sysinfo = haptics.HPushButton("Launch System Info App")
             self.dev_sysinfo.setIcon(qta.icon("fa5s.search", color=self.fg_color))
             self.dev_sysinfo.clicked.connect(lambda: run_app("python3 sysinfo.py", gui=False))
@@ -250,7 +244,7 @@ class MainWindow(KBMainWindow):
                 widget_effect = None
                 effect_type = theme.EFFECTS.split(":")
                 if effect_type[0] == "shadow":
-                    widget_effect = QGraphicsDropShadowEffect()
+                    widget_effect = QGraphicsDropShadowEffect(self)
                     is_blur = [i for i in effect_type if i.startswith('b')]
                     is_color = [i for i in effect_type if i.startswith('c')]
                     if is_blur[0].startswith('b'):

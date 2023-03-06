@@ -28,7 +28,7 @@ settings = json.load(open("settings.json", encoding="utf-8"))
 class MainWindow(KBMainWindow):
     """ Kevinbot About App Window """
     def __init__(self):
-        super().__init__()
+        super(MainWindow, self).__init__()
 
         self.setWindowTitle("Remote Info")
         self.setWindowIcon(QIcon(os.path.join(os.path.dirname(__file__), "icons/help.svg")))

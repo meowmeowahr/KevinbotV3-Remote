@@ -4,15 +4,11 @@ import time
 import threading
 
 try:
-    # noinspection PyPep8Naming
-    import RPi.GPIO as io
+    import RPi.GPIO as GPIO
 except ImportError:
-    # noinspection PyPep8Naming
-    try:
-        # from RPiSim.GPIO import GPIO as io
-        pass  # do not use GPIO sim
-    except ImportError:
-        pass
+    pass
+    # from RPiSim.GPIO import GPIO as io
+    # do not use GPIO sim
 
 _pin = None
 
@@ -21,29 +17,29 @@ def init(pin):
     global _pin
     _pin = pin
     if is_pi():
-        io.setmode(io.BCM)
-        io.setwarnings(False)
-        io.setup(pin, io.OUT)
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setwarnings(False)
+        GPIO.setup(pin, GPIO.OUT)
     else:
         print(f"Haptics Initialized at Pin: {pin}")
         try:
-            io.setmode(io.BCM)
-            io.setwarnings(False)
-            io.setup(pin, io.OUT)
+            GPIO.setmode(GPIO.BCM)
+            GPIO.setwarnings(False)
+            GPIO.setup(pin, GPIO.OUT)
         except (TypeError, NameError):
             pass
 
 
 def haptic(duration=0.02):
     if is_pi():
-        io.output(_pin, 1)
+        GPIO.output(_pin, 1)
         time.sleep(duration)
-        io.output(_pin, 0)
+        GPIO.output(_pin, 0)
     else:
         try:
-            io.output(_pin, 1)
+            GPIO.output(_pin, 1)
             time.sleep(duration)
-            io.output(_pin, 0)
+            GPIO.output(_pin, 0)
         except (TypeError, NameError):
             pass
 

@@ -102,10 +102,12 @@ class MainWindow(KBMainWindow):
     # noinspection PyArgumentList
     def __init__(self):
         # noinspection PyArgumentList
-        super().__init__()
+        super(MainWindow, self).__init__()
         self.slider_style = SliderProxyStyle(QSlider().style())
         self.setWindowTitle("Kevinbot Remote Settings")
+        self.setWindowIcon(QIcon(os.path.join(os.path.dirname(__file__), "icons/settings.svg")))
         self.setObjectName("Kevinbot3_RemoteUI")
+
         try:
             load_theme(self, settings["window_properties"]["theme"], settings["window_properties"]["theme_colors"])
         except NameError:
