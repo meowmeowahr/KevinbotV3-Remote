@@ -31,6 +31,7 @@ class MainWindow(KBMainWindow):
         super().__init__()
 
         self.setWindowTitle("Remote Info")
+        self.setWindowIcon(QIcon(os.path.join(os.path.dirname(__file__), "icons/help.svg")))
 
         try:
             load_theme(self, settings["window_properties"]["theme"],
