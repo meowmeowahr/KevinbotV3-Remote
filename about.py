@@ -10,11 +10,11 @@ import platform
 import sys
 
 # noinspection PyPackageRequirements
-from PyQt5.QtCore import *
+from PyQt6.QtCore import *
 # noinspection PyPackageRequirements
-from PyQt5.QtGui import *
+from PyQt6.QtGui import *
 # noinspection PyPackageRequirements
-from PyQt5.QtWidgets import *
+from PyQt6.QtWidgets import *
 
 from QCustomWidgets import KBMainWindow
 
@@ -53,7 +53,7 @@ class MainWindow(KBMainWindow):
             load_theme(self, settings["window_properties"]["theme"])
 
         if EMULATE_REAL_REMOTE:
-            self.setWindowFlags(Qt.FramelessWindowHint)
+            self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
             self.setFixedSize(QSize(800, 480))
 
         self.ee_count = 0
@@ -61,8 +61,8 @@ class MainWindow(KBMainWindow):
         self.ensurePolished()
         if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],
                         QColor(self.palette().color(
-                            QPalette.Window)).getRgb()[1],
-                        QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
+                            QPalette.ColorRole.Window)).getRgb()[1],
+                        QColor(self.palette().color(QPalette.ColorRole.Window)).getRgb()[2])):
             self.fg_color = Qt.GlobalColor.white
         else:
             self.fg_color = Qt.GlobalColor.black
@@ -112,7 +112,7 @@ class MainWindow(KBMainWindow):
                                  "Lato Font by Łukasz Dziedzic</p>")
         self.credits_box.setVerticalScrollBarPolicy(
             Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        QScroller.grabGesture(self.credits_box, QScroller.LeftMouseButtonGesture)  # enable single-touch scroll
+        QScroller.grabGesture(self.credits_box, QScroller.ScrollerGestureType.LeftMouseButtonGesture)  # enable single-touch scroll
         self.credits_box.hide()
         self.layout.addWidget(self.credits_box)
 
@@ -176,4 +176,4 @@ if __name__ == "__main__":
     app.setApplicationVersion("1.0")
     app.setWindowIcon(QIcon("icons/icon.svg"))
     window = MainWindow()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

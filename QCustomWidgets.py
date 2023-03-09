@@ -1,9 +1,9 @@
 import os.path
 import math
 
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
+from PyQt6.QtWidgets import *
+from PyQt6.QtCore import *
+from PyQt6.QtGui import *
 import qtawesome as qta
 
 
@@ -27,7 +27,7 @@ class QSpinner(QWidget):
             self.__layout.addWidget(self.text)
 
         self.spinbox = QSpinBox()
-        self.spinbox.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.spinbox.setButtonSymbols(QAbstractSpinBox.ButtonSymbols.NoButtons)
         self.spinbox.setFixedHeight(32)
         self.__layout.addWidget(self.spinbox)
 
@@ -93,15 +93,15 @@ class KBMainWindow(QMainWindow):
 
     def _windowModeToggle(self):
         if self._windowify_action.isChecked():
-            self.setWindowFlags(self.windowFlags() & ~Qt.FramelessWindowHint)
+            self.setWindowFlags(self.windowFlags() & ~Qt.WindowType.FramelessWindowHint)
         else:
-            self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
+            self.setWindowFlags(self.windowFlags() | Qt.WindowType.FramelessWindowHint)
 
         self.show()
 
     def createDevTools(self):
         """ Create a right-click Debug Menu in app """
-        self.centralWidget().setContextMenuPolicy(Qt.ActionsContextMenu)
+        self.centralWidget().setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
         self.centralWidget().addAction(self._title_action)
         self.centralWidget().addAction(self._windowify_action)
         self.centralWidget().addAction(self._close_action)
@@ -115,7 +115,7 @@ class KBModalBar(QFrame):
         self.parent = parent
 
         self.setObjectName("Kevinbot3_RemoteUI_ModalBar")
-        self.setFrameStyle(QFrame.Box)
+        self.setFrameStyle(QFrame.Shape.Box)
         self.setFixedSize(QSize(width, height))
         self.setParent(parent)
 
@@ -161,41 +161,41 @@ class KBModalBar(QFrame):
     def setPixmap(self, pixmap):
         self.__icon.setPixmap(pixmap)
 
-    def closeToast(self, closeSpeed = 750):
+    def closeToast(self, closeSpeed=750):
         self.__anim = QPropertyAnimation(self, b"pos")
-        self.__anim.setEasingCurve(QEasingCurve.InOutCubic)
+        self.__anim.setEasingCurve(QEasingCurve.Type.InOutCubic)
         self.__anim.setEndValue(QPoint(int(self.parent.width() / 2 - self.width() / 2),
-                                self.parent.height() + self.height() + 25))
+                                       self.parent.height() + self.height() + 25))
         self.__anim.setDuration(closeSpeed)
         self.__anim.start()
 
         timer = QTimer()
         timer.singleShot(closeSpeed, self.deleteLater)
 
-    def changeIndex(self, newIndex, moveSpeed = 750, easingCurve = QEasingCurve.OutCubic):
+    def changeIndex(self, newIndex, moveSpeed=750, easingCurve=QEasingCurve.Type.OutCubic):
         self.posIndex = newIndex
         self.__anim = QPropertyAnimation(self, b"pos")
         self.__anim.setEasingCurve(easingCurve)
         self.__anim.setEndValue(QPoint(int(self.parent.width() / 2 - self.width() / 2),
-                                     int(self.parent.height() - ((self.height() + self.gap) * newIndex))))
+                                       int(self.parent.height() - ((self.height() + self.gap) * newIndex))))
         self.__anim.setDuration(moveSpeed)
         self.__anim.start()
 
     def getIndex(self):
         return self.posIndex
 
-    def popToast(self, popSpeed = 750, easingCurve = QEasingCurve.OutCubic, posIndex = 1):
+    def popToast(self, popSpeed=750, easingCurve=QEasingCurve.Type.OutCubic, posIndex=1):
 
         self.posIndex = posIndex
 
         self.move(int(self.parent.width() / 2 - self.width() / 2),
-                 self.parent.height() + self.height())
+                  self.parent.height() + self.height())
         self.show()
 
         self.__anim = QPropertyAnimation(self, b"pos")
         self.__anim.setEasingCurve(easingCurve)
         self.__anim.setEndValue(QPoint(int(self.parent.width() / 2 - self.width() / 2),
-                                     int(self.parent.height() - (self.height() + self.gap) * posIndex)))
+                                       int(self.parent.height() - (self.height() + self.gap) * posIndex)))
         self.__anim.setDuration(popSpeed)
         self.__anim.start()
 
@@ -227,7 +227,7 @@ class QSuperDial(QDial):
         painter.setBackgroundMode(1)
 
         # Smooth out the circle
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
         # Use background color
         painter.setBrush(painter.background())
@@ -236,7 +236,7 @@ class QSuperDial(QDial):
         point_color = QColor(painter.pen().color())
 
         # No border
-        painter.setPen(QPen(Qt.NoPen))
+        painter.setPen(QPen(Qt.PenStyle.NoPen))
 
         # Draw first circle
         painter.drawEllipse(0, 0, self.width(), self.height())
