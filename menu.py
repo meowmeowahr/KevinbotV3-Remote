@@ -80,6 +80,8 @@ def run_app(command, gui=True):
         elif platform.system() == "Linux":
             command = command.replace("python3", os.path.join(os.curdir, "venv\\bin\\python"))
 
+    logging.info(f"Running command: {command}")
+
     if gui:
         window.main_widget.setEnabled(False)
 
