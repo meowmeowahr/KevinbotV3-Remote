@@ -3,10 +3,10 @@ import platform
 import sys
 import json
 
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWebEngineWidgets import *
-from PyQt5.QtWidgets import *
+from qtpy.QtCore import *
+from qtpy.QtGui import *
+from qtpy.QtWebEngineWidgets import *
+from qtpy.QtWidgets import *
 from QCustomWidgets import KBMainWindow
 import qtawesome as qta
 
