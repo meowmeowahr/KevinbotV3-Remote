@@ -1,11 +1,10 @@
 #!/usr/bin/python
 
 # Import Qt
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
+from PyQt6.QtWidgets import *
+from PyQt6.QtCore import *
+from PyQt6.QtGui import *
 
-import haptics
 from QCustomWidgets import KBMainWindow
 import qtawesome as qta
 import sys
@@ -44,9 +43,9 @@ class Window(KBMainWindow):
             load_theme(self, settings["window_properties"]["theme"])
 
         self.ensurePolished()
-        if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],
-                        QColor(self.palette().color(QPalette.Window)).getRgb()[1],
-                        QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
+        if detect_dark((QColor(self.palette().color(QPalette.ColorRole.Window)).getRgb()[0],
+                        QColor(self.palette().color(QPalette.ColorRole.Window)).getRgb()[1],
+                        QColor(self.palette().color(QPalette.ColorRole.Window)).getRgb()[2])):
             self.fg_color = Qt.GlobalColor.white
         else:
             self.fg_color = Qt.GlobalColor.black
@@ -125,7 +124,7 @@ class Window(KBMainWindow):
 
         if EMULATE_REAL_REMOTE:
             self.setFixedSize(QSize(800, 480))
-            self.setWindowFlags(Qt.FramelessWindowHint)
+            self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
 
         if START_FULL_SCREEN:
             self.showFullScreen()
@@ -183,4 +182,4 @@ if __name__ == "__main__":
     app.setApplicationName('Kevinbot XBee Terminal')
     w = Window()
     w.setWindowTitle('Kevinbot XBee Terminal')
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
