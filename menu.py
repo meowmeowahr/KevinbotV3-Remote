@@ -1,9 +1,9 @@
 #!/usr/bin/python
 import importlib
 
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
+from qtpy.QtWidgets import *
+from qtpy.QtCore import *
+from qtpy.QtGui import *
 from QCustomWidgets import KBMainWindow
 import qtawesome as qta
 import sys
@@ -101,7 +101,7 @@ def hex2rgb(h):
 
 
 class MainWindow(KBMainWindow):
-    updateTheme = pyqtSignal()
+    updateTheme = Signal()
 
     # noinspection PyUnresolvedReferences,PyArgumentList
     def __init__(self):
