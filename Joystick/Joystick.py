@@ -1,6 +1,6 @@
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt6.QtGui import *
+from PyQt6.QtCore import *
+from PyQt6.QtWidgets import *
 import sys
 from enum import Enum
 
@@ -34,7 +34,7 @@ class Joystick(QWidget):
 
     def paintEvent(self, event):
         painter = QPainter(self)
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         bounds = QRectF(-self.__maxDistance, -self.__maxDistance, self.__maxDistance * 2, self.__maxDistance * 2).\
             translated(self._center())
         painter.setPen(QPen(self.color, 4))
@@ -61,7 +61,7 @@ class Joystick(QWidget):
         return round(norm_vector.dx()), round(norm_vector.dy())
 
     def mousePressEvent(self, ev):
-        self.grabCenter = self._centerEllipse().contains(ev.pos())
+        self.grabCenter = self._centerEllipse().contains(ev.pos().toPointF())
         return super().mousePressEvent(ev)
 
     def mouseReleaseEvent(self, event):
@@ -73,7 +73,7 @@ class Joystick(QWidget):
 
     def mouseMoveEvent(self, event):
         if self.grabCenter:
-            self.movingOffset = self._boundJoystick(event.pos())
+            self.movingOffset = self._boundJoystick(event.pos().toPointF())
             self.update()
             self.xyChanged()
 
@@ -89,4 +89,4 @@ if __name__ == '__main__':
     app = QApplication([])
     joystick = Joystick()
     joystick.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
