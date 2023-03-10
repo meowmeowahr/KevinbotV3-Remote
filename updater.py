@@ -10,9 +10,9 @@
 
 # Uses PyQt5 for the GUI
 
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
+from PyQt6.QtWidgets import *
+from PyQt6.QtCore import *
+from PyQt6.QtGui import *
 from QCustomWidgets import KBMainWindow
 import qtawesome as qta
 from utils import detect_dark, load_theme
@@ -168,13 +168,13 @@ class MainWindow(KBMainWindow):
         load_theme(self, settings["window_properties"]["theme"])
 
         if EMULATE_REAL_REMOTE:
-            self.setWindowFlags(Qt.FramelessWindowHint)
+            self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
             self.setFixedSize(QSize(800, 480))
 
         self.ensurePolished()
-        if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],
-                        QColor(self.palette().color(QPalette.Window)).getRgb()[1],
-                        QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
+        if detect_dark((QColor(self.palette().color(QPalette.ColorRole.Window)).getRgb()[0],
+                        QColor(self.palette().color(QPalette.ColorRole.Window)).getRgb()[1],
+                        QColor(self.palette().color(QPalette.ColorRole.Window)).getRgb()[2])):
             self.fg_color = Qt.GlobalColor.white
         else:
             self.fg_color = Qt.GlobalColor.black
@@ -337,7 +337,7 @@ class MainWindow(KBMainWindow):
     def run_update(self):
         # noinspection PyAttributeOutsideInit
         self.progress_dialog = QProgressDialog("Updating...", "Cancel", 0, 100, self)
-        self.progress_dialog.setWindowModality(Qt.WindowModal)
+        self.progress_dialog.setWindowModality(Qt.WindowModality.WindowModal)
         self.progress_dialog.setWindowTitle("Please Wait")
         self.progress_dialog.setMinimumDuration(0)
         self.progress_dialog.setValue(0)
@@ -365,8 +365,8 @@ class MainWindow(KBMainWindow):
         message.setWindowTitle("Update Complete")
         message.setText(f"Successfully Updated to version {version}")
         message.setInformativeText("Please Reboot")
-        message.setIcon(QMessageBox.Information)
-        message.exec_()
+        message.setIcon(QMessageBox.Icon.Information)
+        message.exec()
 
 
 if __name__ == "__main__":
@@ -375,4 +375,4 @@ if __name__ == "__main__":
     app.setApplicationVersion("1.0")
     window = MainWindow()
     window.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

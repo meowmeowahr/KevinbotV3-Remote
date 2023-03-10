@@ -5,8 +5,7 @@ import statistics
 import threading
 from shutil import which
 # noinspection PyPackageRequirements
-from PyQt5.QtCore import QFile, QTextStream
-from PyQt5.QtWidgets import QWidget
+from PyQt6.QtCore import QFile, QTextStream, QObject
 
 
 def capitalize(string):
@@ -50,7 +49,7 @@ def detect_dark(rgb):
         return True
 
 
-def load_theme(widget: QWidget, theme="classic", theme_style="default"):
+def load_theme(widget: QObject, theme="classic", theme_style="default"):
     if theme == "classic":
         with open("theme.qss", 'r') as file:
             widget.setStyleSheet(file.read())
