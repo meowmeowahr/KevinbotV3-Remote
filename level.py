@@ -2,9 +2,9 @@
 # A circle with a line in the middle
 # You can change the angle of the line using "setAngle()"
 
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
+from qtpy.QtWidgets import *
+from qtpy.QtCore import *
+from qtpy.QtGui import *
 import math
 
 
@@ -21,7 +21,7 @@ class LevelWidget(QWidget):
         self._levelText = "Angle: {}"
 
         if parent is not None:
-            self._backgroundColor = parent.palette().color(QPalette.Background)
+            self._backgroundColor = Qt.GlobalColor.transparent
         else:
             self._backgroundColor = Qt.white
 
@@ -56,11 +56,11 @@ class LevelWidget(QWidget):
         painter.setPen(QPen(self._lineColor, self._lineWidth))
 
         painter.drawLine(QPointF(self.height() / 2, self.height() / 2),
-                         QPointF(self.height() / 2 + math.cos(math.radians(self.angle)) * self.height() / 2,
+                         QPointF(self.height() / 2 + math.cos(math.radians(self.angle)) * self.height() / 2 - 12,
                                  self.height() / 2 + math.sin(math.radians(self.angle)) * self.height() / 2))
 
         painter.drawLine(QPointF(self.height() / 2, self.height() / 2),
-                         QPointF(self.height() / 2 - math.cos(math.radians(self.angle)) * self.height() / 2,
+                         QPointF(self.height() / 2 - math.cos(math.radians(self.angle)) * self.height() / 2 + 12,
                                  self.height() / 2 - math.sin(math.radians(self.angle)) * self.height() / 2))
 
         # line 20px out  of the angle line
