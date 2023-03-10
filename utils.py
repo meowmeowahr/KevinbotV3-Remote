@@ -5,8 +5,8 @@ import statistics
 import threading
 from shutil import which
 # noinspection PyPackageRequirements
-from PyQt5.QtCore import QFile, QTextStream
-from PyQt5.QtWidgets import QWidget
+from qtpy.QtCore import QFile, QTextStream
+from qtpy.QtWidgets import QWidget
 
 
 def capitalize(string):

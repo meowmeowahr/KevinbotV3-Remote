@@ -10,11 +10,11 @@ import platform
 import sys
 
 # noinspection PyPackageRequirements
-from PyQt5.QtCore import *
+from qtpy.QtCore import *
 # noinspection PyPackageRequirements
-from PyQt5.QtGui import *
+from qtpy.QtGui import *
 # noinspection PyPackageRequirements
-from PyQt5.QtWidgets import *
+from qtpy.QtWidgets import *
 
 from QCustomWidgets import KBMainWindow
 

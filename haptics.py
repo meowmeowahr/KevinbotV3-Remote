@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QPushButton, QToolButton
+from qtpy.QtWidgets import QPushButton, QToolButton
 from utils import is_pi
 import time
 import threading
