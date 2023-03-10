@@ -2,9 +2,9 @@
 # A circle with a line in the middle
 # You can change the angle of the line using "setAngle()"
 
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
+from PyQt6.QtWidgets import *
+from PyQt6.QtCore import *
+from PyQt6.QtGui import *
 import math
 
 
@@ -15,15 +15,15 @@ class LevelWidget(QWidget):
         self.setMinimumSize(160, 160)
 
         self.angle = 0
-        self._lineColor = Qt.black
-        self._robotColor = Qt.blue
+        self._lineColor = Qt.GlobalColor.black
+        self._robotColor = Qt.GlobalColor.blue
         self._lineWidth = 16
         self._levelText = "Angle: {}"
 
         if parent is not None:
-            self._backgroundColor = parent.palette().color(QPalette.Background)
+            self._backgroundColor = parent.palette().color(QPalette.ColorRole.Window)
         else:
-            self._backgroundColor = Qt.white
+            self._backgroundColor = Qt.GlobalColor.white
 
     def setAngle(self, angle):
         self.angle = angle
@@ -52,7 +52,7 @@ class LevelWidget(QWidget):
 
     def paintEvent(self, event):
         painter = QPainter(self)
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         painter.setPen(QPen(self._lineColor, self._lineWidth))
 
         painter.drawLine(QPointF(self.height() / 2, self.height() / 2),
@@ -74,7 +74,7 @@ class LevelWidget(QWidget):
 
         painter.setPen(QPen(self._lineColor, self._lineWidth / 2.5))
         painter.drawEllipse(QRect(4, 4, self.height() - 8, self.height() - 8))
-        painter.setPen(QPen(Qt.black, 16))
+        painter.setPen(QPen(Qt.GlobalColor.black, 16))
 
 
 class Level(QWidget):
@@ -131,4 +131,4 @@ if __name__ == "__main__":
     # noinspection PyArgumentList
     layout.addWidget(spinbox)
     window.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
