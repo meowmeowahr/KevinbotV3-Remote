@@ -3,9 +3,9 @@ import platform
 import sys
 import json
 
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from PyQt6.QtCore import *
+from PyQt6.QtGui import *
+from PyQt6.QtWidgets import *
 from QCustomWidgets import KBMainWindow
 import qtawesome as qta
 
@@ -38,14 +38,14 @@ class MainWindow(KBMainWindow):
             load_theme(self, settings["window_properties"]["theme"])
 
         if EMULATE_REAL_REMOTE:
-            self.setWindowFlags(Qt.FramelessWindowHint)
+            self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
             self.setFixedSize(QSize(800, 480))
 
         self.ensurePolished()
-        if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],
+        if detect_dark((QColor(self.palette().color(QPalette.ColorRole.Window)).getRgb()[0],
                         QColor(self.palette().color(
-                            QPalette.Window)).getRgb()[1],
-                        QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
+                            QPalette.ColorRole.Window)).getRgb()[1],
+                        QColor(self.palette().color(QPalette.ColorRole.Window)).getRgb()[2])):
             self.fg_color = Qt.GlobalColor.white
         else:
             self.fg_color = Qt.GlobalColor.black
@@ -86,9 +86,6 @@ class MainWindow(KBMainWindow):
         self.qt_version = QLabel("Qt Version: {}".format(QT_VERSION_STR))
         self.layout.addWidget(self.qt_version, alignment=Qt.AlignmentFlag.AlignLeft)
 
-        self.pyqt_config = QLabel("PyQt Config: {}".format(PYQT_CONFIGURATION))
-        self.layout.addWidget(self.pyqt_config, alignment=Qt.AlignmentFlag.AlignLeft)
-
         self.env_vars_label = QLabel("Environment Variables:")
         self.layout.addWidget(self.env_vars_label, alignment=Qt.AlignmentFlag.AlignLeft)
 
@@ -122,4 +119,4 @@ if __name__ == "__main__":
     app.setApplicationName("Remote Info")
     app.setApplicationVersion("1.0")
     window = MainWindow()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
