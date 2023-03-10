@@ -9,7 +9,7 @@ class SlidingStackedWidget(QStackedWidget):
         super(SlidingStackedWidget, self).__init__(parent)
 
         self.m_animation_type = anim
-        self.m_direction = Qt.Axis.XAxis
+        self.m_direction = Qt.Orientation.Horizontal
         self.m_speed = speed
         self.m_now = 0
         self.m_next = 0

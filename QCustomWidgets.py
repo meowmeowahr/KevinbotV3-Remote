@@ -224,7 +224,7 @@ class QSuperDial(QDial):
         painter = QPainter(self)
 
         # So that we can use the background color
-        painter.setBackgroundMode(1)
+        painter.setBackgroundMode(Qt.BGMode.OpaqueMode)
 
         # Smooth out the circle
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)

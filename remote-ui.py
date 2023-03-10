@@ -6,7 +6,6 @@ import datetime
 import json
 import platform
 import sys
-import threading
 import time
 from functools import partial
 
@@ -207,7 +206,7 @@ def rx_data():
                     get_updater().call_latest(window.level.setLineColor, QColor("#eebc2a"))
                 else:
                     get_updater().call_latest(window.level.label.setStyleSheet, "")
-                    get_updater().call_latest(window.level.setLineColor, Qt.white)
+                    get_updater().call_latest(window.level.setLineColor, Qt.GlobalColor.white)
         # remote disable
         elif data[0] == "remote.disableui":
             if str(data[1]).lower() == "true":
@@ -224,9 +223,9 @@ def rx_data():
 class SliderProxyStyle(QProxyStyle):
     # noinspection PyMethodOverriding
     def pixelMetric(self, metric, option, widget):
-        if metric == QStyle.PM_SliderThickness:
+        if metric == QStyle.PixelMetric.PM_SliderThickness:
             return 25
-        elif metric == QStyle.PM_SliderLength:
+        elif metric == QStyle.PixelMetric.PM_SliderLength:
             return 22
         return super().pixelMetric(metric, option, widget)
 
@@ -242,7 +241,7 @@ class RemoteUI(KBMainWindow):
         self.setWindowIcon(QIcon('icons/icon.svg'))
 
         if EMULATE_REAL_REMOTE:
-            self.setWindowFlags(Qt.Window | Qt.FramelessWindowHint)
+            self.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.FramelessWindowHint)
             self.setFixedSize(800, 480)
 
         # load theme
@@ -269,9 +268,6 @@ class RemoteUI(KBMainWindow):
     def init_ui(self):
         self.widget = SlidingStackedWidget.SlidingStackedWidget()
         self.setCentralWidget(self.widget)
-
-        self.widget.setDirection(settings["window_properties"]["animation_dir"])
-        self.widget.setSpeed(settings["window_properties"]["animation_speed"])
 
         self.mainWidget = QWidget()
         self.mainWidget.setObjectName("Kevinbot3_RemoteUI_MainWidget")
@@ -1413,16 +1409,10 @@ class RemoteUI(KBMainWindow):
         self.close()
 
     def camera_led_action(self):
-        old_dir = self.widget.getDirection()
-        self.widget.setDirection(Qt.Axis.YAxis)
         self.widget.slideInIdx(1)
-        self.widget.setDirection(old_dir)
 
     def arm_edit_action(self):
-        old_dir = self.widget.getDirection()
-        self.widget.setDirection(Qt.Axis.YAxis)
-        self.widget.slideInIdx(5)
-        self.widget.setDirection(old_dir)
+        self.widget.slideInWgt(self.armPresetsWidget)
 
     @staticmethod
     def arm_action(index):
@@ -1537,7 +1527,7 @@ class RemoteUI(KBMainWindow):
 
         if not extract_digits(self.armPresetLabel.text()):
             if self.modal_count < 6:
-                modal_bar = KBModalBar(self)
+                #modal_bar = KBModalBar(self)
                 self.modals.append(modal_bar)
                 self.modal_count += 1
                 modal_bar.setTitle(strings.SAVE_ERROR)
@@ -1550,7 +1540,7 @@ class RemoteUI(KBMainWindow):
                 modal_timeout.singleShot(1500, close_modal)
         else:
             if self.modal_count < 6:
-                modal_bar = KBModalBar(self)
+                #modal_bar = KBModalBar(self)
                 self.modals.append(modal_bar)
                 self.modal_count += 1
                 modal_bar.setTitle(strings.SAVE_SUCCESS)
@@ -1591,7 +1581,7 @@ class RemoteUI(KBMainWindow):
 
         # show modal
         if self.modal_count < 6:
-            modal_bar = KBModalBar(self)
+            #modal_bar = KBModalBar(self)
             self.modals.append(modal_bar)
             self.modal_count += 1
             modal_bar.setTitle(strings.SAVE_SUCCESS)
@@ -1719,8 +1709,8 @@ if __name__ == '__main__':
     error = None
     try:
         com.init()
-        rx_thread = threading.Thread(target=rx_data, daemon=True)
-        rx_thread.start()
+        #rx_thread = threading.Thread(target=rx_data, daemon=True)
+        #rx_thread.start()
         init_robot()
         app = QApplication(sys.argv)
         app.setApplicationName("Kevinbot Remote")
