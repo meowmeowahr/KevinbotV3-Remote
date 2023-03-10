@@ -1,9 +1,9 @@
 #!/usr/bin/python
 import importlib
 
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
+from PyQt6.QtWidgets import *
+from PyQt6.QtCore import *
+from PyQt6.QtGui import *
 from QCustomWidgets import KBMainWindow
 import qtawesome as qta
 import sys
@@ -270,30 +270,30 @@ class MainWindow(KBMainWindow):
         # confirm shutdown
         msg = QMessageBox(self)
         load_theme(msg, settings["window_properties"]["theme"])
-        msg.setIcon(QMessageBox.Warning)
+        msg.setIcon(QMessageBox.Icon.Warning)
         msg.setText("Are you sure you want to shutdown?")
         msg.setInformativeText("This will shutdown the computer.")
         msg.setWindowTitle("Shutdown")
-        msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-        ret = msg.exec_()
+        msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        ret = msg.exec()
 
         # if yes, shutdown
-        if ret == QMessageBox.Yes:
+        if ret == QMessageBox.StandardButton.Yes:
             os.system(settings["shutdown_command"])
 
     def reboot(self):
         # confirm reboot
         msg = QMessageBox(self)
         load_theme(msg, settings["window_properties"]["theme"])
-        msg.setIcon(QMessageBox.Warning)
+        msg.setIcon(QMessageBox.Icon.Warning)
         msg.setText("Are you sure you want to reboot?")
         msg.setInformativeText("This will reboot the computer.")
         msg.setWindowTitle("Reboot")
-        msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-        ret = msg.exec_()
+        msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        ret = msg.exec()
 
         # if yes, reboot
-        if ret == QMessageBox.Yes:
+        if ret == QMessageBox.StandardButton.Yes:
             os.system(settings["reboot_command"])
 
     def open_dev(self):
