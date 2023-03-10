@@ -8,6 +8,5 @@ xscreensaver-config==1.0.7
 qt-thread-updater==1.1.6
 PyQtWebEngine
 darkdetect==0.8.0
-PyQt5
 Qt.py
 QtPy
