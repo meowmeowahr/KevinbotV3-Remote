@@ -1,7 +1,7 @@
 import sys
-from PyQt5.QtCore import *
-from PyQt5.QtGui import QPalette
-from PyQt5.QtWidgets import *
+from PyQt6.QtCore import *
+from PyQt6.QtGui import QPalette
+from PyQt6.QtWidgets import *
 from utils import load_theme
 
 
@@ -15,10 +15,10 @@ class MainWindow(QWidget):
         self.setObjectName("Kevinbot3_RemoteUI")
 
         palette = self.palette()
-        palette.setColor(QPalette.Inactive, QPalette.Highlight,
-                         palette.color(QPalette.Active, QPalette.Highlight))
-        palette.setColor(QPalette.Inactive, QPalette.HighlightedText,
-                         palette.color(QPalette.Active, QPalette.HighlightedText))
+        palette.setColor(QPalette.ColorGroup.Inactive, QPalette.ColorRole.Highlight,
+                         palette.color(QPalette.ColorGroup.Active, QPalette.ColorRole.Highlight))
+        palette.setColor(QPalette.ColorGroup.Inactive, QPalette.ColorRole.HighlightedText,
+                         palette.color(QPalette.ColorGroup.Active, QPalette.ColorRole.HighlightedText))
         self.setPalette(palette)
 
         self.layout = QGridLayout()
@@ -27,7 +27,7 @@ class MainWindow(QWidget):
         self.button = QPushButton("Button")
         self.layout.addWidget(self.button, 0, 0)
 
-        self.slider = QSlider(Qt.Horizontal)
+        self.slider = QSlider(Qt.Orientation.Horizontal)
         self.slider.setObjectName("Kevinbot3_RemoteUI_Slider")
         self.layout.addWidget(self.slider, 0, 1)
 
