@@ -7,9 +7,9 @@ import sys
 import subprocess
 from urllib.parse import urlparse
 
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from PyQt6.QtCore import *
+from PyQt6.QtGui import *
+from PyQt6.QtWidgets import *
 from QCustomWidgets import QSpinner, QNamedLineEdit, KBMainWindow
 from SlidingStackedWidget import SlidingStackedWidget
 from json_editor import Editor
@@ -90,9 +90,9 @@ def uri_validator(x):
 class SliderProxyStyle(QProxyStyle):
     # noinspection PyMethodOverriding
     def pixelMetric(self, metric, option, widget):
-        if metric == QStyle.PM_SliderThickness:
+        if metric == QStyle.PixelMetric.PM_SliderThickness:
             return 25
-        elif metric == QStyle.PM_SliderLength:
+        elif metric == QStyle.PixelMetric.PM_SliderLength:
             return 22
         return super().pixelMetric(metric, option, widget)
 
@@ -114,7 +114,7 @@ class MainWindow(KBMainWindow):
             load_theme(self, settings["window_properties"]["theme"])
 
         if EMULATE_REAL_REMOTE:
-            self.setWindowFlags(Qt.FramelessWindowHint)
+            self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
             self.setFixedSize(QSize(800, 480))
 
         self.ensurePolished()
@@ -823,4 +823,4 @@ if __name__ == "__main__":
     app.setApplicationVersion("1.0")
     app.setWindowIcon(QIcon("icons/settings.svg"))
     window = MainWindow()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

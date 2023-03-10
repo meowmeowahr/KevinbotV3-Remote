@@ -4,7 +4,7 @@ and providing functionalities to manipulate QJsonNode objects within the model
 """
 
 
-from PyQt5 import QtCore, QtGui
+from PyQt6 import QtCore, QtGui
 from .qjsonnode import QJsonNode
 import os
 import platform
@@ -19,8 +19,8 @@ BLANK_ICON = QtGui.QIcon()
 
 
 class QJsonModel(QtCore.QAbstractItemModel):
-    sortRole = QtCore.Qt.UserRole
-    filterRole = QtCore.Qt.UserRole + 1
+    sortRole = QtCore.Qt.ItemDataRole.UserRole
+    filterRole = QtCore.Qt.ItemDataRole.UserRole + 1
 
     def __init__(self, root, parent=None):
         """
@@ -54,19 +54,19 @@ class QJsonModel(QtCore.QAbstractItemModel):
         """
         node = self.getNode(index)
 
-        if role == QtCore.Qt.DisplayRole:
+        if role == QtCore.Qt.ItemDataRole.DisplayRole:
             if index.column() == 0:
                 return node.key
             elif index.column() == 1:
                 return node.value
 
-        elif role == QtCore.Qt.EditRole:
+        elif role == QtCore.Qt.ItemDataRole.EditRole:
             if index.column() == 0:
                 return node.key
             elif index.column() == 1:
                 return node.value
 
-        elif role == QtCore.Qt.DecorationRole:
+        elif role == QtCore.Qt.ItemDataRole.DecorationRole:
             if index.column() == 0:
                 return node.icon
             elif index.column() == 1:
@@ -81,7 +81,7 @@ class QJsonModel(QtCore.QAbstractItemModel):
 
                 if not platform.system() == "Windows":
                     if isinstance(node.value, str) and os.path.isdir(str(node.value).replace("$USER",
-                                                                                               os.environ["USER"])):
+                                                                                             os.environ["USER"])):
                         return node.folderIcon
                     elif isinstance(node.value, str) and os.path.isfile(str(node.value).replace("$USER",
                                                                                                 os.environ["USER"])):
@@ -93,7 +93,7 @@ class QJsonModel(QtCore.QAbstractItemModel):
         elif role == QJsonModel.filterRole:
             return node.key
 
-        elif role == QtCore.Qt.SizeHintRole:
+        elif role == QtCore.Qt.ItemDataRole.SizeHintRole:
             return QtCore.QSize(-1, 32)
 
     def setData(self, index, value, role):
@@ -102,7 +102,7 @@ class QJsonModel(QtCore.QAbstractItemModel):
         """
         node = self.getNode(index)
 
-        if role == QtCore.Qt.EditRole:
+        if role == QtCore.Qt.ItemDataRole.EditRole:
             if index.column() == 0:
                 node.key = value
                 self.dataChanged.emit(index, index)
@@ -119,7 +119,7 @@ class QJsonModel(QtCore.QAbstractItemModel):
         """
         Override
         """
-        if role == QtCore.Qt.DisplayRole:
+        if role == QtCore.Qt.ItemDataRole.DisplayRole:
             if section == 0:
                 return "Key"
             elif section == 1:
@@ -130,15 +130,15 @@ class QJsonModel(QtCore.QAbstractItemModel):
         Override
         """
         flags = super(QJsonModel, self).flags(index)
-        if index.column() == 0 or index.child(index.row(), 0).data(QtCore.Qt.EditRole):
+        if index.column() == 0 or index.model().index(index.row(), 0).data(QtCore.Qt.ItemDataRole.EditRole):
             return (QtCore.Qt.ItemFlag.NoItemFlags
-                    | QtCore.Qt.ItemIsDragEnabled
-                    | QtCore.Qt.ItemIsDropEnabled
+                    | QtCore.Qt.ItemFlag.ItemIsDragEnabled
+                    | QtCore.Qt.ItemFlag.ItemIsDropEnabled
                     | flags)
         else:
             return (QtCore.Qt.ItemFlag.ItemIsEditable
-                    | QtCore.Qt.ItemIsDragEnabled
-                    | QtCore.Qt.ItemIsDropEnabled
+                    | QtCore.Qt.ItemFlag.ItemIsDragEnabled
+                    | QtCore.Qt.ItemFlag.ItemIsDropEnabled
                     | flags)
 
     def index(self, row, column, parent=QtCore.QModelIndex()):

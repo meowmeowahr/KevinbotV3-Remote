@@ -1,5 +1,5 @@
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
+from PyQt6.QtWidgets import *
+from PyQt6.QtCore import *
 
 CURRENT_DIRECTION = 0
 
@@ -9,7 +9,7 @@ class SlidingStackedWidget(QStackedWidget):
         super(SlidingStackedWidget, self).__init__(parent)
 
         self.m_animation_type = anim
-        self.m_direction = 0
+        self.m_direction = Qt.Axis.XAxis
         self.m_speed = speed
         self.m_now = 0
         self.m_next = 0

@@ -17,8 +17,8 @@ import json
 import os
 import sys
 
-from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtWidgets import *
+from PyQt6 import QtWidgets, QtCore
+from PyQt6.QtWidgets import *
 
 from jsonViewer.qjsonmodel import QJsonModel
 from jsonViewer.qjsonnode import QJsonNode
@@ -49,7 +49,8 @@ class Editor(QSplitter):
         self.setMinimumSize(400, 190)
 
         self.ui_view_edit = JSONEditor()
-        QScroller.grabGesture(self.ui_view_edit, QScroller.LeftMouseButtonGesture)  # enable single-touch scroll
+        QScroller.grabGesture(self.ui_view_edit,
+                              QScroller.ScrollerGestureType.LeftMouseButtonGesture)  # enable single-touch scroll
         self.ui_view_edit.setStyleSheet(STYLE_1_QSS)
         self.highlight = JsonHighlighter(self.ui_view_edit.document(), STYLE_1)
         self.ui_view_edit.setReadOnly(True)
@@ -74,7 +75,7 @@ class Editor(QSplitter):
         self._proxyModel.setSourceModel(self._model)
         self._proxyModel.setDynamicSortFilter(False)
         self._proxyModel.setSortRole(QJsonModel.sortRole)
-        self._proxyModel.setFilterCaseSensitivity(QtCore.Qt.CaseInsensitive)
+        self._proxyModel.setFilterCaseSensitivity(QtCore.Qt.CaseSensitivity.CaseInsensitive)
         self._proxyModel.setFilterRole(QJsonModel.filterRole)
         self._proxyModel.setFilterKeyColumn(0)
 
@@ -87,8 +88,9 @@ class Editor(QSplitter):
     def saveFile(self):
         # ask for confirmation
         reply = QMessageBox.question(self, 'Confirmation', "Are you sure to save settings.json?",
-                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-        if reply == QMessageBox.Yes:
+                                     QMessageBox.StandardButton.Yes |
+                                     QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
+        if reply == QMessageBox.StandardButton.Yes:
             self.filePath = "settings.json"
             file = open(self.filePath, 'w')
             file.write(self.ui_view_edit.toPlainText())
@@ -114,4 +116,4 @@ if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     window = Editor()
     window.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

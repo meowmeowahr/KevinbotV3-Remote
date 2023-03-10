@@ -13,7 +13,7 @@ https://doc.qt.io/qt-5/qmouseevent.html#button
 
 
 import ast
-from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt6 import QtWidgets, QtCore, QtGui
 from .qjsonnode import QJsonNode
 
 
@@ -40,8 +40,8 @@ class QJsonView(QtWidgets.QTreeView):
         self.setExpandsOnDoubleClick(True)
         self.setDragEnabled(False)
         self.setAcceptDrops(False)
-        self.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
-        self.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.ExtendedSelection)
+        self.setContextMenuPolicy(QtCore.Qt.ContextMenuPolicy.CustomContextMenu)
         self.setItemDelegate(ItemDelegate())
         self.setAlternatingRowColors(True)
         self.customContextMenuRequested.connect(self.openContextMenu)
@@ -53,7 +53,7 @@ class QJsonView(QtWidgets.QTreeView):
         :param model: QSortFilterProxyModel. model
         """
         super(QJsonView, self).setModel(model)
-        self.model().sort(0, QtCore.Qt.AscendingOrder)
+        self.model().sort(0, QtCore.Qt.SortOrder.AscendingOrder)
         self.header().resizeSection(0, 170)
 
     def openContextMenu(self, position):
@@ -66,7 +66,7 @@ class QJsonView(QtWidgets.QTreeView):
         self.contextMenu = QtWidgets.QMenu()
         self.contextMenu.addAction('Expand All', self.expandAll)
         self.contextMenu.addAction('Collapse All', self.collapseAll)
-        self.contextMenu.exec_(self.mapToGlobal(position))
+        self.contextMenu.exec(self.mapToGlobal(position))
 
     # helper methods
 
