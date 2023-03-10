@@ -4,7 +4,7 @@ and providing functionalities to manipulate QJsonNode objects within the model
 """
 
 
-from PyQt5 import QtCore, QtGui
+from qtpy import QtCore, QtGui
 from .qjsonnode import QJsonNode
 import os
 import platform
@@ -130,7 +130,7 @@ class QJsonModel(QtCore.QAbstractItemModel):
         Override
         """
         flags = super(QJsonModel, self).flags(index)
-        if index.column() == 0 or index.child(index.row(), 0).data(QtCore.Qt.EditRole):
+        if index.column() == 0 or index.model().index(index.row(), 0).data(QtCore.Qt.EditRole):
             return (QtCore.Qt.ItemFlag.NoItemFlags
                     | QtCore.Qt.ItemIsDragEnabled
                     | QtCore.Qt.ItemIsDropEnabled

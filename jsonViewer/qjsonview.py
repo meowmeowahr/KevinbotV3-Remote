@@ -13,7 +13,7 @@ https://doc.qt.io/qt-5/qmouseevent.html#button
 
 
 import ast
-from PyQt5 import QtWidgets, QtCore, QtGui
+from qtpy import QtWidgets, QtCore, QtGui
 from .qjsonnode import QJsonNode
 
 

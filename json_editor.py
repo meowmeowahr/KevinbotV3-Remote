@@ -17,8 +17,8 @@ import json
 import os
 import sys
 
-from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtWidgets import *
+from qtpy import QtWidgets, QtCore
+from qtpy.QtWidgets import *
 
 from jsonViewer.qjsonmodel import QJsonModel
 from jsonViewer.qjsonnode import QJsonNode

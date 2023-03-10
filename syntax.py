@@ -4,9 +4,9 @@ By: Kevin Ahr
 Based on: https://github.com/art1415926535/PyQt5-syntax-highlighting
 """
 
-from PyQt5.QtCore import QRegExp
-from PyQt5.QtGui import QColor, QTextCharFormat, QFont, QSyntaxHighlighter
-from PyQt5.QtWidgets import QApplication, QPlainTextEdit
+from qtpy.QtCore import QRegularExpression, Qt
+from qtpy.QtGui import QColor, QTextCharFormat, QFont, QSyntaxHighlighter
+from qtpy.QtWidgets import QApplication, QPlainTextEdit
 
 
 def color_format(color, style=''):
@@ -22,7 +22,7 @@ def color_format(color, style=''):
     _format = QTextCharFormat()
     _format.setForeground(_color)
     if 'bold' in style:
-        _format.setFontWeight(QFont.Bold)
+        _format.setFontWeight(QFont.Weight.Bold)
     if 'italic' in style:
         _format.setFontItalic(True)
 
@@ -56,41 +56,25 @@ class JsonHighlighter(QSyntaxHighlighter):
         if style is None:
             style = STYLE_1
 
-        rules = []
-
-        rules += [(r'\b%s\b' % w, 0, style['keyword'])
-                  for w in JsonHighlighter.keywords]
-        rules += [(r'%s' % b, 0, style['brace'])
-                  for b in JsonHighlighter.braces]
+        self.rules = []
 
         # All other rules
-        rules += [
+        self.rules += [
 
             # string
-            (r'"[^"\\]*(\\.[^"\\]*)*"', 0, style['string']),
+            (r'"[^"\\]*(\\.[^"\\]*)*"', style['string']),
 
             # Numeric literals
-            (r'\b[+-]?[0-9]+[lL]?\b', 0, style['numbers'])
+            (r'\b[+-]?[0-9]+[lL]?\b', style['numbers'])
         ]
 
-        # Build a QRegExp for each pattern
-        self.rules = [(QRegExp(pat), index, fmt)
-                      for (pat, index, fmt) in rules]
-
     def highlightBlock(self, text):
-        """ Apply syntax highlighting to the given block of text """
-        # Do other syntax formatting
-        for expression, nth, fmt in self.rules:
-            index = expression.indexIn(text, 0)
-
-            while index >= 0:
-                # We actually want the index of the nth match
-                index = expression.pos(nth)
-                length = len(expression.cap(nth))
-                self.setFormat(index, length, fmt)
-                index = expression.indexIn(text, index + length)
-
-        self.setCurrentBlockState(0)
+        for rule_pair in self.rules:
+            expression = QRegularExpression(rule_pair[0])
+            i = expression.globalMatch(text)
+            while i.hasNext():
+                match = i.next()
+                self.setFormat(match.capturedStart(), match.capturedLength(), rule_pair[1])
 
 
 if __name__ == '__main__':
@@ -104,4 +88,4 @@ if __name__ == '__main__':
     infile = open('settings.json', 'r')
     editor.setPlainText(infile.read())
 
-    app.exec_()
+    app.exec()
