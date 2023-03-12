@@ -7,9 +7,9 @@ import sys
 import subprocess
 from urllib.parse import urlparse
 
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from qtpy.QtCore import *
+from qtpy.QtGui import *
+from qtpy.QtWidgets import *
 from QCustomWidgets import QSpinner, QNamedLineEdit, KBMainWindow
 from SlidingStackedWidget import SlidingStackedWidget
 from json_editor import Editor
