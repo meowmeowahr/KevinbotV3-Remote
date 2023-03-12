@@ -10,10 +10,10 @@ import threading
 import time
 from functools import partial
 
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWebEngineWidgets import *
-from PyQt5.QtWidgets import *
+from qtpy.QtCore import *
+from qtpy.QtGui import *
+from qtpy.QtWebEngineWidgets import *
+from qtpy.QtWidgets import *
 from qt_thread_updater import get_updater
 from QCustomWidgets import KBModalBar, KBMainWindow, QSuperDial
 import qtawesome as qta
