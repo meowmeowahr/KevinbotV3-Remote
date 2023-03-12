@@ -52,7 +52,7 @@ def init(callback=None):
             # noinspection PyUnresolvedReferences
             import sys
             # noinspection PyUnresolvedReferences,PyPackageRequirements
-            from PyQt5.QtWidgets import QApplication, QMessageBox, QInputDialog
+            from qtpy.QtWidgets import QApplication, QMessageBox, QInputDialog
             _ = QApplication(sys.argv)
             # noinspection PyTypeChecker
             resp, _ = QInputDialog.getText(None, f"Port Not Found", "Type the correct port")

@@ -1,7 +1,7 @@
 import sys
-from PyQt5.QtCore import *
-from PyQt5.QtGui import QPalette
-from PyQt5.QtWidgets import *
+from qtpy.QtCore import *
+from qtpy.QtGui import QPalette
+from qtpy.QtWidgets import *
 from utils import load_theme
 
 

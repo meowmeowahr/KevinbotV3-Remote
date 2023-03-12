@@ -1,5 +1,5 @@
-from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtCore import pyqtSignal as Signal
+from qtpy import QtCore, QtWidgets
+from qtpy.QtCore import Signal as Signal
 
 import haptics
 

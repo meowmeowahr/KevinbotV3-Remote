@@ -3,9 +3,9 @@ import platform
 import sys
 import json
 
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from qtpy.QtCore import *
+from qtpy.QtGui import *
+from qtpy.QtWidgets import *
 from QCustomWidgets import KBMainWindow
 import qtawesome as qta
 
@@ -83,7 +83,7 @@ class MainWindow(KBMainWindow):
         self.python_version = QLabel("Python Version: {}".format(platform.python_version()))
         self.layout.addWidget(self.python_version, alignment=Qt.AlignmentFlag.AlignLeft)
 
-        self.qt_version = QLabel("Qt Version: {}".format(QT_VERSION_STR))
+        self.qt_version = QLabel("PyQt Version: {}".format(PYQT_VERSION_STR))
         self.layout.addWidget(self.qt_version, alignment=Qt.AlignmentFlag.AlignLeft)
 
         self.pyqt_config = QLabel("PyQt Config: {}".format(PYQT_CONFIGURATION))

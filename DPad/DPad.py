@@ -1,9 +1,9 @@
 # A D-Pad main_widget for PyQt5
+# This widget is deprecated in the new versions of Kevinbot Remote
 
-from tracemalloc import stop
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
+from qtpy.QtWidgets import *
+from qtpy.QtCore import *
+from qtpy.QtGui import *
 
 
 class DPad(QWidget):

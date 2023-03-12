@@ -1,5 +1,5 @@
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
+from qtpy.QtWidgets import *
+from qtpy.QtCore import *
 
 CURRENT_DIRECTION = 0
 

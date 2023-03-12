@@ -10,9 +10,9 @@
 
 # Uses PyQt5 for the GUI
 
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
+from qtpy.QtWidgets import *
+from qtpy.QtCore import *
+from qtpy.QtGui import *
 from QCustomWidgets import KBMainWindow
 import qtawesome as qta
 from utils import detect_dark, load_theme
@@ -41,8 +41,8 @@ version = None
 
 
 class Worker(QObject):
-    finished = pyqtSignal()
-    progress = pyqtSignal(int)
+    finished = Signal()
+    progress = Signal(int)
 
     def set_prog(self, prog):
         self.progress.emit(prog)
