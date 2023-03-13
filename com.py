@@ -1,4 +1,5 @@
 # XBee Communication wrapper for Kevinbot v3
+import logging
 import time
 import serial
 from serial.serialutil import SerialException
@@ -68,7 +69,7 @@ def _send_data(data):
 
 
 def txstr(string):
-    print("Sent: " + string)
+    logging.debug("Sent: " + string)
     _send_data(string)
 
 
