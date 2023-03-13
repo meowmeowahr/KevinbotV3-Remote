@@ -1759,6 +1759,7 @@ def init_robot():
     com.txcv("eye_bg_color", "0022ff", delay=0.02)
     com.txcv("pupil_color", "000000", delay=0.02)
     com.txcv("iris_color", "ffffff", delay=0.02)
+    com.txcv("robot.disable", "True", delay=0.02)
     com.txcv("eye_size", 35, delay=0.02)
 
 
