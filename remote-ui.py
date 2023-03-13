@@ -6,7 +6,6 @@ import datetime
 import json
 import platform
 import sys
-import time
 from functools import partial
 
 # noinspection PyUnresolvedReferences
@@ -50,14 +49,19 @@ enabled = False
 with open("settings.json", "r") as f:
     settings = json.load(f)
 
+
+def save_settings():
+    with open('settings.json', 'w') as file:
+        json.dump(settings, file, indent=2)
+
+
 # load stick size settings
 if "joystick_size" in settings:
     JOYSTICK_SIZE = settings["joystick_size"]
 else:
     settings["joystick_size"] = 80  # save default
     JOYSTICK_SIZE = settings["joystick_size"]
-    with open('settings.json', 'w') as file:
-        json.dump(settings, file, indent=2)
+    save_settings()
 
 # load stick mode settings
 if "joystick_type" in settings:
@@ -71,8 +75,7 @@ else:
         ANALOG_STICK = False
     else:
         ANALOG_STICK = True
-    with open('settings.json', 'w') as file:
-        json.dump(settings, file, indent=2)
+    save_settings()
 
 # load voltage warning settings
 if "warning_voltage" in settings:
@@ -80,8 +83,7 @@ if "warning_voltage" in settings:
 else:
     settings["warning_voltage"] = 10  # save default
     warning_voltage = settings["warning_voltage"]
-    with open('settings.json', 'w') as file:
-        json.dump(settings, file, indent=2)
+    save_settings()
 
 # load temp warning settings
 if "motor_temp_warning" in settings:
@@ -89,8 +91,7 @@ if "motor_temp_warning" in settings:
 else:
     settings["motor_temp_warning"] = 50  # save default
     HIGH_MOTOR_TEMP = settings["motor_temp_warning"]
-    with open('settings.json', 'w') as file:
-        json.dump(settings, file, indent=2)
+    save_settings()
 
 # if windows
 if platform.system() == "Windows":
@@ -103,16 +104,6 @@ try:
     remote_name = settings["name"]
 except KeyError:
     remote_name = "KBOT_REMOTE"
-
-
-class SliderProxyStyle(QProxyStyle):
-    # noinspection PyMethodOverriding
-    def pixelMetric(self, metric, option, widget):
-        if metric == QStyle.PM_SliderThickness:
-            return 25
-        elif metric == QStyle.PM_SliderLength:
-            return 22
-        return super().pixelMetric(metric, option, widget)
 
 
 # noinspection PyAttributeOutsideInit,PyArgumentList
@@ -153,7 +144,8 @@ class RemoteUI(KBMainWindow):
         else:
             self.show()
 
-    def serial_callback(self, message):
+    @staticmethod
+    def serial_callback(message):
         data = message["rf_data"].decode("utf-8")
         data = data.split("=", maxsplit=1)
 
@@ -254,14 +246,15 @@ class RemoteUI(KBMainWindow):
         elif data[0] == "remote.disableui":
             if str(data[1]).lower() == "true":
                 get_updater().call_latest(window.arm_group.setDisabled, True)
-                get_updater().call_latest(window.ledGroup.setDisabled, True)
+                get_updater().call_latest(window.led_group.setDisabled, True)
                 get_updater().call_latest(window.mainGroup.setDisabled, True)
 
             else:
                 get_updater().call_latest(window.arm_group.setDisabled, False)
-                get_updater().call_latest(window.ledGroup.setDisabled, False)
+                get_updater().call_latest(window.led_group.setDisabled, False)
                 get_updater().call_latest(window.mainGroup.setDisabled, False)
 
+    # noinspection PyUnresolvedReferences
     def init_ui(self):
         self.widget = SlidingStackedWidget.SlidingStackedWidget()
         self.setCentralWidget(self.widget)
@@ -297,8 +290,8 @@ class RemoteUI(KBMainWindow):
         self.mainWidget.setLayout(self.layout)
         self.widget.addWidget(self.mainWidget)
 
-        self.cameraLayout = QVBoxLayout()
-        self.cameraWidget.setLayout(self.cameraLayout)
+        self.camera_layout = QVBoxLayout()
+        self.cameraWidget.setLayout(self.camera_layout)
         self.widget.addWidget(self.cameraWidget)
 
         self.headColorLayout = QHBoxLayout()
@@ -309,12 +302,12 @@ class RemoteUI(KBMainWindow):
         self.bodyColorWidget.setLayout(self.bodyColorLayout)
         self.widget.addWidget(self.bodyColorWidget)
 
-        self.baseColorLayout = QHBoxLayout()
-        self.baseColorWidget.setLayout(self.baseColorLayout)
+        self.base_color_layout = QHBoxLayout()
+        self.baseColorWidget.setLayout(self.base_color_layout)
         self.widget.addWidget(self.baseColorWidget)
 
-        self.armPresetsLayout = QVBoxLayout()
-        self.armPresetsWidget.setLayout(self.armPresetsLayout)
+        self.arm_presets_layout = QVBoxLayout()
+        self.armPresetsWidget.setLayout(self.arm_presets_layout)
         self.widget.addWidget(self.armPresetsWidget)
 
         self.eyeConfigLayout = QHBoxLayout()
@@ -369,8 +362,8 @@ class RemoteUI(KBMainWindow):
         self.arm_preset9 = QPushButton(strings.ARM_PRESETS[8])
         self.arm_preset9.setObjectName("Kevinbot3_RemoteUI_ArmButton")
 
-        self.armSetPreset = QPushButton(strings.ARM_SET_PRESET)
-        self.armSetPreset.setObjectName("Kevinbot3_RemoteUI_ArmButton")
+        self.arm_set_preset = QPushButton(strings.ARM_SET_PRESET)
+        self.arm_set_preset.setObjectName("Kevinbot3_RemoteUI_ArmButton")
 
         self.arm_preset1.setFixedSize(60, 50)
         self.arm_preset2.setFixedSize(60, 50)
@@ -381,7 +374,7 @@ class RemoteUI(KBMainWindow):
         self.arm_preset7.setFixedSize(60, 50)
         self.arm_preset8.setFixedSize(60, 50)
         self.arm_preset9.setFixedSize(60, 50)
-        self.armSetPreset.setFixedSize(60, 50)
+        self.arm_set_preset.setFixedSize(60, 50)
 
         self.arm_preset1.clicked.connect(lambda: self.arm_action(0))
         self.arm_preset2.clicked.connect(lambda: self.arm_action(1))
@@ -392,7 +385,7 @@ class RemoteUI(KBMainWindow):
         self.arm_preset7.clicked.connect(lambda: self.arm_action(6))
         self.arm_preset8.clicked.connect(lambda: self.arm_action(7))
         self.arm_preset9.clicked.connect(lambda: self.arm_action(8))
-        self.armSetPreset.clicked.connect(self.arm_edit_action)
+        self.arm_set_preset.clicked.connect(self.arm_edit_action)
 
         self.arm_preset1.setShortcut("1")
         self.arm_preset2.setShortcut("2")
@@ -413,47 +406,47 @@ class RemoteUI(KBMainWindow):
         self.arm_layout.addWidget(self.arm_preset7)
         self.arm_layout.addWidget(self.arm_preset8)
         self.arm_layout.addWidget(self.arm_preset9)
-        self.arm_layout.addWidget(self.armSetPreset)
+        self.arm_layout.addWidget(self.arm_set_preset)
 
         # LED Options
 
-        self.ledGroup = QGroupBox(strings.LED_PRESET_G)
-        self.ledGroup.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.layout.addWidget(self.ledGroup)
+        self.led_group = QGroupBox(strings.LED_PRESET_G)
+        self.led_group.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.layout.addWidget(self.led_group)
 
-        self.ledLayout = QHBoxLayout()
-        self.ledGroup.setLayout(self.ledLayout)
+        self.led_layout = QHBoxLayout()
+        self.led_group.setLayout(self.led_layout)
 
-        self.headLED = QPushButton(strings.LED_HEAD)
-        self.headLED.setObjectName("Kevinbot3_RemoteUI_LedButton")
-        self.headLED.clicked.connect(lambda: self.led_action(0))
-        self.ledLayout.addWidget(self.headLED)
+        self.head_led = QPushButton(strings.LED_HEAD)
+        self.head_led.setObjectName("Kevinbot3_RemoteUI_LedButton")
+        self.head_led.clicked.connect(lambda: self.led_action(0))
+        self.led_layout.addWidget(self.head_led)
 
-        self.bodyLED = QPushButton(strings.LED_BODY)
-        self.bodyLED.setObjectName("Kevinbot3_RemoteUI_LedButton")
-        self.bodyLED.clicked.connect(lambda: self.led_action(1))
-        self.ledLayout.addWidget(self.bodyLED)
+        self.body_led = QPushButton(strings.LED_BODY)
+        self.body_led.setObjectName("Kevinbot3_RemoteUI_LedButton")
+        self.body_led.clicked.connect(lambda: self.led_action(1))
+        self.led_layout.addWidget(self.body_led)
 
-        self.cameraLED = QPushButton(strings.LED_CAMERA)
-        self.cameraLED.setObjectName("Kevinbot3_RemoteUI_LedButton")
-        self.cameraLED.clicked.connect(self.camera_led_action)
-        self.ledLayout.addWidget(self.cameraLED)
+        self.camera_led = QPushButton(strings.LED_CAMERA)
+        self.camera_led.setObjectName("Kevinbot3_RemoteUI_LedButton")
+        self.camera_led.clicked.connect(self.camera_led_action)
+        self.led_layout.addWidget(self.camera_led)
 
-        self.baseLED = QPushButton(strings.LED_BASE)
-        self.baseLED.setObjectName("Kevinbot3_RemoteUI_LedButton")
-        self.baseLED.clicked.connect(lambda: self.led_action(2))
-        self.ledLayout.addWidget(self.baseLED)
+        self.base_led = QPushButton(strings.LED_BASE)
+        self.base_led.setObjectName("Kevinbot3_RemoteUI_LedButton")
+        self.base_led.clicked.connect(lambda: self.led_action(2))
+        self.led_layout.addWidget(self.base_led)
 
         self.eyeConfig = QPushButton(strings.LED_EYE_CONFIG)
         self.eyeConfig.setObjectName("Kevinbot3_RemoteUI_LedButton")
         self.eyeConfig.clicked.connect(self.eye_config_action)
-        self.ledLayout.addWidget(self.eyeConfig)
+        self.led_layout.addWidget(self.eyeConfig)
 
         # LED Button Heights
-        self.headLED.setFixedHeight(24)
-        self.bodyLED.setFixedHeight(24)
-        self.cameraLED.setFixedHeight(24)
-        self.baseLED.setFixedHeight(24)
+        self.head_led.setFixedHeight(24)
+        self.body_led.setFixedHeight(24)
+        self.camera_led.setFixedHeight(24)
+        self.base_led.setFixedHeight(24)
         self.eyeConfig.setFixedHeight(24)
 
         # DPad, Joystick, and Speech
@@ -550,14 +543,14 @@ class RemoteUI(KBMainWindow):
         # Camera WebEngine
         self.cameraGroup = QGroupBox(strings.CAMERA_G)
         self.cameraGroup.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.cameraLayout.addWidget(self.cameraGroup)
+        self.camera_layout.addWidget(self.cameraGroup)
 
-        self.cameraLayout = QVBoxLayout()
-        self.cameraGroup.setLayout(self.cameraLayout)
+        self.camera_layout = QVBoxLayout()
+        self.cameraGroup.setLayout(self.camera_layout)
 
         self.cameraWebView = QWebEngineView()
         self.cameraWebView.setObjectName("Kevinbot3_RemoteUI_CameraWebView")
-        self.cameraLayout.addWidget(self.cameraWebView)
+        self.camera_layout.addWidget(self.cameraWebView)
 
         # navigate to the camera page
         self.cameraWebView.load(QUrl(settings["camera_url"]))
@@ -565,15 +558,13 @@ class RemoteUI(KBMainWindow):
         # Camera Leds
         self.cameraLedsGroup = QGroupBox(strings.CAMERA_LEDS_G)
         self.cameraLedsGroup.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.cameraLayout.addWidget(self.cameraLedsGroup)
+        self.camera_layout.addWidget(self.cameraLedsGroup)
 
         self.cameraLedsLayout = QHBoxLayout()
         self.cameraLedsGroup.setLayout(self.cameraLedsLayout)
 
         self.cameraLedSlider = QSlider(Qt.Orientation.Horizontal)
         self.cameraLedSlider.setObjectName("Kevinbot3_RemoteUI_CameraLedSlider")
-        slider_style = SliderProxyStyle(self.cameraLedSlider.style())
-        self.cameraLedSlider.setStyle(slider_style)
         self.cameraLedSlider.valueChanged.connect(self.camera_brightness_changed)
         self.cameraLedSlider.setRange(0, 255)
         self.cameraLedsLayout.addWidget(self.cameraLedSlider)
@@ -688,18 +679,18 @@ class RemoteUI(KBMainWindow):
         self.bodySpeedLayout.addWidget(self.bodySpeed)
 
         # Body Effects
-        self.bodyEffectsGroup = QGroupBox(strings.BODY_EFFECTS_G)
-        self.bodyEffectsGroup.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.bodyColorLayout.addWidget(self.bodyEffectsGroup)
+        self.body_effects_group = QGroupBox(strings.BODY_EFFECTS_G)
+        self.body_effects_group.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.bodyColorLayout.addWidget(self.body_effects_group)
 
-        self.bodyEffectsLayout = QGridLayout()
-        self.bodyEffectsGroup.setLayout(self.bodyEffectsLayout)
+        self.body_effects_layout = QGridLayout()
+        self.body_effects_group.setLayout(self.body_effects_layout)
 
         for i in range(len(settings["body_effects"])):
             if "*" not in settings["body_effects"][i]:
                 effect_button = QPushButton(capitalize(settings["body_effects"][i]))
                 effect_button.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
-                self.bodyEffectsLayout.addWidget(effect_button, i // 2, i % 2)
+                self.body_effects_layout.addWidget(effect_button, i // 2, i % 2)
                 effect_button.clicked.connect(partial(self.body_effect_action, i))
                 effect_button.setFixedSize(QSize(75, 50))
             elif "*c" in settings["body_effects"][i]:
@@ -708,81 +699,81 @@ class RemoteUI(KBMainWindow):
                     effect_button = QPushButton(capitalize(settings["body_effects"][i]))
                     effect_button.setObjectName("Kevinbot3_RemoteUI_BodyEffectButtonEgg")
                     effect_button.clicked.connect(partial(self.body_effect_action, i))
-                    self.bodyEffectsLayout.addWidget(effect_button, (i // 2) + 1, i % 2)
+                    self.body_effects_layout.addWidget(effect_button, (i // 2) + 1, i % 2)
 
-        self.bodyBrightPlus = QPushButton("Bright+")
-        self.bodyBrightPlus.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
-        self.bodyBrightPlus.clicked.connect(lambda: com.txstr("body_bright+"))
-        self.bodyBrightPlus.setFixedSize(QSize(75, 50))
-        self.bodyEffectsLayout.addWidget(self.bodyBrightPlus, (len(settings["body_effects"]) // 2),
-                                         (len(settings["body_effects"]) % 2) - 1)
+        self.body_bright_plus = QPushButton("Bright+")
+        self.body_bright_plus.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
+        self.body_bright_plus.clicked.connect(lambda: com.txstr("body_bright+"))
+        self.body_bright_plus.setFixedSize(QSize(75, 50))
+        self.body_effects_layout.addWidget(self.body_bright_plus, (len(settings["body_effects"]) // 2),
+                                           (len(settings["body_effects"]) % 2) - 1)
 
-        self.bodyBrightMinus = QPushButton("Bright-")
-        self.bodyBrightMinus.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
-        self.bodyBrightMinus.clicked.connect(lambda: com.txstr("body_bright-"))
-        self.bodyBrightMinus.setFixedSize(QSize(75, 50))
-        self.bodyEffectsLayout.addWidget(self.bodyBrightMinus, len(settings["body_effects"]) // 2,
-                                         len(settings["body_effects"]) % 2)
+        self.body_bright_minus = QPushButton("Bright-")
+        self.body_bright_minus.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
+        self.body_bright_minus.clicked.connect(lambda: com.txstr("body_bright-"))
+        self.body_bright_minus.setFixedSize(QSize(75, 50))
+        self.body_effects_layout.addWidget(self.body_bright_minus, len(settings["body_effects"]) // 2,
+                                           len(settings["body_effects"]) % 2)
 
         # Base Color Page
 
         # Back Button
-        self.baseColorBack = QPushButton()
-        self.baseColorBack.setObjectName("Kevinbot3_RemoteUI_BackButton")
-        self.baseColorBack.clicked.connect(lambda: self.widget.slideInIdx(0))
-        self.baseColorBack.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
-        self.baseColorBack.setIconSize(QSize(32, 32))
-        self.baseColorBack.setFixedSize(QSize(36, 36))
-        self.baseColorBack.setFlat(True)
-        self.baseColorLayout.addWidget(self.baseColorBack)
+        self.base_color_back = QPushButton()
+        self.base_color_back.setObjectName("Kevinbot3_RemoteUI_BackButton")
+        self.base_color_back.clicked.connect(lambda: self.widget.slideInIdx(0))
+        self.base_color_back.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
+        self.base_color_back.setIconSize(QSize(32, 32))
+        self.base_color_back.setFixedSize(QSize(36, 36))
+        self.base_color_back.setFlat(True)
+        self.base_color_layout.addWidget(self.base_color_back)
 
         # Base Color picker
         self.baseColorGroup = QGroupBox(strings.BASE_COLOR_G)
         self.baseColorGroup.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.baseColorLayout.addWidget(self.baseColorGroup)
+        self.base_color_layout.addWidget(self.baseColorGroup)
 
-        self.baseColorLayoutP = QGridLayout()
-        self.baseColorGroup.setLayout(self.baseColorLayoutP)
+        self.base_color_layout_p = QGridLayout()
+        self.baseColorGroup.setLayout(self.base_color_layout_p)
 
-        self.baseColorPicker = ColorPicker()
-        self.baseColorPicker.setObjectName("Kevinbot3_RemoteUI_BodyColorPicker")
-        self.baseColorPicker.colorChanged.connect(self.base_color1_changed)
-        self.baseColorPicker.setHex("000000")
-        self.baseColorLayoutP.addWidget(self.baseColorPicker, 0, 0)
+        self.base_color_picker = ColorPicker()
+        self.base_color_picker.setObjectName("Kevinbot3_RemoteUI_BodyColorPicker")
+        self.base_color_picker.colorChanged.connect(self.base_color1_changed)
+        self.base_color_picker.setHex("000000")
+        self.base_color_layout_p.addWidget(self.base_color_picker, 0, 0)
 
         # Base Color picker 2
-        self.baseColorPicker2 = ColorPicker()
-        self.baseColorPicker2.setObjectName("Kevinbot3_RemoteUI_BodyColorPicker")
-        self.baseColorPicker2.colorChanged.connect(self.base_color2_changed)
-        self.baseColorPicker2.setHex("000000")
-        self.baseColorLayoutP.addWidget(self.baseColorPicker2, 1, 0)
+        self.base_color_picker_2 = ColorPicker()
+        self.base_color_picker_2.setObjectName("Kevinbot3_RemoteUI_BodyColorPicker")
+        self.base_color_picker_2.colorChanged.connect(self.base_color2_changed)
+        self.base_color_picker_2.setHex("000000")
+        self.base_color_layout_p.addWidget(self.base_color_picker_2, 1, 0)
 
         # Base Animation Speed
-        self.baseSpeedBox = QGroupBox(strings.BASE_SPEED_G)
-        self.baseSpeedBox.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.baseColorLayoutP.addWidget(self.baseSpeedBox, 0, 1)
-        self.baseSpeedLayout = QVBoxLayout()
+        self.base_speed_box = QGroupBox(strings.BASE_SPEED_G)
+        self.base_speed_box.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.base_color_layout_p.addWidget(self.base_speed_box, 0, 1)
+        self.base_speed_layout = QVBoxLayout()
 
-        self.baseSpeed = QSlider(Qt.Orientation.Horizontal)
-        self.baseSpeed.setRange(100, 500)
-        self.baseSpeed.setObjectName("Kevinbot3_RemoteUI_Slider")
-        self.baseSpeed.valueChanged.connect(lambda x: com.txcv("base_update", map_range(x, 100, 500, 500, 100)))
-        self.baseSpeedLayout.addWidget(self.baseSpeed)
-        self.baseSpeedBox.setLayout(self.baseSpeedLayout)
+        self.base_speed = QSlider(Qt.Orientation.Horizontal)
+        self.base_speed.setRange(100, 500)
+        self.base_speed.setObjectName("Kevinbot3_RemoteUI_Slider")
+        self.base_speed.valueChanged.connect(lambda x: com.txcv("base_update", map_range(x, 100, 500, 500, 100)))
+        self.base_speed_layout.addWidget(self.base_speed)
+        self.base_speed_box.setLayout(self.base_speed_layout)
 
         # Base Effects
-        self.baseEffectsGroup = QGroupBox(strings.BASE_EFFECTS_G)
-        self.baseEffectsGroup.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.baseColorLayout.addWidget(self.baseEffectsGroup)
+        self.base_effects_group = QGroupBox(strings.BASE_EFFECTS_G)
+        self.base_effects_group.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.base_color_layout.addWidget(self.base_effects_group)
 
-        self.baseEffectsLayout = QGridLayout()
-        self.baseEffectsGroup.setLayout(self.baseEffectsLayout)
+        self.base_effects_layout = QGridLayout()
+        self.base_effects_group.setLayout(self.base_effects_layout)
 
         for i in range(len(settings["base_effects"])):
             if "*" not in settings["base_effects"][i]:
                 effect_button = QPushButton(capitalize(settings["base_effects"][i]))
                 effect_button.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
-                self.baseEffectsLayout.addWidget(effect_button, i // 2, i % 2)
+                self.base_effects_layout.addWidget(effect_button, i // 2, i % 2)
                 effect_button.clicked.connect(partial(self.base_effect_action, i))
                 effect_button.setFixedSize(QSize(75, 50))
             elif "*c" in settings["base_effects"][i]:
@@ -791,38 +782,38 @@ class RemoteUI(KBMainWindow):
                     effect_button = QPushButton(capitalize(settings["base_effects"][i]))
                     effect_button.setObjectName("Kevinbot3_RemoteUI_BodyEffectButtonEgg")
                     effect_button.clicked.connect(partial(self.base_effect_action, i))
-                    self.baseEffectsLayout.addWidget(effect_button, (i // 2) + 1, i % 2)
+                    self.base_effects_layout.addWidget(effect_button, (i // 2) + 1, i % 2)
 
-        self.baseBrightPlus = QPushButton("Bright+")
-        self.baseBrightPlus.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
-        self.baseBrightPlus.clicked.connect(lambda: com.txstr("base_bright+"))
-        self.baseBrightPlus.setFixedSize(QSize(75, 50))
-        self.baseEffectsLayout.addWidget(self.baseBrightPlus, (len(settings["base_effects"]) // 2),
-                                         (len(settings["base_effects"]) % 2) - 1)
+        self.base_bright_plus = QPushButton("Bright+")
+        self.base_bright_plus.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
+        self.base_bright_plus.clicked.connect(lambda: com.txstr("base_bright+"))
+        self.base_bright_plus.setFixedSize(QSize(75, 50))
+        self.base_effects_layout.addWidget(self.base_bright_plus, (len(settings["base_effects"]) // 2),
+                                           (len(settings["base_effects"]) % 2) - 1)
 
-        self.baseBrightMinus = QPushButton("Bright-")
-        self.baseBrightMinus.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
-        self.baseBrightMinus.clicked.connect(lambda: com.txstr("base_bright-"))
-        self.baseBrightMinus.setFixedSize(QSize(75, 50))
-        self.baseEffectsLayout.addWidget(self.baseBrightMinus, len(settings["base_effects"]) // 2,
-                                         len(settings["base_effects"]) % 2)
+        self.base_bright_minus = QPushButton("Bright-")
+        self.base_bright_minus.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
+        self.base_bright_minus.clicked.connect(lambda: com.txstr("base_bright-"))
+        self.base_bright_minus.setFixedSize(QSize(75, 50))
+        self.base_effects_layout.addWidget(self.base_bright_minus, len(settings["base_effects"]) // 2,
+                                           len(settings["base_effects"]) % 2)
 
         # Arm Preset Editor
 
         # Title
-        self.armPresetTitle = QLabel(strings.ARM_PRESET_EDIT_G)
-        self.armPresetTitle.setObjectName("Kevinbot3_RemoteUI_Title")
-        self.armPresetTitle.setAlignment(Qt.AlignCenter)
-        self.armPresetTitle.setMaximumHeight(self.armPresetTitle.sizeHint().height())
-        self.armPresetsLayout.addWidget(self.armPresetTitle)
+        self.arm_preset_title = QLabel(strings.ARM_PRESET_EDIT_G)
+        self.arm_preset_title.setObjectName("Kevinbot3_RemoteUI_Title")
+        self.arm_preset_title.setAlignment(Qt.AlignCenter)
+        self.arm_preset_title.setMaximumHeight(self.arm_preset_title.sizeHint().height())
+        self.arm_presets_layout.addWidget(self.arm_preset_title)
 
         # Pick Preset
-        self.armPresetGroup = QGroupBox(strings.PRESET_PICK)
-        self.armPresetGroup.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.armPresetsLayout.addWidget(self.armPresetGroup)
+        self.arm_preset_group = QGroupBox(strings.PRESET_PICK)
+        self.arm_preset_group.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.arm_presets_layout.addWidget(self.arm_preset_group)
 
-        self.armPresetLayout = QHBoxLayout()
-        self.armPresetGroup.setLayout(self.armPresetLayout)
+        self.arm_preset_layout = QHBoxLayout()
+        self.arm_preset_group.setLayout(self.arm_preset_layout)
 
         # add arm preset buttons
         for i in range(len(settings["arm_prog"])):
@@ -830,39 +821,39 @@ class RemoteUI(KBMainWindow):
             preset_button.setObjectName("Kevinbot3_RemoteUI_ArmButton")
             preset_button.setFixedSize(QSize(50, 50))
             preset_button.clicked.connect(partial(self.arm_preset_action, i))
-            self.armPresetLayout.addWidget(preset_button)
+            self.arm_preset_layout.addWidget(preset_button)
 
         # Editor
-        self.armPresetEditor = QGroupBox(strings.ARM_PRESET_EDIT)
-        self.armPresetEditor.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.armPresetsLayout.addWidget(self.armPresetEditor)
+        self.arm_preset_editor = QGroupBox(strings.ARM_PRESET_EDIT)
+        self.arm_preset_editor.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.arm_presets_layout.addWidget(self.arm_preset_editor)
 
-        self.armPresetEditorLayout = QVBoxLayout()
-        self.armPresetEditor.setLayout(self.armPresetEditorLayout)
+        self.arm_preset_editor_layout = QVBoxLayout()
+        self.arm_preset_editor.setLayout(self.arm_preset_editor_layout)
 
         # current arm preset
-        self.armPresetLabel = QLabel(strings.CURRENT_ARM_PRESET + ": Unset")
-        self.armPresetLabel.setObjectName("Kevinbot3_RemoteUI_Label")
-        self.armPresetLabel.setAlignment(Qt.AlignCenter)
-        self.armPresetLabel.setMaximumHeight(self.armPresetLabel.minimumSizeHint().height())
-        self.armPresetEditorLayout.addWidget(self.armPresetLabel)
+        self.arm_preset_label = QLabel(strings.CURRENT_ARM_PRESET + ": Unset")
+        self.arm_preset_label.setObjectName("Kevinbot3_RemoteUI_Label")
+        self.arm_preset_label.setAlignment(Qt.AlignCenter)
+        self.arm_preset_label.setMaximumHeight(self.arm_preset_label.minimumSizeHint().height())
+        self.arm_preset_editor_layout.addWidget(self.arm_preset_label)
 
         # stretch
-        self.armPresetEditorLayout.addStretch()
+        self.arm_preset_editor_layout.addStretch()
 
         # left group box
-        self.armPresetEditorLeft = QGroupBox(strings.ARM_PRESET_EDIT_L)
-        self.armPresetEditorLeft.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.armPresetEditorLayout.addWidget(self.armPresetEditorLeft)
-        self.armPresetEditorLeftLayout = QHBoxLayout()
-        self.armPresetEditorLeft.setLayout(self.armPresetEditorLeftLayout)
+        self.arm_preset_editor_left = QGroupBox(strings.ARM_PRESET_EDIT_L)
+        self.arm_preset_editor_left.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.arm_preset_editor_layout.addWidget(self.arm_preset_editor_left)
+        self.arm_preset_editor_left_layout = QHBoxLayout()
+        self.arm_preset_editor_left.setLayout(self.arm_preset_editor_left_layout)
 
         # right group box
-        self.armPresetEditorRight = QGroupBox(strings.ARM_PRESET_EDIT_R)
-        self.armPresetEditorRight.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.armPresetEditorLayout.addWidget(self.armPresetEditorRight)
-        self.armPresetEditorRightLayout = QHBoxLayout()
-        self.armPresetEditorRight.setLayout(self.armPresetEditorRightLayout)
+        self.arm_preset_editor_right = QGroupBox(strings.ARM_PRESET_EDIT_R)
+        self.arm_preset_editor_right.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.arm_preset_editor_layout.addWidget(self.arm_preset_editor_right)
+        self.arm_preset_editor_right_layout = QHBoxLayout()
+        self.arm_preset_editor_right.setLayout(self.arm_preset_editor_right_layout)
 
         # use knobs and a label per servo
 
@@ -874,7 +865,7 @@ class RemoteUI(KBMainWindow):
         for i in range(settings["arm_dof"]):
             # layout
             layout = QVBoxLayout()
-            self.armPresetEditorLeftLayout.addLayout(layout)
+            self.arm_preset_editor_left_layout.addLayout(layout)
             # knob
             self.left_knobs.append(QSuperDial(knob_radius=8, knob_margin=7))
             self.left_knobs[i].setObjectName("Kevinbot3_RemoteUI_ArmKnob")
@@ -895,7 +886,7 @@ class RemoteUI(KBMainWindow):
         for i in range(settings["arm_dof"]):
             # layout
             layout = QVBoxLayout()
-            self.armPresetEditorRightLayout.addLayout(layout)
+            self.arm_preset_editor_right_layout.addLayout(layout)
             # knob
             self.right_knobs.append(QSuperDial(knob_radius=8, knob_margin=7))
             self.right_knobs[i].setObjectName("Kevinbot3_RemoteUI_ArmKnob")
@@ -914,52 +905,52 @@ class RemoteUI(KBMainWindow):
             self.right_knobs[i].valueChanged.connect(partial(self.arm_preset_right_changed, i))
 
         # stretch
-        self.armPresetEditorLayout.addStretch()
+        self.arm_preset_editor_layout.addStretch()
 
         # Back button and save button
 
-        self.armBottomLayout = QHBoxLayout()
-        self.armPresetsLayout.addLayout(self.armBottomLayout)
+        self.arm_bottom_layout = QHBoxLayout()
+        self.arm_presets_layout.addLayout(self.arm_bottom_layout)
 
-        self.armPresetBack = QPushButton()
-        self.armPresetBack.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
-        self.armPresetBack.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
-        self.armPresetBack.setFixedSize(QSize(36, 36))
-        self.armPresetBack.setIconSize(QSize(32, 32))
-        self.armPresetBack.clicked.connect(lambda: self.widget.slideInIdx(0))
-        self.armPresetBack.setFlat(True)
-        self.armBottomLayout.addWidget(self.armPresetBack)
+        self.arm_preset_back = QPushButton()
+        self.arm_preset_back.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
+        self.arm_preset_back.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
+        self.arm_preset_back.setFixedSize(QSize(36, 36))
+        self.arm_preset_back.setIconSize(QSize(32, 32))
+        self.arm_preset_back.clicked.connect(lambda: self.widget.slideInIdx(0))
+        self.arm_preset_back.setFlat(True)
+        self.arm_bottom_layout.addWidget(self.arm_preset_back)
 
-        self.armPresetSave = QPushButton("    " + strings.SAVE)
-        self.armPresetSave.setObjectName("Kevinbot3_RemoteUI_ArmButton")
-        self.armPresetSave.setFixedHeight(36)
-        self.armPresetSave.setIcon(qta.icon("fa5.save", color=self.fg_color))
-        self.armPresetSave.setIconSize(QSize(32, 32))
-        self.armPresetSave.clicked.connect(self.arm_preset_save_action)
-        self.armBottomLayout.addWidget(self.armPresetSave)
+        self.arm_preset_save = QPushButton(" " * 5 + strings.SAVE)
+        self.arm_preset_save.setObjectName("Kevinbot3_RemoteUI_ArmButton")
+        self.arm_preset_save.setFixedHeight(36)
+        self.arm_preset_save.setIcon(qta.icon("fa5.save", color=self.fg_color))
+        self.arm_preset_save.setIconSize(QSize(32, 32))
+        self.arm_preset_save.clicked.connect(self.arm_preset_save_action)
+        self.arm_bottom_layout.addWidget(self.arm_preset_save)
 
         # Eye Configurator
 
-        self.eyeConfigBack = QPushButton()
-        self.eyeConfigBack.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
-        self.eyeConfigBack.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
-        self.eyeConfigBack.setFixedSize(QSize(36, 36))
-        self.eyeConfigBack.setIconSize(QSize(32, 32))
-        self.eyeConfigBack.clicked.connect(lambda: self.widget.slideInIdx(0))
-        self.eyeConfigBack.setFlat(True)
-        self.eyeConfigLayout.addWidget(self.eyeConfigBack)
+        self.eye_config_back = QPushButton()
+        self.eye_config_back.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
+        self.eye_config_back.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
+        self.eye_config_back.setFixedSize(QSize(36, 36))
+        self.eye_config_back.setIconSize(QSize(32, 32))
+        self.eye_config_back.clicked.connect(lambda: self.widget.slideInIdx(0))
+        self.eye_config_back.setFlat(True)
+        self.eyeConfigLayout.addWidget(self.eye_config_back)
 
         # group box
         self.eyeConfigGroup = QGroupBox(strings.EYE_CONFIG_G)
         self.eyeConfigGroup.setObjectName("Kevinbot3_RemoteUI_Group")
         self.eyeConfigLayout.addWidget(self.eyeConfigGroup)
-        self.eyeConfigGroupLayout = QGridLayout()
-        self.eyeConfigGroup.setLayout(self.eyeConfigGroupLayout)
+        self.eye_config_group_layout = QGridLayout()
+        self.eyeConfigGroup.setLayout(self.eye_config_group_layout)
 
         # background group box
         self.eyeConfigBackground = QGroupBox(strings.EYE_CONFIG_B_G)
         self.eyeConfigBackground.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.eyeConfigGroupLayout.addWidget(self.eyeConfigBackground, 0, 0)
+        self.eye_config_group_layout.addWidget(self.eyeConfigBackground, 0, 0)
         self.eyeConfigBackgroundLayout = QHBoxLayout()
         self.eyeConfigBackground.setLayout(self.eyeConfigBackgroundLayout)
 
@@ -978,127 +969,127 @@ class RemoteUI(KBMainWindow):
         self.eyeConfigBackgroundLayout.addWidget(self.eyeConfigPalette)
 
         # pupil group box
-        self.eyeConfigPupil = QGroupBox(strings.EYE_CONFIG_P_G)
-        self.eyeConfigPupil.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.eyeConfigGroupLayout.addWidget(self.eyeConfigPupil, 0, 1)
-        self.eyeConfigPupilLayout = QHBoxLayout()
-        self.eyeConfigPupil.setLayout(self.eyeConfigPupilLayout)
+        self.eye_config_pupil = QGroupBox(strings.EYE_CONFIG_P_G)
+        self.eye_config_pupil.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.eye_config_group_layout.addWidget(self.eye_config_pupil, 0, 1)
+        self.eye_config_pupil_layout = QHBoxLayout()
+        self.eye_config_pupil.setLayout(self.eye_config_pupil_layout)
 
         # pupil image
-        self.eyeConfigPupilImage = QLabel()
-        self.eyeConfigPupilImage.setObjectName("Kevinbot3_RemoteUI_EyeConfigImage")
-        self.eyeConfigPupilImage.setPixmap(QPixmap("icons/eye-pupil.svg"))
-        self.eyeConfigPupilImage.setAlignment(Qt.AlignCenter)
-        self.eyeConfigPupilLayout.addWidget(self.eyeConfigPupilImage)
+        self.eye_config_pupil_image = QLabel()
+        self.eye_config_pupil_image.setObjectName("Kevinbot3_RemoteUI_EyeConfigImage")
+        self.eye_config_pupil_image.setPixmap(QPixmap("icons/eye-pupil.svg"))
+        self.eye_config_pupil_image.setAlignment(Qt.AlignCenter)
+        self.eye_config_pupil_layout.addWidget(self.eye_config_pupil_image)
 
         # pupil palette
-        self.eyeConfigPalette2 = PaletteGrid(colors=PALETTES['kevinbot'])
-        self.eyeConfigPalette2.setObjectName("Kevinbot3_RemoteUI_EyeConfigPalette")
-        self.eyeConfigPalette2.setFixedSize(self.eyeConfigPalette2.sizeHint())
-        self.eyeConfigPalette2.selected.connect(self.eye_config_palette2_selected)
-        self.eyeConfigPupilLayout.addWidget(self.eyeConfigPalette2)
+        self.eye_config_palette_2 = PaletteGrid(colors=PALETTES['kevinbot'])
+        self.eye_config_palette_2.setObjectName("Kevinbot3_RemoteUI_EyeConfigPalette")
+        self.eye_config_palette_2.setFixedSize(self.eye_config_palette_2.sizeHint())
+        self.eye_config_palette_2.selected.connect(self.eye_config_palette2_selected)
+        self.eye_config_pupil_layout.addWidget(self.eye_config_palette_2)
 
         # iris group box
-        self.eyeConfigIris = QGroupBox(strings.EYE_CONFIG_I_G)
-        self.eyeConfigIris.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.eyeConfigGroupLayout.addWidget(self.eyeConfigIris, 1, 0)
-        self.eyeConfigIrisLayout = QHBoxLayout()
-        self.eyeConfigIris.setLayout(self.eyeConfigIrisLayout)
+        self.eye_config_iris = QGroupBox(strings.EYE_CONFIG_I_G)
+        self.eye_config_iris.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.eye_config_group_layout.addWidget(self.eye_config_iris, 1, 0)
+        self.eye_config_iris_layout = QHBoxLayout()
+        self.eye_config_iris.setLayout(self.eye_config_iris_layout)
 
         # iris image
-        self.eyeConfigIrisImage = QLabel()
-        self.eyeConfigIrisImage.setObjectName("Kevinbot3_RemoteUI_EyeConfigImage")
-        self.eyeConfigIrisImage.setPixmap(QPixmap("icons/eye-iris.svg"))
-        self.eyeConfigIrisImage.setAlignment(Qt.AlignCenter)
-        self.eyeConfigIrisLayout.addWidget(self.eyeConfigIrisImage)
+        self.eye_config_iris_image = QLabel()
+        self.eye_config_iris_image.setObjectName("Kevinbot3_RemoteUI_EyeConfigImage")
+        self.eye_config_iris_image.setPixmap(QPixmap("icons/eye-iris.svg"))
+        self.eye_config_iris_image.setAlignment(Qt.AlignCenter)
+        self.eye_config_iris_layout.addWidget(self.eye_config_iris_image)
 
         # iris palette
-        self.eyeConfigPalette3 = PaletteGrid(colors=PALETTES['kevinbot'])
-        self.eyeConfigPalette3.setObjectName("Kevinbot3_RemoteUI_EyeConfigPalette")
-        self.eyeConfigPalette3.setFixedSize(self.eyeConfigPalette3.sizeHint())
-        self.eyeConfigPalette3.selected.connect(self.eye_config_palette3_selected)
-        self.eyeConfigIrisLayout.addWidget(self.eyeConfigPalette3)
+        self.eye_config_palette_3 = PaletteGrid(colors=PALETTES['kevinbot'])
+        self.eye_config_palette_3.setObjectName("Kevinbot3_RemoteUI_EyeConfigPalette")
+        self.eye_config_palette_3.setFixedSize(self.eye_config_palette_3.sizeHint())
+        self.eye_config_palette_3.selected.connect(self.eye_config_palette3_selected)
+        self.eye_config_iris_layout.addWidget(self.eye_config_palette_3)
 
         # eye size group box
-        self.eyeConfigSize = QGroupBox(strings.EYE_CONFIG_S_G)
-        self.eyeConfigSize.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.eyeConfigGroupLayout.addWidget(self.eyeConfigSize, 1, 1)
-        self.eyeConfigSizeLayout = QHBoxLayout()
-        self.eyeConfigSize.setLayout(self.eyeConfigSizeLayout)
+        self.eye_config_size = QGroupBox(strings.EYE_CONFIG_S_G)
+        self.eye_config_size.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.eye_config_group_layout.addWidget(self.eye_config_size, 1, 1)
+        self.eye_config_size_layout = QHBoxLayout()
+        self.eye_config_size.setLayout(self.eye_config_size_layout)
 
         # eye size image
-        self.eyeConfigSizeImage = QLabel()
-        self.eyeConfigSizeImage.setObjectName("Kevinbot3_RemoteUI_EyeConfigImage")
-        self.eyeConfigSizeImage.setPixmap(QPixmap("icons/eye-size.svg"))
-        self.eyeConfigSizeImage.setAlignment(Qt.AlignCenter)
-        self.eyeConfigSizeLayout.addWidget(self.eyeConfigSizeImage)
+        self.eye_config_size_image = QLabel()
+        self.eye_config_size_image.setObjectName("Kevinbot3_RemoteUI_EyeConfigImage")
+        self.eye_config_size_image.setPixmap(QPixmap("icons/eye-size.svg"))
+        self.eye_config_size_image.setAlignment(Qt.AlignCenter)
+        self.eye_config_size_layout.addWidget(self.eye_config_size_image)
 
         # eye size slider
-        self.eyeConfigSizeSlider = QSlider(Qt.Horizontal)
-        self.eyeConfigSizeSlider.setObjectName("Kevinbot3_RemoteUI_EyeConfigSlider")
-        self.eyeConfigSizeSlider.setMinimum(0)
-        self.eyeConfigSizeSlider.setMaximum(50)
-        self.eyeConfigSizeSlider.setValue(35)
-        self.eyeConfigSizeSlider.setTickPosition(QSlider.TicksBelow)
-        self.eyeConfigSizeSlider.setTickInterval(5)
-        self.eyeConfigSizeSlider.valueChanged.connect(self.eye_config_size_slider_value_changed)
-        self.eyeConfigSizeLayout.addWidget(self.eyeConfigSizeSlider)
+        self.eye_config_size_slider = QSlider(Qt.Horizontal)
+        self.eye_config_size_slider.setObjectName("Kevinbot3_RemoteUI_EyeConfigSlider")
+        self.eye_config_size_slider.setMinimum(0)
+        self.eye_config_size_slider.setMaximum(50)
+        self.eye_config_size_slider.setValue(35)
+        self.eye_config_size_slider.setTickPosition(QSlider.TicksBelow)
+        self.eye_config_size_slider.setTickInterval(5)
+        self.eye_config_size_slider.valueChanged.connect(self.eye_config_size_slider_value_changed)
+        self.eye_config_size_layout.addWidget(self.eye_config_size_slider)
 
         # eye move speed group box
-        self.eyeConfigBright = QGroupBox(strings.EYE_CONFIG_SP_G)
-        self.eyeConfigBright.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.eyeConfigGroupLayout.addWidget(self.eyeConfigBright, 2, 0)
-        self.eyeConfigSpeedLayout = QHBoxLayout()
-        self.eyeConfigBright.setLayout(self.eyeConfigSpeedLayout)
+        self.eye_config_bright = QGroupBox(strings.EYE_CONFIG_SP_G)
+        self.eye_config_bright.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.eye_config_group_layout.addWidget(self.eye_config_bright, 2, 0)
+        self.eye_config_speed_layout = QHBoxLayout()
+        self.eye_config_bright.setLayout(self.eye_config_speed_layout)
 
         # eye speed slider
-        self.eyeConfigBrightSlider = QSlider(Qt.Horizontal)
-        self.eyeConfigBrightSlider.setObjectName("Kevinbot3_RemoteUI_EyeConfigSlider")
-        self.eyeConfigBrightSlider.setMinimum(1)
-        self.eyeConfigBrightSlider.setMaximum(16)
-        self.eyeConfigBrightSlider.setValue(5)
-        self.eyeConfigBrightSlider.setTickPosition(QSlider.NoTicks)
-        self.eyeConfigBrightSlider.setTickInterval(1)
-        self.eyeConfigBrightSlider.valueChanged.connect(self.eye_config_speed_slider_value_changed)
-        self.eyeConfigSpeedLayout.addWidget(self.eyeConfigBrightSlider)
+        self.eye_config_light_slider = QSlider(Qt.Horizontal)
+        self.eye_config_light_slider.setObjectName("Kevinbot3_RemoteUI_EyeConfigSlider")
+        self.eye_config_light_slider.setMinimum(1)
+        self.eye_config_light_slider.setMaximum(16)
+        self.eye_config_light_slider.setValue(5)
+        self.eye_config_light_slider.setTickPosition(QSlider.NoTicks)
+        self.eye_config_light_slider.setTickInterval(1)
+        self.eye_config_light_slider.valueChanged.connect(self.eye_config_speed_slider_value_changed)
+        self.eye_config_speed_layout.addWidget(self.eye_config_light_slider)
 
         # eye brightness group box
-        self.eyeConfigBright = QGroupBox(strings.EYE_CONFIG_BR_G)
-        self.eyeConfigBright.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.eyeConfigGroupLayout.addWidget(self.eyeConfigBright, 2, 1)
-        self.eyeConfigSpeedLayout = QHBoxLayout()
-        self.eyeConfigBright.setLayout(self.eyeConfigSpeedLayout)
+        self.eye_config_bright = QGroupBox(strings.EYE_CONFIG_BR_G)
+        self.eye_config_bright.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.eye_config_group_layout.addWidget(self.eye_config_bright, 2, 1)
+        self.eye_config_speed_layout = QHBoxLayout()
+        self.eye_config_bright.setLayout(self.eye_config_speed_layout)
 
         # eye brightness slider
-        self.eyeConfigBrightSlider = QSlider(Qt.Horizontal)
-        self.eyeConfigBrightSlider.setObjectName("Kevinbot3_RemoteUI_EyeConfigSlider")
-        self.eyeConfigBrightSlider.setMinimum(1)
-        self.eyeConfigBrightSlider.setMaximum(255)
-        self.eyeConfigBrightSlider.setValue(255)
-        self.eyeConfigBrightSlider.setTickPosition(QSlider.NoTicks)
-        self.eyeConfigBrightSlider.setTickInterval(1)
-        self.eyeConfigBrightSlider.valueChanged.connect(self.eye_config_bright_slider_value_changed)
-        self.eyeConfigSpeedLayout.addWidget(self.eyeConfigBrightSlider)
+        self.eye_config_light_slider = QSlider(Qt.Horizontal)
+        self.eye_config_light_slider.setObjectName("Kevinbot3_RemoteUI_EyeConfigSlider")
+        self.eye_config_light_slider.setMinimum(1)
+        self.eye_config_light_slider.setMaximum(255)
+        self.eye_config_light_slider.setValue(255)
+        self.eye_config_light_slider.setTickPosition(QSlider.NoTicks)
+        self.eye_config_light_slider.setTickInterval(1)
+        self.eye_config_light_slider.valueChanged.connect(self.eye_config_bright_slider_value_changed)
+        self.eye_config_speed_layout.addWidget(self.eye_config_light_slider)
 
         # Sensors
-        self.sensorsBack = QPushButton()
-        self.sensorsBack.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
-        self.sensorsBack.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
-        self.sensorsBack.setFixedSize(QSize(36, 36))
-        self.sensorsBack.setIconSize(QSize(32, 32))
-        self.sensorsBack.clicked.connect(lambda: self.widget.slideInIdx(0))
-        self.sensor_layout.addWidget(self.sensorsBack)
+        self.sensors_back = QPushButton()
+        self.sensors_back.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
+        self.sensors_back.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
+        self.sensors_back.setFixedSize(QSize(36, 36))
+        self.sensors_back.setIconSize(QSize(32, 32))
+        self.sensors_back.clicked.connect(lambda: self.widget.slideInIdx(0))
+        self.sensor_layout.addWidget(self.sensors_back)
 
-        self.sensorsBox = QGroupBox(strings.SENSORS_G)
-        self.sensorsBox.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.sensorBoxLayout = QVBoxLayout()
-        self.sensorsBox.setLayout(self.sensorBoxLayout)
-        self.sensor_layout.addWidget(self.sensorsBox)
+        self.sensors_box = QGroupBox(strings.SENSORS_G)
+        self.sensors_box.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.sensor_box_layout = QVBoxLayout()
+        self.sensors_box.setLayout(self.sensor_box_layout)
+        self.sensor_layout.addWidget(self.sensors_box)
 
-        self.battLayout = QHBoxLayout()
-        self.bmeLayout = QHBoxLayout()
-        self.sensorBoxLayout.addLayout(self.battLayout)
-        self.sensorBoxLayout.addLayout(self.bmeLayout)
+        self.batt_layout = QHBoxLayout()
+        self.bme_layout = QHBoxLayout()
+        self.sensor_box_layout.addLayout(self.batt_layout)
+        self.sensor_box_layout.addLayout(self.bme_layout)
 
         # Battery 1
         self.battery1_label = QLabel(strings.BATT_VOLT1.format("Not Installed / Unknown"))
@@ -1106,7 +1097,7 @@ class RemoteUI(KBMainWindow):
         self.battery1_label.setObjectName("Kevinbot3_RemoteUI_SensorData")
         self.battery1_label.setFixedHeight(32)
         self.battery1_label.setAlignment(Qt.AlignCenter)
-        self.battLayout.addWidget(self.battery1_label)
+        self.batt_layout.addWidget(self.battery1_label)
 
         # Battery 2
         self.battery2_label = QLabel(strings.BATT_VOLT2.format("Not Installed / Unknown"))
@@ -1114,7 +1105,7 @@ class RemoteUI(KBMainWindow):
         self.battery2_label.setObjectName("Kevinbot3_RemoteUI_SensorData")
         self.battery2_label.setFixedHeight(32)
         self.battery2_label.setAlignment(Qt.AlignCenter)
-        self.battLayout.addWidget(self.battery2_label)
+        self.batt_layout.addWidget(self.battery2_label)
 
         # Outside Temp
         self.outside_temp = QLabel(strings.OUTSIDE_TEMP.format("Unknown"))
@@ -1122,7 +1113,7 @@ class RemoteUI(KBMainWindow):
         self.outside_temp.setObjectName("Kevinbot3_RemoteUI_SensorData")
         self.outside_temp.setFixedHeight(32)
         self.outside_temp.setAlignment(Qt.AlignCenter)
-        self.bmeLayout.addWidget(self.outside_temp)
+        self.bme_layout.addWidget(self.outside_temp)
 
         # Outside Humidity
         self.outside_humi = QLabel(strings.OUTSIDE_HUMI.format("Unknown"))
@@ -1130,7 +1121,7 @@ class RemoteUI(KBMainWindow):
         self.outside_humi.setObjectName("Kevinbot3_RemoteUI_SensorData")
         self.outside_humi.setFixedHeight(32)
         self.outside_humi.setAlignment(Qt.AlignCenter)
-        self.bmeLayout.addWidget(self.outside_humi)
+        self.bme_layout.addWidget(self.outside_humi)
 
         # Outside Pressure
         self.outside_hpa = QLabel(strings.OUTSIDE_PRES.format("Unknown"))
@@ -1138,10 +1129,10 @@ class RemoteUI(KBMainWindow):
         self.outside_hpa.setObjectName("Kevinbot3_RemoteUI_SensorData")
         self.outside_hpa.setFixedHeight(32)
         self.outside_hpa.setAlignment(Qt.AlignCenter)
-        self.bmeLayout.addWidget(self.outside_hpa)
+        self.bme_layout.addWidget(self.outside_hpa)
 
-        self.motorTempLayout = QHBoxLayout()
-        self.sensorBoxLayout.addLayout(self.motorTempLayout)
+        self.motor_temp_layout = QHBoxLayout()
+        self.sensor_box_layout.addLayout(self.motor_temp_layout)
 
         # Left
         self.left_temp = QLabel(strings.LEFT_TEMP.format("Unknown"))
@@ -1149,7 +1140,7 @@ class RemoteUI(KBMainWindow):
         self.left_temp.setObjectName("Kevinbot3_RemoteUI_SensorData")
         self.left_temp.setFixedHeight(32)
         self.left_temp.setAlignment(Qt.AlignCenter)
-        self.motorTempLayout.addWidget(self.left_temp)
+        self.motor_temp_layout.addWidget(self.left_temp)
 
         # Robot Temp
         self.robot_temp = QLabel(strings.INSIDE_TEMP.format("Unknown"))
@@ -1157,7 +1148,7 @@ class RemoteUI(KBMainWindow):
         self.robot_temp.setObjectName("Kevinbot3_RemoteUI_SensorData")
         self.robot_temp.setFixedHeight(32)
         self.robot_temp.setAlignment(Qt.AlignCenter)
-        self.motorTempLayout.addWidget(self.robot_temp)
+        self.motor_temp_layout.addWidget(self.robot_temp)
 
         # Right
         self.right_temp = QLabel(strings.RIGHT_TEMP.format("Unknown"))
@@ -1165,11 +1156,11 @@ class RemoteUI(KBMainWindow):
         self.right_temp.setObjectName("Kevinbot3_RemoteUI_SensorData")
         self.right_temp.setFixedHeight(32)
         self.right_temp.setAlignment(Qt.AlignCenter)
-        self.motorTempLayout.addWidget(self.right_temp)
+        self.motor_temp_layout.addWidget(self.right_temp)
 
         # Level
         self.level_layout = QHBoxLayout()
-        self.sensorBoxLayout.addLayout(self.level_layout)
+        self.sensor_box_layout.addLayout(self.level_layout)
 
         self.level = Level()
         self.level.label.setObjectName("Kevinbot3_RemoteUI_SensorData")
@@ -1183,21 +1174,21 @@ class RemoteUI(KBMainWindow):
                                              QColor(self.palette().color(QPalette.Window)).getRgb()[2]))
         self.level_layout.addWidget(self.level)
 
-        self.sensorBoxLayout.addStretch()
+        self.sensor_box_layout.addStretch()
 
         # Page Flip 1
-        self.pageFlipLayout1 = QHBoxLayout()
-        self.layout.addLayout(self.pageFlipLayout1)
+        self.page_flip_layout_1 = QHBoxLayout()
+        self.layout.addLayout(self.page_flip_layout_1)
 
-        self.pageFlipLeft = QPushButton()
-        self.pageFlipLeft.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
-        self.pageFlipLeft.clicked.connect(lambda: self.widget.slideInIdx(7))
-        self.pageFlipLeft.setShortcut(QKeySequence(Qt.Key.Key_Comma))
+        self.page_flip_left = QPushButton()
+        self.page_flip_left.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
+        self.page_flip_left.clicked.connect(lambda: self.widget.slideInIdx(7))
+        self.page_flip_left.setShortcut(QKeySequence(Qt.Key.Key_Comma))
 
-        self.pageFlipRight = QPushButton()
-        self.pageFlipRight.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
-        self.pageFlipRight.clicked.connect(lambda: self.widget.slideInIdx(1))
-        self.pageFlipRight.setShortcut(QKeySequence(Qt.Key.Key_Period))
+        self.page_flip_right = QPushButton()
+        self.page_flip_right.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
+        self.page_flip_right.clicked.connect(lambda: self.widget.slideInIdx(1))
+        self.page_flip_right.setShortcut(QKeySequence(Qt.Key.Key_Period))
 
         self.shutdown = QPushButton()
         self.shutdown.setObjectName("Kevinbot3_RemoteUI_ShutdownButton")
@@ -1207,8 +1198,8 @@ class RemoteUI(KBMainWindow):
         self.shutdown.setFixedSize(QSize(36, 36))
 
         # icons
-        self.pageFlipLeft.setIcon(qta.icon("fa5s.thermometer-half", color=self.fg_color))
-        self.pageFlipRight.setIcon(qta.icon("fa5s.camera", color=self.fg_color))
+        self.page_flip_left.setIcon(qta.icon("fa5s.thermometer-half", color=self.fg_color))
+        self.page_flip_right.setIcon(qta.icon("fa5s.camera", color=self.fg_color))
 
         # batt_volt1
         self.batt_volt1 = QLabel(strings.BATT_VOLT1.format("Unknown"))
@@ -1219,57 +1210,57 @@ class RemoteUI(KBMainWindow):
         self.batt_volt2.setObjectName("Kevinbot3_RemoteUI_VoltageText")
 
         # width/height
-        self.pageFlipLeft.setFixedSize(36, 36)
-        self.pageFlipRight.setFixedSize(36, 36)
-        self.pageFlipLeft.setIconSize(QSize(32, 32))
-        self.pageFlipRight.setIconSize(QSize(32, 32))
+        self.page_flip_left.setFixedSize(36, 36)
+        self.page_flip_right.setFixedSize(36, 36)
+        self.page_flip_left.setIconSize(QSize(32, 32))
+        self.page_flip_right.setIconSize(QSize(32, 32))
 
-        self.pageFlipLayout1.addWidget(self.pageFlipLeft)
-        self.pageFlipLayout1.addStretch()
-        self.pageFlipLayout1.addWidget(self.batt_volt1)
-        self.pageFlipLayout1.addStretch()
-        self.pageFlipLayout1.addWidget(self.shutdown)
-        self.pageFlipLayout1.addStretch()
-        self.pageFlipLayout1.addWidget(self.batt_volt2)
-        self.pageFlipLayout1.addStretch()
-        self.pageFlipLayout1.addWidget(self.pageFlipRight)
+        self.page_flip_layout_1.addWidget(self.page_flip_left)
+        self.page_flip_layout_1.addStretch()
+        self.page_flip_layout_1.addWidget(self.batt_volt1)
+        self.page_flip_layout_1.addStretch()
+        self.page_flip_layout_1.addWidget(self.shutdown)
+        self.page_flip_layout_1.addStretch()
+        self.page_flip_layout_1.addWidget(self.batt_volt2)
+        self.page_flip_layout_1.addStretch()
+        self.page_flip_layout_1.addWidget(self.page_flip_right)
 
         # Page Flip 2
-        self.pageFlipLayout2 = QHBoxLayout()
-        self.cameraLayout.addLayout(self.pageFlipLayout2)
+        self.page_flip_layout_2 = QHBoxLayout()
+        self.camera_layout.addLayout(self.page_flip_layout_2)
 
-        self.pageFlipLeft2 = QPushButton()
-        self.pageFlipLeft2.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
-        self.pageFlipLeft2.clicked.connect(lambda: self.widget.slideInIdx(0))
-        self.pageFlipLeft2.setShortcut(QKeySequence(Qt.Key.Key_Comma))
+        self.page_flip_left_2 = QPushButton()
+        self.page_flip_left_2.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
+        self.page_flip_left_2.clicked.connect(lambda: self.widget.slideInIdx(0))
+        self.page_flip_left_2.setShortcut(QKeySequence(Qt.Key.Key_Comma))
 
-        self.refreshCamera = QPushButton()
-        self.refreshCamera.clicked.connect(self.cameraWebView.reload)
+        self.refresh_camera = QPushButton()
+        self.refresh_camera.clicked.connect(self.cameraWebView.reload)
 
-        self.pageFlipRight2 = QPushButton()
-        self.pageFlipRight2.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
-        self.pageFlipLeft.setShortcut(QKeySequence(Qt.Key.Key_Period))
-        self.pageFlipRight2.setDisabled(True)
+        self.page_flip_right_2 = QPushButton()
+        self.page_flip_right_2.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
+        self.page_flip_left.setShortcut(QKeySequence(Qt.Key.Key_Period))
+        self.page_flip_right_2.setDisabled(True)
 
-        self.pageFlipLeft2.setIcon(qta.icon("fa5.arrow-alt-circle-left", color=self.fg_color))
-        self.refreshCamera.setIcon(qta.icon("fa5s.redo-alt", color=self.fg_color))
-        self.pageFlipRight2.setIcon(qta.icon("fa5.arrow-alt-circle-right", color=self.fg_color))
+        self.page_flip_left_2.setIcon(qta.icon("fa5.arrow-alt-circle-left", color=self.fg_color))
+        self.refresh_camera.setIcon(qta.icon("fa5s.redo-alt", color=self.fg_color))
+        self.page_flip_right_2.setIcon(qta.icon("fa5.arrow-alt-circle-right", color=self.fg_color))
 
-        self.pageFlipLeft2.setFixedSize(36, 36)
-        self.refreshCamera.setFixedSize(36, 36)
-        self.pageFlipRight2.setFixedSize(36, 36)
-        self.pageFlipLeft2.setIconSize(QSize(32, 32))
-        self.refreshCamera.setIconSize(QSize(32, 32))
-        self.pageFlipRight2.setIconSize(QSize(32, 32))
+        self.page_flip_left_2.setFixedSize(36, 36)
+        self.refresh_camera.setFixedSize(36, 36)
+        self.page_flip_right_2.setFixedSize(36, 36)
+        self.page_flip_left_2.setIconSize(QSize(32, 32))
+        self.refresh_camera.setIconSize(QSize(32, 32))
+        self.page_flip_right_2.setIconSize(QSize(32, 32))
 
-        self.pageFlipLayout2.addWidget(self.pageFlipLeft2)
-        self.pageFlipLayout2.addStretch()
-        self.pageFlipLayout2.addWidget(self.refreshCamera)
-        self.pageFlipLayout2.addStretch()
-        self.pageFlipLayout2.addWidget(self.pageFlipRight2)
+        self.page_flip_layout_2.addWidget(self.page_flip_left_2)
+        self.page_flip_layout_2.addStretch()
+        self.page_flip_layout_2.addWidget(self.refresh_camera)
+        self.page_flip_layout_2.addStretch()
+        self.page_flip_layout_2.addWidget(self.page_flip_right_2)
 
         # disable items on startup
-        self.armSetPreset.setEnabled(False)
+        self.arm_set_preset.setEnabled(False)
         self.arm_preset1.setEnabled(False)
         self.arm_preset2.setEnabled(False)
         self.arm_preset3.setEnabled(False)
@@ -1283,15 +1274,16 @@ class RemoteUI(KBMainWindow):
         self.motor_stick.setEnabled(False)
         self.head_stick.setEnabled(False)
 
-        self.headLED.setEnabled(False)
-        self.baseLED.setEnabled(False)
-        self.bodyLED.setEnabled(False)
-        self.cameraLED.setEnabled(False)
+        self.head_led.setEnabled(False)
+        self.base_led.setEnabled(False)
+        self.body_led.setEnabled(False)
+        self.camera_led.setEnabled(False)
 
     def closeEvent(self, event):
         com.xb.halt()
         event.accept()
 
+    # noinspection PyUnresolvedReferences
     def init_batt_modal(self):
         # a main_widget floating in the middle of the window
         self.batt_modal = QWidget(self)
@@ -1394,6 +1386,7 @@ class RemoteUI(KBMainWindow):
                                          self.batt_modal.geometry().height() / 1.6)))
         self.anim.setEasingCurve(QEasingCurve.Type.OutSine)
         self.anim.setDuration(settings["window_properties"]["animation_speed"])
+        # noinspection PyUnresolvedReferences
         self.anim.finished.connect(lambda: self.hide_batt_modal((not disable)))
         self.anim.start()
 
@@ -1408,6 +1401,7 @@ class RemoteUI(KBMainWindow):
                                          self.motTemp_modal.geometry().height() / 1.6)))
         self.anim.setEasingCurve(QEasingCurve.Type.OutSine)
         self.anim.setDuration(settings["window_properties"]["animation_speed"])
+        # noinspection PyUnresolvedReferences
         self.anim.finished.connect(lambda: self.hide_temp_modal((not disable)))
         self.anim.start()
 
@@ -1489,10 +1483,10 @@ class RemoteUI(KBMainWindow):
         com.txcv("body_color2", str(self.bodyColorPicker2.getHex()).strip("#") + "00")
 
     def base_color1_changed(self):
-        com.txcv("base_color1", str(self.baseColorPicker.getHex()).strip("#") + "00")
+        com.txcv("base_color1", str(self.base_color_picker.getHex()).strip("#") + "00")
 
     def base_color2_changed(self):
-        com.txcv("base_color2", str(self.baseColorPicker2.getHex()).strip("#") + "00")
+        com.txcv("base_color2", str(self.base_color_picker_2.getHex()).strip("#") + "00")
 
     def camera_brightness_changed(self):
         com.txcv("cam_brightness", str(self.cameraLedSlider.value()))
@@ -1532,7 +1526,7 @@ class RemoteUI(KBMainWindow):
                 self.right_knobs[i - settings["arm_dof"]].blockSignals(False)
 
         # update label
-        self.armPresetLabel.setText(strings.CURRENT_ARM_PRESET + ": {}".format(str(index + 1)))
+        self.arm_preset_label.setText(strings.CURRENT_ARM_PRESET + ": {}".format(str(index + 1)))
 
     def arm_preset_left_changed(self, index):
         global CURRENT_ARM_POS
@@ -1563,7 +1557,7 @@ class RemoteUI(KBMainWindow):
             for modal in self.modals:
                 modal.changeIndex(modal.getIndex() - 1, moveSpeed=600)
 
-        if not extract_digits(self.armPresetLabel.text()):
+        if not extract_digits(self.arm_preset_label.text()):
             if self.modal_count < 6:
                 modal_bar = KBModalBar(self)
                 self.modals.append(modal_bar)
@@ -1590,17 +1584,16 @@ class RemoteUI(KBMainWindow):
                 modal_timeout = QTimer()
                 modal_timeout.singleShot(1500, close_modal)
 
-            for i in range(len(settings["arm_prog"][extract_digits(self.armPresetLabel.text())[0] - 1])):
+            for i in range(len(settings["arm_prog"][extract_digits(self.arm_preset_label.text())[0] - 1])):
                 if i < settings["arm_dof"]:
-                    settings["arm_prog"][extract_digits(self.armPresetLabel.text())[0] - 1][i] = self.left_knobs[
+                    settings["arm_prog"][extract_digits(self.arm_preset_label.text())[0] - 1][i] = self.left_knobs[
                         i].value()
                 else:
-                    settings["arm_prog"][extract_digits(self.armPresetLabel.text())[0] - 1][i] = self.right_knobs[
+                    settings["arm_prog"][extract_digits(self.arm_preset_label.text())[0] - 1][i] = self.right_knobs[
                         i - settings["arm_dof"]].value()
 
             # dump json
-            with open('settings.json', 'w') as file:
-                json.dump(settings, file, indent=2)
+            save_settings()
 
     def save_speech(self, text):
         def close_modal():
@@ -1614,8 +1607,7 @@ class RemoteUI(KBMainWindow):
                 modal.changeIndex(modal.getIndex() - 1, moveSpeed=600)
 
         settings["speech"]["text"] = text
-        with open('settings.json', 'w') as file:
-            json.dump(settings, file, indent=2)
+        save_settings()
 
         # show modal
         if self.modal_count < 6:
@@ -1634,8 +1626,7 @@ class RemoteUI(KBMainWindow):
     def set_speed(self, speed):
         self.speed = speed
         settings["speed"] = speed
-        with open('settings.json', 'w') as file:
-            json.dump(settings, file, indent=4)
+        save_settings()
 
     def head_changed_action(self):
         com.txcv("head_x", map_range(self.head_stick.getXY()[0], 0, JOYSTICK_SIZE, 0, 60))
@@ -1752,7 +1743,7 @@ class RemoteUI(KBMainWindow):
 
         enabled = ena
 
-        self.armSetPreset.setEnabled(enabled)
+        self.arm_set_preset.setEnabled(enabled)
         self.arm_preset1.setEnabled(enabled)
         self.arm_preset2.setEnabled(enabled)
         self.arm_preset3.setEnabled(enabled)
@@ -1766,10 +1757,10 @@ class RemoteUI(KBMainWindow):
         self.motor_stick.setEnabled(enabled)
         self.head_stick.setEnabled(enabled)
 
-        self.headLED.setEnabled(enabled)
-        self.baseLED.setEnabled(enabled)
-        self.bodyLED.setEnabled(enabled)
-        self.cameraLED.setEnabled(enabled)
+        self.head_led.setEnabled(enabled)
+        self.base_led.setEnabled(enabled)
+        self.body_led.setEnabled(enabled)
+        self.camera_led.setEnabled(enabled)
 
         if not enabled:
             com.txcv("head_effect", "color1", delay=0.02)
