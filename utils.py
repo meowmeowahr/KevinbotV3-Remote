@@ -130,7 +130,20 @@ def load_theme(widget: QWidget, theme="classic", theme_style="default"):
                              "QDial{"
                              "background-color: #263f66;"
                              "color: #afbfcf;"
-                             "}")
+                             "}"
+                             "#Enable_Button{"
+                             "background-color: #e65c4d;"
+                             "color: #080808;"
+                             "font-size: 18px;"
+                             "font-weight: bold;"
+                             "}"
+                             "#Disable_Button{"
+                             "background-color: #56bb74;"
+                             "color: #080808;"
+                             "font-size: 18px;"
+                             "font-weight: bold;"
+                             "}"
+                             )
     elif theme == "highcontrast":
         import qdarktheme
         if theme_style.lower() == "default":

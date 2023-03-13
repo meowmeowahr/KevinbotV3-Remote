@@ -6,9 +6,11 @@ import datetime
 import json
 import platform
 import sys
-import threading
 import time
 from functools import partial
+
+# noinspection PyUnresolvedReferences
+import PyQt5  # useful for using debuggers
 
 from qtpy.QtCore import *
 from qtpy.QtGui import *
@@ -42,6 +44,7 @@ __author__ = "Kevin Ahr"
 window = None
 disable_batt_modal = False
 disable_temp_modal = False
+enabled = False
 
 # load settings from file
 with open("settings.json", "r") as f:
@@ -82,7 +85,7 @@ else:
 
 # load temp warning settings
 if "motor_temp_warning" in settings:
-    motor_temp_warning = settings["motor_temp_warning"]
+    HIGH_MOTOR_TEMP = settings["motor_temp_warning"]
 else:
     settings["motor_temp_warning"] = 50  # save default
     HIGH_MOTOR_TEMP = settings["motor_temp_warning"]
@@ -493,38 +496,50 @@ class RemoteUI(KBMainWindow):
         self.speechGrid = QGridLayout()
         self.speechWidget.setLayout(self.speechGrid)
 
+        self.enable_button = QPushButton("ENABLE")
+        self.enable_button.setObjectName("Enable_Button")
+        self.enable_button.setMinimumHeight(56)
+        self.enable_button.clicked.connect(lambda: self.set_enabled(True))
+        self.speechGrid.addWidget(self.enable_button, 0, 0)
+
+        self.disable_button = QPushButton("DISABLE")
+        self.disable_button.setObjectName("Disable_Button")
+        self.disable_button.setMinimumHeight(56)
+        self.disable_button.clicked.connect(lambda: self.set_enabled(False))
+        self.speechGrid.addWidget(self.disable_button, 0, 1)
+
         self.speechInput = QLineEdit()
         self.speechInput.setObjectName("Kevinbot3_RemoteUI_SpeechInput")
         self.speechInput.setText(settings["speech"]["text"])
         self.speechInput.returnPressed.connect(lambda: com.txcv("no-pass.speech", self.speechInput.text()))
         self.speechInput.setPlaceholderText(strings.SPEECH_INPUT_H)
 
-        self.speechGrid.addWidget(self.speechInput, 0, 0, 1, 2)
+        self.speechGrid.addWidget(self.speechInput, 1, 0, 1, 2)
 
         self.speechButton = QPushButton(strings.SPEECH_BUTTON)
         self.speechButton.setObjectName("Kevinbot3_RemoteUI_SpeechButton")
         self.speechButton.clicked.connect(lambda: com.txcv("no-pass.speech", self.speechInput.text()))
         self.speechButton.setShortcut(QKeySequence("Ctrl+Shift+S"))
-        self.speechGrid.addWidget(self.speechButton, 1, 0, 1, 1)
+        self.speechGrid.addWidget(self.speechButton, 2, 0, 1, 1)
 
         self.speechSave = QPushButton(strings.SPEECH_SAVE)
         self.speechSave.setObjectName("Kevinbot3_RemoteUI_SpeechButton")
         self.speechSave.clicked.connect(lambda: self.save_speech(self.speechInput.text()))
         self.speechSave.setShortcut(QKeySequence("Ctrl+S"))
-        self.speechGrid.addWidget(self.speechSave, 1, 1, 1, 1)
+        self.speechGrid.addWidget(self.speechSave, 2, 1, 1, 1)
 
         self.espeakRadio = QRadioButton(strings.SPEECH_ESPEAK)
         self.espeakRadio.setObjectName("Kevinbot3_RemoteUI_SpeechRadio")
         self.espeakRadio.setChecked(True)
         self.espeakRadio.pressed.connect(lambda: com.txcv("no-pass.speech-engine", "espeak"))
         self.espeakRadio.setShortcut(QKeySequence("Ctrl+Shift+E"))
-        self.speechGrid.addWidget(self.espeakRadio, 2, 0, 1, 1)
+        self.speechGrid.addWidget(self.espeakRadio, 3, 0, 1, 1)
 
         self.festivalRadio = QRadioButton(strings.SPEECH_FESTIVAL)
         self.festivalRadio.setObjectName("Kevinbot3_RemoteUI_SpeechRadio")
         self.festivalRadio.pressed.connect(lambda: com.txcv("no-pass.speech-engine", "festival"))
         self.festivalRadio.setShortcut(QKeySequence("Ctrl+Shift+F"))
-        self.speechGrid.addWidget(self.festivalRadio, 2, 1, 1, 1)
+        self.speechGrid.addWidget(self.festivalRadio, 3, 1, 1, 1)
 
         self.speechWidget.setFixedHeight(self.speechWidget.sizeHint().height())
         self.speechWidget.setFixedWidth(self.speechWidget.sizeHint().width() + 100)
@@ -1693,6 +1708,38 @@ class RemoteUI(KBMainWindow):
             right = map_range_limit(right, -1, 1, 1000 + us_change, 2000 - us_change)
 
             com.txmot((int(right), int(left)))
+
+    def set_enabled(self, ena: bool):
+        def close_modal():
+            # close this modal, move other modals
+            modal_bar.closeToast()
+            self.modal_count -= 1
+
+            self.modals.remove(modal_bar)
+
+            for modal in self.modals:
+                modal.changeIndex(modal.getIndex() - 1, moveSpeed=600)
+
+        global enabled
+
+        if not enabled == ena:
+            # show modal
+            if self.modal_count < 6:
+                modal_bar = KBModalBar(self)
+                self.modals.append(modal_bar)
+                self.modal_count += 1
+                modal_bar.setTitle(f"Robot {'Enabled' if ena else 'Disabled'}")
+                modal_bar.setDescription(f"Kevinbot has been {'Enabled' if ena else 'Disabled'}")
+                modal_bar.setPixmap(qta.icon("fa5s.power-off", color=self.fg_color).pixmap(36))
+
+                modal_bar.popToast(popSpeed=500, posIndex=self.modal_count)
+
+                modal_timeout = QTimer()
+                modal_timeout.singleShot(1500, close_modal)
+
+        enabled = ena
+
+        com.txcv("robot.disable", str(not enabled))
 
 
 def init_robot():
