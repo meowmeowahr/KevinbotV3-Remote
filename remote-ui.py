@@ -105,20 +105,57 @@ except KeyError:
     remote_name = "KBOT_REMOTE"
 
 
-def rx_data():
-    time.sleep(1)  # wait for window to open
+class SliderProxyStyle(QProxyStyle):
+    # noinspection PyMethodOverriding
+    def pixelMetric(self, metric, option, widget):
+        if metric == QStyle.PM_SliderThickness:
+            return 25
+        elif metric == QStyle.PM_SliderLength:
+            return 22
+        return super().pixelMetric(metric, option, widget)
 
-    global window
-    global disable_batt_modal
-    while True:
-        data = com.xb.wait_read_frame()
 
+# noinspection PyAttributeOutsideInit,PyArgumentList
+class RemoteUI(KBMainWindow):
+    # noinspection PyArgumentList
+    def __init__(self):
+        super(RemoteUI, self).__init__()
+
+        self.setObjectName("Kevinbot3_RemoteUI")
+        self.setWindowTitle(strings.WIN_TITLE)
+        self.setWindowIcon(QIcon('icons/icon.svg'))
+
+        # start coms
+        com.init(callback=self.serial_callback)
+        init_robot()
+
+        if EMULATE_REAL_REMOTE:
+            self.setWindowFlags(Qt.Window | Qt.FramelessWindowHint)
+            self.setFixedSize(800, 480)
+
+        # load theme
         try:
-            data = data['rf_data'].decode('utf-8').strip().split("=")
-        except KeyError:
-            continue
+            load_theme(self, settings["window_properties"]["theme"], settings["window_properties"]["theme_colors"])
+        except NameError:
+            load_theme(self, settings["window_properties"]["theme"])
 
-        print("Received: " + str(data))
+        # vars
+        self.modal_count = 0
+        self.modals = []
+
+        self.init_ui()
+
+        if settings["dev_mode"]:
+            self.createDevTools()
+
+        if START_FULL_SCREEN:
+            self.showFullScreen()
+        else:
+            self.show()
+
+    def serial_callback(self, message):
+        data = message["rf_data"].decode("utf-8")
+        data = data.split("=", maxsplit=1)
 
         if data[0] == "batt_volts":
             if window is not None:
@@ -148,7 +185,7 @@ def rx_data():
                         get_updater().call_latest(window.batt_modal.show)
                     elif float(volt2) / 10 < 11:
                         com.txmot([1500, 1500])
-                        get_updater().call_latest(window.battModalText, strings.BATT_LOW)
+                        get_updater().call_latest(window.battModalText.setText, strings.BATT_LOW)
                         get_updater().call_latest(window.batt_modal.show)
         # bme280 sensor
         elif data[0] == "bme":
@@ -225,52 +262,6 @@ def rx_data():
                 get_updater().call_latest(window.ledGroup.setDisabled, False)
                 get_updater().call_latest(window.mainGroup.setDisabled, False)
 
-
-class SliderProxyStyle(QProxyStyle):
-    # noinspection PyMethodOverriding
-    def pixelMetric(self, metric, option, widget):
-        if metric == QStyle.PM_SliderThickness:
-            return 25
-        elif metric == QStyle.PM_SliderLength:
-            return 22
-        return super().pixelMetric(metric, option, widget)
-
-
-# noinspection PyAttributeOutsideInit,PyArgumentList
-class RemoteUI(KBMainWindow):
-    # noinspection PyArgumentList
-    def __init__(self):
-        super(RemoteUI, self).__init__()
-
-        self.setObjectName("Kevinbot3_RemoteUI")
-        self.setWindowTitle(strings.WIN_TITLE)
-        self.setWindowIcon(QIcon('icons/icon.svg'))
-
-        if EMULATE_REAL_REMOTE:
-            self.setWindowFlags(Qt.Window | Qt.FramelessWindowHint)
-            self.setFixedSize(800, 480)
-
-        # load theme
-        try:
-            load_theme(self, settings["window_properties"]["theme"], settings["window_properties"]["theme_colors"])
-        except NameError:
-            load_theme(self, settings["window_properties"]["theme"])
-
-        # vars
-        self.modal_count = 0
-        self.modals = []
-
-        self.init_ui()
-
-        if settings["dev_mode"]:
-            self.createDevTools()
-
-        if START_FULL_SCREEN:
-            self.showFullScreen()
-        else:
-            self.show()
-
-    # noinspection PyArgumentList,PyUnresolvedReferences
     def init_ui(self):
         self.widget = SlidingStackedWidget.SlidingStackedWidget()
         self.setCentralWidget(self.widget)
@@ -1812,10 +1803,6 @@ def init_robot():
 if __name__ == '__main__':
     error = None
     try:
-        com.init()
-        rx_thread = threading.Thread(target=rx_data, daemon=True)
-        rx_thread.start()
-        init_robot()
         app = QApplication(sys.argv)
         app.setApplicationName("Kevinbot Remote")
         app.setApplicationVersion(__version__)
