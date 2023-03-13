@@ -130,7 +130,7 @@ class QJsonModel(QtCore.QAbstractItemModel):
         Override
         """
         flags = super(QJsonModel, self).flags(index)
-        if index.column() == 0 or index.model().index(index.row(), 0).data(QtCore.Qt.EditRole):
+        if index.column() == 0:
             return (QtCore.Qt.ItemFlag.NoItemFlags
                     | QtCore.Qt.ItemIsDragEnabled
                     | QtCore.Qt.ItemIsDropEnabled
