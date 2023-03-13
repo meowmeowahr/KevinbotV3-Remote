@@ -132,8 +132,10 @@ def rx_data():
                     get_updater().call_latest(window.battery1_label.setStyleSheet, "")
 
                 if ENABLE_BATT2:
-                    get_updater().call_latest(window.batt_volt2.setText, strings.BATT_VOLT2.format(float(volt2) / 10) + "V")
-                    get_updater().call_latest(window.battery2_label.setText, strings.BATT_VOLT2.format(float(volt2) / 10))
+                    get_updater().call_latest(window.batt_volt2.setText,
+                                              strings.BATT_VOLT2.format(float(volt2) / 10) + "V")
+                    get_updater().call_latest(window.battery2_label.setText,
+                                              strings.BATT_VOLT2.format(float(volt2) / 10))
                     if float(volt2) / 10 < warning_voltage:
                         get_updater().call_latest(window.battery2_label.setStyleSheet, "background-color: #df574d;")
                     else:
@@ -153,7 +155,7 @@ def rx_data():
             if window is not None:
                 get_updater().call_latest(window.outside_temp.setText,
                                           strings.OUTSIDE_TEMP.format(str(data[1].split(",")[0]) + "℃ (" + str(
-                                          data[1].split(",")[1]) + "℉)"))
+                                              data[1].split(",")[1]) + "℉)"))
                 get_updater().call_latest(window.outside_humi.setText,
                                           strings.OUTSIDE_HUMI.format(data[1].split(",")[2]))
                 get_updater().call_latest(window.outside_hpa.setText,
@@ -546,11 +548,11 @@ class RemoteUI(KBMainWindow):
 
         self.mainLayout.addStretch()
 
-        self.joystick = Joystick.Joystick(color=self.fg_color, max_distance=JOYSTICK_SIZE)
-        self.joystick.setObjectName("Kevinbot3_RemoteUI_Joystick")
-        self.joystick.posChanged.connect(self.head_changed_action)
-        self.joystick.setMinimumSize(180, 180)
-        self.mainLayout.addWidget(self.joystick)
+        self.head_stick = Joystick.Joystick(color=self.fg_color, max_distance=JOYSTICK_SIZE)
+        self.head_stick.setObjectName("Kevinbot3_RemoteUI_Joystick")
+        self.head_stick.posChanged.connect(self.head_changed_action)
+        self.head_stick.setMinimumSize(180, 180)
+        self.mainLayout.addWidget(self.head_stick)
 
         # Camera Page
 
@@ -1275,6 +1277,26 @@ class RemoteUI(KBMainWindow):
         self.pageFlipLayout2.addStretch()
         self.pageFlipLayout2.addWidget(self.pageFlipRight2)
 
+        # disable items on startup
+        self.armSetPreset.setEnabled(False)
+        self.arm_preset1.setEnabled(False)
+        self.arm_preset2.setEnabled(False)
+        self.arm_preset3.setEnabled(False)
+        self.arm_preset4.setEnabled(False)
+        self.arm_preset5.setEnabled(False)
+        self.arm_preset6.setEnabled(False)
+        self.arm_preset7.setEnabled(False)
+        self.arm_preset8.setEnabled(False)
+        self.arm_preset9.setEnabled(False)
+
+        self.motor_stick.setEnabled(False)
+        self.head_stick.setEnabled(False)
+
+        self.headLED.setEnabled(False)
+        self.baseLED.setEnabled(False)
+        self.bodyLED.setEnabled(False)
+        self.cameraLED.setEnabled(False)
+
     def closeEvent(self, event):
         com.xb.halt()
         event.accept()
@@ -1321,7 +1343,7 @@ class RemoteUI(KBMainWindow):
         self.battModalShutdown = QPushButton(strings.MODAL_SHUTDOWN)
         self.battModalShutdown.setObjectName("Kevinbot3_RemoteUI_ModalButton")
         self.battModalShutdown.setFixedHeight(36)
-        self.battModalShutdown.clicked.connect(lambda: self.shutdown_robot_modal_action(self.slide_out_batt_modal()))
+        self.battModalShutdown.clicked.connect(self.shutdown_robot_modal_action)
         self.battModalButtonLayout.addWidget(self.battModalShutdown)
 
     # noinspection PyArgumentList,PyUnresolvedReferences
@@ -1367,7 +1389,7 @@ class RemoteUI(KBMainWindow):
         self.motTempModalShutdown = QPushButton(strings.MODAL_SHUTDOWN)
         self.motTempModalShutdown.setObjectName("Kevinbot3_RemoteUI_ModalButton")
         self.motTempModalShutdown.setFixedHeight(36)
-        self.motTempModalShutdown.clicked.connect(lambda: self.shutdown_robot_modal_action(self.slide_out_temp_modal()))
+        self.motTempModalShutdown.clicked.connect(self.shutdown_robot_modal_action)
         self.motTempModalButtonLayout.addWidget(self.motTempModalShutdown)
 
     def slide_out_batt_modal(self, disable=False):
@@ -1422,7 +1444,7 @@ class RemoteUI(KBMainWindow):
             self.close()
             sys.exit()
 
-    def shutdown_robot_modal_action(self, modal):
+    def shutdown_robot_modal_action(self):
         com.txstr("no-pass.remote.status=disconnected")
         com.txshut()
         self.close()
@@ -1625,8 +1647,8 @@ class RemoteUI(KBMainWindow):
             json.dump(settings, file, indent=4)
 
     def head_changed_action(self):
-        com.txcv("head_x", map_range(self.joystick.getXY()[0], 0, JOYSTICK_SIZE, 0, 60))
-        com.txcv("head_y", map_range(self.joystick.getXY()[1], 0, JOYSTICK_SIZE, 0, 60))
+        com.txcv("head_x", map_range(self.head_stick.getXY()[0], 0, JOYSTICK_SIZE, 0, 60))
+        com.txcv("head_y", map_range(self.head_stick.getXY()[1], 0, JOYSTICK_SIZE, 0, 60))
 
     def shutdown_action(self):
         self.close()
@@ -1738,6 +1760,30 @@ class RemoteUI(KBMainWindow):
                 modal_timeout.singleShot(1500, close_modal)
 
         enabled = ena
+
+        self.armSetPreset.setEnabled(enabled)
+        self.arm_preset1.setEnabled(enabled)
+        self.arm_preset2.setEnabled(enabled)
+        self.arm_preset3.setEnabled(enabled)
+        self.arm_preset4.setEnabled(enabled)
+        self.arm_preset5.setEnabled(enabled)
+        self.arm_preset6.setEnabled(enabled)
+        self.arm_preset7.setEnabled(enabled)
+        self.arm_preset8.setEnabled(enabled)
+        self.arm_preset9.setEnabled(enabled)
+
+        self.motor_stick.setEnabled(enabled)
+        self.head_stick.setEnabled(enabled)
+
+        self.headLED.setEnabled(enabled)
+        self.baseLED.setEnabled(enabled)
+        self.bodyLED.setEnabled(enabled)
+        self.cameraLED.setEnabled(enabled)
+
+        if not enabled:
+            com.txcv("head_effect", "color1", delay=0.02)
+            com.txcv("body_effect", "color1", delay=0.02)
+            com.txcv("base_effect", "color1", delay=0.02)
 
         com.txcv("robot.disable", str(not enabled))
 
