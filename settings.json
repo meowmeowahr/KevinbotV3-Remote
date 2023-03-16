@@ -272,7 +272,8 @@
     "animation_speed": 500,
     "error_animation_speed": 80,
     "theme": "qdarktheme_kbot",
-    "theme_colors": "Default"
+    "theme_colors": "Default",
+    "ui_style": "modern"
   },
   "motor_temp_warning": 50
 }

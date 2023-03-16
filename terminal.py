@@ -117,8 +117,9 @@ class Window(KBMainWindow):
         self.update_timer.timeout.connect(self.add_to_textbox)
         self.update_timer.start(10)
 
-        self.serial_th = threading.Thread(target=self.target, daemon=True)
-        self.serial_th.start()
+        if com.ser:
+            self.serial_th = threading.Thread(target=self.target, daemon=True)
+            self.serial_th.start()
 
         if settings["dev_mode"]:
             self.createDevTools()

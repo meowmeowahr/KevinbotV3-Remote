@@ -616,6 +616,37 @@ class MainWindow(KBMainWindow):
         elif settings["joystick_type"] == "digital":
             self.digital_joy_radio.setChecked(True)
 
+        self.line = QFrame()
+        self.line.setFrameShape(QFrame.Shape.HLine)
+        self.remote_box_layout.addWidget(self.line)
+
+        self.ui_mode_group = QButtonGroup()
+
+        self.ui_mode_layout = QHBoxLayout()
+        self.remote_box_layout.addLayout(self.ui_mode_layout)
+
+        self.ui_mode_label = QLabel(strings.SETTINGS_UI_MODE_L)
+        self.ui_mode_layout.addWidget(self.ui_mode_label)
+
+        self.classic_ui_radio = QRadioButton()
+        self.classic_ui_radio.setIcon(QIcon("icons/remote-ui-icon.svg"))
+        self.classic_ui_radio.setIconSize(QSize(128, 84))
+        self.classic_ui_radio.clicked.connect(lambda: self.set_ui_mode("classic"))
+        self.ui_mode_group.addButton(self.classic_ui_radio)
+        self.ui_mode_layout.addWidget(self.classic_ui_radio)
+
+        self.modern_ui_radio = QRadioButton()
+        self.modern_ui_radio.setIcon(QIcon("icons/remote-ui-icon-modern.svg"))
+        self.modern_ui_radio.setIconSize(QSize(128, 84))
+        self.modern_ui_radio.clicked.connect(lambda: self.set_ui_mode("modern"))
+        self.ui_mode_group.addButton(self.modern_ui_radio)
+        self.ui_mode_layout.addWidget(self.modern_ui_radio)
+
+        if settings["window_properties"]["ui_style"] == "modern":
+            self.modern_ui_radio.setChecked(True)
+        elif settings["window_properties"]["ui_style"] == "classic":
+            self.classic_ui_radio.setChecked(True)
+
         self.exit_remote = haptics.HPushButton()
         self.exit_remote.clicked.connect(lambda: self.main_widget.slideInIdx(0))
         self.exit_remote.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
@@ -813,6 +844,12 @@ class MainWindow(KBMainWindow):
 
     def runner_theme_flat_changed(self):
         settings["apps"]["theme_flat"] = self.runner_theme_flat.isChecked()
+        with open('settings.json', 'w') as file:
+            json.dump(settings, file, indent=2)
+
+    @staticmethod
+    def set_ui_mode(ui_mode: str):
+        settings["window_properties"]["ui_style"] = ui_mode
         with open('settings.json', 'w') as file:
             json.dump(settings, file, indent=2)
 

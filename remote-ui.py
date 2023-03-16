@@ -412,7 +412,9 @@ class RemoteUI(KBMainWindow):
 
         self.led_group = QGroupBox(strings.LED_PRESET_G)
         self.led_group.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.layout.addWidget(self.led_group)
+
+        if settings["window_properties"]["ui_style"] == "classic":
+            self.layout.addWidget(self.led_group)
 
         self.led_layout = QHBoxLayout()
         self.led_group.setLayout(self.led_layout)
@@ -1201,13 +1203,14 @@ class RemoteUI(KBMainWindow):
         self.page_flip_left.setIcon(qta.icon("fa5s.thermometer-half", color=self.fg_color))
         self.page_flip_right.setIcon(qta.icon("fa5s.camera", color=self.fg_color))
 
+        # batts
+        self.bottom_batt_layout = QVBoxLayout()
+
         # batt_volt1
         self.batt_volt1 = QLabel(strings.BATT_VOLT1.format("Unknown"))
-        self.batt_volt1.setObjectName("Kevinbot3_RemoteUI_VoltageText")
 
         # batt_volt2
         self.batt_volt2 = QLabel(strings.BATT_VOLT2.format("Unknown"))
-        self.batt_volt2.setObjectName("Kevinbot3_RemoteUI_VoltageText")
 
         # width/height
         self.page_flip_left.setFixedSize(36, 36)
@@ -1215,15 +1218,56 @@ class RemoteUI(KBMainWindow):
         self.page_flip_left.setIconSize(QSize(32, 32))
         self.page_flip_right.setIconSize(QSize(32, 32))
 
-        self.page_flip_layout_1.addWidget(self.page_flip_left)
-        self.page_flip_layout_1.addStretch()
-        self.page_flip_layout_1.addWidget(self.batt_volt1)
-        self.page_flip_layout_1.addStretch()
-        self.page_flip_layout_1.addWidget(self.shutdown)
-        self.page_flip_layout_1.addStretch()
-        self.page_flip_layout_1.addWidget(self.batt_volt2)
-        self.page_flip_layout_1.addStretch()
-        self.page_flip_layout_1.addWidget(self.page_flip_right)
+        if settings["window_properties"]["ui_style"] == "classic":
+            self.page_flip_layout_1.addWidget(self.page_flip_left)
+            self.page_flip_layout_1.addStretch()
+            self.page_flip_layout_1.addWidget(self.batt_volt1)
+            self.page_flip_layout_1.addStretch()
+            self.page_flip_layout_1.addWidget(self.shutdown)
+            self.page_flip_layout_1.addStretch()
+            self.page_flip_layout_1.addWidget(self.batt_volt2)
+            self.page_flip_layout_1.addStretch()
+            self.page_flip_layout_1.addWidget(self.page_flip_right)
+        elif settings["window_properties"]["ui_style"] == "modern":
+            self.bottom_batt_layout.addWidget(self.batt_volt1)
+            self.bottom_batt_layout.addWidget(self.batt_volt2)
+
+            self.page_flip_layout_1.addWidget(self.page_flip_left)
+            self.page_flip_layout_1.addStretch()
+            self.page_flip_layout_1.addLayout(self.bottom_batt_layout)
+            self.page_flip_layout_1.addStretch()
+            self.page_flip_layout_1.addWidget(self.shutdown)
+            self.page_flip_layout_1.addStretch()
+
+            self.bottom_head_led_button = QPushButton()
+            self.bottom_head_led_button.setFixedSize(QSize(36, 36))
+            self.bottom_head_led_button.setIconSize(QSize(32, 32))
+            self.bottom_head_led_button.setIcon(qta.icon('ph.number-circle-one-fill', color="#ff2a2a"))
+            self.bottom_head_led_button.clicked.connect(lambda: self.led_action(0))
+            self.page_flip_layout_1.addWidget(self.bottom_head_led_button)
+
+            self.bottom_body_led_button = QPushButton()
+            self.bottom_body_led_button.setFixedSize(QSize(36, 36))
+            self.bottom_body_led_button.setIconSize(QSize(32, 32))
+            self.bottom_body_led_button.setIcon(qta.icon('ph.number-circle-two-fill', color="#5fd35f"))
+            self.bottom_body_led_button.clicked.connect(lambda: self.led_action(1))
+            self.page_flip_layout_1.addWidget(self.bottom_body_led_button)
+
+            self.bottom_base_led_button = QPushButton()
+            self.bottom_base_led_button.setFixedSize(QSize(36, 36))
+            self.bottom_base_led_button.setIconSize(QSize(32, 32))
+            self.bottom_base_led_button.setIcon(qta.icon('ph.number-circle-three-fill', color="#2a7fff"))
+            self.bottom_base_led_button.clicked.connect(lambda: self.led_action(2))
+            self.page_flip_layout_1.addWidget(self.bottom_base_led_button)
+
+            self.bottom_eye_button = QPushButton()
+            self.bottom_eye_button.setFixedSize(QSize(36, 36))
+            self.bottom_eye_button.setIconSize(QSize(32, 32))
+            self.bottom_eye_button.setIcon(qta.icon("fa5s.eye", color=self.fg_color))
+            self.bottom_eye_button.clicked.connect(self.eye_config_action)
+            self.page_flip_layout_1.addWidget(self.bottom_eye_button)
+
+            self.page_flip_layout_1.addWidget(self.page_flip_right)
 
         # Page Flip 2
         self.page_flip_layout_2 = QHBoxLayout()
@@ -1280,7 +1324,9 @@ class RemoteUI(KBMainWindow):
         self.camera_led.setEnabled(False)
 
     def closeEvent(self, event):
-        com.xb.halt()
+        if com.ser:
+            com.xb.halt()
+
         event.accept()
 
     # noinspection PyUnresolvedReferences

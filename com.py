@@ -57,15 +57,20 @@ def init(callback=None):
             _ = QApplication(sys.argv)
             # noinspection PyTypeChecker
             resp, _ = QInputDialog.getText(None, f"Port Not Found", "Type the correct port")
-            ser = serial.Serial(resp, BAUD)
+            if not resp.lower() == "dummy":
+                ser = serial.Serial(resp, BAUD)
+            else:
+                ser = None
         except ImportError:
             print(f"Port \"{PORT}\" Not Found")
-    xb = xbee_com.XBee(ser, escaped=False, callback=callback)
+    if ser:
+        xb = xbee_com.XBee(ser, escaped=False, callback=callback)
 
 
 def _send_data(data):
     # noinspection PyUnresolvedReferences
-    xb.send("tx", dest_addr=b'\x00\x00', data=bytes("{}\r".format(data), 'utf-8'))
+    if ser:
+        xb.send("tx", dest_addr=b'\x00\x00', data=bytes("{}\r".format(data), 'utf-8'))
 
 
 def txstr(string):
