@@ -93,13 +93,6 @@ else:
     HIGH_MOTOR_TEMP = settings["motor_temp_warning"]
     save_settings()
 
-# if windows
-if platform.system() == "Windows":
-    import ctypes
-
-    # show icon in taskbar
-    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("Kevinbot3 Remote")
-
 try:
     remote_name = settings["name"]
 except KeyError:
@@ -249,10 +242,22 @@ class RemoteUI(KBMainWindow):
                 get_updater().call_latest(window.led_group.setDisabled, True)
                 get_updater().call_latest(window.mainGroup.setDisabled, True)
 
+                if settings["window_properties"]["ui_style"] == "modern":
+                    get_updater().call_latest(window.bottom_base_led_button.setDisabled, True)
+                    get_updater().call_latest(window.bottom_body_led_button.setDisabled, True)
+                    get_updater().call_latest(window.bottom_head_led_button.setDisabled, True)
+                    get_updater().call_latest(window.bottom_eye_button.setDisabled, True)
+
             else:
                 get_updater().call_latest(window.arm_group.setDisabled, False)
                 get_updater().call_latest(window.led_group.setDisabled, False)
                 get_updater().call_latest(window.mainGroup.setDisabled, False)
+
+                if settings["window_properties"]["ui_style"] == "modern":
+                    get_updater().call_latest(window.bottom_base_led_button.setDisabled, False)
+                    get_updater().call_latest(window.bottom_body_led_button.setDisabled, False)
+                    get_updater().call_latest(window.bottom_head_led_button.setDisabled, False)
+                    get_updater().call_latest(window.bottom_eye_button.setDisabled, False)
 
     # noinspection PyUnresolvedReferences
     def init_ui(self):
@@ -1323,6 +1328,11 @@ class RemoteUI(KBMainWindow):
         self.body_led.setEnabled(False)
         self.camera_led.setEnabled(False)
 
+        self.bottom_base_led_button.setEnabled(False)
+        self.bottom_body_led_button.setEnabled(False)
+        self.bottom_head_led_button.setEnabled(False)
+        self.bottom_eye_button.setEnabled(False)
+
     def closeEvent(self, event):
         if com.ser:
             com.xb.halt()
@@ -1808,6 +1818,11 @@ class RemoteUI(KBMainWindow):
         self.body_led.setEnabled(enabled)
         self.camera_led.setEnabled(enabled)
 
+        self.bottom_base_led_button.setEnabled(enabled)
+        self.bottom_body_led_button.setEnabled(enabled)
+        self.bottom_head_led_button.setEnabled(enabled)
+        self.bottom_eye_button.setEnabled(enabled)
+
         if not enabled:
             com.txcv("head_effect", "color1", delay=0.02)
             com.txcv("body_effect", "color1", delay=0.02)
@@ -1840,6 +1855,12 @@ def init_robot():
 if __name__ == '__main__':
     error = None
     try:
+        if platform.system() == "Windows":
+            import ctypes
+
+            # show icon in taskbar
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("Kevinbot3 Remote")
+
         app = QApplication(sys.argv)
         app.setApplicationName("Kevinbot Remote")
         app.setApplicationVersion(__version__)
