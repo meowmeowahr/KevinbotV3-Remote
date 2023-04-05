@@ -24,7 +24,7 @@ with open("settings.json", "r") as f:
 if platform.system() == "Windows":
     import ctypes
 
-    # show icon in taskbar
+    # show icon in the taskbar
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("Kevinbot3 Remote")
 
 

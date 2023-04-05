@@ -7,7 +7,7 @@ import xbee as xbee_com
 import platform
 
 
-# detect if an actual raspberry pi is being used
+# detect if an actual Raspberry Pi is being used
 def is_pi():
     try:
         if "Raspberry" in open("/sys/firmware/devicetree/base/model", "r").readline():

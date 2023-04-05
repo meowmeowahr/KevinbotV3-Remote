@@ -1341,7 +1341,7 @@ class RemoteUI(KBMainWindow):
 
     # noinspection PyUnresolvedReferences
     def init_batt_modal(self):
-        # a main_widget floating in the middle of the window
+        # a main widget floating in the middle of the window
         self.batt_modal = QWidget(self)
         self.batt_modal.setFixedSize(QSize(400, 200))
         self.batt_modal.setObjectName("Kevinbot3_RemoteUI_Modal")
@@ -1387,7 +1387,7 @@ class RemoteUI(KBMainWindow):
 
     # noinspection PyArgumentList,PyUnresolvedReferences
     def init_mot_temp_modal(self):
-        # a main_widget floating in the middle of the window
+        # a main widget floating in the middle of the window
         self.motTemp_modal = QWidget(self)
         self.motTemp_modal.setObjectName("Kevinbot3_RemoteUI_Modal")
         self.motTemp_modal.setStyleSheet("#Kevinbot3_RemoteUI_Modal { border: 1px solid " + QColor(
@@ -1858,7 +1858,7 @@ if __name__ == '__main__':
         if platform.system() == "Windows":
             import ctypes
 
-            # show icon in taskbar
+            # show icon in the taskbar
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("Kevinbot3 Remote")
 
         app = QApplication(sys.argv)

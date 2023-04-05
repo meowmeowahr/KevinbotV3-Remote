@@ -85,7 +85,7 @@ class Joystick(QWidget):
 
 
 if __name__ == '__main__':
-    # Create main application window
+    # Create the main application window
     app = QApplication([])
     joystick = Joystick()
     joystick.show()
