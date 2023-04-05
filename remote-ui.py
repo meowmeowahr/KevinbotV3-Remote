@@ -1268,7 +1268,7 @@ class RemoteUI(KBMainWindow):
             self.bottom_eye_button = QPushButton()
             self.bottom_eye_button.setFixedSize(QSize(36, 36))
             self.bottom_eye_button.setIconSize(QSize(32, 32))
-            self.bottom_eye_button.setIcon(qta.icon("fa5s.eye", color=self.fg_color))
+            self.bottom_eye_button.setIcon(qta.icon("fa5s.eye", color="#ff7fff"))
             self.bottom_eye_button.clicked.connect(self.eye_config_action)
             self.page_flip_layout_1.addWidget(self.bottom_eye_button)
 
