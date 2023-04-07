@@ -4,7 +4,7 @@ By: Kevin Ahr
 Based on: https://github.com/art1415926535/PyQt5-syntax-highlighting
 """
 
-from qtpy.QtCore import QRegularExpression, Qt
+from qtpy.QtCore import QRegularExpression
 from qtpy.QtGui import QColor, QTextCharFormat, QFont, QSyntaxHighlighter
 from qtpy.QtWidgets import QApplication, QPlainTextEdit
 
@@ -33,7 +33,7 @@ def color_format(color, style=''):
 
 STYLE_1 = {
     'keyword': color_format([198, 120, 221], 'bold'),
-    'brace': color_format([196, 170, 51]),
+    'brace': color_format([241, 115, 71]),
     'string': color_format([136, 192, 91]),
     'numbers': color_format([208, 149, 82])
 }
@@ -46,9 +46,6 @@ STYLE_1_QSS = "QPlainTextEdit{ " \
 
 class JsonHighlighter(QSyntaxHighlighter):
     """ Syntax highlighter for JSON """
-
-    braces = ['{', '}', '(', ')', '[', ']']
-    keywords = ['true', 'false', 'null']
 
     def __init__(self, document, style=None):
         QSyntaxHighlighter.__init__(self, document)
@@ -65,7 +62,12 @@ class JsonHighlighter(QSyntaxHighlighter):
             (r'"[^"\\]*(\\.[^"\\]*)*"', style['string']),
 
             # Numeric literals
-            (r'\b[+-]?[0-9]+[lL]?\b', style['numbers'])
+            (r'\b[+-]?[0-9]+[lL]?\b', style['numbers']),
+            (r'\b[+-]?0[xX][0-9A-Fa-f]+[lL]?\b', style['numbers']),
+            (r'\b[+-]?[0-9]+(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?\b', style['numbers']),
+
+            # Keywords
+            (r'true|false|null', style["keyword"]),
         ]
 
     def highlightBlock(self, text):
