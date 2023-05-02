@@ -64,7 +64,7 @@ def init(callback=None):
         except ImportError:
             print(f"Port \"{PORT}\" Not Found")
     if ser:
-        xb = xbee_com.XBee(ser, escaped=False, callback=callback)
+        xb = xbee_com.XBee(ser, escaped=True, callback=callback)
 
 
 def _send_data(data):
@@ -89,8 +89,8 @@ def txcv(cmd, val, delay=0):
 
 def txmot(vals):
     # send motor values to the xbee
-    txcv("left_us", vals[0])
-    txcv("right_us", vals[1])
+    txcv("left_motor", vals[0])
+    txcv("right_motor", vals[1])
 
 
 def txstop():
