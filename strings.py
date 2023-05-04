@@ -70,6 +70,9 @@ SAVE_SUCCESS = "Saved Successfully"
 SAVE_ERROR = "Save Error"
 SAVE_WARN_1 = "Please Select a Preset before saving"
 
+COM_REOPEN = "Kevinbot Services"
+COM_REOPEN_DESC = "Kevinbot Com Service has Started"
+
 SHUTDOWN_MESSAGE = "Are you sure you want to shutdown the remote?"
 SHUTDOWN_TITLE = "Shutdown"
 

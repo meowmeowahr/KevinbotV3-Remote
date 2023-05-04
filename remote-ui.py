@@ -6,6 +6,7 @@ import datetime
 import json
 import platform
 import sys
+import traceback
 from functools import partial
 
 # noinspection PyUnresolvedReferences
@@ -139,125 +140,134 @@ class RemoteUI(KBMainWindow):
 
     @staticmethod
     def serial_callback(message):
-        data = message["rf_data"].decode("utf-8")
-        data = data.split("=", maxsplit=1)
+        try:
+            data = message["rf_data"].decode("utf-8")
+            data = data.split("=", maxsplit=1)
 
-        if data[0] == "batt_volts":
-            if window is not None:
-                volt1, volt2 = data[1].split(",")
-                get_updater().call_latest(window.batt_volt1.setText, strings.BATT_VOLT1.format(float(volt1) / 10) + "V")
-                get_updater().call_latest(window.battery1_label.setText, strings.BATT_VOLT1.format(float(volt1) / 10))
+            if data[0] == "batt_volts":
+                if window is not None:
+                    volt1, volt2 = data[1].split(",")
+                    get_updater().call_latest(window.batt_volt1.setText, strings.BATT_VOLT1.format(float(volt1) / 10) + "V")
+                    get_updater().call_latest(window.battery1_label.setText, strings.BATT_VOLT1.format(float(volt1) / 10))
 
-                if float(volt1) / 10 < warning_voltage:
-                    get_updater().call_latest(window.battery1_label.setStyleSheet, "background-color: #df574d;")
-                else:
-                    get_updater().call_latest(window.battery1_label.setStyleSheet, "")
-
-                if ENABLE_BATT2:
-                    get_updater().call_latest(window.batt_volt2.setText,
-                                              strings.BATT_VOLT2.format(float(volt2) / 10) + "V")
-                    get_updater().call_latest(window.battery2_label.setText,
-                                              strings.BATT_VOLT2.format(float(volt2) / 10))
-                    if float(volt2) / 10 < warning_voltage:
-                        get_updater().call_latest(window.battery2_label.setStyleSheet, "background-color: #df574d;")
+                    if float(volt1) / 10 < warning_voltage:
+                        get_updater().call_latest(window.battery1_label.setStyleSheet, "background-color: #df574d;")
                     else:
-                        get_updater().call_latest(window.battery2_label.setStyleSheet, "")
+                        get_updater().call_latest(window.battery1_label.setStyleSheet, "")
 
-                if not disable_batt_modal:
-                    if float(volt1) / 10 < 11:
-                        com.txmot([1500, 1500])
-                        get_updater().call_latest(window.battModalText.setText, strings.BATT_LOW)
-                        get_updater().call_latest(window.batt_modal.show)
-                    elif float(volt2) / 10 < 11:
-                        com.txmot([1500, 1500])
-                        get_updater().call_latest(window.battModalText.setText, strings.BATT_LOW)
-                        get_updater().call_latest(window.batt_modal.show)
-        # bme280 sensor
-        elif data[0] == "bme":
-            if window is not None:
-                get_updater().call_latest(window.outside_temp.setText,
-                                          strings.OUTSIDE_TEMP.format(str(data[1].split(",")[0]) + "℃ (" + str(
-                                              data[1].split(",")[1]) + "℉)"))
-                get_updater().call_latest(window.outside_humi.setText,
-                                          strings.OUTSIDE_HUMI.format(data[1].split(",")[2]))
-                get_updater().call_latest(window.outside_hpa.setText,
-                                          strings.OUTSIDE_PRES.format(data[1].split(",")[3]))
-        # motor, body temps
-        elif data[0] == "temps":
-            if window is not None:
-                get_updater().call_latest(window.left_temp.setText,
-                                          strings.LEFT_TEMP.format(rstr(data[1].split(",")[0]) + "℃ (" +
-                                                                   rstr(convert_c_to_f(
-                                                                       float(data[1].split(",")[0]))) + "℉)"))
-                get_updater().call_latest(window.right_temp.setText,
-                                          strings.RIGHT_TEMP.format(rstr(data[1].split(",")[1]) + "℃ (" +
-                                                                    rstr(convert_c_to_f(
-                                                                        float(data[1].split(",")[1]))) + "℉)"))
+                    if ENABLE_BATT2:
+                        get_updater().call_latest(window.batt_volt2.setText,
+                                                  strings.BATT_VOLT2.format(float(volt2) / 10) + "V")
+                        get_updater().call_latest(window.battery2_label.setText,
+                                                  strings.BATT_VOLT2.format(float(volt2) / 10))
+                        if float(volt2) / 10 < warning_voltage:
+                            get_updater().call_latest(window.battery2_label.setStyleSheet, "background-color: #df574d;")
+                        else:
+                            get_updater().call_latest(window.battery2_label.setStyleSheet, "")
 
-                get_updater().call_latest(window.robot_temp.setText,
-                                          strings.INSIDE_TEMP.format(rstr(data[1].split(",")[2]) + "℃ (" +
-                                                                     rstr(convert_c_to_f(
-                                                                         float(data[1].split(",")[2]))) + "℉)"))
+                    if not disable_batt_modal:
+                        if float(volt1) / 10 < 11:
+                            com.txmot([1500, 1500])
+                            get_updater().call_latest(window.battModalText.setText, strings.BATT_LOW)
+                            get_updater().call_latest(window.batt_modal.show)
+                        elif float(volt2) / 10 < 11:
+                            com.txmot([1500, 1500])
+                            get_updater().call_latest(window.battModalText.setText, strings.BATT_LOW)
+                            get_updater().call_latest(window.batt_modal.show)
+            # bme280 sensor
+            elif data[0] == "bme":
+                if window is not None:
+                    get_updater().call_latest(window.outside_temp.setText,
+                                              strings.OUTSIDE_TEMP.format(str(data[1].split(",")[0]) + "℃ (" + str(
+                                                  data[1].split(",")[1]) + "℉)"))
+                    get_updater().call_latest(window.outside_humi.setText,
+                                              strings.OUTSIDE_HUMI.format(data[1].split(",")[2]))
+                    get_updater().call_latest(window.outside_hpa.setText,
+                                              strings.OUTSIDE_PRES.format(data[1].split(",")[3]))
+            # motor, body temps
+            elif data[0] == "temps":
+                if window is not None:
+                    get_updater().call_latest(window.left_temp.setText,
+                                              strings.LEFT_TEMP.format(rstr(data[1].split(",")[0]) + "℃ (" +
+                                                                       rstr(convert_c_to_f(
+                                                                           float(data[1].split(",")[0]))) + "℉)"))
+                    get_updater().call_latest(window.right_temp.setText,
+                                              strings.RIGHT_TEMP.format(rstr(data[1].split(",")[1]) + "℃ (" +
+                                                                        rstr(convert_c_to_f(
+                                                                            float(data[1].split(",")[1]))) + "℉)"))
 
-                if float(data[1].split(",")[0]) > HIGH_MOTOR_TEMP:
-                    get_updater().call_latest(window.left_temp.setStyleSheet, "background-color: #df574d;")
-                    get_updater().call_latest(window.motor_stick.setDisabled, True)
-                    if not disable_temp_modal:
-                        com.txmot([1500, 1500])
-                        get_updater().call_latest(window.motTempModalText.setText, strings.MOT_TEMP_HIGH)
-                        get_updater().call_latest(window.motTemp_modal.show)
+                    get_updater().call_latest(window.robot_temp.setText,
+                                              strings.INSIDE_TEMP.format(rstr(data[1].split(",")[2]) + "℃ (" +
+                                                                         rstr(convert_c_to_f(
+                                                                             float(data[1].split(",")[2]))) + "℉)"))
+
+                    if float(data[1].split(",")[0]) > HIGH_MOTOR_TEMP:
+                        get_updater().call_latest(window.left_temp.setStyleSheet, "background-color: #df574d;")
+                        get_updater().call_latest(window.motor_stick.setDisabled, True)
+                        if not disable_temp_modal:
+                            com.txmot([1500, 1500])
+                            get_updater().call_latest(window.motTempModalText.setText, strings.MOT_TEMP_HIGH)
+                            get_updater().call_latest(window.motTemp_modal.show)
+                    else:
+                        get_updater().call_latest(window.left_temp.setStyleSheet, "")
+
+                    if float(data[1].split(",")[1]) > HIGH_MOTOR_TEMP:
+                        get_updater().call_latest(window.right_temp.setStyleSheet, "background-color: #df574d;")
+                        get_updater().call_latest(window.motor_stick.setDisabled, True)
+                        if not disable_temp_modal:
+                            com.txmot([1500, 1500])
+                            get_updater().call_latest(window.motTempModalText.setText, strings.MOT_TEMP_HIGH)
+                            get_updater().call_latest(window.motTemp_modal.show)
+                    else:
+                        get_updater().call_latest(window.right_temp.setStyleSheet, "")
+
+                    if float(data[1].split(",")[2]) > HIGH_INSIDE_TEMP:
+                        get_updater().call_latest(window.robot_temp.setStyleSheet, "background-color: #df574d;")
+                    else:
+                        get_updater().call_latest(window.robot_temp.setStyleSheet, "")
+            elif data[0] == "imu":
+                roll, pitch, yaw = data[1].split(",")
+                if window is not None:
+                    get_updater().call_latest(window.level.setAngle, float(roll))
+                    if abs(float(roll)) > 18:
+                        get_updater().call_latest(window.level.label.setStyleSheet, "background-color: #df574d;")
+                        get_updater().call_latest(window.level.setLineColor, QColor("#df574d"))
+                    elif abs(float(roll)) > 10:
+                        get_updater().call_latest(window.level.label.setStyleSheet, "background-color: #eebc2a;")
+                        get_updater().call_latest(window.level.setLineColor, QColor("#eebc2a"))
+                    else:
+                        get_updater().call_latest(window.level.label.setStyleSheet, "")
+                        get_updater().call_latest(window.level.setLineColor, Qt.white)
+            # remote disable
+            elif data[0] == "remote.disableui":
+                if str(data[1]).lower() == "true":
+                    get_updater().call_latest(window.arm_group.setDisabled, True)
+                    get_updater().call_latest(window.led_group.setDisabled, True)
+                    get_updater().call_latest(window.mainGroup.setDisabled, True)
+
+                    if settings["window_properties"]["ui_style"] == "modern":
+                        get_updater().call_latest(window.bottom_base_led_button.setDisabled, True)
+                        get_updater().call_latest(window.bottom_body_led_button.setDisabled, True)
+                        get_updater().call_latest(window.bottom_head_led_button.setDisabled, True)
+                        get_updater().call_latest(window.bottom_eye_button.setDisabled, True)
+
                 else:
-                    get_updater().call_latest(window.left_temp.setStyleSheet, "")
+                    get_updater().call_latest(window.arm_group.setDisabled, False)
+                    get_updater().call_latest(window.led_group.setDisabled, False)
+                    get_updater().call_latest(window.mainGroup.setDisabled, False)
 
-                if float(data[1].split(",")[1]) > HIGH_MOTOR_TEMP:
-                    get_updater().call_latest(window.right_temp.setStyleSheet, "background-color: #df574d;")
-                    get_updater().call_latest(window.motor_stick.setDisabled, True)
-                    if not disable_temp_modal:
-                        com.txmot([1500, 1500])
-                        get_updater().call_latest(window.motTempModalText.setText, strings.MOT_TEMP_HIGH)
-                        get_updater().call_latest(window.motTemp_modal.show)
-                else:
-                    get_updater().call_latest(window.right_temp.setStyleSheet, "")
-
-                if float(data[1].split(",")[2]) > HIGH_INSIDE_TEMP:
-                    get_updater().call_latest(window.robot_temp.setStyleSheet, "background-color: #df574d;")
-                else:
-                    get_updater().call_latest(window.robot_temp.setStyleSheet, "")
-        elif data[0] == "angle":
-            if window is not None:
-                get_updater().call_latest(window.level.setAngle, int(data[1]))
-                if int(data[1]) > 18:
-                    get_updater().call_latest(window.level.label.setStyleSheet, "background-color: #df574d;")
-                    get_updater().call_latest(window.level.setLineColor, QColor("#df574d"))
-                elif int(data[1]) > 10:
-                    get_updater().call_latest(window.level.label.setStyleSheet, "background-color: #eebc2a;")
-                    get_updater().call_latest(window.level.setLineColor, QColor("#eebc2a"))
-                else:
-                    get_updater().call_latest(window.level.label.setStyleSheet, "")
-                    get_updater().call_latest(window.level.setLineColor, Qt.white)
-        # remote disable
-        elif data[0] == "remote.disableui":
-            if str(data[1]).lower() == "true":
-                get_updater().call_latest(window.arm_group.setDisabled, True)
-                get_updater().call_latest(window.led_group.setDisabled, True)
-                get_updater().call_latest(window.mainGroup.setDisabled, True)
-
-                if settings["window_properties"]["ui_style"] == "modern":
-                    get_updater().call_latest(window.bottom_base_led_button.setDisabled, True)
-                    get_updater().call_latest(window.bottom_body_led_button.setDisabled, True)
-                    get_updater().call_latest(window.bottom_head_led_button.setDisabled, True)
-                    get_updater().call_latest(window.bottom_eye_button.setDisabled, True)
-
-            else:
-                get_updater().call_latest(window.arm_group.setDisabled, False)
-                get_updater().call_latest(window.led_group.setDisabled, False)
-                get_updater().call_latest(window.mainGroup.setDisabled, False)
-
-                if settings["window_properties"]["ui_style"] == "modern":
-                    get_updater().call_latest(window.bottom_base_led_button.setDisabled, False)
-                    get_updater().call_latest(window.bottom_body_led_button.setDisabled, False)
-                    get_updater().call_latest(window.bottom_head_led_button.setDisabled, False)
-                    get_updater().call_latest(window.bottom_eye_button.setDisabled, False)
+                    if settings["window_properties"]["ui_style"] == "modern":
+                        get_updater().call_latest(window.bottom_base_led_button.setDisabled, False)
+                        get_updater().call_latest(window.bottom_body_led_button.setDisabled, False)
+                        get_updater().call_latest(window.bottom_head_led_button.setDisabled, False)
+                        get_updater().call_latest(window.bottom_eye_button.setDisabled, False)
+            elif data[0] == "core.enabled":
+                if window:
+                    get_updater().call_latest(window.set_enabled, data[1].lower() == "true")
+            elif data == ["core.service.init", "kevinbot.com"]:
+                get_updater().call_latest(window.pop_com_service_modal)
+        except Exception:
+            traceback.print_exc()
 
     # noinspection PyUnresolvedReferences
     def init_ui(self):
@@ -504,14 +514,14 @@ class RemoteUI(KBMainWindow):
         self.speechInput = QLineEdit()
         self.speechInput.setObjectName("Kevinbot3_RemoteUI_SpeechInput")
         self.speechInput.setText(settings["speech"]["text"])
-        self.speechInput.returnPressed.connect(lambda: com.txcv("no-pass.speech", self.speechInput.text()))
+        self.speechInput.returnPressed.connect(lambda: com.txcv("core.speech", self.speechInput.text()))
         self.speechInput.setPlaceholderText(strings.SPEECH_INPUT_H)
 
         self.speechGrid.addWidget(self.speechInput, 1, 0, 1, 2)
 
         self.speechButton = QPushButton(strings.SPEECH_BUTTON)
         self.speechButton.setObjectName("Kevinbot3_RemoteUI_SpeechButton")
-        self.speechButton.clicked.connect(lambda: com.txcv("no-pass.speech", self.speechInput.text()))
+        self.speechButton.clicked.connect(lambda: com.txcv("core.speech", self.speechInput.text()))
         self.speechButton.setShortcut(QKeySequence("Ctrl+Shift+S"))
         self.speechGrid.addWidget(self.speechButton, 2, 0, 1, 1)
 
@@ -524,13 +534,13 @@ class RemoteUI(KBMainWindow):
         self.espeakRadio = QRadioButton(strings.SPEECH_ESPEAK)
         self.espeakRadio.setObjectName("Kevinbot3_RemoteUI_SpeechRadio")
         self.espeakRadio.setChecked(True)
-        self.espeakRadio.pressed.connect(lambda: com.txcv("no-pass.speech-engine", "espeak"))
+        self.espeakRadio.pressed.connect(lambda: com.txcv("core.speech-engine", "espeak"))
         self.espeakRadio.setShortcut(QKeySequence("Ctrl+Shift+E"))
         self.speechGrid.addWidget(self.espeakRadio, 3, 0, 1, 1)
 
         self.festivalRadio = QRadioButton(strings.SPEECH_FESTIVAL)
         self.festivalRadio.setObjectName("Kevinbot3_RemoteUI_SpeechRadio")
-        self.festivalRadio.pressed.connect(lambda: com.txcv("no-pass.speech-engine", "festival"))
+        self.festivalRadio.pressed.connect(lambda: com.txcv("core.speech-engine", "festival"))
         self.festivalRadio.setShortcut(QKeySequence("Ctrl+Shift+F"))
         self.speechGrid.addWidget(self.festivalRadio, 3, 1, 1, 1)
 
@@ -1486,7 +1496,7 @@ class RemoteUI(KBMainWindow):
             sys.exit()
 
     def shutdown_robot_modal_action(self):
-        com.txstr("no-pass.remote.status=disconnected")
+        com.txstr("core.remote.status=disconnected")
         com.txshut()
         self.close()
 
@@ -1650,6 +1660,30 @@ class RemoteUI(KBMainWindow):
 
             # dump json
             save_settings()
+
+    def pop_com_service_modal(self):
+        def close_modal():
+            # close this modal, move other modals
+            modal_bar.closeToast()
+            self.modal_count -= 1
+
+            self.modals.remove(modal_bar)
+
+            for modal in self.modals:
+                modal.changeIndex(modal.getIndex() - 1, moveSpeed=600)
+
+        if self.modal_count < 6:
+            modal_bar = KBModalBar(self)
+            self.modals.append(modal_bar)
+            self.modal_count += 1
+            modal_bar.setTitle(strings.COM_REOPEN)
+            modal_bar.setDescription(strings.COM_REOPEN_DESC)
+            modal_bar.setPixmap(qta.icon("fa5s.cogs", color=self.fg_color).pixmap(36))
+
+            modal_bar.popToast(popSpeed=500, posIndex=self.modal_count)
+
+            modal_timeout = QTimer()
+            modal_timeout.singleShot(1500, close_modal)
 
     def save_speech(self, text):
         def close_modal():
@@ -1828,18 +1862,17 @@ class RemoteUI(KBMainWindow):
             com.txcv("body_effect", "color1", delay=0.02)
             com.txcv("base_effect", "color1", delay=0.02)
 
-        com.txcv("robot.disable", str(not enabled))
+        com.txcv("enabled", str(enabled))
 
 
 def init_robot():
-    com.txcv("no-pass.remote.name", remote_name)
     try:
-        com.txcv("no-pass.remote.version", open("version.txt", "r").read())
+        remote_version = open("version.txt", "r").read()
     except FileNotFoundError:
-        com.txcv("no-pass.remote.version", "UNKNOWN")
-    com.txcv("no-pass.remote.status", "connected")
+        remote_version = "UNKNOWN"
+    com.txcv("core.remotes.add", f"{remote_name}|{remote_version}|kevinbot.remote")
     com.txcv("arms", CURRENT_ARM_POS, delay=0.02)
-    com.txcv("no-pass.speech-engine", "espeak", delay=0.02)
+    com.txcv("core.speech-engine", "espeak", delay=0.02)
     com.txcv("head_effect", "color1", delay=0.02)
     com.txcv("body_effect", "color1", delay=0.02)
     com.txcv("base_effect", "color1", delay=0.02)
@@ -1848,12 +1881,11 @@ def init_robot():
     com.txcv("eye_bg_color", "0022ff", delay=0.02)
     com.txcv("pupil_color", "000000", delay=0.02)
     com.txcv("iris_color", "ffffff", delay=0.02)
-    com.txcv("robot.disable", "True", delay=0.02)
+    com.txcv("enable", "False", delay=0.02)
     com.txcv("eye_size", 35, delay=0.02)
 
 
 if __name__ == '__main__':
-    error = None
     try:
         if platform.system() == "Windows":
             import ctypes
@@ -1866,11 +1898,9 @@ if __name__ == '__main__':
         app.setApplicationVersion(__version__)
         window = RemoteUI()
         ex = app.exec()
-    # noinspection PyBroadException
-    except Exception as e:
-        com.txcv("no-pass.remote.status", "error")
-        com.txcv("no-pass.remote.error", e)
-        error = True
     finally:
-        if not error:
-            com.txcv("no-pass.remote.status", "disconnected")
+        try:
+            remote_version = open("version.txt", "r").read()
+        except FileNotFoundError:
+            remote_version = "UNKNOWN"
+        com.txcv("core.remotes.remove", f"{remote_name}|{remote_version}|kevinbot.remote")
