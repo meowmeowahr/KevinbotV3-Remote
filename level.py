@@ -56,11 +56,11 @@ class LevelWidget(QWidget):
         painter.setPen(QPen(self._lineColor, self._lineWidth))
 
         painter.drawLine(QPointF(self.height() / 2, self.height() / 2),
-                         QPointF(self.height() / 2 + math.cos(math.radians(self.angle)) * self.height() / 2 - 12,
+                         QPointF(self.height() / 2 + math.cos(math.radians(self.angle)) * self.height() / 2 - 5,
                                  self.height() / 2 + math.sin(math.radians(self.angle)) * self.height() / 2))
 
         painter.drawLine(QPointF(self.height() / 2, self.height() / 2),
-                         QPointF(self.height() / 2 - math.cos(math.radians(self.angle)) * self.height() / 2 + 12,
+                         QPointF(self.height() / 2 - math.cos(math.radians(self.angle)) * self.height() / 2 + 5,
                                  self.height() / 2 - math.sin(math.radians(self.angle)) * self.height() / 2))
 
         # line 20px out  of the angle line
