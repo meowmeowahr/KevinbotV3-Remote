@@ -38,7 +38,7 @@ else:
     except KeyError:
         PORT = "/dev/ttyS0"
 
-BAUD = 230400
+BAUD = 460800
 
 xb = None
 ser = None
@@ -64,7 +64,7 @@ def init(callback=None):
         except ImportError:
             print(f"Port \"{PORT}\" Not Found")
     if ser:
-        xb = xbee_com.XBee(ser, escaped=True, callback=callback)
+        xb = xbee_com.XBee(ser, escaped=False, callback=callback)
 
 
 def _send_data(data):
