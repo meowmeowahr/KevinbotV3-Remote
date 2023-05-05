@@ -564,6 +564,9 @@ class MainWindow(KBMainWindow):
             self.name_edit.lineedit.setText(settings["name"])
         except KeyError:
             self.name_edit.lineedit.setText("KBOT_REMOTE")
+
+        self.name_edit_validator = QRegExpValidator(QRegExp(r"^[^<>(){}\[\]#*$|:;]+$"))
+        self.name_edit.lineedit.setValidator(self.name_edit_validator)
         self.name_edit.lineedit.textChanged.connect(self.name_change)
 
         self.joy_size_layout = QHBoxLayout()
