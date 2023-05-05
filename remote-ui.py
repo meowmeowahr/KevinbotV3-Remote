@@ -1240,12 +1240,14 @@ class RemoteUI(KBMainWindow):
             self.page_flip_layout_1.addStretch()
             self.page_flip_layout_1.addWidget(self.shutdown)
             self.page_flip_layout_1.addStretch()
-            self.page_flip_layout_1.addWidget(self.batt_volt2)
-            self.page_flip_layout_1.addStretch()
+            if ENABLE_BATT2:
+                self.page_flip_layout_1.addWidget(self.batt_volt2)
+                self.page_flip_layout_1.addStretch()
             self.page_flip_layout_1.addWidget(self.page_flip_right)
         elif settings["window_properties"]["ui_style"] == "modern":
             self.bottom_batt_layout.addWidget(self.batt_volt1)
-            self.bottom_batt_layout.addWidget(self.batt_volt2)
+            if ENABLE_BATT2:
+                self.bottom_batt_layout.addWidget(self.batt_volt2)
 
             self.page_flip_layout_1.addWidget(self.page_flip_left)
             self.page_flip_layout_1.addStretch()
