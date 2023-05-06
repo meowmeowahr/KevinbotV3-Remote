@@ -501,53 +501,53 @@ class RemoteUI(KBMainWindow):
         self.speech_widget.setObjectName("Kevinbot3_RemoteUI_SpeechWidget")
         self.main_layout.addWidget(self.speech_widget)
 
-        self.speechGrid = QGridLayout()
-        self.speech_widget.setLayout(self.speechGrid)
+        self.speech_grid = QGridLayout()
+        self.speech_widget.setLayout(self.speech_grid)
 
         self.enable_button = QPushButton("ENABLE")
         self.enable_button.setObjectName("Enable_Button")
         self.enable_button.setMinimumHeight(42)
         self.enable_button.clicked.connect(lambda: self.set_enabled(True))
-        self.speechGrid.addWidget(self.enable_button, 0, 0)
+        self.speech_grid.addWidget(self.enable_button, 0, 0)
 
         self.disable_button = QPushButton("DISABLE")
         self.disable_button.setObjectName("Disable_Button")
         self.disable_button.setMinimumHeight(42)
         self.disable_button.clicked.connect(lambda: self.set_enabled(False))
-        self.speechGrid.addWidget(self.disable_button, 0, 1)
+        self.speech_grid.addWidget(self.disable_button, 0, 1)
 
-        self.speechInput = QLineEdit()
-        self.speechInput.setObjectName("Kevinbot3_RemoteUI_SpeechInput")
-        self.speechInput.setText(settings["speech"]["text"])
-        self.speechInput.returnPressed.connect(lambda: com.txcv("core.speech", self.speechInput.text()))
-        self.speechInput.setPlaceholderText(strings.SPEECH_INPUT_H)
+        self.speech_input = QLineEdit()
+        self.speech_input.setObjectName("Kevinbot3_RemoteUI_SpeechInput")
+        self.speech_input.setText(settings["speech"]["text"])
+        self.speech_input.returnPressed.connect(lambda: com.txcv("core.speech", self.speech_input.text()))
+        self.speech_input.setPlaceholderText(strings.SPEECH_INPUT_H)
 
-        self.speechGrid.addWidget(self.speechInput, 1, 0, 1, 2)
+        self.speech_grid.addWidget(self.speech_input, 1, 0, 1, 2)
 
-        self.speechButton = QPushButton(strings.SPEECH_BUTTON)
-        self.speechButton.setObjectName("Kevinbot3_RemoteUI_SpeechButton")
-        self.speechButton.clicked.connect(lambda: com.txcv("core.speech", self.speechInput.text()))
-        self.speechButton.setShortcut(QKeySequence("Ctrl+Shift+S"))
-        self.speechGrid.addWidget(self.speechButton, 2, 0, 1, 1)
+        self.speech_button = QPushButton(strings.SPEECH_BUTTON)
+        self.speech_button.setObjectName("Kevinbot3_RemoteUI_SpeechButton")
+        self.speech_button.clicked.connect(lambda: com.txcv("core.speech", self.speech_input.text()))
+        self.speech_button.setShortcut(QKeySequence("Ctrl+Shift+S"))
+        self.speech_grid.addWidget(self.speech_button, 2, 0, 1, 1)
 
-        self.speechSave = QPushButton(strings.SPEECH_SAVE)
-        self.speechSave.setObjectName("Kevinbot3_RemoteUI_SpeechButton")
-        self.speechSave.clicked.connect(lambda: self.save_speech(self.speechInput.text()))
-        self.speechSave.setShortcut(QKeySequence("Ctrl+S"))
-        self.speechGrid.addWidget(self.speechSave, 2, 1, 1, 1)
+        self.speech_save = QPushButton(strings.SPEECH_SAVE)
+        self.speech_save.setObjectName("Kevinbot3_RemoteUI_SpeechButton")
+        self.speech_save.clicked.connect(lambda: self.save_speech(self.speech_input.text()))
+        self.speech_save.setShortcut(QKeySequence("Ctrl+S"))
+        self.speech_grid.addWidget(self.speech_save, 2, 1, 1, 1)
 
-        self.espeakRadio = QRadioButton(strings.SPEECH_ESPEAK)
-        self.espeakRadio.setObjectName("Kevinbot3_RemoteUI_SpeechRadio")
-        self.espeakRadio.setChecked(True)
-        self.espeakRadio.pressed.connect(lambda: com.txcv("core.speech-engine", "espeak"))
-        self.espeakRadio.setShortcut(QKeySequence("Ctrl+Shift+E"))
-        self.speechGrid.addWidget(self.espeakRadio, 3, 0, 1, 1)
+        self.espeak_radio = QRadioButton(strings.SPEECH_ESPEAK)
+        self.espeak_radio.setObjectName("Kevinbot3_RemoteUI_SpeechRadio")
+        self.espeak_radio.setChecked(True)
+        self.espeak_radio.pressed.connect(lambda: com.txcv("core.speech-engine", "espeak"))
+        self.espeak_radio.setShortcut(QKeySequence("Ctrl+Shift+E"))
+        self.speech_grid.addWidget(self.espeak_radio, 3, 0, 1, 1)
 
-        self.festivalRadio = QRadioButton(strings.SPEECH_FESTIVAL)
-        self.festivalRadio.setObjectName("Kevinbot3_RemoteUI_SpeechRadio")
-        self.festivalRadio.pressed.connect(lambda: com.txcv("core.speech-engine", "festival"))
-        self.festivalRadio.setShortcut(QKeySequence("Ctrl+Shift+F"))
-        self.speechGrid.addWidget(self.festivalRadio, 3, 1, 1, 1)
+        self.festival_radio = QRadioButton(strings.SPEECH_FESTIVAL)
+        self.festival_radio.setObjectName("Kevinbot3_RemoteUI_SpeechRadio")
+        self.festival_radio.pressed.connect(lambda: com.txcv("core.speech-engine", "festival"))
+        self.festival_radio.setShortcut(QKeySequence("Ctrl+Shift+F"))
+        self.speech_grid.addWidget(self.festival_radio, 3, 1, 1, 1)
 
         self.speech_widget.setFixedHeight(self.speech_widget.sizeHint().height())
         self.speech_widget.setFixedWidth(self.speech_widget.sizeHint().width() + 100)
@@ -563,71 +563,71 @@ class RemoteUI(KBMainWindow):
         # Camera Page
 
         # Camera WebEngine
-        self.cameraGroup = QGroupBox(strings.CAMERA_G)
-        self.cameraGroup.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.camera_layout.addWidget(self.cameraGroup)
+        self.camera_group = QGroupBox(strings.CAMERA_G)
+        self.camera_group.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.camera_layout.addWidget(self.camera_group)
 
         self.camera_layout = QVBoxLayout()
-        self.cameraGroup.setLayout(self.camera_layout)
+        self.camera_group.setLayout(self.camera_layout)
 
-        self.cameraWebView = QWebEngineView()
-        self.cameraWebView.setObjectName("Kevinbot3_RemoteUI_CameraWebView")
-        self.camera_layout.addWidget(self.cameraWebView)
+        self.camera_web_view = QWebEngineView()
+        self.camera_web_view.setObjectName("Kevinbot3_RemoteUI_CameraWebView")
+        self.camera_layout.addWidget(self.camera_web_view)
 
         # navigate to the camera page
-        self.cameraWebView.load(QUrl(settings["camera_url"]))
+        self.camera_web_view.load(QUrl(settings["camera_url"]))
 
         # Camera Leds
-        self.cameraLedsGroup = QGroupBox(strings.CAMERA_LEDS_G)
-        self.cameraLedsGroup.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.camera_layout.addWidget(self.cameraLedsGroup)
+        self.camera_leds_group = QGroupBox(strings.CAMERA_LEDS_G)
+        self.camera_leds_group.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.camera_layout.addWidget(self.camera_leds_group)
 
-        self.cameraLedsLayout = QHBoxLayout()
-        self.cameraLedsGroup.setLayout(self.cameraLedsLayout)
+        self.camera_leds_layout = QHBoxLayout()
+        self.camera_leds_group.setLayout(self.camera_leds_layout)
 
-        self.cameraLedSlider = QSlider(Qt.Orientation.Horizontal)
-        self.cameraLedSlider.setObjectName("Kevinbot3_RemoteUI_CameraLedSlider")
-        self.cameraLedSlider.valueChanged.connect(self.camera_brightness_changed)
-        self.cameraLedSlider.setRange(0, 255)
-        self.cameraLedsLayout.addWidget(self.cameraLedSlider)
+        self.camera_led_slider = QSlider(Qt.Orientation.Horizontal)
+        self.camera_led_slider.setObjectName("Kevinbot3_RemoteUI_CameraLedSlider")
+        self.camera_led_slider.valueChanged.connect(self.camera_brightness_changed)
+        self.camera_led_slider.setRange(0, 255)
+        self.camera_leds_layout.addWidget(self.camera_led_slider)
 
         # Head Color Page
 
         # Back Button
-        self.headColorBack = QPushButton()
-        self.headColorBack.setObjectName("Kevinbot3_RemoteUI_BackButton")
-        self.headColorBack.clicked.connect(lambda: self.widget.slideInIdx(0))
-        self.headColorBack.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
-        self.headColorBack.setIconSize(QSize(32, 32))
-        self.headColorBack.setFixedSize(QSize(36, 36))
-        self.headColorBack.setFlat(True)
-        self.head_color_layout.addWidget(self.headColorBack)
+        self.head_color_back = QPushButton()
+        self.head_color_back.setObjectName("Kevinbot3_RemoteUI_BackButton")
+        self.head_color_back.clicked.connect(lambda: self.widget.slideInIdx(0))
+        self.head_color_back.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
+        self.head_color_back.setIconSize(QSize(32, 32))
+        self.head_color_back.setFixedSize(QSize(36, 36))
+        self.head_color_back.setFlat(True)
+        self.head_color_layout.addWidget(self.head_color_back)
 
         # Head Colorpicker
-        self.headColorGroup = QGroupBox(strings.HEAD_COLOR_G)
-        self.headColorGroup.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.head_color_layout.addWidget(self.headColorGroup)
+        self.head_color_group = QGroupBox(strings.HEAD_COLOR_G)
+        self.head_color_group.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.head_color_layout.addWidget(self.head_color_group)
 
-        self.headColorLayoutP = QGridLayout()
-        self.headColorGroup.setLayout(self.headColorLayoutP)
+        self.head_color_layout_p = QGridLayout()
+        self.head_color_group.setLayout(self.head_color_layout_p)
 
-        self.headColorPicker = ColorPicker()
-        self.headColorPicker.setObjectName("Kevinbot3_RemoteUI_HeadColorPicker")
-        self.headColorPicker.colorChanged.connect(self.head_color1_changed)
-        self.headColorPicker.setHex("000000")
-        self.headColorLayoutP.addWidget(self.headColorPicker, 0, 0)
+        self.head_color_picker = ColorPicker()
+        self.head_color_picker.setObjectName("Kevinbot3_RemoteUI_HeadColorPicker")
+        self.head_color_picker.colorChanged.connect(self.head_color1_changed)
+        self.head_color_picker.setHex("000000")
+        self.head_color_layout_p.addWidget(self.head_color_picker, 0, 0)
 
         # Head Colorpicker 2
         self.headColorPicker2 = ColorPicker()
         self.headColorPicker2.setObjectName("Kevinbot3_RemoteUI_HeadColorPicker")
         self.headColorPicker2.colorChanged.connect(self.head_color2_changed)
         self.headColorPicker2.setHex("000000")
-        self.headColorLayoutP.addWidget(self.headColorPicker2, 1, 0)
+        self.head_color_layout_p.addWidget(self.headColorPicker2, 1, 0)
 
         # Head Animation Speed
         self.headSpeedBox = QGroupBox(strings.HEAD_SPEED_G)
         self.headSpeedBox.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.headColorLayoutP.addWidget(self.headSpeedBox, 0, 1)
+        self.head_color_layout_p.addWidget(self.headSpeedBox, 0, 1)
 
         self.headSpeedLayout = QVBoxLayout()
         self.headSpeedBox.setLayout(self.headSpeedLayout)
@@ -1301,7 +1301,7 @@ class RemoteUI(KBMainWindow):
         self.page_flip_left_2.setShortcut(QKeySequence(Qt.Key.Key_Comma))
 
         self.refresh_camera = QPushButton()
-        self.refresh_camera.clicked.connect(self.cameraWebView.reload)
+        self.refresh_camera.clicked.connect(self.camera_web_view.reload)
 
         self.page_flip_right_2 = QPushButton()
         self.page_flip_right_2.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
@@ -1544,7 +1544,7 @@ class RemoteUI(KBMainWindow):
         self.widget.slideInIdx(6)
 
     def head_color1_changed(self):
-        com.txcv("head_color1", str(self.headColorPicker.getHex()).strip("#") + "00")
+        com.txcv("head_color1", str(self.head_color_picker.getHex()).strip("#") + "00")
 
     def head_color2_changed(self):
         com.txcv("head_color2", str(self.headColorPicker2.getHex()).strip("#") + "00")
@@ -1562,7 +1562,7 @@ class RemoteUI(KBMainWindow):
         com.txcv("base_color2", str(self.base_color_picker_2.getHex()).strip("#") + "00")
 
     def camera_brightness_changed(self):
-        com.txcv("cam_brightness", str(self.cameraLedSlider.value()))
+        com.txcv("cam_brightness", str(self.camera_led_slider.value()))
 
     def arm_preset_action(self, index):
         global CURRENT_ARM_POS
