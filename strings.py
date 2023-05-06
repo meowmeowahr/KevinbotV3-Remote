@@ -73,6 +73,9 @@ SAVE_WARN_1 = "Please Select a Preset before saving"
 COM_REOPEN = "Kevinbot Services"
 COM_REOPEN_DESC = "Kevinbot Com Service has Started"
 
+ESTOP_TITLE = "E-Stop"
+ESTOP = "Kevinbot is shutting down"
+
 SHUTDOWN_MESSAGE = "Are you sure you want to shutdown the remote?"
 SHUTDOWN_TITLE = "Shutdown"
 

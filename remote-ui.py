@@ -504,50 +504,56 @@ class RemoteUI(KBMainWindow):
         self.speech_grid = QGridLayout()
         self.speech_widget.setLayout(self.speech_grid)
 
+        self.e_stop = QPushButton("E-STOP")
+        self.e_stop.setObjectName("E_Stop")
+        self.e_stop.setShortcut(Qt.Key.Key_Space)
+        self.e_stop.setMinimumHeight(64)
+        self.e_stop.pressed.connect(self.e_stop_action)
+        self.speech_grid.addWidget(self.e_stop, 0, 0, 1, 2)
+
         self.enable_button = QPushButton("ENABLE")
         self.enable_button.setObjectName("Enable_Button")
         self.enable_button.setMinimumHeight(42)
         self.enable_button.clicked.connect(lambda: self.set_enabled(True))
-        self.speech_grid.addWidget(self.enable_button, 0, 0)
+        self.speech_grid.addWidget(self.enable_button, 1, 0)
 
         self.disable_button = QPushButton("DISABLE")
         self.disable_button.setObjectName("Disable_Button")
         self.disable_button.setMinimumHeight(42)
         self.disable_button.clicked.connect(lambda: self.set_enabled(False))
-        self.speech_grid.addWidget(self.disable_button, 0, 1)
+        self.speech_grid.addWidget(self.disable_button, 1, 1)
 
         self.speech_input = QLineEdit()
         self.speech_input.setObjectName("Kevinbot3_RemoteUI_SpeechInput")
         self.speech_input.setText(settings["speech"]["text"])
         self.speech_input.returnPressed.connect(lambda: com.txcv("core.speech", self.speech_input.text()))
         self.speech_input.setPlaceholderText(strings.SPEECH_INPUT_H)
-
-        self.speech_grid.addWidget(self.speech_input, 1, 0, 1, 2)
+        self.speech_grid.addWidget(self.speech_input, 2, 0, 1, 2)
 
         self.speech_button = QPushButton(strings.SPEECH_BUTTON)
         self.speech_button.setObjectName("Kevinbot3_RemoteUI_SpeechButton")
         self.speech_button.clicked.connect(lambda: com.txcv("core.speech", self.speech_input.text()))
         self.speech_button.setShortcut(QKeySequence("Ctrl+Shift+S"))
-        self.speech_grid.addWidget(self.speech_button, 2, 0, 1, 1)
+        self.speech_grid.addWidget(self.speech_button, 3, 0)
 
         self.speech_save = QPushButton(strings.SPEECH_SAVE)
         self.speech_save.setObjectName("Kevinbot3_RemoteUI_SpeechButton")
         self.speech_save.clicked.connect(lambda: self.save_speech(self.speech_input.text()))
         self.speech_save.setShortcut(QKeySequence("Ctrl+S"))
-        self.speech_grid.addWidget(self.speech_save, 2, 1, 1, 1)
+        self.speech_grid.addWidget(self.speech_save, 3, 1)
 
         self.espeak_radio = QRadioButton(strings.SPEECH_ESPEAK)
         self.espeak_radio.setObjectName("Kevinbot3_RemoteUI_SpeechRadio")
         self.espeak_radio.setChecked(True)
         self.espeak_radio.pressed.connect(lambda: com.txcv("core.speech-engine", "espeak"))
         self.espeak_radio.setShortcut(QKeySequence("Ctrl+Shift+E"))
-        self.speech_grid.addWidget(self.espeak_radio, 3, 0, 1, 1)
+        self.speech_grid.addWidget(self.espeak_radio, 4, 0)
 
         self.festival_radio = QRadioButton(strings.SPEECH_FESTIVAL)
         self.festival_radio.setObjectName("Kevinbot3_RemoteUI_SpeechRadio")
         self.festival_radio.pressed.connect(lambda: com.txcv("core.speech-engine", "festival"))
         self.festival_radio.setShortcut(QKeySequence("Ctrl+Shift+F"))
-        self.speech_grid.addWidget(self.festival_radio, 3, 1, 1, 1)
+        self.speech_grid.addWidget(self.festival_radio, 4, 1)
 
         self.speech_widget.setFixedHeight(self.speech_widget.sizeHint().height())
         self.speech_widget.setFixedWidth(self.speech_widget.sizeHint().width() + 100)
@@ -1868,8 +1874,39 @@ class RemoteUI(KBMainWindow):
             com.txcv("head_effect", "color1", delay=0.02)
             com.txcv("body_effect", "color1", delay=0.02)
             com.txcv("base_effect", "color1", delay=0.02)
+            com.txcv("head_color1", "000000", delay=0.02)
+            com.txcv("body_color1", "000000", delay=0.02)
+            com.txcv("base_color1", "000000", delay=0.02)
+
 
         com.txcv("enabled", str(enabled))
+
+    def e_stop_action(self):
+        """EMERGENCY STOP CODE"""
+        def close_modal():
+            # close this modal, move other modals
+            modal_bar.closeToast()
+            self.modal_count -= 1
+
+            self.modals.remove(modal_bar)
+
+            for modal in self.modals:
+                modal.changeIndex(modal.getIndex() - 1, moveSpeed=600)
+        com.txshut()
+
+        # show modal
+        if self.modal_count < 6:
+            modal_bar = KBModalBar(self)
+            self.modals.append(modal_bar)
+            self.modal_count += 1
+            modal_bar.setTitle(strings.ESTOP_TITLE)
+            modal_bar.setDescription(strings.ESTOP)
+            modal_bar.setPixmap(qta.icon("fa5s.exclamation-circle", color="#E53935").pixmap(36))
+
+            modal_bar.popToast(popSpeed=80, posIndex=self.modal_count)
+
+            modal_timeout = QTimer()
+            modal_timeout.singleShot(2000, close_modal)
 
 
 def init_robot():

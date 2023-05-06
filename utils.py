@@ -143,6 +143,12 @@ def load_theme(widget: QWidget, theme="classic", theme_style="default"):
                              "font-size: 18px;"
                              "font-weight: bold;"
                              "}"
+                             "#E_Stop{"
+                             "background-color: #c62828;"
+                             "color: #fafafa;"
+                             "font-size: 24px;"
+                             "font-weight: bold;"
+                             "}"
                              )
     elif theme == "highcontrast":
         import qdarktheme
