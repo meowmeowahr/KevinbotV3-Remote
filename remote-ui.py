@@ -270,6 +270,10 @@ class RemoteUI(KBMainWindow):
                     get_updater().call_latest(window.set_enabled, data[1].lower() == "true")
             elif data == ["core.service.init", "kevinbot.com"]:
                 get_updater().call_latest(window.pop_com_service_modal)
+                try:
+                    remote_version = open("version.txt", "r").read()
+                except FileNotFoundError:
+                    remote_version = "UNKNOWN"
                 com.txcv("core.remotes.add", f"{remote_name}|{remote_version}|kevinbot.remote")
         except Exception:
             traceback.print_exc()
