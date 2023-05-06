@@ -1,3 +1,4 @@
+import enum
 import os.path
 import math
 
@@ -6,6 +7,7 @@ from qtpy.QtCore import *
 from qtpy.QtGui import *
 import qtawesome as qta
 
+import strings
 
 class QPushToolButton(QToolButton):
     def __init__(self, text: str = None):
@@ -262,3 +264,54 @@ class QSuperDial(QDial):
         painter.drawEllipse(QPointF(x, y),
                             self.knobRadius,
                             self.knobRadius)
+
+class KBDevice(QWidget):
+    class IconType(enum.Enum):
+        Remote = 0
+        Robot = 1
+    def __init__(self):
+        super(KBDevice, self).__init__()
+
+        self.__root_layout = QVBoxLayout()
+        self.setLayout(self.__root_layout)
+
+        self.__layout = QHBoxLayout()
+        self.__root_layout.addLayout(self.__layout)
+
+        self.__icon = QLabel()
+        self.__layout.addWidget(self.__icon)
+
+        self.__layout.addStretch()
+
+        self.__device_nickname = QLabel()
+        self.__device_nickname.setStyleSheet("font-family: Roboto; font-size: 14px;")
+        self.__layout.addWidget(self.__device_nickname)
+
+        self.__layout.addStretch()
+
+        self.__device_type = QLabel()
+        self.__device_type.setStyleSheet("font-family: Roboto; font-size: 14px;")
+        self.__layout.addWidget(self.__device_type)
+
+        self.__layout.addStretch()
+
+        self.__ping = QPushButton(strings.PING.upper())
+        self.__ping.setStyleSheet("font-family: Roboto; font-size: 16px;")
+        self.__ping.setFixedSize(QSize(96, 48))
+        self.__layout.addWidget(self.__ping)
+
+        self.__line = QFrame()
+        self.__line.setFrameShape(QFrame.Shape.HLine)
+        self.__root_layout.addWidget(self.__line)
+
+    def setIcon(self, icon: IconType):
+        if icon == self.IconType.Remote:
+            self.__icon.setPixmap(QPixmap("icons/remote-hardware-128.svg"))
+        elif icon == self.IconType.Robot:
+            self.__icon.setPixmap(QPixmap("icons/icon-meshview.svg"))
+
+    def setDeviceName(self, name: str):
+        self.__device_type.setText(name)
+
+    def setDeviceNickName(self, name: str):
+        self.__device_nickname.setText(name)

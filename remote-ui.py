@@ -6,6 +6,7 @@ By: Kevin Ahr
 """
 
 import datetime
+import time
 import json
 import platform
 import sys
@@ -20,7 +21,7 @@ from qtpy.QtGui import *
 from qtpy.QtWebEngineWidgets import *
 from qtpy.QtWidgets import *
 from qt_thread_updater import get_updater
-from QCustomWidgets import KBModalBar, KBMainWindow, QSuperDial
+from QCustomWidgets import KBModalBar, KBMainWindow, QSuperDial, KBDevice
 import qtawesome as qta
 
 import Joystick.Joystick as Joystick
@@ -130,24 +131,31 @@ class RemoteUI(KBMainWindow):
         # vars
         self.modal_count = 0
         self.modals = []
+        self.full_mesh = []
+        self.full_mesh_last_part = 0
 
         self.init_ui()
 
         if settings["dev_mode"]:
             self.createDevTools()
 
+        try:
+            remote_version = open("version.txt", "r").read()
+        except FileNotFoundError:
+            remote_version = "UNKNOWN"
+        com.txcv("core.remotes.add", f"{remote_name}|{remote_version}|kevinbot.remote")
+
         if START_FULL_SCREEN:
             self.showFullScreen()
         else:
             self.show()
 
-    @staticmethod
-    def serial_callback(message):
+    def serial_callback(self, message):
         # noinspection PyBroadException
         try:
-            data = message["rf_data"].decode("utf-8")
+            data = message["rf_data"].decode("utf-8").strip("\r\n")
             data = data.split("=", maxsplit=1)
-
+            print(data)
             if data[0] == "batt_volts":
                 if window is not None:
                     volt1, volt2 = data[1].split(",")
@@ -265,9 +273,19 @@ class RemoteUI(KBMainWindow):
                         get_updater().call_latest(window.bottom_body_led_button.setDisabled, False)
                         get_updater().call_latest(window.bottom_head_led_button.setDisabled, False)
                         get_updater().call_latest(window.bottom_eye_button.setDisabled, False)
-            elif data[0] == "core.enabled":
-                if window:
-                    get_updater().call_latest(window.set_enabled, data[1].lower() == "true")
+            elif data[0] == "core.enabled" or data[0] == "enabled":
+                while not window:
+                    time.sleep(0.02)
+
+                get_updater().call_latest(window.set_enabled, data[1].lower() == "true")
+            elif data[0] == "core.speech-engine":
+                while not window:
+                    time.sleep(0.02)
+
+                if data[1] == "festival":
+                    get_updater().call_latest(window.festival_radio.setChecked, True)
+                else:
+                    get_updater().call_latest(window.espeak_radio.setChecked, True)
             elif data == ["core.service.init", "kevinbot.com"]:
                 get_updater().call_latest(window.pop_com_service_modal)
                 try:
@@ -275,6 +293,15 @@ class RemoteUI(KBMainWindow):
                 except FileNotFoundError:
                     remote_version = "UNKNOWN"
                 com.txcv("core.remotes.add", f"{remote_name}|{remote_version}|kevinbot.remote")
+            elif data[0].startswith("core.full_mesh"):
+                cmd_part = data[0].split(":")[1]
+                cmd_parts = data[0].split(":")[2]
+
+                self.full_mesh.insert(int(cmd_part), data[1])
+
+                if int(cmd_parts) == int(cmd_part):
+                    get_updater().call_latest(window.add_mesh_devices, "".join(self.full_mesh))
+                    self.full_mesh = []
         except Exception:
             traceback.print_exc()
 
@@ -310,6 +337,9 @@ class RemoteUI(KBMainWindow):
         self.sensors_widget = QWidget()
         self.sensors_widget.setObjectName("Kevinbot3_RemoteUI_SensorsWidget")
 
+        self.mesh_widget = QWidget()
+        self.mesh_widget.setObjectName("Kevinbot3_RemoteUI_MeshWidget")
+
         self.layout = QVBoxLayout()
         self.main_widget.setLayout(self.layout)
         self.widget.addWidget(self.main_widget)
@@ -341,6 +371,10 @@ class RemoteUI(KBMainWindow):
         self.sensor_layout = QHBoxLayout()
         self.sensors_widget.setLayout(self.sensor_layout)
         self.widget.addWidget(self.sensors_widget)
+
+        self.mesh_layout = QHBoxLayout()
+        self.mesh_widget.setLayout(self.mesh_layout)
+        self.widget.addWidget(self.mesh_widget)
 
         self.widget.setCurrentIndex(0)
 
@@ -1208,6 +1242,39 @@ class RemoteUI(KBMainWindow):
         self.level_layout.addWidget(self.level)
 
         self.sensor_box_layout.addStretch()
+        
+        # Mesh
+        self.mesh_back = QPushButton()
+        self.mesh_back.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
+        self.mesh_back.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
+        self.mesh_back.setFixedSize(QSize(36, 36))
+        self.mesh_back.setIconSize(QSize(32, 32))
+        self.mesh_back.clicked.connect(lambda: self.widget.slideInIdx(0))
+        self.mesh_layout.addWidget(self.mesh_back)
+
+        self.mesh_inner_layout = QVBoxLayout()
+        self.mesh_layout.addLayout(self.mesh_inner_layout)
+
+        self.connected_devices = QLabel(strings.CONNECTED_DEVICES.format(strings.UNKNOWN))
+        self.connected_devices.setStyleSheet("font-family: Roboto; font-size: 16px;")
+        self.connected_devices.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.mesh_inner_layout.addWidget(self.connected_devices)
+
+        self.devices_scroll = QScrollArea()
+        self.devices_layout = QVBoxLayout()
+        self.devices_widget = QWidget()
+        self.devices_widget.setLayout(self.devices_layout)
+        self.mesh_inner_layout.addWidget(self.devices_scroll)
+
+        self.devices_scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.devices_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.devices_scroll.setWidgetResizable(True)
+        QScroller.grabGesture(self.devices_scroll, QScroller.LeftMouseButtonGesture)  # enable single-touch scroll
+        self.devices_scroll.setWidget(self.devices_widget)
+
+        self.devices_refresh = QPushButton(strings.REFRESH)
+        self.devices_refresh.clicked.connect(self.refresh_mesh)
+        self.mesh_inner_layout.addWidget(self.devices_refresh)
 
         # Page Flip 1
         self.page_flip_layout_1 = QHBoxLayout()
@@ -1217,6 +1284,10 @@ class RemoteUI(KBMainWindow):
         self.page_flip_left.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
         self.page_flip_left.clicked.connect(lambda: self.widget.slideInIdx(7))
         self.page_flip_left.setShortcut(QKeySequence(Qt.Key.Key_Comma))
+
+        self.page_flip_mesh = QPushButton()
+        self.page_flip_mesh.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
+        self.page_flip_mesh.clicked.connect(lambda: self.widget.slideInIdx(8))
 
         self.page_flip_right = QPushButton()
         self.page_flip_right.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
@@ -1232,6 +1303,7 @@ class RemoteUI(KBMainWindow):
 
         # icons
         self.page_flip_left.setIcon(qta.icon("fa5s.thermometer-half", color=self.fg_color))
+        self.page_flip_mesh.setIcon(qta.icon("fa5s.link", color=self.fg_color))
         self.page_flip_right.setIcon(qta.icon("fa5s.camera", color=self.fg_color))
 
         # batts
@@ -1245,12 +1317,15 @@ class RemoteUI(KBMainWindow):
 
         # width/height
         self.page_flip_left.setFixedSize(36, 36)
+        self.page_flip_mesh.setFixedSize(36, 36)
         self.page_flip_right.setFixedSize(36, 36)
         self.page_flip_left.setIconSize(QSize(32, 32))
+        self.page_flip_mesh.setIconSize(QSize(32, 32))
         self.page_flip_right.setIconSize(QSize(32, 32))
 
         if settings["window_properties"]["ui_style"] == "classic":
             self.page_flip_layout_1.addWidget(self.page_flip_left)
+            self.page_flip_layout_1.addWidget(self.page_flip_mesh)
             self.page_flip_layout_1.addStretch()
             self.page_flip_layout_1.addWidget(self.batt_volt1)
             self.page_flip_layout_1.addStretch()
@@ -1266,6 +1341,7 @@ class RemoteUI(KBMainWindow):
                 self.bottom_batt_layout.addWidget(self.batt_volt2)
 
             self.page_flip_layout_1.addWidget(self.page_flip_left)
+            self.page_flip_layout_1.addWidget(self.page_flip_mesh)
             self.page_flip_layout_1.addStretch()
             self.page_flip_layout_1.addLayout(self.bottom_batt_layout)
             self.page_flip_layout_1.addStretch()
@@ -1356,10 +1432,11 @@ class RemoteUI(KBMainWindow):
         self.body_led.setEnabled(False)
         self.camera_led.setEnabled(False)
 
-        self.bottom_base_led_button.setEnabled(False)
-        self.bottom_body_led_button.setEnabled(False)
-        self.bottom_head_led_button.setEnabled(False)
-        self.bottom_eye_button.setEnabled(False)
+        if settings["window_properties"]["ui_style"] == "modren":
+            self.bottom_base_led_button.setEnabled(False)
+            self.bottom_body_led_button.setEnabled(False)
+            self.bottom_head_led_button.setEnabled(False)
+            self.bottom_eye_button.setEnabled(False)
 
     def closeEvent(self, event):
         if com.ser:
@@ -1913,13 +1990,28 @@ class RemoteUI(KBMainWindow):
             modal_timeout = QTimer()
             modal_timeout.singleShot(2000, close_modal)
 
+    def refresh_mesh(self):
+        com.txstr("core.remotes.get_full")
+
+    def add_mesh_devices(self, items):
+        items = items.split(",")
+
+        for i in reversed(range(self.devices_layout.count())):
+            self.devices_layout.itemAt(i).widget().setParent(None)
+
+        for item in items:
+            object = KBDevice()
+            if item.split("|")[2] == "kevinbot.remote":
+                object.setDeviceName(strings.DEVICE_REMOTE)
+                object.setIcon(KBDevice.IconType.Remote)
+            elif item.split("|")[2] == "kevinbot.kevinbot":
+                object.setDeviceName(strings.DEVICE_ROBOT)
+                object.setIcon(KBDevice.IconType.Robot)
+            object.setDeviceNickName(strings.DEVICE_NICKNAME.format(item.split("|")[0]))
+            self.devices_layout.addWidget(object)
+
 
 def init_robot():
-    try:
-        remote_version = open("version.txt", "r").read()
-    except FileNotFoundError:
-        remote_version = "UNKNOWN"
-    com.txcv("core.remotes.add", f"{remote_name}|{remote_version}|kevinbot.remote")
     com.txcv("arms", CURRENT_ARM_POS, delay=0.02)
     com.txcv("core.speech-engine", "espeak", delay=0.02)
     com.txcv("head_effect", "color1", delay=0.02)
@@ -1945,6 +2037,13 @@ if __name__ == '__main__':
         app = QApplication(sys.argv)
         app.setApplicationName("Kevinbot Remote")
         app.setApplicationVersion(__version__)
+
+        # Font
+        QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Roboto-Regular.ttf"))
+        QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Roboto-Bold.ttf"))
+        QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Lato-Regular.ttf"))
+        QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Lato-Bold.ttf"))
+
         window = RemoteUI()
         ex = app.exec()
     finally:

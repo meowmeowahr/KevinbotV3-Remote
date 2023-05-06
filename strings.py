@@ -102,6 +102,15 @@ RIGHT_TEMP = "Right Motor Temp: {}"
 INSIDE_TEMP = "Inside Temp: {}"
 MOT_TEMP_HIGH = "One or More Motors are Overheating"
 
+# -- Remote UI Mesh -- #
+
+CONNECTED_DEVICES = "Connected Devices: {0}"
+
+DEVICE_REMOTE = "Type\nKevinbot Remote"
+DEVICE_ROBOT = "Type\nKevinbot v3"
+
+DEVICE_NICKNAME = "Nickname\n{0}"
+
 # -- Settings -- #
 
 SETTINGS_SCREEN_BR_G = "Screen Brightness"
@@ -161,4 +170,7 @@ SETTINGS_ANIM_SPEED = "Animation Speed"
 FILE_M = "File"
 EXIT_A = "Exit"
 CLEAR = "Clear"
+PING = "Ping"
+REFRESH = "Refresh"
+UNKNOWN = "Unknown"
 DEV_OFF = "Dev Options Disabled"
