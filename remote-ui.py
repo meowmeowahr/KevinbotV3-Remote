@@ -1657,7 +1657,6 @@ class RemoteUI(KBMainWindow):
 
     def arm_preset_action(self, index):
         global CURRENT_ARM_POS
-        print("arm preset: " + str(index))
         com.txcv("arms", settings["arm_prog"][index])
         CURRENT_ARM_POS = settings["arm_prog"][index]
 
@@ -2012,7 +2011,6 @@ class RemoteUI(KBMainWindow):
                 objects[count].setDeviceName(strings.DEVICE_ROBOT)
                 objects[count].setIcon(KBDevice.IconType.Robot)
             objects[count].setDeviceNickName(strings.DEVICE_NICKNAME.format(item.split("|")[0]))
-            print(item.split("|")[0])
             if item.split("|")[0] == remote_name:
                 objects[count].ping.clicked.connect(partial(lambda: self.ping("self")))
             else:

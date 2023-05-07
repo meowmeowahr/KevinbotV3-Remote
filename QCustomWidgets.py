@@ -300,11 +300,6 @@ class KBDevice(QWidget):
         self.ping.setFixedSize(QSize(84, 48))
         self.__layout.addWidget(self.ping)
 
-        self.kick = QPushButton(strings.KICK.upper())
-        self.kick.setStyleSheet("font-family: Roboto; font-size: 16px;")
-        self.kick.setFixedSize(QSize(84, 48))
-        self.__layout.addWidget(self.kick)
-
         self.__line = QFrame()
         self.__line.setFrameShape(QFrame.Shape.HLine)
         self.__root_layout.addWidget(self.__line)
