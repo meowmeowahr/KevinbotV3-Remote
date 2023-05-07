@@ -302,6 +302,9 @@ class RemoteUI(KBMainWindow):
                 if int(cmd_parts) == int(cmd_part):
                     get_updater().call_latest(window.add_mesh_devices, "".join(self.full_mesh))
                     self.full_mesh = []
+            elif data[0] == "core.ping":
+                src_dest = data[1].split(",", maxsplit=1)
+                get_updater().call_latest(window.ping, src_dest[0])
         except Exception:
             traceback.print_exc()
 
@@ -1303,7 +1306,7 @@ class RemoteUI(KBMainWindow):
 
         # icons
         self.page_flip_left.setIcon(qta.icon("fa5s.thermometer-half", color=self.fg_color))
-        self.page_flip_mesh.setIcon(qta.icon("fa5s.link", color=self.fg_color))
+        self.page_flip_mesh.setIcon(qta.icon("fa5s.project-diagram", color=self.fg_color))
         self.page_flip_right.setIcon(qta.icon("fa5s.camera", color=self.fg_color))
 
         # batts
@@ -1320,7 +1323,7 @@ class RemoteUI(KBMainWindow):
         self.page_flip_mesh.setFixedSize(36, 36)
         self.page_flip_right.setFixedSize(36, 36)
         self.page_flip_left.setIconSize(QSize(32, 32))
-        self.page_flip_mesh.setIconSize(QSize(32, 32))
+        self.page_flip_mesh.setIconSize(QSize(24, 24))
         self.page_flip_right.setIconSize(QSize(32, 32))
 
         if settings["window_properties"]["ui_style"] == "classic":
@@ -1999,16 +2002,50 @@ class RemoteUI(KBMainWindow):
         for i in reversed(range(self.devices_layout.count())):
             self.devices_layout.itemAt(i).widget().setParent(None)
 
-        for item in items:
-            object = KBDevice()
+        objects = []
+        for count, item in enumerate(items):
+            objects.append(KBDevice())
             if item.split("|")[2] == "kevinbot.remote":
-                object.setDeviceName(strings.DEVICE_REMOTE)
-                object.setIcon(KBDevice.IconType.Remote)
+                objects[count].setDeviceName(strings.DEVICE_REMOTE)
+                objects[count].setIcon(KBDevice.IconType.Remote)
             elif item.split("|")[2] == "kevinbot.kevinbot":
-                object.setDeviceName(strings.DEVICE_ROBOT)
-                object.setIcon(KBDevice.IconType.Robot)
-            object.setDeviceNickName(strings.DEVICE_NICKNAME.format(item.split("|")[0]))
-            self.devices_layout.addWidget(object)
+                objects[count].setDeviceName(strings.DEVICE_ROBOT)
+                objects[count].setIcon(KBDevice.IconType.Robot)
+            objects[count].setDeviceNickName(strings.DEVICE_NICKNAME.format(item.split("|")[0]))
+            print(item.split("|")[0])
+            if item.split("|")[0] == remote_name:
+                objects[count].ping.clicked.connect(partial(lambda: self.ping("self")))
+            else:
+                objects[count].ping.clicked.connect(partial(self.send_ping, item.split('|')[0]))
+            self.devices_layout.addWidget(objects[count])
+
+    def ping(self, transmitter):
+        def close_modal():
+            # close this modal, move other modals
+            modal_bar.closeToast()
+            self.modal_count -= 1
+
+            self.modals.remove(modal_bar)
+
+            for modal in self.modals:
+                modal.changeIndex(modal.getIndex() - 1, moveSpeed=600)
+
+        # show modal
+        if self.modal_count < 6:
+            modal_bar = KBModalBar(self)
+            self.modals.append(modal_bar)
+            self.modal_count += 1
+            modal_bar.setTitle(strings.PING_TITLE)
+            modal_bar.setDescription(strings.PING_DESC.format(transmitter))
+            modal_bar.setPixmap(qta.icon("fa5s.exclamation-circle", color="#29B6F6").pixmap(36))
+
+            modal_bar.popToast(popSpeed=500, posIndex=self.modal_count)
+
+            modal_timeout = QTimer()
+            modal_timeout.singleShot(3000, close_modal)
+
+    def send_ping(self, source):
+        com.txcv("core.ping", f"{source},{remote_name}")
 
 
 def init_robot():

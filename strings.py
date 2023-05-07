@@ -111,6 +111,9 @@ DEVICE_ROBOT = "Type\nKevinbot v3"
 
 DEVICE_NICKNAME = "Nickname\n{0}"
 
+PING_TITLE = "Ping!"
+PING_DESC = "Ping from {0}"
+
 # -- Settings -- #
 
 SETTINGS_SCREEN_BR_G = "Screen Brightness"
@@ -171,6 +174,7 @@ FILE_M = "File"
 EXIT_A = "Exit"
 CLEAR = "Clear"
 PING = "Ping"
+KICK = "Kick"
 REFRESH = "Refresh"
 UNKNOWN = "Unknown"
 DEV_OFF = "Dev Options Disabled"
