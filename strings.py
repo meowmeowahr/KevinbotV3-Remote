@@ -147,6 +147,7 @@ SETTINGS_XSC_TIME_SUF = " minutes"
 
 SETTINGS_MAX_US_L = "Max µS:"
 SETTINGS_NICKNAME_L = "Remote Nickname:"
+SETTINGS_NICKNAME_DESC = "The Remote Nickname is the identifier for this remote.\nIt must be unique and not used on any other remote.\nIt must also not contain special characters."
 SETTINGS_STICK_SIZE_L = "Joystick Size:"
 SETTINGS_STICK_MODE_L = "Joystick Mode:"
 SETTINGS_UI_MODE_L = "UI Style"

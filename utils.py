@@ -152,6 +152,10 @@ def load_theme(widget: QWidget, theme="classic", theme_style="default"):
                              "font-family: Roboto;"
                              "font-weight: bold;"
                              "}"
+                             "#Detailed_Help {"
+                             "font-size: 13px;"
+                             "font-family: Roboto;"
+                             "}"
                              )
     elif theme == "highcontrast":
         import qdarktheme

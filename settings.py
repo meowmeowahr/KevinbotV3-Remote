@@ -558,6 +558,10 @@ class MainWindow(KBMainWindow):
         self.remote_box.setLayout(self.remote_box_layout)
         self.remote_layout.addWidget(self.remote_box)
 
+        self.name_desc = QLabel(strings.SETTINGS_NICKNAME_DESC)
+        self.name_desc.setObjectName("Detailed_Help")
+        self.remote_box_layout.addWidget(self.name_desc)
+
         self.name_edit = QNamedLineEdit(strings.SETTINGS_NICKNAME_L)
         self.remote_box_layout.addWidget(self.name_edit)
         try:
@@ -565,9 +569,11 @@ class MainWindow(KBMainWindow):
         except KeyError:
             self.name_edit.lineedit.setText("KBOT_REMOTE")
 
-        self.name_edit_validator = QRegExpValidator(QRegExp(r"^[^<>(){}\[\]#*$|:;]+$"))
+        self.name_edit_validator = QRegExpValidator(QRegExp(r"^[^<>(){}\[\]#*$|:;,]+$"))
         self.name_edit.lineedit.setValidator(self.name_edit_validator)
         self.name_edit.lineedit.textChanged.connect(self.name_change)
+
+        self.remote_box_layout.addStretch()
 
         self.joy_size_layout = QHBoxLayout()
         self.remote_box_layout.addLayout(self.joy_size_layout)
