@@ -179,11 +179,14 @@ class RemoteUI(KBMainWindow):
 
                     if not disable_batt_modal:
                         if float(volt1) / 10 < 11:
-                            com.txmot([1500, 1500])
+                            print(enabled)
+                            if enabled:
+                                get_updater().call_latest(window.set_enabled, False)
                             get_updater().call_latest(window.battModalText.setText, strings.BATT_LOW)
                             get_updater().call_latest(window.batt_modal.show)
                         elif float(volt2) / 10 < 11:
-                            com.txmot([1500, 1500])
+                            if enabled:
+                                get_updater().call_latest(window.set_enabled, False)
                             get_updater().call_latest(window.battModalText.setText, strings.BATT_LOW)
                             get_updater().call_latest(window.batt_modal.show)
             # bme280 sensor
