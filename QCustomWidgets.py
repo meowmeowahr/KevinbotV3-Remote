@@ -186,19 +186,19 @@ class KBModalBar(QFrame):
     def getIndex(self):
         return self.posIndex
 
-    def popToast(self, popSpeed = 750, easingCurve = QEasingCurve.OutCubic, posIndex = 1):
+    def popToast(self, pop_speed = 750, easing_curve = QEasingCurve.OutCubic, pos_index = 1):
 
-        self.posIndex = posIndex
+        self.posIndex = pos_index
 
         self.move(int(self.parent.width() / 2 - self.width() / 2),
                  self.parent.height() + self.height())
         self.show()
 
         self.__anim = QPropertyAnimation(self, b"pos")
-        self.__anim.setEasingCurve(easingCurve)
+        self.__anim.setEasingCurve(easing_curve)
         self.__anim.setEndValue(QPoint(int(self.parent.width() / 2 - self.width() / 2),
-                                     int(self.parent.height() - (self.height() + self.gap) * posIndex)))
-        self.__anim.setDuration(popSpeed)
+                                       int(self.parent.height() - (self.height() + self.gap) * pos_index)))
+        self.__anim.setDuration(pop_speed)
         self.__anim.start()
 
 

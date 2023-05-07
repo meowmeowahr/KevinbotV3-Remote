@@ -1729,7 +1729,7 @@ class RemoteUI(KBMainWindow):
                 modal_bar.setDescription(strings.SAVE_WARN_1)
                 modal_bar.setPixmap(qta.icon("fa5s.exclamation-triangle", color=self.fg_color).pixmap(36))
 
-                modal_bar.popToast(popSpeed=500, posIndex=self.modal_count)
+                modal_bar.popToast(pop_speed=500, pos_index=self.modal_count)
 
                 modal_timeout = QTimer()
                 modal_timeout.singleShot(1500, close_modal)
@@ -1742,7 +1742,7 @@ class RemoteUI(KBMainWindow):
                 modal_bar.setDescription("Speech Preset Saved")
                 modal_bar.setPixmap(qta.icon("fa5.save", color=self.fg_color).pixmap(36))
 
-                modal_bar.popToast(popSpeed=500, posIndex=self.modal_count)
+                modal_bar.popToast(pop_speed=500, pos_index=self.modal_count)
 
                 modal_timeout = QTimer()
                 modal_timeout.singleShot(1500, close_modal)
@@ -1777,7 +1777,7 @@ class RemoteUI(KBMainWindow):
             modal_bar.setDescription(strings.COM_REOPEN_DESC)
             modal_bar.setPixmap(qta.icon("fa5s.cogs", color=self.fg_color).pixmap(36))
 
-            modal_bar.popToast(popSpeed=500, posIndex=self.modal_count)
+            modal_bar.popToast(pop_speed=500, pos_index=self.modal_count)
 
             modal_timeout = QTimer()
             modal_timeout.singleShot(1500, close_modal)
@@ -1805,7 +1805,7 @@ class RemoteUI(KBMainWindow):
             modal_bar.setDescription("Speech Preset Saved")
             modal_bar.setPixmap(qta.icon("fa5.save", color=self.fg_color).pixmap(36))
 
-            modal_bar.popToast(popSpeed=500, posIndex=self.modal_count)
+            modal_bar.popToast(pop_speed=500, pos_index=self.modal_count)
 
             modal_timeout = QTimer()
             modal_timeout.singleShot(1500, close_modal)
@@ -1923,7 +1923,7 @@ class RemoteUI(KBMainWindow):
                 modal_bar.setDescription(f"Kevinbot has been {'Enabled' if ena else 'Disabled'}")
                 modal_bar.setPixmap(qta.icon("fa5s.power-off", color=self.fg_color).pixmap(36))
 
-                modal_bar.popToast(popSpeed=500, posIndex=self.modal_count)
+                modal_bar.popToast(pop_speed=500, pos_index=self.modal_count)
 
                 modal_timeout = QTimer()
                 modal_timeout.singleShot(1500, close_modal)
@@ -1987,7 +1987,7 @@ class RemoteUI(KBMainWindow):
             modal_bar.setDescription(strings.ESTOP)
             modal_bar.setPixmap(qta.icon("fa5s.exclamation-circle", color="#E53935").pixmap(36))
 
-            modal_bar.popToast(popSpeed=80, posIndex=self.modal_count)
+            modal_bar.popToast(pop_speed=80, pos_index=self.modal_count)
 
             modal_timeout = QTimer()
             modal_timeout.singleShot(2000, close_modal)
@@ -2037,7 +2037,7 @@ class RemoteUI(KBMainWindow):
             modal_bar.setDescription(strings.PING_DESC.format(transmitter))
             modal_bar.setPixmap(qta.icon("fa5s.exclamation-circle", color="#29B6F6").pixmap(36))
 
-            modal_bar.popToast(popSpeed=500, posIndex=self.modal_count)
+            modal_bar.popToast(pop_speed=500, pos_index=self.modal_count)
 
             modal_timeout = QTimer()
             modal_timeout.singleShot(3000, close_modal)

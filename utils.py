@@ -156,6 +156,10 @@ def load_theme(widget: QWidget, theme="classic", theme_style="default"):
                              "font-size: 13px;"
                              "font-family: Roboto;"
                              "}"
+                             "QGroupBox {"
+                             "font-family: Roboto;"
+                             "font-size: 13px;"
+                             "}"
                              )
     elif theme == "highcontrast":
         import qdarktheme
