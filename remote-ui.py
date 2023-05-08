@@ -49,6 +49,7 @@ window = None
 disable_batt_modal = False
 disable_temp_modal = False
 enabled = False
+last_alive_message = datetime.datetime.now()
 
 # load settings from file
 with open("settings.json", "r") as f:
@@ -1351,7 +1352,7 @@ class RemoteUI(KBMainWindow):
             self.page_flip_layout_1.addStretch()
             self.page_flip_layout_1.addLayout(self.bottom_batt_layout)
             self.page_flip_layout_1.addStretch()
-            self.page_flip_layout_1.addWidget(self.shutdown)
+            self.page_flip_layout_1.addWidget(self.shutdown, alignment=Qt.AlignmentFlag.AlignVCenter)
             self.page_flip_layout_1.addStretch()
 
             self.bottom_head_led_button = QPushButton()
