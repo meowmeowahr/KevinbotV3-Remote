@@ -281,15 +281,19 @@ class RemoteUI(KBMainWindow):
                 while not window:
                     time.sleep(0.02)
 
-                get_updater().call_latest(window.set_enabled, data[1].lower() == "true")
+                get_updater().call_latest(window.set_enabled, data[1].lower() == "true", False)
             elif data[0] == "core.speech-engine":
                 while not window:
                     time.sleep(0.02)
 
                 if data[1] == "festival":
+                    get_updater().call_latest(window.festival_radio.blockSignals, True)
                     get_updater().call_latest(window.festival_radio.setChecked, True)
+                    get_updater().call_latest(window.festival_radio.blockSignals, False)
                 else:
+                    get_updater().call_latest(window.espeak_radio.blockSignals, True)
                     get_updater().call_latest(window.espeak_radio.setChecked, True)
+                    get_updater().call_latest(window.espeak_radio.blockSignals, False)
             elif data == ["core.service.init", "kevinbot.com"]:
                 get_updater().call_latest(window.pop_com_service_modal)
                 try:
@@ -1881,6 +1885,10 @@ class RemoteUI(KBMainWindow):
 
             # get values
             x, y = self.motor_stick.getXY()
+            if x == 0 and y == 0:
+                com.txmot((1500, 1500))
+                return
+
             x, y = x / self.motor_stick.getMaxDistance(), y / self.motor_stick.getMaxDistance()
 
             theta = math.atan2(y, x)
@@ -1904,7 +1912,7 @@ class RemoteUI(KBMainWindow):
 
             com.txmot((int(right), int(left)))
 
-    def set_enabled(self, ena: bool):
+    def set_enabled(self, ena: bool, tx=True):
         def close_modal():
             # close this modal, move other modals
             modal_bar.closeToast()
@@ -1958,16 +1966,16 @@ class RemoteUI(KBMainWindow):
         self.bottom_head_led_button.setEnabled(enabled)
         self.bottom_eye_button.setEnabled(enabled)
 
-        if not enabled:
-            com.txcv("head_effect", "color1", delay=0.02)
-            com.txcv("body_effect", "color1", delay=0.02)
-            com.txcv("base_effect", "color1", delay=0.02)
-            com.txcv("head_color1", "000000", delay=0.02)
-            com.txcv("body_color1", "000000", delay=0.02)
-            com.txcv("base_color1", "000000", delay=0.02)
+        if tx:
+            if not enabled:
+                com.txcv("head_effect", "color1", delay=0.02)
+                com.txcv("body_effect", "color1", delay=0.02)
+                com.txcv("base_effect", "color1", delay=0.02)
+                com.txcv("head_color1", "000000", delay=0.02)
+                com.txcv("body_color1", "000000", delay=0.02)
+                com.txcv("base_color1", "000000", delay=0.02)
 
-
-        com.txcv("enabled", str(enabled))
+            com.txcv("enabled", str(enabled))
 
     def e_stop_action(self):
         """EMERGENCY STOP CODE"""
@@ -2061,7 +2069,6 @@ def init_robot():
     com.txcv("eye_bg_color", "0022ff", delay=0.02)
     com.txcv("pupil_color", "000000", delay=0.02)
     com.txcv("iris_color", "ffffff", delay=0.02)
-    com.txcv("enable", "False", delay=0.02)
     com.txcv("eye_size", 35, delay=0.02)
 
 
