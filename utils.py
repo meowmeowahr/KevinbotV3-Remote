@@ -165,6 +165,10 @@ def load_theme(widget: QWidget, theme="classic", theme_style="default"):
                              "font-weight: medium;"
                              "font-size: 13px;"
                              "}"
+                             "#Kevinbot3_Widget_KBDebugDataEntry_Data {"
+                             "font-familt: Roboto;"
+                             "font-size: 13px;"
+                             "}"
                              )
     elif theme == "highcontrast":
         import qdarktheme

@@ -315,3 +315,27 @@ class KBDevice(QWidget):
 
     def setDeviceNickName(self, name: str):
         self.__device_nickname.setText(name)
+
+class KBDebugDataEntry(QWidget):
+    def __init__(self):
+        super(KBDebugDataEntry, self).__init__()
+
+        self.setObjectName("Kevinbot3_Widget_KBDebugDataEntry")
+
+        self.__layout = QHBoxLayout()
+        self.setLayout(self.__layout)
+
+        self.__icon = QLabel()
+        self.__layout.addWidget(self.__icon)
+
+        self.__data = QLabel()
+        self.__data.setObjectName("Kevinbot3_Widget_KBDebugDataEntry_Data")
+        self.__layout.addWidget(self.__data)
+
+        self.__layout.addStretch()
+
+    def setText(self, text: str):
+        self.__data.setText(text)
+
+    def setIcon(self, icon: QIcon, size: QSize = QSize(36, 36)):
+        self.__icon.setPixmap(icon.pixmap(size))

@@ -21,7 +21,7 @@ from qtpy.QtGui import *
 from qtpy.QtWebEngineWidgets import *
 from qtpy.QtWidgets import *
 from qt_thread_updater import get_updater
-from QCustomWidgets import KBModalBar, KBMainWindow, QSuperDial, KBDevice
+from QCustomWidgets import KBModalBar, KBMainWindow, QSuperDial, KBDevice, KBDebugDataEntry
 import qtawesome as qta
 
 import Joystick.Joystick as Joystick
@@ -257,8 +257,9 @@ class RemoteUI(KBMainWindow):
                         get_updater().call_latest(window.level.setLineColor, Qt.white)
             # core alive message
             elif data[0] == "alive":
-                delta = datetime.timedelta(seconds = int(data[1]))
-                get_updater().call_latest(self.debug_uptime.setText, strings.UPTIME.format(delta, data[1] + "s"))
+                if window:
+                    delta = datetime.timedelta(seconds = int(data[1]))
+                    get_updater().call_latest(self.debug_uptime.setText, strings.UPTIME.format(delta, data[1] + "s"))
             # remote disable
             elif data[0] == "remote.disableui":
                 if str(data[1]).lower() == "true":
@@ -1328,7 +1329,9 @@ class RemoteUI(KBMainWindow):
         QScroller.grabGesture(self.debug_scroll, QScroller.LeftMouseButtonGesture)  # enable single-touch scroll
         self.debug_scroll.setWidget(self.debug_scroll_widget)
 
-        self.debug_uptime = QLabel(strings.UPTIME.format(strings.UNKNOWN, strings.UNKNOWN))
+        self.debug_uptime = KBDebugDataEntry()
+        self.debug_uptime.setText(strings.UPTIME.format(strings.UNKNOWN, strings.UNKNOWN))
+        self.debug_uptime.setIcon(qta.icon("mdi.timer", color=self.fg_color))
         self.debug_scroll_layout.addWidget(self.debug_uptime)
 
         # Page Flip 1
