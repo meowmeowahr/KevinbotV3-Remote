@@ -4,6 +4,8 @@ import importlib
 from qtpy.QtWidgets import *
 from qtpy.QtCore import *
 from qtpy.QtGui import *
+
+import utils
 from QCustomWidgets import KBMainWindow
 import qtawesome as qta
 import sys
@@ -87,7 +89,7 @@ def run_app(command, gui=True):
 
     launcher.set_script(command)
     if gui:
-        launcher.set_finnished(lambda: window.main_widget.setEnabled(True))
+        launcher.set_finished(lambda: window.main_widget.setEnabled(True))
     launcher.launch()
 
 
@@ -118,7 +120,10 @@ class MainWindow(KBMainWindow):
             self.fg_color = Qt.GlobalColor.black
 
         if EMULATE_REAL_REMOTE:
-            self.setWindowFlags(Qt.FramelessWindowHint)
+            if utils.is_pi():
+                self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnBottomHint)
+            else:
+                self.setWindowFlags(Qt.FramelessWindowHint)
             self.setFixedSize(QSize(800, 480))
 
         self.editMode = False

@@ -360,7 +360,7 @@ class AppLauncher:
         if launch:
             self.launch()
 
-    def set_finnished(self, func):
+    def set_finished(self, func):
         self.__done = func
 
     def __launch_thread(self):
