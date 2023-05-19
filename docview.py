@@ -64,10 +64,10 @@ class MainWindow(KBMainWindow):
         self.browser.load(QUrl().fromLocalFile(os.path.split(os.path.abspath(__file__))[0] + r'/built_docs/index.html'))
 
         self.close_button = QPushButton()
-        self.close_button.setIcon(qta.icon("fa5s.window-close", color=self.fg_color))
+        self.close_button.setIcon(qta.icon("fa5s.window-close", color="#F44336"))
         self.close_button.setIconSize(QSize(22, 22))
         self.close_button.clicked.connect(self.close)
-        self.close_button.setFixedSize(QSize(24, 24))
+        self.close_button.setFixedSize(QSize(36, 24))
         self.layout.addWidget(self.close_button, alignment=Qt.AlignmentFlag.AlignCenter)
 
         if settings["dev_mode"]:
