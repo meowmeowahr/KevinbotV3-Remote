@@ -868,5 +868,12 @@ if __name__ == "__main__":
     app.setApplicationName("Kevinbot Remote Settings")
     app.setApplicationVersion("1.0")
     app.setWindowIcon(QIcon("icons/settings.svg"))
+
+    # Font
+    QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Roboto-Regular.ttf"))
+    QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Roboto-Bold.ttf"))
+    QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Lato-Regular.ttf"))
+    QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Lato-Bold.ttf"))
+
     window = MainWindow()
     sys.exit(app.exec_())

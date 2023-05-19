@@ -373,6 +373,13 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setApplicationName("Kevinbot Updater")
     app.setApplicationVersion("1.0")
+
+    # Font
+    QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Roboto-Regular.ttf"))
+    QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Roboto-Bold.ttf"))
+    QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Lato-Regular.ttf"))
+    QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Lato-Bold.ttf"))
+
     window = MainWindow()
     window.show()
     sys.exit(app.exec_())
