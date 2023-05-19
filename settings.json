@@ -44,7 +44,7 @@
         "name": "About"
       }
     ],
-    "theme": "geoblue.py",
+    "theme": "dark.py",
     "theme_files": [
       "blue.py",
       "green.py",
