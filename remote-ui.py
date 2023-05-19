@@ -241,6 +241,7 @@ class RemoteUI(KBMainWindow):
                         get_updater().call_latest(window.robot_temp.setStyleSheet, "background-color: #df574d;")
                     else:
                         get_updater().call_latest(window.robot_temp.setStyleSheet, "")
+            # yaw, pitch, roll
             elif data[0] == "imu":
                 roll, pitch, yaw = data[1].split(",")
                 if window is not None:
@@ -254,6 +255,10 @@ class RemoteUI(KBMainWindow):
                     else:
                         get_updater().call_latest(window.level.label.setStyleSheet, "")
                         get_updater().call_latest(window.level.setLineColor, Qt.white)
+            # core alive message
+            elif data[0] == "alive":
+                delta = datetime.timedelta(seconds = int(data[1]))
+                get_updater().call_latest(self.debug_uptime.setText, strings.UPTIME.format(delta, data[1] + "s"))
             # remote disable
             elif data[0] == "remote.disableui":
                 if str(data[1]).lower() == "true":
