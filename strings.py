@@ -114,6 +114,12 @@ DEVICE_NICKNAME = "Nickname\n{0}"
 PING_TITLE = "Ping!"
 PING_DESC = "Ping from {0}"
 
+# -- Remote UI Debug -- #
+
+DEBUG_TITLE = "Debug Data"
+
+UPTIME = "Uptime: {0} ({1})"
+
 # -- Settings -- #
 
 SETTINGS_SCREEN_BR_G = "Screen Brightness"

@@ -348,6 +348,9 @@ class RemoteUI(KBMainWindow):
         self.sensors_widget = QWidget()
         self.sensors_widget.setObjectName("Kevinbot3_RemoteUI_SensorsWidget")
 
+        self.debug_widget = QWidget()
+        self.debug_widget.setObjectName("Kevinbot3_RemoteUI_DebugWidget")
+
         self.mesh_widget = QWidget()
         self.mesh_widget.setObjectName("Kevinbot3_RemoteUI_MeshWidget")
 
@@ -386,6 +389,10 @@ class RemoteUI(KBMainWindow):
         self.mesh_layout = QHBoxLayout()
         self.mesh_widget.setLayout(self.mesh_layout)
         self.widget.addWidget(self.mesh_widget)
+
+        self.debug_layout = QHBoxLayout()
+        self.debug_widget.setLayout(self.debug_layout)
+        self.widget.addWidget(self.debug_widget)
 
         self.widget.setCurrentIndex(0)
 
@@ -1277,8 +1284,8 @@ class RemoteUI(KBMainWindow):
         self.devices_widget.setLayout(self.devices_layout)
         self.mesh_inner_layout.addWidget(self.devices_scroll)
 
-        self.devices_scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-        self.devices_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.devices_scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        self.devices_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.devices_scroll.setWidgetResizable(True)
         QScroller.grabGesture(self.devices_scroll, QScroller.LeftMouseButtonGesture)  # enable single-touch scroll
         self.devices_scroll.setWidget(self.devices_widget)
@@ -1286,6 +1293,38 @@ class RemoteUI(KBMainWindow):
         self.devices_refresh = QPushButton(strings.REFRESH)
         self.devices_refresh.clicked.connect(self.refresh_mesh)
         self.mesh_inner_layout.addWidget(self.devices_refresh)
+        
+        # Debug
+        self.debug_back = QPushButton()
+        self.debug_back.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
+        self.debug_back.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
+        self.debug_back.setFixedSize(QSize(36, 36))
+        self.debug_back.setIconSize(QSize(32, 32))
+        self.debug_back.clicked.connect(lambda: self.widget.slideInIdx(0))
+        self.debug_layout.addWidget(self.debug_back)
+
+        self.debug_inner_layout = QVBoxLayout()
+        self.debug_layout.addLayout(self.debug_inner_layout)
+
+        self.debug_title = QLabel(strings.DEBUG_TITLE)
+        self.debug_title.setStyleSheet("font-family: Roboto; font-size: 16px;")
+        self.debug_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.debug_inner_layout.addWidget(self.debug_title)
+
+        self.debug_scroll = QScrollArea()
+        self.debug_scroll_layout = QVBoxLayout()
+        self.debug_scroll_widget = QWidget()
+        self.debug_scroll_widget.setLayout(self.debug_scroll_layout)
+        self.debug_inner_layout.addWidget(self.debug_scroll)
+
+        self.debug_scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.debug_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.debug_scroll.setWidgetResizable(True)
+        QScroller.grabGesture(self.debug_scroll, QScroller.LeftMouseButtonGesture)  # enable single-touch scroll
+        self.debug_scroll.setWidget(self.debug_scroll_widget)
+
+        self.debug_uptime = QLabel(strings.UPTIME.format(strings.UNKNOWN, strings.UNKNOWN))
+        self.debug_scroll_layout.addWidget(self.debug_uptime)
 
         # Page Flip 1
         self.page_flip_layout_1 = QHBoxLayout()
@@ -1299,6 +1338,10 @@ class RemoteUI(KBMainWindow):
         self.page_flip_mesh = QPushButton()
         self.page_flip_mesh.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
         self.page_flip_mesh.clicked.connect(lambda: self.widget.slideInIdx(8))
+
+        self.page_flip_debug = QPushButton()
+        self.page_flip_debug.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
+        self.page_flip_debug.clicked.connect(lambda: self.widget.slideInIdx(9))
 
         self.page_flip_right = QPushButton()
         self.page_flip_right.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
@@ -1315,6 +1358,7 @@ class RemoteUI(KBMainWindow):
         # icons
         self.page_flip_left.setIcon(qta.icon("fa5s.thermometer-half", color=self.fg_color))
         self.page_flip_mesh.setIcon(qta.icon("fa5s.project-diagram", color=self.fg_color))
+        self.page_flip_debug.setIcon(qta.icon("fa5s.bug", color=f"{self.fg_color if settings['window_properties']['ui_style'] == 'classic' else '#4CAF50'}"))
         self.page_flip_right.setIcon(qta.icon("fa5s.camera", color=self.fg_color))
 
         # batts
@@ -1329,14 +1373,17 @@ class RemoteUI(KBMainWindow):
         # width/height
         self.page_flip_left.setFixedSize(36, 36)
         self.page_flip_mesh.setFixedSize(36, 36)
+        self.page_flip_debug.setFixedSize(36, 36)
         self.page_flip_right.setFixedSize(36, 36)
         self.page_flip_left.setIconSize(QSize(32, 32))
         self.page_flip_mesh.setIconSize(QSize(24, 24))
+        self.page_flip_debug.setIconSize(QSize(24, 24))
         self.page_flip_right.setIconSize(QSize(32, 32))
 
         if settings["window_properties"]["ui_style"] == "classic":
             self.page_flip_layout_1.addWidget(self.page_flip_left)
             self.page_flip_layout_1.addWidget(self.page_flip_mesh)
+            self.page_flip_layout_1.addWidget(self.page_flip_debug)
             self.page_flip_layout_1.addStretch()
             self.page_flip_layout_1.addWidget(self.batt_volt1)
             self.page_flip_layout_1.addStretch()
@@ -1353,6 +1400,7 @@ class RemoteUI(KBMainWindow):
 
             self.page_flip_layout_1.addWidget(self.page_flip_left)
             self.page_flip_layout_1.addWidget(self.page_flip_mesh)
+            self.page_flip_layout_1.addWidget(self.page_flip_debug)
             self.page_flip_layout_1.addStretch()
             self.page_flip_layout_1.addLayout(self.bottom_batt_layout)
             self.page_flip_layout_1.addStretch()
