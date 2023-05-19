@@ -11,15 +11,19 @@ except ImportError:
     # do not use GPIO sim
 
 _pin = None
+pwm = None
 
 
 def init(pin):
     global _pin
+    global pwm
     _pin = pin
     if is_pi():
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
-        GPIO.setup(pin, GPIO.OUT)
+        GPIO.setup(_pin, GPIO.OUT)
+        pwm = GPIO.PWM(pin, 120)
+        pwm.start(0)
     else:
         print(f"Haptics Initialized at Pin: {pin}")
         try:
@@ -31,10 +35,11 @@ def init(pin):
 
 
 def haptic(duration=0.02):
+    global pwm
     if is_pi():
-        GPIO.output(_pin, 1)
+        pwm.ChangeDutyCycle(50)
         time.sleep(duration)
-        GPIO.output(_pin, 0)
+        pwm.ChangeDutyCycle(0)
     else:
         try:
             GPIO.output(_pin, 1)
