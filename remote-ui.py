@@ -1366,7 +1366,7 @@ class RemoteUI(KBMainWindow):
         # icons
         self.page_flip_left.setIcon(qta.icon("fa5s.thermometer-half", color=self.fg_color))
         self.page_flip_mesh.setIcon(qta.icon("fa5s.project-diagram", color=self.fg_color))
-        self.page_flip_debug.setIcon(qta.icon("fa5s.bug", color=f"{self.fg_color if settings['window_properties']['ui_style'] == 'classic' else '#4CAF50'}"))
+        self.page_flip_debug.setIcon(qta.icon("fa5s.bug", color=self.fg_color if settings['window_properties']['ui_style'] == 'classic' else '#4CAF50'))
         self.page_flip_right.setIcon(qta.icon("fa5s.camera", color=self.fg_color))
 
         # batts
@@ -1998,29 +1998,30 @@ class RemoteUI(KBMainWindow):
 
         enabled = ena
 
-        self.arm_set_preset.setEnabled(enabled)
-        self.arm_preset1.setEnabled(enabled)
-        self.arm_preset2.setEnabled(enabled)
-        self.arm_preset3.setEnabled(enabled)
-        self.arm_preset4.setEnabled(enabled)
-        self.arm_preset5.setEnabled(enabled)
-        self.arm_preset6.setEnabled(enabled)
-        self.arm_preset7.setEnabled(enabled)
-        self.arm_preset8.setEnabled(enabled)
-        self.arm_preset9.setEnabled(enabled)
+        if window:
+            self.arm_set_preset.setEnabled(enabled)
+            self.arm_preset1.setEnabled(enabled)
+            self.arm_preset2.setEnabled(enabled)
+            self.arm_preset3.setEnabled(enabled)
+            self.arm_preset4.setEnabled(enabled)
+            self.arm_preset5.setEnabled(enabled)
+            self.arm_preset6.setEnabled(enabled)
+            self.arm_preset7.setEnabled(enabled)
+            self.arm_preset8.setEnabled(enabled)
+            self.arm_preset9.setEnabled(enabled)
 
-        self.motor_stick.setEnabled(enabled)
-        self.head_stick.setEnabled(enabled)
+            self.motor_stick.setEnabled(enabled)
+            self.head_stick.setEnabled(enabled)
 
-        self.head_led.setEnabled(enabled)
-        self.base_led.setEnabled(enabled)
-        self.body_led.setEnabled(enabled)
-        self.camera_led.setEnabled(enabled)
+            self.head_led.setEnabled(enabled)
+            self.base_led.setEnabled(enabled)
+            self.body_led.setEnabled(enabled)
+            self.camera_led.setEnabled(enabled)
 
-        self.bottom_base_led_button.setEnabled(enabled)
-        self.bottom_body_led_button.setEnabled(enabled)
-        self.bottom_head_led_button.setEnabled(enabled)
-        self.bottom_eye_button.setEnabled(enabled)
+            self.bottom_base_led_button.setEnabled(enabled)
+            self.bottom_body_led_button.setEnabled(enabled)
+            self.bottom_head_led_button.setEnabled(enabled)
+            self.bottom_eye_button.setEnabled(enabled)
 
         if tx:
             if not enabled:
