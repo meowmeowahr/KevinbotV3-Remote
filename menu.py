@@ -224,7 +224,7 @@ class MainWindow(KBMainWindow):
 
         self.edit_exit_action = QAction("Cancel")
         self.edit_exit_action.triggered.connect(self.exit_edit_mode)
-        self.edit_exit_action.setIcon(QIcon(qta.icon("fa5s.backspace", color=QColor("#0024ff"))))
+        self.edit_exit_action.setIcon(QIcon(qta.icon("fa5s.backspace", color=QColor("#0288D1"))))
         self.edit_toolbar.addAction(self.edit_exit_action)
 
         # timer to update time
@@ -320,12 +320,12 @@ class MainWindow(KBMainWindow):
 
             self.edit_left_action = QAction("Left")
             self.edit_left_action.triggered.connect(lambda: self.left_edit_mode(index))
-            self.edit_left_action.setIcon(QIcon(qta.icon("fa5s.caret-left", color=QColor("#0024ff"))))
+            self.edit_left_action.setIcon(QIcon(qta.icon("fa5s.caret-left", color=QColor("#0288D1"))))
             self.edit_toolbar.addAction(self.edit_left_action)
 
             self.edit_right_action = QAction("Right")
             self.edit_right_action.triggered.connect(lambda: self.right_edit_mode(index))
-            self.edit_right_action.setIcon(QIcon(qta.icon("fa5s.caret-right", color=QColor("#0024ff"))))
+            self.edit_right_action.setIcon(QIcon(qta.icon("fa5s.caret-right", color=QColor("#0288D1"))))
             self.edit_toolbar.addAction(self.edit_right_action)
 
     def right_edit_mode(self, index):
