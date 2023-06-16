@@ -259,7 +259,12 @@ class RemoteUI(KBMainWindow):
             elif data[0] == "alive":
                 if window:
                     delta = datetime.timedelta(seconds = int(data[1]))
-                    get_updater().call_latest(self.debug_uptime.setText, strings.UPTIME.format(delta, data[1] + "s"))
+                    get_updater().call_latest(self.debug_uptime.setText, strings.CORE_UPTIME.format(delta, data[1] + "s"))
+            # sys uptime
+            elif data[0] == "os_uptime":
+                if window:
+                    delta = datetime.timedelta(seconds = int(data[1]))
+                    get_updater().call_latest(self.debug_sys_uptime.setText, strings.SYS_UPTIME.format(delta, data[1] + "s"))
             # remote disable
             elif data[0] == "remote.disableui":
                 if str(data[1]).lower() == "true":
@@ -1330,9 +1335,14 @@ class RemoteUI(KBMainWindow):
         self.debug_scroll.setWidget(self.debug_scroll_widget)
 
         self.debug_uptime = KBDebugDataEntry()
-        self.debug_uptime.setText(strings.UPTIME.format(strings.UNKNOWN, strings.UNKNOWN))
-        self.debug_uptime.setIcon(qta.icon("mdi.timer", color=self.fg_color))
+        self.debug_uptime.setText(strings.CORE_UPTIME.format(strings.UNKNOWN, strings.UNKNOWN))
+        self.debug_uptime.setIcon(qta.icon("mdi.timer", color="#00BCD4"))
         self.debug_scroll_layout.addWidget(self.debug_uptime)
+
+        self.debug_sys_uptime = KBDebugDataEntry()
+        self.debug_sys_uptime.setText(strings.SYS_UPTIME.format(strings.UNKNOWN, strings.UNKNOWN))
+        self.debug_sys_uptime.setIcon(qta.icon("mdi.timer", color="#26A69A"))
+        self.debug_scroll_layout.addWidget(self.debug_sys_uptime)
 
         # Page Flip 1
         self.page_flip_layout_1 = QHBoxLayout()

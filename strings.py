@@ -118,7 +118,8 @@ PING_DESC = "Ping from {0}"
 
 DEBUG_TITLE = "Debug Data"
 
-UPTIME = "Uptime: {0} ({1})"
+CORE_UPTIME = "Core Uptime: {0} ({1})"
+SYS_UPTIME = "System Uptime: {0} ({1})"
 
 # -- Settings -- #
 
