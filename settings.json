@@ -39,7 +39,7 @@
       },
       {
         "icon": "about.svg",
-        "id": 5,
+        "id": 6,
         "launch": "python3 about.py",
         "name": "About"
       }
