@@ -227,6 +227,7 @@ class MainWindow(KBMainWindow):
         self.home_widget.setLayout(self.main_layout)
 
         self.display_button = haptics.HPushButton(strings.SETTINGS_DISPLAY_OPT)
+        self.display_button.setObjectName("Kevinbot3_RemoteUI_SMenuButton")
         self.display_button.setStyleSheet("text-align: left;")
         self.display_button.setIcon(qta.icon("fa5s.paint-roller", color=self.fg_color))
         self.display_button.clicked.connect(lambda: self.main_widget.slideInIdx(2))
@@ -234,6 +235,7 @@ class MainWindow(KBMainWindow):
         self.main_layout.addWidget(self.display_button)
 
         self.robot_button = haptics.HPushButton(strings.SETTINGS_ROBOT_OPT)
+        self.robot_button.setObjectName("Kevinbot3_RemoteUI_SMenuButton")
         self.robot_button.setStyleSheet("text-align: left;")
         self.robot_button.setIcon(qta.icon("fa5s.robot", color=self.fg_color))
         self.robot_button.clicked.connect(lambda: self.main_widget.slideInIdx(3))
@@ -241,6 +243,7 @@ class MainWindow(KBMainWindow):
         self.main_layout.addWidget(self.robot_button)
 
         self.remote_button = haptics.HPushButton(strings.SETTINGS_REMOTE_OPT)
+        self.remote_button.setObjectName("Kevinbot3_RemoteUI_SMenuButton")
         self.remote_button.setStyleSheet("text-align: left;")
         self.remote_button.setIcon(qta.icon("fa5s.tablet-alt", color=self.fg_color))
         self.remote_button.clicked.connect(lambda: self.main_widget.slideInIdx(6))
@@ -248,6 +251,7 @@ class MainWindow(KBMainWindow):
         self.main_layout.addWidget(self.remote_button)
 
         self.web_button = haptics.HPushButton(strings.SETTINGS_BROWSER_OPT)
+        self.web_button.setObjectName("Kevinbot3_RemoteUI_SMenuButton")
         self.web_button.setStyleSheet("text-align: left;")
         self.web_button.setIcon(qta.icon("fa5s.globe", color=self.fg_color))
         self.web_button.clicked.connect(lambda: self.main_widget.slideInIdx(4))
@@ -255,9 +259,9 @@ class MainWindow(KBMainWindow):
         self.main_layout.addWidget(self.web_button)
 
         self.adv_button = haptics.HPushButton(strings.SETTINGS_ADVANCED_OPT)
+        self.adv_button.setObjectName("Kevinbot3_RemoteUI_SMenuButton")
         self.adv_button.setStyleSheet("text-align: left;")
         self.adv_button.setIcon(qta.icon("fa5s.tools", color=self.fg_color))
-        self.adv_button.setObjectName("Kevinbot3_RemoteUI_Button")
         self.adv_button.setIconSize(QSize(48, 48))
         self.adv_button.clicked.connect(lambda: self.main_widget.slideInIdx(1))
         self.main_layout.addWidget(self.adv_button)

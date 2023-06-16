@@ -169,6 +169,11 @@ def load_theme(widget: QWidget, theme="classic", theme_style="default"):
                              "font-familt: Roboto;"
                              "font-size: 13px;"
                              "}"
+                             "#Kevinbot3_RemoteUI_SMenuButton {"
+                             "font-size: 14px;"
+                             "font-weight: bold;"
+                             "font-family: Roboto;"
+                             "}"
                              )
     elif theme == "highcontrast":
         import qdarktheme
