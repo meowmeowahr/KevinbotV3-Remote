@@ -12,6 +12,8 @@ QSS = """#Kevinbot3_RemoteUI {
     font-weight: bold;
     border: 12px solid rgba(255, 255, 255, 0);
     margin-top: 10px;
+    font-size: 12px;
+    font-family: Roboto;
 }
 
 
