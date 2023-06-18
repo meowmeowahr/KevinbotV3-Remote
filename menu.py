@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import importlib
 
+import PyQt5
 from qtpy.QtWidgets import *
 from qtpy.QtCore import *
 from qtpy.QtGui import *

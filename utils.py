@@ -4,8 +4,9 @@ import math
 import statistics
 import threading
 from shutil import which
+
 # noinspection PyPackageRequirements
-from qtpy.QtCore import QFile, QTextStream
+from qtpy.QtCore import QFile, QTextStream, QTimer
 from qtpy.QtWidgets import QWidget
 
 
@@ -354,10 +355,14 @@ class AppLauncher:
         self.__done = None
         self.__thread = None
         self.__script = None
+        self.__timer = None
 
     def launch(self):
         self.__thread = threading.Thread(target=self.__launch_thread)
         self.__thread.start()
+        if self.__done:
+            self.__timer = QTimer()
+            self.__timer.singleShot(5000, self.__done)
 
     def set_script(self, script, launch=False):
         self.__script = script
