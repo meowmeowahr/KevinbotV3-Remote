@@ -230,33 +230,19 @@ class QSuperDial(QDial):
 
         # Smooth out the circle
         painter.setRenderHint(QPainter.Antialiasing)
-
-        # Use background color
         painter.setBrush(painter.background())
-
-        # Store color from stylesheet, pen will be overriden
         point_color = QColor(painter.pen().color())
-
-        # No border
         painter.setPen(QPen(Qt.NoPen))
 
-        # Draw first circle
         painter.drawEllipse(0, 0, self.width(), self.height())
-
-        # Reset color to point_color from stylesheet
         painter.setBrush(QBrush(point_color))
 
-        # Get ratio between current value and maximum to calculate angle
         ratio = self.value() / self.maximum()
-
-        # The maximum amount of degrees is 270, offset by 225
         angle = ratio * self._degree270 - self._degree225
-
-        # Radius of background circle
         rx = self.width() / 2
         ry = self.height() / 2
 
-        # Add r to have (0,0) in center of dial
+        # Add r to have (0,0) in the center of dial
         y = math.sin(angle) * (ry - self.knobRadius - self.knobMargin) + ry
         x = math.cos(angle) * (rx - self.knobRadius - self.knobMargin) + rx
 
@@ -336,6 +322,104 @@ class KBDebugDataEntry(QWidget):
 
     def setText(self, text: str):
         self.__data.setText(text)
-
     def setIcon(self, icon: QIcon, size: QSize = QSize(36, 36)):
         self.__icon.setPixmap(icon.pixmap(size))
+
+
+class LevelWidget(QWidget):
+    # noinspection PyArgumentList
+    def __init__(self, parent=None):
+        super(LevelWidget, self).__init__(parent)
+        self.setMinimumSize(160, 160)
+
+        self.angle = 0
+        self._lineColor = Qt.black
+        self._robotColor = Qt.blue
+        self._lineWidth = 16
+        self._levelText = "Angle: {}"
+
+        if parent is not None:
+            self._backgroundColor = Qt.GlobalColor.transparent
+        else:
+            self._backgroundColor = Qt.white
+
+    def setAngle(self, angle):
+        self.angle = angle
+        self.update()
+
+    def setLineColor(self, color):
+        self._lineColor = color
+        self.update()
+
+    def setRobotColor(self, color):
+        self._robotColor = color
+        self.update()
+
+    def setLineWidth(self, width):
+        self._lineWidth = width
+        self.update()
+
+    def setBackgroundColor(self, color):
+        self._backgroundColor = color
+        self.update()
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setPen(QPen(self._lineColor, self._lineWidth))
+
+        painter.drawLine(QPointF(self.height() / 2, self.height() / 2),
+                         QPointF(self.height() / 2 + math.cos(math.radians(self.angle)) * self.height() / 2 - 5,
+                                 self.height() / 2 + math.sin(math.radians(self.angle)) * self.height() / 2))
+
+        painter.drawLine(QPointF(self.height() / 2, self.height() / 2),
+                         QPointF(self.height() / 2 - math.cos(math.radians(self.angle)) * self.height() / 2 + 5,
+                                 self.height() / 2 - math.sin(math.radians(self.angle)) * self.height() / 2))
+
+        # line 20px out of the angle line
+        painter.setPen(QPen(self._robotColor, self._lineWidth))
+        painter.drawLine(QPointF(self.height() / 2, self.height() / 2),
+                         QPointF(self.height() / 2 + math.cos(math.radians(self.angle - 90)) * 20,
+                                 self.height() / 2 + math.sin(math.radians(self.angle - 90)) * 20))
+
+        painter.setPen(QPen(self._backgroundColor, 30))
+        painter.drawEllipse(QRect(0, 0, self.height(), self.height()))
+
+        painter.setPen(QPen(self._lineColor, self._lineWidth / 2.5))
+        painter.drawEllipse(QRect(4, 4, self.height() - 8, self.height() - 8))
+        painter.setPen(QPen(Qt.black, 16))
+
+
+class Level(QWidget):
+    # noinspection PyArgumentList
+    def __init__(self, parent=None):
+        super(Level, self).__init__(parent)
+
+        self.levelText = "Angle: {}°"
+
+        self._layout = QVBoxLayout()
+        self.setLayout(self._layout)
+        self._level = LevelWidget(self)
+        self._layout.addWidget(self._level)
+
+        self.label = QLabel()
+        self.label.setFixedHeight(32)
+        self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.label.setText(self.levelText.format(self._level.angle))
+        self._layout.addWidget(self.label)
+
+    def setAngle(self, angle):
+        self._level.setAngle(angle)
+        self.label.setText(self.levelText.format(angle))
+
+    def setLineColor(self, color):
+        self._level.setLineColor(color)
+
+    def setRobotColor(self, color):
+        self._level.setRobotColor(color)
+
+    def setLineWidth(self, width):
+        self._level.setLineWidth(width)
+
+    def setBackgroundColor(self, color):
+        self._level.setBackgroundColor(color)

@@ -21,12 +21,11 @@ from qtpy.QtGui import *
 from qtpy.QtWebEngineWidgets import *
 from qtpy.QtWidgets import *
 from qt_thread_updater import get_updater
-from QCustomWidgets import KBModalBar, KBMainWindow, QSuperDial, KBDevice, KBDebugDataEntry
+from QCustomWidgets import KBModalBar, KBMainWindow, QSuperDial, KBDevice, KBDebugDataEntry, Level
 import qtawesome as qta
 
 import Joystick.Joystick as Joystick
 import SlidingStackedWidget as SlidingStackedWidget
-from level import Level
 import com
 import strings
 from colorpicker.colorpicker import ColorPicker
