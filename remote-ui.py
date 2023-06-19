@@ -246,13 +246,10 @@ class RemoteUI(KBMainWindow):
                 if window is not None:
                     get_updater().call_latest(window.level.setAngles, (float(roll), float(pitch), float(yaw)))
                     if abs(float(roll)) > 18:
-                        get_updater().call_latest(window.level.label.setStyleSheet, "background-color: #df574d;")
                         get_updater().call_latest(window.level.setLineColor, QColor("#df574d"))
                     elif abs(float(roll)) > 10:
-                        get_updater().call_latest(window.level.label.setStyleSheet, "background-color: #eebc2a;")
                         get_updater().call_latest(window.level.setLineColor, QColor("#eebc2a"))
                     else:
-                        get_updater().call_latest(window.level.label.setStyleSheet, "")
                         get_updater().call_latest(window.level.setLineColor, Qt.white)
             # core alive message
             elif data[0] == "alive":
@@ -1258,8 +1255,7 @@ class RemoteUI(KBMainWindow):
         self.sensor_box_layout.addLayout(self.level_layout)
 
         self.level = Level(self.palette())
-        self.level.label.setObjectName("Kevinbot3_RemoteUI_SensorData")
-        self.level.setFixedSize(QSize(500, 280))
+        self.level.setFixedSize(QSize(500, 320))
         self.level.setLineColor(self.fg_color)
         self.level.setLineWidth(16)
         self.level.setRobotColor(QColor(0, 34, 255))
