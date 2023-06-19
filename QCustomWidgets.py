@@ -398,6 +398,8 @@ class Level(QWidget):
 
         self.levelText = "Angle: {}°"
 
+        self.x_size = 200
+
         self._layout = QVBoxLayout()
         self.setLayout(self._layout)
 
@@ -411,6 +413,7 @@ class Level(QWidget):
         qtg.setConfigOption("antialias", True)
 
         self.graph = qtg.PlotWidget()
+        self.graph.addLegend((10, 10))
         self.graph.plotItem.setMenuEnabled(False)
         self.graph.plotItem.setMouseEnabled(False, False)
         self._top_layout.addWidget(self.graph)
@@ -418,29 +421,45 @@ class Level(QWidget):
         color = palette.color(QPalette.Window)
         self.graph.setBackground(color)
 
-        self.x_roll = list(range(100))
-        self.y_roll = [0 for _ in range(100)]
+        self.x_roll = list(range(self.x_size))
+        self.y_roll = [0 for _ in range(self.x_size)]
 
         pen = qtg.mkPen(color="#F44336")
-        self.roll_line = self.graph.plot(self.x_roll, self.y_roll, pen=pen)
+        self.roll_line = self.graph.plot(self.x_roll, self.y_roll, pen=pen, name="Roll")
 
-        self.x_pitch = list(range(100))
-        self.y_pitch = [0 for _ in range(100)]
+        self.x_pitch = list(range(self.x_size))
+        self.y_pitch = [0 for _ in range(self.x_size)]
 
         pen = qtg.mkPen(color="#FFEB3B")
-        self.pitch_line = self.graph.plot(self.x_pitch, self.y_pitch, pen=pen)
+        self.pitch_line = self.graph.plot(self.x_pitch, self.y_pitch, pen=pen, name="Pitch")
         
-        self.x_yaw = list(range(100))
-        self.y_yaw = [0 for _ in range(100)]
+        self.x_yaw = list(range(self.x_size))
+        self.y_yaw = [0 for _ in range(self.x_size)]
 
         pen = qtg.mkPen(color="#4CAF50")
-        self.yaw_line = self.graph.plot(self.x_yaw, self.y_yaw, pen=pen)
+        self.yaw_line = self.graph.plot(self.x_yaw, self.y_yaw, pen=pen, name="Yaw")
+
+        self.base_layout = QHBoxLayout()
+        self._layout.addLayout(self.base_layout)
 
         self.label = QLabel()
         self.label.setFixedHeight(32)
         self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.label.setText(self.levelText.format(self._level.angle))
-        self._layout.addWidget(self.label)
+        self.label.setFrameShape(QFrame.Shape.Box)
+        self.base_layout.addWidget(self.label)
+
+        self.x_len_label = QLabel(strings.X_LENGTH)
+        self.x_len_label.setFixedWidth(self.x_len_label.sizeHint().width() + 5)
+        self.base_layout.addWidget(self.x_len_label)
+
+        self.x_len = QSpinner()
+        self.x_len.setMinimum(20)
+        self.x_len.setMaximum(1000)
+        self.x_len.setValue(self.x_size)
+        self.x_len.setSingleStep(20)
+        self.x_len.spinbox.valueChanged.connect(self._update_graph_len)
+        self.base_layout.addWidget(self.x_len)
 
     def setAngles(self, angles):
         self._level.setAngle(angles[0])
@@ -481,3 +500,20 @@ class Level(QWidget):
 
     def setBackgroundColor(self, color):
         self._level.setBackgroundColor(color)
+
+    def _update_graph_len(self, value):
+        self.x_roll = list(range(value))
+        self.x_yaw = list(range(value))
+        self.x_pitch = list(range(value))
+
+        if value < self.x_size:
+            self.y_roll = self.y_roll[self.x_size - value:]
+            self.y_yaw = self.y_yaw[self.x_size - value:]
+            self.y_pitch = self.y_pitch[self.x_size - value:]
+
+        if value > self.x_size:
+            self.y_roll = ([0] * (value - self.x_size)) + self.y_roll
+            self.y_pitch = ([0] * (value - self.x_size)) + self.y_pitch
+            self.y_yaw = ([0] * (value - self.x_size)) + self.y_yaw
+
+        self.x_size = value

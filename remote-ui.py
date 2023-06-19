@@ -1259,7 +1259,7 @@ class RemoteUI(KBMainWindow):
 
         self.level = Level(self.palette())
         self.level.label.setObjectName("Kevinbot3_RemoteUI_SensorData")
-        self.level.setFixedSize(QSize(500, 260))
+        self.level.setFixedSize(QSize(500, 280))
         self.level.setLineColor(self.fg_color)
         self.level.setLineWidth(16)
         self.level.setRobotColor(QColor(0, 34, 255))

@@ -102,6 +102,8 @@ RIGHT_TEMP = "Right Motor Temp: {}"
 INSIDE_TEMP = "Inside Temp: {}"
 MOT_TEMP_HIGH = "One or More Motors are Overheating"
 
+X_LENGTH = "X-Axis Length"
+
 # -- Remote UI Mesh -- #
 
 CONNECTED_DEVICES = "Connected Devices: {0}"
