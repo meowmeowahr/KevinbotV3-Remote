@@ -150,6 +150,8 @@ class MainWindow(KBMainWindow):
         self.viewer_back_button.setFixedSize(QSize(36, 36))
         self.viewer_bottom_layout.addWidget(self.viewer_back_button)
 
+        self.viewer_bottom_layout.addStretch()
+
         self.viewer_zoom_out = QPushButton()
         self.viewer_zoom_out.setIcon(qta.icon("mdi.magnify-minus", color=self.fg_color))
         self.viewer_zoom_out.setIconSize(QSize(32, 32))
@@ -163,6 +165,9 @@ class MainWindow(KBMainWindow):
         self.viewer_zoom_in.clicked.connect(lambda: self.zoom(0.1))
         self.viewer_zoom_in.setFixedSize(QSize(36, 36))
         self.viewer_bottom_layout.addWidget(self.viewer_zoom_in)
+
+        self.zoom_label = QLabel(f"Zoom: {self.scale_factor * 100}")
+        self.viewer_bottom_layout.addWidget(self.zoom_label)
 
         if settings["dev_mode"]:
             self.createDevTools()
@@ -187,9 +192,11 @@ class MainWindow(KBMainWindow):
         self.widget.slideInIdx(2)
 
     def zoom(self, factor):
-        self.scale_factor += factor
-        self.image.setPixmap(self.pixmap.scaledToWidth(round(self.pixmap.width() * self.scale_factor),
-                                                       mode=Qt.TransformationMode.SmoothTransformation))
+        if int((self.scale_factor + factor) * 100) in range(10, 210):
+            self.scale_factor += factor
+            self.image.setPixmap(self.pixmap.scaledToWidth(round(self.pixmap.width() * self.scale_factor),
+                                                           mode=Qt.TransformationMode.SmoothTransformation))
+            self.zoom_label.setText(f"Zoom: {int(self.scale_factor * 100)}")
 
 
 class ImageListView(QListView):
