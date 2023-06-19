@@ -94,11 +94,11 @@ class MainWindow(KBMainWindow):
         self.close_button.setFixedSize(QSize(36, 36))
         self.home_layout.addWidget(self.close_button, alignment=Qt.AlignmentFlag.AlignCenter)
 
-        model = ImageModel()
-        model.setStringList(os.listdir(os.path.join(os.curdir, "mpu_graph_images")))
+        self.model = ImageModel()
+        self.model.setStringList(os.listdir(os.path.join(os.curdir, "mpu_graph_images")))
 
         self.proxy_model = QSortFilterProxyModel()
-        self.proxy_model.setSourceModel(model)
+        self.proxy_model.setSourceModel(self.model)
         self.proxy_model.setFilterCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
 
         self.graph_list = ImageListView()
@@ -150,6 +150,13 @@ class MainWindow(KBMainWindow):
         self.viewer_back_button.setFixedSize(QSize(36, 36))
         self.viewer_bottom_layout.addWidget(self.viewer_back_button)
 
+        self.viewer_delete = QPushButton()
+        self.viewer_delete.setIcon(qta.icon("mdi.delete", color="#F44336"))
+        self.viewer_delete.setIconSize(QSize(32, 32))
+        self.viewer_delete.clicked.connect(self.delete)
+        self.viewer_delete.setFixedSize(QSize(36, 36))
+        self.viewer_bottom_layout.addWidget(self.viewer_delete)
+
         self.viewer_bottom_layout.addStretch()
 
         self.viewer_zoom_out = QPushButton()
@@ -197,6 +204,11 @@ class MainWindow(KBMainWindow):
             self.image.setPixmap(self.pixmap.scaledToWidth(round(self.pixmap.width() * self.scale_factor),
                                                            mode=Qt.TransformationMode.SmoothTransformation))
             self.zoom_label.setText(f"Zoom: {int(self.scale_factor * 100)}")
+
+    def delete(self):
+        os.remove(self.im_dir)
+        self.model.setStringList(os.listdir(os.path.join(os.curdir, "mpu_graph_images")))
+        self.widget.slideInIdx(1)
 
 
 class ImageListView(QListView):
