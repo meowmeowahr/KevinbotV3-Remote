@@ -32,14 +32,20 @@
         "name": "Browser\n(Beta)"
       },
       {
-        "icon": "help.svg",
+        "icon": "imview.svg",
         "id": 5,
+        "launch": "python3 imview.py",
+        "name": "Image\nViewer"
+      },
+      {
+        "icon": "help.svg",
+        "id": 6,
         "launch": "python3 docview.py",
         "name": "Help"
       },
       {
         "icon": "about.svg",
-        "id": 6,
+        "id": 7,
         "launch": "python3 about.py",
         "name": "About"
       }
