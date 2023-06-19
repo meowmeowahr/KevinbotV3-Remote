@@ -2,6 +2,7 @@ import os
 import platform
 import sys
 import json
+import time
 
 from qtpy.QtCore import *
 from qtpy.QtGui import *
@@ -102,12 +103,18 @@ class MainWindow(KBMainWindow):
         self.graph_list.clicked.connect(self.select)
         self.graph_layout.addWidget(self.graph_list)
 
+        self.picker_bottom_layout = QHBoxLayout()
+        self.graph_layout.addLayout(self.picker_bottom_layout)
+
         self.back_button = QPushButton()
         self.back_button.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
         self.back_button.setIconSize(QSize(32, 32))
         self.back_button.clicked.connect(lambda: self.widget.slideInIdx(0))
         self.back_button.setFixedSize(QSize(36, 36))
-        self.graph_layout.addWidget(self.back_button, alignment=Qt.AlignmentFlag.AlignLeft)
+        self.picker_bottom_layout.addWidget(self.back_button)
+
+        self.time_label = QLabel(strings.IMVIEW_TIME.format(strings.UNKNOWN))
+        self.picker_bottom_layout.addWidget(self.time_label, alignment=Qt.AlignmentFlag.AlignRight)
 
 
         if settings["dev_mode"]:
@@ -121,7 +128,9 @@ class MainWindow(KBMainWindow):
     def select(self):
         indexes = self.graph_list.selectedIndexes()
         item = indexes[0].data()
-        print(item)
+        directory = os.path.join(os.curdir, "mpu_graph_images", item)
+        timestamp = os.path.getmtime(directory)
+        self.time_label.setText(strings.IMVIEW_TIME.format(time.ctime(timestamp)))
 
 
 class ImageListView(QListView):

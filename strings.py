@@ -182,6 +182,7 @@ SETTINGS_ANIM_SPEED: Final[str] = "Animation Speed"
 # -- ImView -- #
 
 IMVIEW_GRAPH_A = "Gyro Graph Images"
+IMVIEW_TIME = "Timestamp: {0}"
 
 # -- Misc -- #
 
