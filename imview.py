@@ -228,6 +228,9 @@ class ImageModel(QStringListModel):
 
 
 if __name__ == "__main__":
+    if not os.path.exists(os.path.join(os.curdir, "mpu_graph_images")):
+        os.mkdir(os.path.join(os.curdir, "mpu_graph_images"))
+
     app = QApplication(sys.argv)
     app.setApplicationName("Remote Info")
     app.setApplicationVersion("1.0")
