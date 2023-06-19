@@ -6,6 +6,7 @@ from qtpy.QtWidgets import *
 from qtpy.QtCore import *
 from qtpy.QtGui import *
 import qtawesome as qta
+import pyqtgraph as qtg
 
 import strings
 
@@ -392,15 +393,36 @@ class LevelWidget(QWidget):
 
 class Level(QWidget):
     # noinspection PyArgumentList
-    def __init__(self, parent=None):
+    def __init__(self, palette, parent=None):
         super(Level, self).__init__(parent)
 
         self.levelText = "Angle: {}°"
 
         self._layout = QVBoxLayout()
         self.setLayout(self._layout)
+
+        self._top_layout = QHBoxLayout()
+        self._layout.addLayout(self._top_layout)
+
         self._level = LevelWidget(self)
-        self._layout.addWidget(self._level)
+        self._level.setFixedSize(QSize(200, 200))
+        self._top_layout.addWidget(self._level)
+
+        qtg.setConfigOption("antialias", True)
+
+        self.graph = qtg.PlotWidget()
+        self.graph.plotItem.setMenuEnabled(False)
+        self.graph.plotItem.setMouseEnabled(False, False)
+        self._top_layout.addWidget(self.graph)
+
+        color = palette.color(QPalette.Window)
+        self.graph.setBackground(color)
+
+        self.x = list(range(100))
+        self.y = [0 for _ in range(100)]
+
+        pen = qtg.mkPen(color="#F44336")
+        self.data_line = self.graph.plot(self.x, self.y, pen=pen)
 
         self.label = QLabel()
         self.label.setFixedHeight(32)
@@ -411,6 +433,14 @@ class Level(QWidget):
     def setAngle(self, angle):
         self._level.setAngle(angle)
         self.label.setText(self.levelText.format(angle))
+
+        self.x = self.x[1:]  # Remove the first y element.
+        self.x.append(self.x[-1] + 1)  # Add a new value 1 higher than the last.
+
+        self.y = self.y[1:]  # Remove the first
+        self.y.append(angle)  # Add a new random value.
+
+        self.data_line.setData(self.x, self.y)  # Update the data.
 
     def setLineColor(self, color):
         self._level.setLineColor(color)
