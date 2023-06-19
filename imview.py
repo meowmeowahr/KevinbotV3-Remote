@@ -106,6 +106,7 @@ class MainWindow(KBMainWindow):
         self.graph_list.setModel(self.proxy_model)
         self.graph_list.clicked.connect(self.select)
         self.graph_list.doubleClicked.connect(self.view_image)
+        QScroller.grabGesture(self.graph_list, QScroller.LeftMouseButtonGesture)  # enable single-touch scroll
         self.graph_layout.addWidget(self.graph_list)
 
         self.picker_bottom_layout = QHBoxLayout()
@@ -136,6 +137,7 @@ class MainWindow(KBMainWindow):
         self.image = QLabel()
         self.image.setPixmap(self.pixmap)
         self.image.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        QScroller.grabGesture(self.image_area, QScroller.LeftMouseButtonGesture)  # enable single-touch scroll
         self.image_area.setWidget(self.image)
 
         self.viewer_bottom_layout = QHBoxLayout()
