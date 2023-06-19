@@ -2141,9 +2141,11 @@ if __name__ == '__main__':
     try:
         if platform.system() == "Windows":
             import ctypes
-
             # show icon in the taskbar
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("Kevinbot3 Remote")
+
+        if not os.path.exists(os.path.join(os.curdir, "mpu_graph_images")):
+            os.mkdir(os.path.join(os.curdir, "mpu_graph_images"))
 
         app = QApplication(sys.argv)
         app.setApplicationName("Kevinbot Remote")

@@ -1,14 +1,19 @@
 import enum
 import os.path
 import math
+from datetime import datetime
+import shortuuid
 
 from qtpy.QtWidgets import *
 from qtpy.QtCore import *
 from qtpy.QtGui import *
 import qtawesome as qta
 import pyqtgraph as qtg
+import pyqtgraph.exporters
 
 import strings
+import utils
+
 
 class QPushToolButton(QToolButton):
     def __init__(self, text: str = None):
@@ -397,8 +402,14 @@ class Level(QWidget):
         super(Level, self).__init__(parent)
 
         self.levelText = "Angle: {}°"
-
         self.x_size = 200
+
+        if utils.detect_dark((QColor(palette.color(QPalette.Window)).getRgb()[0],
+                        QColor(palette.color(QPalette.Window)).getRgb()[1],
+                        QColor(palette.color(QPalette.Window)).getRgb()[2])):
+            self.fg_color = Qt.GlobalColor.white
+        else:
+            self.fg_color = Qt.GlobalColor.black
 
         self._layout = QVBoxLayout()
         self.setLayout(self._layout)
@@ -461,6 +472,13 @@ class Level(QWidget):
         self.x_len.spinbox.valueChanged.connect(self._update_graph_len)
         self.base_layout.addWidget(self.x_len)
 
+        self.take_image_button = QPushButton()
+        self.take_image_button.setFixedSize(QSize(32, 32))
+        self.take_image_button.setIconSize(QSize(32, 32))
+        self.take_image_button.setIcon(qta.icon('mdi.image', color=self.fg_color))
+        self.take_image_button.clicked.connect(self.take_image)
+        self.base_layout.addWidget(self.take_image_button)
+
     def setAngles(self, angles):
         self._level.setAngle(angles[0])
         self.label.setText(self.levelText.format(angles[0]))
@@ -517,3 +535,10 @@ class Level(QWidget):
             self.y_yaw = ([0] * (value - self.x_size)) + self.y_yaw
 
         self.x_size = value
+
+    def take_image(self):
+        exporter = qtg.exporters.ImageExporter(self.graph.plotItem)
+        exporter.parameters()['width'] = 500
+        exporter.export(os.path.join(os.path.curdir, "mpu_graph_images",
+                                     datetime.now().strftime("%m-%d-%y_%I-%M_%p_") +
+                                     str(shortuuid.uuid()) + ".png"))

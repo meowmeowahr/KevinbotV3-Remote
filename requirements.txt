@@ -12,3 +12,4 @@ PyQt5
 Qt.py
 QtPy
 pyqtgraph
+shortuuid
