@@ -35,6 +35,10 @@ class MainWindow(KBMainWindow):
     def __init__(self):
         super().__init__()
 
+        self.im_dir = ""
+        self.pixmap = QPixmap(self.im_dir)
+        self.scale_factor = 1
+
         self.setWindowTitle("Remote Info")
 
         try:
@@ -101,6 +105,7 @@ class MainWindow(KBMainWindow):
         self.graph_list.setViewMode(QListView.IconMode)
         self.graph_list.setModel(self.proxy_model)
         self.graph_list.clicked.connect(self.select)
+        self.graph_list.doubleClicked.connect(self.view_image)
         self.graph_layout.addWidget(self.graph_list)
 
         self.picker_bottom_layout = QHBoxLayout()
@@ -116,6 +121,46 @@ class MainWindow(KBMainWindow):
         self.time_label = QLabel(strings.IMVIEW_TIME.format(strings.UNKNOWN))
         self.picker_bottom_layout.addWidget(self.time_label, alignment=Qt.AlignmentFlag.AlignRight)
 
+        self.im_view_widget = QWidget()
+        self.widget.addWidget(self.im_view_widget)
+        self.im_view_layout = QVBoxLayout()
+        self.im_view_widget.setLayout(self.im_view_layout)
+
+        self.picker_bottom_layout = QHBoxLayout()
+        self.graph_layout.addLayout(self.picker_bottom_layout)
+
+        self.image_area = QScrollArea()
+        self.image_area.setWidgetResizable(True)
+        self.im_view_layout.addWidget(self.image_area)
+
+        self.image = QLabel()
+        self.image.setPixmap(self.pixmap)
+        self.image.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.image_area.setWidget(self.image)
+
+        self.viewer_bottom_layout = QHBoxLayout()
+        self.im_view_layout.addLayout(self.viewer_bottom_layout)
+
+        self.viewer_back_button = QPushButton()
+        self.viewer_back_button.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
+        self.viewer_back_button.setIconSize(QSize(32, 32))
+        self.viewer_back_button.clicked.connect(lambda: self.widget.slideInIdx(1))
+        self.viewer_back_button.setFixedSize(QSize(36, 36))
+        self.viewer_bottom_layout.addWidget(self.viewer_back_button)
+
+        self.viewer_zoom_out = QPushButton()
+        self.viewer_zoom_out.setIcon(qta.icon("mdi.magnify-minus", color=self.fg_color))
+        self.viewer_zoom_out.setIconSize(QSize(32, 32))
+        self.viewer_zoom_out.clicked.connect(lambda: self.zoom(-0.1))
+        self.viewer_zoom_out.setFixedSize(QSize(36, 36))
+        self.viewer_bottom_layout.addWidget(self.viewer_zoom_out)
+
+        self.viewer_zoom_in = QPushButton()
+        self.viewer_zoom_in.setIcon(qta.icon("mdi.magnify-plus", color=self.fg_color))
+        self.viewer_zoom_in.setIconSize(QSize(32, 32))
+        self.viewer_zoom_in.clicked.connect(lambda: self.zoom(0.1))
+        self.viewer_zoom_in.setFixedSize(QSize(36, 36))
+        self.viewer_bottom_layout.addWidget(self.viewer_zoom_in)
 
         if settings["dev_mode"]:
             self.createDevTools()
@@ -128,9 +173,21 @@ class MainWindow(KBMainWindow):
     def select(self):
         indexes = self.graph_list.selectedIndexes()
         item = indexes[0].data()
-        directory = os.path.join(os.curdir, "mpu_graph_images", item)
-        timestamp = os.path.getmtime(directory)
+        self.im_dir = os.path.join(os.curdir, "mpu_graph_images", item)
+        timestamp = os.path.getmtime(self.im_dir)
         self.time_label.setText(strings.IMVIEW_TIME.format(time.ctime(timestamp)))
+        self.pixmap = QPixmap(self.im_dir)
+        self.image.setPixmap(self.pixmap.scaledToWidth(round(self.pixmap.width() * self.scale_factor),
+                                                       mode=Qt.TransformationMode.SmoothTransformation))
+
+    def view_image(self):
+        self.select()
+        self.widget.slideInIdx(2)
+
+    def zoom(self, factor):
+        self.scale_factor += factor
+        self.image.setPixmap(self.pixmap.scaledToWidth(round(self.pixmap.width() * self.scale_factor),
+                                                       mode=Qt.TransformationMode.SmoothTransformation))
 
 
 class ImageListView(QListView):
