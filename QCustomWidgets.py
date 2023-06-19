@@ -418,11 +418,23 @@ class Level(QWidget):
         color = palette.color(QPalette.Window)
         self.graph.setBackground(color)
 
-        self.x = list(range(100))
-        self.y = [0 for _ in range(100)]
+        self.x_roll = list(range(100))
+        self.y_roll = [0 for _ in range(100)]
 
         pen = qtg.mkPen(color="#F44336")
-        self.data_line = self.graph.plot(self.x, self.y, pen=pen)
+        self.roll_line = self.graph.plot(self.x_roll, self.y_roll, pen=pen)
+
+        self.x_pitch = list(range(100))
+        self.y_pitch = [0 for _ in range(100)]
+
+        pen = qtg.mkPen(color="#FFEB3B")
+        self.pitch_line = self.graph.plot(self.x_pitch, self.y_pitch, pen=pen)
+        
+        self.x_yaw = list(range(100))
+        self.y_yaw = [0 for _ in range(100)]
+
+        pen = qtg.mkPen(color="#4CAF50")
+        self.yaw_line = self.graph.plot(self.x_yaw, self.y_yaw, pen=pen)
 
         self.label = QLabel()
         self.label.setFixedHeight(32)
@@ -430,17 +442,33 @@ class Level(QWidget):
         self.label.setText(self.levelText.format(self._level.angle))
         self._layout.addWidget(self.label)
 
-    def setAngle(self, angle):
-        self._level.setAngle(angle)
-        self.label.setText(self.levelText.format(angle))
+    def setAngles(self, angles):
+        self._level.setAngle(angles[0])
+        self.label.setText(self.levelText.format(angles[0]))
 
-        self.x = self.x[1:]  # Remove the first y element.
-        self.x.append(self.x[-1] + 1)  # Add a new value 1 higher than the last.
+        self.x_roll = self.x_roll[1:]  # Remove the first y element.
+        self.x_roll.append(self.x_roll[-1] + 1)  # Add a new value 1 higher than the last.
 
-        self.y = self.y[1:]  # Remove the first
-        self.y.append(angle)  # Add a new random value.
+        self.y_roll = self.y_roll[1:]  # Remove the first
+        self.y_roll.append(angles[0])  # Add a new random value.
 
-        self.data_line.setData(self.x, self.y)  # Update the data.
+        self.roll_line.setData(self.x_roll, self.y_roll)  # Update the data.
+
+        self.x_pitch = self.x_pitch[1:]  # Remove the first y element.
+        self.x_pitch.append(self.x_pitch[-1] + 1)  # Add a new value 1 higher than the last.
+
+        self.y_pitch = self.y_pitch[1:]  # Remove the first
+        self.y_pitch.append(angles[1])  # Add a new random value.
+
+        self.pitch_line.setData(self.x_pitch, self.y_pitch)  # Update the data.
+        
+        self.x_yaw = self.x_yaw[1:]  # Remove the first y element.
+        self.x_yaw.append(self.x_yaw[-1] + 1)  # Add a new value 1 higher than the last.
+
+        self.y_yaw = self.y_yaw[1:]  # Remove the first
+        self.y_yaw.append(angles[2])  # Add a new random value.
+
+        self.yaw_line.setData(self.x_yaw, self.y_yaw)  # Update the data.
 
     def setLineColor(self, color):
         self._level.setLineColor(color)

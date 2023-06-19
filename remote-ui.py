@@ -244,7 +244,7 @@ class RemoteUI(KBMainWindow):
             elif data[0] == "imu":
                 roll, pitch, yaw = data[1].split(",")
                 if window is not None:
-                    get_updater().call_latest(window.level.setAngle, float(roll))
+                    get_updater().call_latest(window.level.setAngles, (float(roll), float(pitch), float(yaw)))
                     if abs(float(roll)) > 18:
                         get_updater().call_latest(window.level.label.setStyleSheet, "background-color: #df574d;")
                         get_updater().call_latest(window.level.setLineColor, QColor("#df574d"))
