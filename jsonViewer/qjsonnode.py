@@ -10,7 +10,7 @@ class QJsonNode(object):
         """
         Initialization
 
-        :param parent: QJsonNode. parent of the current node
+        :param parent: QJsonNode. Parent of the current node
         """
         self._key = ""
         self._value = ""
@@ -23,9 +23,12 @@ class QJsonNode(object):
         """
         Generate the hierarchical node tree using dictionary
 
-        :param value: dict. input dictionary
-        :param parent: QJsonNode. for recursive use only
-        :return: QJsonNode. the top node
+        :param value: dict.
+        Input dictionary
+        :param parent: QJsonNode.
+        For recursive use only
+        :return: QJsonNode.
+        The top node
         """
         rootNode = cls(parent)
         rootNode.key = "root"
@@ -64,7 +67,7 @@ class QJsonNode(object):
     @property
     def value(self):
         """
-        Get value of the current node
+        Get the value of the current node
         """
         return self._value
 
@@ -75,7 +78,7 @@ class QJsonNode(object):
     @property
     def dtype(self):
         """
-        Get value data type of the current node
+        Get a value data type of the current node
         """
         return self._dtype
 
@@ -101,7 +104,7 @@ class QJsonNode(object):
     @property
     def childCount(self):
         """
-        Get the number of children of the current node
+        Get the number of children in the current node
         :return: int.
         """
         return len(self._children)
@@ -110,7 +113,8 @@ class QJsonNode(object):
         """
         Add a new child to the current node
 
-        :param node: QJsonNode. child node
+        :param node: QJsonNode.
+        Child node
         """
         self._children.append(node)
         node._parent = self
@@ -119,7 +123,8 @@ class QJsonNode(object):
         """
         Remove child on row/position of the current node
 
-        :param position: int. index of the children
+        :param position: int.
+        Index of the children
         """
         node = self._children.pop(position)
         node._parent = None
@@ -128,16 +133,18 @@ class QJsonNode(object):
         """
         Get the child on row/position of the current node
 
-        :param row: int. index of the children
-        :return: QJsonNode. child node
+        :param row: int.
+        Index of the children
+        :return: QJsonNode.
+        Child node
         """
         return self._children[row]
 
     def row(self):
         """
-        Get the current node's row/position in regards to its parent
+        Get the current node's row/position in regard to its parent
 
-        :return: int. index of the current node
+        :return: int. Index of the current node
         """
         if self._parent:
             return self.parent.children.index(self)
@@ -145,9 +152,10 @@ class QJsonNode(object):
 
     def asDict(self):
         """
-        Serialize the hierarchical structure of current node to a dictionary
+        Serialize the hierarchical structure of the current node to a dictionary
 
-        :return: dict. serialization of the hierarchy
+        :return: dict.
+        Serialization of the hierarchy
         """
         return {self.key: self.getChildrenValue(self)}
 
@@ -155,7 +163,8 @@ class QJsonNode(object):
         """
         Query the nested children value (instead of a single value)
 
-        :param node: QJsonNode. root node
+        :param node: QJsonNode.
+        Root node
         :return: mixed. value
         """
         if node.dtype is dict:

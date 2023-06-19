@@ -1,6 +1,6 @@
 """
 The model class used for populating the QJsonView,
-and providing functionalities to manipulate QJsonNode objects within the model
+and provided functionalities to manipulate QJsonNode objects within the model
 """
 
 
@@ -26,7 +26,8 @@ class QJsonModel(QtCore.QAbstractItemModel):
         """
         Initialization
 
-        :param root: QJsonNode. root node of the model, it is hidden
+        :param root: QJsonNode.
+        Root node of the model, it is hidden
         """
         super(QJsonModel, self).__init__(parent)
         self._rootNode = root
@@ -234,8 +235,10 @@ class QJsonModel(QtCore.QAbstractItemModel):
         if no index is specified, the whole model will be serialized
         but will not include the root key (as it's supposed to be hidden)
 
-        :param index: QModelIndex. specified index
-        :return: dict. output dictionary
+        :param index: QModelIndex.
+        Specified index
+        :return: dict.
+        Output dictionary
         """
         node = self.getNode(index)
         if node == self._rootNode:
