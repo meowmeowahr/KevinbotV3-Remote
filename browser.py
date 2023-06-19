@@ -7,7 +7,6 @@ from qtpy.QtWebEngineWidgets import *
 from QCustomWidgets import KBMainWindow
 import qtawesome as qta
 
-import os
 import sys
 import json
 import platform

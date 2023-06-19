@@ -1,190 +1,191 @@
 # Strings used in the remote for Kevinbot v3
+from typing import Final
 
-WIN_TITLE = "Kevinbot3 Remote"
+WIN_TITLE: Final[str] = "Kevinbot3 Remote"
 
 # -- Remote UI Arms -- #
 
-ARM_PRESET_G = "Arm Presets"
-ARM_PRESETS = ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9"]
-ARM_SET_PRESET = "Setup"
+ARM_PRESET_G: Final[str] = "Arm Presets"
+ARM_PRESETS: Final[list[str]] = ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9"]
+ARM_SET_PRESET: Final[str] = "Setup"
 
-ARM_PRESET_EDIT_G = "Edit Presets"
-PRESET_PICK = "Pick Preset"
-ARM_PRESET_EDIT = "Editor"
-ARM_PRESET_EDIT_L = "Left"
-ARM_PRESET_EDIT_R = "Right"
-CURRENT_ARM_PRESET = "Current Preset"
+ARM_PRESET_EDIT_G: Final[str] = "Edit Presets"
+PRESET_PICK: Final[str] = "Pick Preset"
+ARM_PRESET_EDIT: Final[str] = "Editor"
+ARM_PRESET_EDIT_L: Final[str] = "Left"
+ARM_PRESET_EDIT_R: Final[str] = "Right"
+CURRENT_ARM_PRESET: Final[str] = "Current Preset"
 
 # -- Remote UI Leds -- #
 
-LED_PRESET_G = "Appearance"
-LED_HEAD = "Head LEDs"
-LED_BODY = "Body LEDs"
-LED_BASE = "Base LEDs"
-LED_CAMERA = "Camera LEDs"
-LED_EYE_CONFIG = "Eye Config"
+LED_PRESET_G: Final[str] = "Appearance"
+LED_HEAD: Final[str] = "Head LEDs"
+LED_BODY: Final[str] = "Body LEDs"
+LED_BASE: Final[str] = "Base LEDs"
+LED_CAMERA: Final[str] = "Camera LEDs"
+LED_EYE_CONFIG: Final[str] = "Eye Config"
 
 # -- Remote UI Main -- #
 
-MAIN_G = "Main"
+MAIN_G: Final[str] = "Main"
 
 # -- Remote UI Speech -- #
 
-SPEECH_INPUT_H = "Speech Input"
-SPEECH_BUTTON = "Speak"
-SPEECH_SAVE = "Save"
-SPEECH_ESPEAK = "eSpeak"
-SPEECH_FESTIVAL = "Festival"
+SPEECH_INPUT_H: Final[str] = "Speech Input"
+SPEECH_BUTTON: Final[str] = "Speak"
+SPEECH_SAVE: Final[str] = "Save"
+SPEECH_ESPEAK: Final[str] = "eSpeak"
+SPEECH_FESTIVAL: Final[str] = "Festival"
 
 # -- Remote UI Camera -- #
 
-CAMERA_G = "Camera"
-CAMERA_LEDS_G = "Camera LED Brightness"
+CAMERA_G: Final[str] = "Camera"
+CAMERA_LEDS_G: Final[str] = "Camera LED Brightness"
 
 # -- Remote UI Led Effects -- #
 
-HEAD_COLOR_G = "Head Color"
-HEAD_EFFECTS_G = "Head Effects"
-HEAD_SPEED_G = "Head Speed"
+HEAD_COLOR_G: Final[str] = "Head Color"
+HEAD_EFFECTS_G: Final[str] = "Head Effects"
+HEAD_SPEED_G: Final[str] = "Head Speed"
 
-BODY_COLOR_G = "Body Color"
-BODY_EFFECTS_G = "Body Effects"
-BODY_SPEED_G = "Body Speed"
+BODY_COLOR_G: Final[str] = "Body Color"
+BODY_EFFECTS_G: Final[str] = "Body Effects"
+BODY_SPEED_G: Final[str] = "Body Speed"
 
-BASE_COLOR_G = "Base Color"
-BASE_EFFECTS_G = "Base Effects"
-BASE_SPEED_G = "Base Speed"
+BASE_COLOR_G: Final[str] = "Base Color"
+BASE_EFFECTS_G: Final[str] = "Base Effects"
+BASE_SPEED_G: Final[str] = "Base Speed"
 
 # -- Remote UI Eyes -- #
 
-EYE_CONFIG_G = "Eye Config"
-EYE_CONFIG_B_G = "Eye Background"
-EYE_CONFIG_P_G = "Eye Pupil"
-EYE_CONFIG_I_G = "Eye Iris"
-EYE_CONFIG_S_G = "Eye Size"
-EYE_CONFIG_SP_G = "Eye Speed"
-EYE_CONFIG_BR_G = "Eye Backlight"
+EYE_CONFIG_G: Final[str] = "Eye Config"
+EYE_CONFIG_B_G: Final[str] = "Eye Background"
+EYE_CONFIG_P_G: Final[str] = "Eye Pupil"
+EYE_CONFIG_I_G: Final[str] = "Eye Iris"
+EYE_CONFIG_S_G: Final[str] = "Eye Size"
+EYE_CONFIG_SP_G: Final[str] = "Eye Speed"
+EYE_CONFIG_BR_G: Final[str] = "Eye Backlight"
 
-SAVE = "Save"
-SAVE_SUCCESS = "Saved Successfully"
-SAVE_ERROR = "Save Error"
-SAVE_WARN_1 = "Please Select a Preset before saving"
+SAVE: Final[str] = "Save"
+SAVE_SUCCESS: Final[str] = "Saved Successfully"
+SAVE_ERROR: Final[str] = "Save Error"
+SAVE_WARN_1: Final[str] = "Please Select a Preset before saving"
 
-COM_REOPEN = "Kevinbot Services"
-COM_REOPEN_DESC = "Kevinbot Com Service has Started"
+COM_REOPEN: Final[str] = "Kevinbot Services"
+COM_REOPEN_DESC: Final[str] = "Kevinbot Com Service has Started"
 
-ESTOP_TITLE = "E-Stop"
-ESTOP = "Kevinbot is shutting down"
+ESTOP_TITLE: Final[str] = "E-Stop"
+ESTOP: Final[str] = "Kevinbot is shutting down"
 
-SHUTDOWN_MESSAGE = "Are you sure you want to shutdown the remote?"
-SHUTDOWN_TITLE = "Shutdown"
+SHUTDOWN_MESSAGE: Final[str] = "Are you sure you want to shutdown the remote?"
+SHUTDOWN_TITLE: Final[str] = "Shutdown"
 
-ROBOT_VERSION = "Robot Version: "
-REMOTE_VERSION = "Remote Version: "
-BATT_VOLT1 = "Battery #1 Voltage: {}"
-BATT_VOLT2 = "Battery #2 Voltage: {}"
-BATT_LOW = "One or More Batteries are Low"
+ROBOT_VERSION: Final[str] = "Robot Version: "
+REMOTE_VERSION: Final[str] = "Remote Version: "
+BATT_VOLT1: Final[str] = "Battery #1 Voltage: {}"
+BATT_VOLT2: Final[str] = "Battery #2 Voltage: {}"
+BATT_LOW: Final[str] = "One or More Batteries are Low"
 
 # -- Remote UI Volt Waring -- #
 
-MODAL_CLOSE = "Ignore"
-MODAL_SHUTDOWN = "Shutdown Robot"
+MODAL_CLOSE: Final[str] = "Ignore"
+MODAL_SHUTDOWN: Final[str] = "Shutdown Robot"
 
 # -- Remote UI Sensors -- #
 
-SENSORS_G = "Sensors"
-OUTSIDE_TEMP = "Outside Temp: {}"
-OUTSIDE_HUMI = "Outside Humidity: {}%"
-OUTSIDE_PRES = "Outside Pressure: {}hPa"
+SENSORS_G: Final[str] = "Sensors"
+OUTSIDE_TEMP: Final[str] = "Outside Temp: {}"
+OUTSIDE_HUMI: Final[str] = "Outside Humidity: {}%"
+OUTSIDE_PRES: Final[str] = "Outside Pressure: {}hPa"
 
-LEFT_TEMP = "Left Motor Temp: {}"
-RIGHT_TEMP = "Right Motor Temp: {}"
-INSIDE_TEMP = "Inside Temp: {}"
-MOT_TEMP_HIGH = "One or More Motors are Overheating"
+LEFT_TEMP: Final[str] = "Left Motor Temp: {}"
+RIGHT_TEMP: Final[str] = "Right Motor Temp: {}"
+INSIDE_TEMP: Final[str] = "Inside Temp: {}"
+MOT_TEMP_HIGH: Final[str] = "One or More Motors are Overheating"
 
-X_LENGTH = "X-Axis Length"
+X_LENGTH: Final[str] = "X-Axis Length"
 
 # -- Remote UI Mesh -- #
 
-CONNECTED_DEVICES = "Connected Devices: {0}"
+CONNECTED_DEVICES: Final[str] = "Connected Devices: {0}"
 
-DEVICE_REMOTE = "Type\nKevinbot Remote"
-DEVICE_ROBOT = "Type\nKevinbot v3"
+DEVICE_REMOTE: Final[str] = "Type\nKevinbot Remote"
+DEVICE_ROBOT: Final[str] = "Type\nKevinbot v3"
 
-DEVICE_NICKNAME = "Nickname\n{0}"
+DEVICE_NICKNAME: Final[str] = "Nickname\n{0}"
 
-PING_TITLE = "Ping!"
-PING_DESC = "Ping from {0}"
+PING_TITLE: Final[str] = "Ping!"
+PING_DESC: Final[str] = "Ping from {0}"
 
 # -- Remote UI Debug -- #
 
-DEBUG_TITLE = "Debug Data"
+DEBUG_TITLE: Final[str] = "Debug Data"
 
-CORE_UPTIME = "Core Uptime: {0} ({1})"
-SYS_UPTIME = "System Uptime: {0} ({1})"
+CORE_UPTIME: Final[str] = "Core Uptime: {0} ({1})"
+SYS_UPTIME: Final[str] = "System Uptime: {0} ({1})"
 
 # -- Settings -- #
 
-SETTINGS_SCREEN_BR_G = "Screen Brightness"
-SETTINGS_RUN_THEME_G = "Runner Theme"
-SETTINGS_APP_THEME_G = "App Theme"
-SETTINGS_ANIM_G = "Animations"
-SETTINGS_XSC_G = "Screensaver"
-SETTINGS_SPEED_G = "Robot Speed"
-SETTINGS_CAM_URL_G = "Camera URL"
-SETTINGS_HOMEPAGE_G = "Homepage"
-SETTINGS_REMOTE_G = "Remote"
+SETTINGS_SCREEN_BR_G: Final[str] = "Screen Brightness"
+SETTINGS_RUN_THEME_G: Final[str] = "Runner Theme"
+SETTINGS_APP_THEME_G: Final[str] = "App Theme"
+SETTINGS_ANIM_G: Final[str] = "Animations"
+SETTINGS_XSC_G: Final[str] = "Screensaver"
+SETTINGS_SPEED_G: Final[str] = "Robot Speed"
+SETTINGS_CAM_URL_G: Final[str] = "Camera URL"
+SETTINGS_HOMEPAGE_G: Final[str] = "Homepage"
+SETTINGS_REMOTE_G: Final[str] = "Remote"
 
-SETTINGS_ADV_G = "Advanced Settings"
-SETTINGS_ADV_WARNING = "WARNING: Changing some of these settings may damage your remote or robot."
+SETTINGS_ADV_G: Final[str] = "Advanced Settings"
+SETTINGS_ADV_WARNING: Final[str] = "WARNING: Changing some of these settings may damage your remote or robot."
 
-SETTINGS_DISPLAY_OPT = "Display and Theme Settings"
-SETTINGS_ROBOT_OPT = "Robot Settings"
-SETTINGS_REMOTE_OPT = "Remote Settings"
-SETTINGS_BROWSER_OPT = "Browser Settings"
-SETTINGS_ADVANCED_OPT = "Advanced Settings"
+SETTINGS_DISPLAY_OPT: Final[str] = "Display and Theme Settings"
+SETTINGS_ROBOT_OPT: Final[str] = "Robot Settings"
+SETTINGS_REMOTE_OPT: Final[str] = "Remote Settings"
+SETTINGS_BROWSER_OPT: Final[str] = "Browser Settings"
+SETTINGS_ADVANCED_OPT: Final[str] = "Advanced Settings"
 
-SETTINGS_APP_THEMES = "App Theme Gallery"
-SETTINGS_RUNNER_THEMES = "Runner Theme Gallery"
+SETTINGS_APP_THEMES: Final[str] = "App Theme Gallery"
+SETTINGS_RUNNER_THEMES: Final[str] = "Runner Theme Gallery"
 
-SETTINGS_XSC_PREVIEW_B = "Preview Screensaver"
-SETTINGS_VALIDATE_URL_B = "Validate URL"
-SETTINGS_CUSTOMIZER_B = "Customizer"
+SETTINGS_XSC_PREVIEW_B: Final[str] = "Preview Screensaver"
+SETTINGS_VALIDATE_URL_B: Final[str] = "Validate URL"
+SETTINGS_CUSTOMIZER_B: Final[str] = "Customizer"
 
-SETTINGS_XSC_TIME_S = "Screen Timeout: "
-SETTINGS_XSC_TIME_SUF = " minutes"
+SETTINGS_XSC_TIME_S: Final[str] = "Screen Timeout: "
+SETTINGS_XSC_TIME_SUF: Final[str] = " minutes"
 
-SETTINGS_MAX_US_L = "Max µS:"
-SETTINGS_NICKNAME_L = "Remote Nickname:"
-SETTINGS_NICKNAME_DESC = "The Remote Nickname is the identifier for this remote.\nIt must be unique and not used on any other remote.\nIt must also not contain special characters."
-SETTINGS_STICK_SIZE_L = "Joystick Size:"
-SETTINGS_STICK_MODE_L = "Joystick Mode:"
-SETTINGS_UI_MODE_L = "UI Style"
+SETTINGS_MAX_US_L: Final[str] = "Max µS:"
+SETTINGS_NICKNAME_L: Final[str] = "Remote Nickname:"
+SETTINGS_NICKNAME_DESC: Final[str] = "The Remote Nickname is the identifier for this remote.\nIt must be unique and not used on any other remote.\nIt must also not contain special characters."
+SETTINGS_STICK_SIZE_L: Final[str] = "Joystick Size:"
+SETTINGS_STICK_MODE_L: Final[str] = "Joystick Mode:"
+SETTINGS_UI_MODE_L: Final[str] = "UI Style"
 
-SETTINGS_TICK_FLAT = "Flat"
-SETTINGS_TICK_ENABLE = "Enable"
+SETTINGS_TICK_FLAT: Final[str] = "Flat"
+SETTINGS_TICK_ENABLE: Final[str] = "Enable"
 
-SETTINGS_RAD_SMALL = "Small"
-SETTINGS_RAD_LARGE = "Large"
-SETTINGS_RAD_X_LARGE = "X-Large"
-SETTINGS_RAD_DIGITAL = "Digital"
-SETTINGS_RAD_ANALOG = "Analog"
-SETTINGS_RAD_CLASSIC = "Classic"
-SETTINGS_RAD_MODERN = "Modern"
+SETTINGS_RAD_SMALL: Final[str] = "Small"
+SETTINGS_RAD_LARGE: Final[str] = "Large"
+SETTINGS_RAD_X_LARGE: Final[str] = "X-Large"
+SETTINGS_RAD_DIGITAL: Final[str] = "Digital"
+SETTINGS_RAD_ANALOG: Final[str] = "Analog"
+SETTINGS_RAD_CLASSIC: Final[str] = "Classic"
+SETTINGS_RAD_MODERN: Final[str] = "Modern"
 
-SETTINGS_MSG_VALID_URL = "URL is Valid"
-SETTINGS_MSG_INVALID_URL = "URL is Invalid"
-SETTINGS_WIN_URL_VALIDATOR = "URL Validator"
+SETTINGS_MSG_VALID_URL: Final[str] = "URL is Valid"
+SETTINGS_MSG_INVALID_URL: Final[str] = "URL is Invalid"
+SETTINGS_WIN_URL_VALIDATOR: Final[str] = "URL Validator"
 
-SETTINGS_ANIM_SPEED = "Animation Speed"
+SETTINGS_ANIM_SPEED: Final[str] = "Animation Speed"
 
 # -- Misc -- #
 
-FILE_M = "File"
-EXIT_A = "Exit"
-CLEAR = "Clear"
-PING = "Ping"
-KICK = "Kick"
-REFRESH = "Refresh"
-UNKNOWN = "Unknown"
-DEV_OFF = "Dev Options Disabled"
+FILE_M: Final[str] = "File"
+EXIT_A: Final[str] = "Exit"
+CLEAR: Final[str] = "Clear"
+PING: Final[str] = "Ping"
+KICK: Final[str] = "Kick"
+REFRESH: Final[str] = "Refresh"
+UNKNOWN: Final[str] = "Unknown"
+DEV_OFF: Final[str] = "Dev Options Disabled"
