@@ -541,4 +541,4 @@ class Level(QWidget):
         exporter.parameters()['width'] = 500
         exporter.export(os.path.join(os.path.curdir, "mpu_graph_images",
                                      datetime.now().strftime("%m-%d-%y_%I-%M_%p_") +
-                                     str(shortuuid.uuid()) + ".png"))
+                                     str(shortuuid.uuid()[12:]) + ".png"))

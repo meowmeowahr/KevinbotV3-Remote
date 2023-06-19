@@ -179,6 +179,10 @@ SETTINGS_WIN_URL_VALIDATOR: Final[str] = "URL Validator"
 
 SETTINGS_ANIM_SPEED: Final[str] = "Animation Speed"
 
+# -- ImView -- #
+
+IMVIEW_GRAPH_A = "Gyro Graph Images"
+
 # -- Misc -- #
 
 FILE_M: Final[str] = "File"
