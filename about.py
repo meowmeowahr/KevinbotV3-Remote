@@ -85,22 +85,23 @@ class MainWindow(KBMainWindow):
         self.icon_layout.addWidget(self.icon)
 
         self.name_text = QLabel("Kevinbot v3 Remote")
-        self.name_text.setStyleSheet("font-size: 30px; font-weight: bold;")
+        self.name_text.setStyleSheet("font-size: 30px; font-weight: bold; font-family: Roboto;")
         self.name_text.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.layout.addWidget(self.name_text)
 
         self.version = QLabel("Version: " + open("version.txt", encoding="utf-8").read())
-        self.version.setStyleSheet("font-size: 24px; font-weight: semibold;")
+        self.version.setStyleSheet("font-size: 24px; font-weight: semibold; font-family: Roboto;")
         self.version.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.layout.addWidget(self.version)
 
         self.qt_version = QLabel("PyQt Version: " + PYQT_VERSION_STR)
-        self.qt_version.setStyleSheet("font-size: 22px; font-weight: normal;")
+        self.qt_version.setStyleSheet("font-size: 22px; font-weight: normal; font-family: Roboto;")
         self.qt_version.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.layout.addWidget(self.qt_version)
 
         self.credits_box = QTextEdit()
         self.credits_box.setReadOnly(True)
+        self.credits_box.setStyleSheet("font-family: Roboto;")
         self.credits_box.setText("<p>Kevinbot and Kevinbot Software created by Kevin Ahr <br>"
                                  "PyQtDarkTheme created by Yunosuke Ohsugi <br>"
                                  "BreezeStyleSheets created by Alexander Huszagh <br>"
@@ -175,5 +176,12 @@ if __name__ == "__main__":
     app.setApplicationName("About Kevinbot Remote")
     app.setApplicationVersion("1.0")
     app.setWindowIcon(QIcon("icons/icon.svg"))
+
+    # Font
+    QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Roboto-Regular.ttf"))
+    QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Roboto-Bold.ttf"))
+    QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Lato-Regular.ttf"))
+    QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Lato-Bold.ttf"))
+
     window = MainWindow()
     sys.exit(app.exec_())
