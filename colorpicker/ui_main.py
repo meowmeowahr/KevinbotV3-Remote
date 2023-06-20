@@ -22,28 +22,7 @@ class Ui_ColorPicker(object):
         ColorPicker.setSizePolicy(sizePolicy)
         ColorPicker.setMinimumSize(QtCore.QSize(0, 0))
         ColorPicker.setMaximumSize(QtCore.QSize(360, 200))
-        ColorPicker.setStyleSheet("QWidget{\n"
-"    background-color: none;\n"
-"}\n"
-"QFrame{\n"
-"    border-radius:5px;\n"
-"}\n"
-"\n"
-"/*  LINE EDIT */\n"
-"QLineEdit{\n"
-"    color: rgb(221, 221, 221);\n"
-"    background-color: #303030;\n"
-"    border: 2px solid #303030;\n"
-"    border-radius: 5px;\n"
-"    selection-color: rgb(16, 16, 16);\n"
-"    selection-background-color: rgb(221, 51, 34);\n"
-"    font-family: Segoe UI;\n"
-"    font-size: 11pt;\n"
-"}\n"
-"QLineEdit::focus{\n"
-"    border-color: #aaaaaa;\n"
-"}\n"
-"")
+        ColorPicker.setStyleSheet("QWidget{background-color: none;}\nQLineEdit{background-color:#111114;}")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(ColorPicker)
         self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_2.setSpacing(0)
@@ -94,9 +73,6 @@ class Ui_ColorPicker(object):
         self.horizontalLayout_2.addWidget(self.color_view)
         self.hue_frame = QtWidgets.QFrame(ColorPicker)
         self.hue_frame.setMinimumSize(QtCore.QSize(30, 0))
-        self.hue_frame.setStyleSheet("QLabel{\n"
-"    border-radius: 5px;\n"
-"}")
         self.hue_frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.hue_frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.hue_frame.setObjectName("hue_frame")
@@ -116,18 +92,15 @@ class Ui_ColorPicker(object):
         self.hue_selector.setText("")
         self.hue_selector.setObjectName("hue_selector")
         self.hue = QtWidgets.QFrame(self.hue_frame)
-        self.hue.setGeometry(QtCore.QRect(7, 0, 26, 200))
         self.hue.setMinimumSize(QtCore.QSize(20, 200))
         self.hue.setStyleSheet("")
-        self.hue.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.hue.setFrameShadow(QtWidgets.QFrame.Raised)
         self.hue.setObjectName("hue")
         self.horizontalLayout_2.addWidget(self.hue_frame)
         self.editfields = QtWidgets.QFrame(ColorPicker)
         self.editfields.setMinimumSize(QtCore.QSize(120, 200))
         self.editfields.setMaximumSize(QtCore.QSize(120, 200))
         self.editfields.setStyleSheet("QLabel{\n"
-"    font-family: Segoe UI;\n"
+"    font-family: Roboto;\n"
 "font-weight: bold;\n"
 "    font-size: 11pt;\n"
 "    color: #aaaaaa;\n"
