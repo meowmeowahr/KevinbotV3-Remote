@@ -228,8 +228,7 @@
     "fade",
     "jump3",
     "color1",
-    "color2",
-    "effect10*c"
+    "color2"
   ],
   "body_effects": [
     "magic",
@@ -241,8 +240,7 @@
     "fade",
     "jump3",
     "color1",
-    "color2",
-    "effect10*c"
+    "color2"
   ],
   "camera_url": "http://kevinbotv3/stream",
   "data_dir": "/home/$USER/KbotV3/",

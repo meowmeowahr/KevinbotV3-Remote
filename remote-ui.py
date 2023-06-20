@@ -688,60 +688,63 @@ class RemoteUI(KBMainWindow):
         self.head_color_layout_p.addWidget(self.head_color_picker, 0, 0)
 
         # Head Colorpicker 2
-        self.headColorPicker2 = ColorPicker()
-        self.headColorPicker2.setObjectName("Kevinbot3_RemoteUI_HeadColorPicker")
-        self.headColorPicker2.colorChanged.connect(self.head_color2_changed)
-        self.headColorPicker2.setHex("000000")
-        self.head_color_layout_p.addWidget(self.headColorPicker2, 1, 0)
+        self.head_color_picker_2 = ColorPicker()
+        self.head_color_picker_2.setObjectName("Kevinbot3_RemoteUI_HeadColorPicker")
+        self.head_color_picker_2.colorChanged.connect(self.head_color2_changed)
+        self.head_color_picker_2.setHex("000000")
+        self.head_color_layout_p.addWidget(self.head_color_picker_2, 1, 0)
+
+        self.head_right_layout = QVBoxLayout()
+        self.head_color_layout.addLayout(self.head_right_layout)
 
         # Head Animation Speed
-        self.headSpeedBox = QGroupBox(strings.HEAD_SPEED_G)
-        self.headSpeedBox.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.head_color_layout_p.addWidget(self.headSpeedBox, 0, 1)
+        self.head_speed_box = QGroupBox(strings.HEAD_SPEED_G)
+        self.head_speed_box.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.head_right_layout.addWidget(self.head_speed_box)
 
-        self.headSpeedLayout = QVBoxLayout()
-        self.headSpeedBox.setLayout(self.headSpeedLayout)
+        self.head_speed_layout = QVBoxLayout()
+        self.head_speed_box.setLayout(self.head_speed_layout)
 
-        self.headSpeed = QSlider(Qt.Orientation.Horizontal)
-        self.headSpeed.setRange(100, 500)
-        self.headSpeed.setObjectName("Kevinbot3_RemoteUI_Slider")
-        self.headSpeed.valueChanged.connect(lambda x: com.txcv("head_update", map_range(x, 100, 500, 500, 100)))
-        self.headSpeedLayout.addWidget(self.headSpeed)
+        self.head_speed = QSlider(Qt.Orientation.Horizontal)
+        self.head_speed.setRange(100, 500)
+        self.head_speed.setObjectName("Kevinbot3_RemoteUI_Slider")
+        self.head_speed.valueChanged.connect(lambda x: com.txcv("head_update", map_range(x, 100, 500, 500, 100)))
+        self.head_speed_layout.addWidget(self.head_speed)
 
         # Head Effects
-        self.headEffectsGroup = QGroupBox(strings.HEAD_EFFECTS_G)
-        self.headEffectsGroup.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.head_color_layout.addWidget(self.headEffectsGroup)
+        self.head_effects_group = QGroupBox(strings.HEAD_EFFECTS_G)
+        self.head_effects_group.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.head_right_layout.addWidget(self.head_effects_group)
 
-        self.headEffectsLayout = QGridLayout()
-        self.headEffectsGroup.setLayout(self.headEffectsLayout)
+        self.head_effects_layout = QGridLayout()
+        self.head_effects_group.setLayout(self.head_effects_layout)
 
         for i in range(len(settings["head_effects"])):
             effect_button = QPushButton(capitalize(settings["head_effects"][i]))
             effect_button.setObjectName("Kevinbot3_RemoteUI_HeadEffectButton")
-            self.headEffectsLayout.addWidget(effect_button, i // 2, i % 2)
+            self.head_effects_layout.addWidget(effect_button, i // 3, i % 3)
             effect_button.clicked.connect(partial(self.head_effect_action, i))
             effect_button.setFixedSize(QSize(75, 50))
 
         # Body Color Page
 
         # Back Button
-        self.bodyColorBack = QPushButton()
-        self.bodyColorBack.setObjectName("Kevinbot3_RemoteUI_BackButton")
-        self.bodyColorBack.clicked.connect(lambda: self.widget.slideInIdx(0))
-        self.bodyColorBack.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
-        self.bodyColorBack.setIconSize(QSize(32, 32))
-        self.bodyColorBack.setFixedSize(QSize(36, 36))
-        self.bodyColorBack.setFlat(True)
-        self.body_color_layout.addWidget(self.bodyColorBack)
+        self.body_color_back = QPushButton()
+        self.body_color_back.setObjectName("Kevinbot3_RemoteUI_BackButton")
+        self.body_color_back.clicked.connect(lambda: self.widget.slideInIdx(0))
+        self.body_color_back.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
+        self.body_color_back.setIconSize(QSize(32, 32))
+        self.body_color_back.setFixedSize(QSize(36, 36))
+        self.body_color_back.setFlat(True)
+        self.body_color_layout.addWidget(self.body_color_back)
 
         # Body Color picker
-        self.bodyColorGroup = QGroupBox(strings.BODY_COLOR_G)
-        self.bodyColorGroup.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.body_color_layout.addWidget(self.bodyColorGroup)
+        self.body_color_group = QGroupBox(strings.BODY_COLOR_G)
+        self.body_color_group.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.body_color_layout.addWidget(self.body_color_group)
 
         self.bodyColorLayoutP = QGridLayout()
-        self.bodyColorGroup.setLayout(self.bodyColorLayoutP)
+        self.body_color_group.setLayout(self.bodyColorLayoutP)
 
         self.bodyColorPicker = ColorPicker()
         self.bodyColorPicker.setObjectName("Kevinbot3_RemoteUI_BodyColorPicker")
@@ -756,10 +759,13 @@ class RemoteUI(KBMainWindow):
         self.bodyColorPicker2.setHex("000000")
         self.bodyColorLayoutP.addWidget(self.bodyColorPicker2, 1, 0)
 
+        self.body_right_layout = QVBoxLayout()
+        self.body_color_layout.addLayout(self.body_right_layout)
+
         # Body Animation Speed
         self.bodySpeedBox = QGroupBox(strings.BODY_SPEED_G)
         self.bodySpeedBox.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.bodyColorLayoutP.addWidget(self.bodySpeedBox, 0, 1)
+        self.body_right_layout.addWidget(self.bodySpeedBox)
 
         self.bodySpeedLayout = QVBoxLayout()
         self.bodySpeedBox.setLayout(self.bodySpeedLayout)
@@ -773,39 +779,31 @@ class RemoteUI(KBMainWindow):
         # Body Effects
         self.body_effects_group = QGroupBox(strings.BODY_EFFECTS_G)
         self.body_effects_group.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.body_color_layout.addWidget(self.body_effects_group)
+        self.body_right_layout.addWidget(self.body_effects_group)
 
         self.body_effects_layout = QGridLayout()
         self.body_effects_group.setLayout(self.body_effects_layout)
 
         for i in range(len(settings["body_effects"])):
-            if "*" not in settings["body_effects"][i]:
-                effect_button = QPushButton(capitalize(settings["body_effects"][i]))
-                effect_button.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
-                self.body_effects_layout.addWidget(effect_button, i // 2, i % 2)
-                effect_button.clicked.connect(partial(self.body_effect_action, i))
-                effect_button.setFixedSize(QSize(75, 50))
-            elif "*c" in settings["body_effects"][i]:
-                dt = datetime.datetime.now()
-                if dt.day in range(20, 27) and dt.month == 12:
-                    effect_button = QPushButton(capitalize(settings["body_effects"][i]))
-                    effect_button.setObjectName("Kevinbot3_RemoteUI_BodyEffectButtonEgg")
-                    effect_button.clicked.connect(partial(self.body_effect_action, i))
-                    self.body_effects_layout.addWidget(effect_button, (i // 2) + 1, i % 2)
+            effect_button = QPushButton(capitalize(settings["body_effects"][i]))
+            effect_button.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
+            self.body_effects_layout.addWidget(effect_button, i // 4, i % 4)
+            effect_button.clicked.connect(partial(self.body_effect_action, i))
+            effect_button.setFixedSize(QSize(75, 50))
 
         self.body_bright_plus = QPushButton("Bright+")
         self.body_bright_plus.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
         self.body_bright_plus.clicked.connect(lambda: com.txstr("body_bright+"))
         self.body_bright_plus.setFixedSize(QSize(75, 50))
-        self.body_effects_layout.addWidget(self.body_bright_plus, (len(settings["body_effects"]) // 2),
-                                           (len(settings["body_effects"]) % 2) - 1)
+        self.body_effects_layout.addWidget(self.body_bright_plus, (len(settings["body_effects"]) // 4),
+                                           (len(settings["body_effects"]) % 4))
 
         self.body_bright_minus = QPushButton("Bright-")
         self.body_bright_minus.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
         self.body_bright_minus.clicked.connect(lambda: com.txstr("body_bright-"))
         self.body_bright_minus.setFixedSize(QSize(75, 50))
-        self.body_effects_layout.addWidget(self.body_bright_minus, len(settings["body_effects"]) // 2,
-                                           len(settings["body_effects"]) % 2)
+        self.body_effects_layout.addWidget(self.body_bright_minus, len(settings["body_effects"]) // 4,
+                                           len(settings["body_effects"]) % 4 + 1)
 
         # Base Color Page
 
@@ -840,10 +838,13 @@ class RemoteUI(KBMainWindow):
         self.base_color_picker_2.setHex("000000")
         self.base_color_layout_p.addWidget(self.base_color_picker_2, 1, 0)
 
+        self.base_right_layout = QVBoxLayout()
+        self.base_color_layout.addLayout(self.base_right_layout)
+
         # Base Animation Speed
         self.base_speed_box = QGroupBox(strings.BASE_SPEED_G)
         self.base_speed_box.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.base_color_layout_p.addWidget(self.base_speed_box, 0, 1)
+        self.base_right_layout.addWidget(self.base_speed_box)
         self.base_speed_layout = QVBoxLayout()
 
         self.base_speed = QSlider(Qt.Orientation.Horizontal)
@@ -856,39 +857,31 @@ class RemoteUI(KBMainWindow):
         # Base Effects
         self.base_effects_group = QGroupBox(strings.BASE_EFFECTS_G)
         self.base_effects_group.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.base_color_layout.addWidget(self.base_effects_group)
+        self.base_right_layout.addWidget(self.base_effects_group)
 
         self.base_effects_layout = QGridLayout()
         self.base_effects_group.setLayout(self.base_effects_layout)
 
         for i in range(len(settings["base_effects"])):
-            if "*" not in settings["base_effects"][i]:
-                effect_button = QPushButton(capitalize(settings["base_effects"][i]))
-                effect_button.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
-                self.base_effects_layout.addWidget(effect_button, i // 2, i % 2)
-                effect_button.clicked.connect(partial(self.base_effect_action, i))
-                effect_button.setFixedSize(QSize(75, 50))
-            elif "*c" in settings["base_effects"][i]:
-                dt = datetime.datetime.now()
-                if dt.day in range(20, 27) and dt.month == 12:
-                    effect_button = QPushButton(capitalize(settings["base_effects"][i]))
-                    effect_button.setObjectName("Kevinbot3_RemoteUI_BodyEffectButtonEgg")
-                    effect_button.clicked.connect(partial(self.base_effect_action, i))
-                    self.base_effects_layout.addWidget(effect_button, (i // 2) + 1, i % 2)
+            effect_button = QPushButton(capitalize(settings["base_effects"][i]))
+            effect_button.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
+            self.base_effects_layout.addWidget(effect_button, i // 4, i % 4)
+            effect_button.clicked.connect(partial(self.base_effect_action, i))
+            effect_button.setFixedSize(QSize(75, 50))
 
         self.base_bright_plus = QPushButton("Bright+")
         self.base_bright_plus.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
         self.base_bright_plus.clicked.connect(lambda: com.txstr("base_bright+"))
         self.base_bright_plus.setFixedSize(QSize(75, 50))
-        self.base_effects_layout.addWidget(self.base_bright_plus, (len(settings["base_effects"]) // 2),
-                                           (len(settings["base_effects"]) % 2) - 1)
+        self.base_effects_layout.addWidget(self.base_bright_plus, (len(settings["base_effects"]) // 4),
+                                           (len(settings["base_effects"]) % 4))
 
         self.base_bright_minus = QPushButton("Bright-")
         self.base_bright_minus.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
         self.base_bright_minus.clicked.connect(lambda: com.txstr("base_bright-"))
         self.base_bright_minus.setFixedSize(QSize(75, 50))
-        self.base_effects_layout.addWidget(self.base_bright_minus, len(settings["base_effects"]) // 2,
-                                           len(settings["base_effects"]) % 2)
+        self.base_effects_layout.addWidget(self.base_bright_minus, len(settings["base_effects"]) // 4,
+                                           len(settings["base_effects"]) % 4 + 1)
 
         # Arm Preset Editor
 
@@ -1706,7 +1699,7 @@ class RemoteUI(KBMainWindow):
         com.txcv("head_color1", str(self.head_color_picker.getHex()).strip("#") + "00")
 
     def head_color2_changed(self):
-        com.txcv("head_color2", str(self.headColorPicker2.getHex()).strip("#") + "00")
+        com.txcv("head_color2", str(self.head_color_picker_2.getHex()).strip("#") + "00")
 
     def body_color1_changed(self):
         com.txcv("body_color1", str(self.bodyColorPicker.getHex()).strip("#") + "00")
