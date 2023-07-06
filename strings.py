@@ -58,13 +58,12 @@ BASE_SPEED_G: Final[str] = "Base Speed"
 
 # -- Remote UI Eyes -- #
 
-EYE_CONFIG_G: Final[str] = "Eye Config"
-EYE_CONFIG_B_G: Final[str] = "Eye Background"
-EYE_CONFIG_P_G: Final[str] = "Eye Pupil"
-EYE_CONFIG_I_G: Final[str] = "Eye Iris"
+EYE_CONFIG_B_G: Final[str] = "Background Color"
+EYE_CONFIG_P_G: Final[str] = "Pupil Color"
+EYE_CONFIG_I_G: Final[str] = "Iris Color"
 EYE_CONFIG_S_G: Final[str] = "Eye Size"
-EYE_CONFIG_SP_G: Final[str] = "Eye Speed"
-EYE_CONFIG_BR_G: Final[str] = "Eye Backlight"
+EYE_CONFIG_SP_G: Final[str] = "Motion Speed"
+EYE_CONFIG_BR_G: Final[str] = "Backlight"
 
 SAVE: Final[str] = "Save"
 SAVE_SUCCESS: Final[str] = "Saved Successfully"
@@ -86,7 +85,7 @@ BATT_VOLT1: Final[str] = "Battery #1 Voltage: {}"
 BATT_VOLT2: Final[str] = "Battery #2 Voltage: {}"
 BATT_LOW: Final[str] = "One or More Batteries are Low"
 
-# -- Remote UI Volt Waring -- #
+# -- Remote UI Volt Warning -- #
 
 MODAL_CLOSE: Final[str] = "Ignore"
 MODAL_SHUTDOWN: Final[str] = "Shutdown Robot"

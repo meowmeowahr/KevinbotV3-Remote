@@ -1,4 +1,5 @@
 import enum
+import functools
 import os.path
 import math
 from datetime import datetime
@@ -570,3 +571,30 @@ class Level(QFrame):
         exporter.export(os.path.join(os.path.curdir, "mpu_graph_images",
                                      datetime.now().strftime("%m-%d-%y_%I-%M_%p_") +
                                      str(shortuuid.uuid()[12:]) + ".png"))
+
+class KBSkinSelector(QScrollArea):
+    def __init__(self):
+        super(KBSkinSelector, self).__init__()
+        self.setWidgetResizable(True)
+
+        self.scroll_widget = QWidget()
+        self.setWidget(self.scroll_widget)
+
+        self.scroll_layout = QHBoxLayout()
+        self.scroll_widget.setLayout(self.scroll_layout)
+
+    def addSkins(self, skins: dict, on_select) -> None:
+        for key in skins.keys():
+            option = KBEyeSkin(skins[key][1], key)
+            option.clicked.connect(functools.partial(on_select, skins[key][0]))
+            self.scroll_layout.addWidget(option)
+
+class KBEyeSkin(QToolButton):
+    def __init__(self, image: QPixmap = None, text: str = ""):
+        super(KBEyeSkin, self).__init__()
+
+        self.setIcon(QIcon(image))
+        self.setIconSize(QSize(42, 42))
+        self.setFixedSize(QSize(72, 72))
+        self.setText(text)
+        self.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)

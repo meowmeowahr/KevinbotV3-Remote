@@ -25,6 +25,7 @@ BROWN = "#0E0600"
 CRIMSON = "#DC283C"
 PURPLE = "#8C00FF"
 DBLUE = "#0022FF"
+GRAY = "#555555"
 
 PALETTES = {
     # bokeh paired 12
@@ -39,7 +40,7 @@ PALETTES = {
                      '#ffffff'],
     # Kevinbot v3
     'kevinbot': [BLACK, RED, GREEN, BLUE, WHITE, CYAN, MAGENTA, YELLOW, CHARTREUSE, ORANGE, AQUAMARINE, PINK, TURQUOISE,
-                 INDIGO, VIOLET, MAROON, BROWN, CRIMSON, PURPLE, DBLUE]
+                 INDIGO, VIOLET, MAROON, BROWN, CRIMSON, PURPLE, DBLUE, GRAY]
 }
 
 
@@ -92,7 +93,7 @@ class PaletteVertical(_PaletteLinearBase):
 
 class PaletteGrid(_PaletteBase):
 
-    def __init__(self, colors, n_columns=5, *args, **kwargs):
+    def __init__(self, colors, n_columns=7, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         if isinstance(colors, str):
