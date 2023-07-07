@@ -42,6 +42,9 @@ CURRENT_ARM_POS = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 2 5dof arms
 HIGH_INSIDE_TEMP = 45
 
 EYE_SKINS = {"Simple": (3, "icons/eye.svg"), "Metallic": (4, "icons/iris.png"), "Neon": (5, "icons/neon1.png")}
+EYE_NEON_SKINS = {"Circle": ("neon1.png", "res/eye_skin_neon/neon1.png"),
+                  "Semicircle": ("neon2.png", "res/eye_skin_neon/neon2.png"),
+                  "Striped\nCircle": ("neon3.png", "res/eye_skin_neon/neon3.png")}
 
 __version__ = "v1.0.0"
 __author__ = "Kevin Ahr"
@@ -138,6 +141,8 @@ class RemoteUI(KBMainWindow):
         self.eye_skin = 3
 
         self.init_ui()
+
+        com.txcv("eye.get_settings", True)
 
         if settings["dev_mode"]:
             self.createDevTools()
@@ -323,6 +328,20 @@ class RemoteUI(KBMainWindow):
             elif data[0] == "core.ping":
                 src_dest = data[1].split(",", maxsplit=1)
                 get_updater().call_latest(window.ping, src_dest[0])
+            elif data[0] == "eye_settings.states.page":
+                if window:
+                    get_updater().call_latest(self.eye_config_stack.setCurrentIndex, int(data[1]) - 3)
+            elif data[0] == "eye_settings.skins.simple.iris_size":
+                if window:
+                    get_updater().call_latest(self.eye_simple_iris_size_slider.blockSignals, True)
+                    get_updater().call_latest(self.eye_simple_iris_size_slider.setValue, int(data[1]))
+                    get_updater().call_latest(self.eye_simple_iris_size_slider.blockSignals, False)
+            elif data[0] == "eye_settings.skins.simple.pupil_size":
+                if window:
+                    get_updater().call_latest(self.eye_simple_pupil_size_slider.blockSignals, True)
+                    get_updater().call_latest(self.eye_simple_pupil_size_slider.setValue, int(data[1]))
+                    get_updater().call_latest(self.eye_simple_pupil_size_slider.blockSignals, False)
+
         except Exception:
             traceback.print_exc()
 
@@ -1047,96 +1066,106 @@ class RemoteUI(KBMainWindow):
         self.eye_config_stack.insertWidget(0, self.eye_simple_widget)
 
         # background group box
-        self.eyeConfigBackground = QGroupBox(strings.EYE_CONFIG_B_G)
-        self.eyeConfigBackground.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.eye_simple_layout.addWidget(self.eyeConfigBackground, 0, 0)
-        self.eyeConfigBackgroundLayout = QHBoxLayout()
-        self.eyeConfigBackground.setLayout(self.eyeConfigBackgroundLayout)
+        self.eye_simple_background = QGroupBox(strings.EYE_CONFIG_B_G)
+        self.eye_simple_background.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.eye_simple_layout.addWidget(self.eye_simple_background, 0, 0)
+        self.eye_simple_background_layout = QHBoxLayout()
+        self.eye_simple_background.setLayout(self.eye_simple_background_layout)
 
         # background image
-        self.eyeConfigBackgroundImage = QLabel()
-        self.eyeConfigBackgroundImage.setObjectName("Kevinbot3_RemoteUI_EyeConfigImage")
-        self.eyeConfigBackgroundImage.setPixmap(QPixmap("icons/eye-bg.svg")
-                                                .scaledToWidth(96, Qt.TransformationMode.SmoothTransformation))
-        self.eyeConfigBackgroundImage.setAlignment(Qt.AlignCenter)
-        self.eyeConfigBackgroundLayout.addWidget(self.eyeConfigBackgroundImage)
+        self.eye_simple_background_image = QLabel()
+        self.eye_simple_background_image.setObjectName("Kevinbot3_RemoteUI_EyeConfigImage")
+        self.eye_simple_background_image.setPixmap(QPixmap("icons/eye-bg.svg")
+                                                   .scaledToWidth(96, Qt.TransformationMode.SmoothTransformation))
+        self.eye_simple_background_image.setAlignment(Qt.AlignCenter)
+        self.eye_simple_background_layout.addWidget(self.eye_simple_background_image)
 
         # palette
-        self.eyeConfigPalette = PaletteGrid(colors=PALETTES['kevinbot'])
-        self.eyeConfigPalette.setObjectName("Kevinbot3_RemoteUI_EyeConfigPalette")
-        self.eyeConfigPalette.setFixedSize(self.eyeConfigPalette.sizeHint())
-        self.eyeConfigPalette.selected.connect(self.eye_config_simple_bg_selected)
-        self.eyeConfigBackgroundLayout.addWidget(self.eyeConfigPalette)
+        self.eye_simple_bg_palette = PaletteGrid(colors=PALETTES['kevinbot'])
+        self.eye_simple_bg_palette.setObjectName("Kevinbot3_RemoteUI_EyeConfigPalette")
+        self.eye_simple_bg_palette.setFixedSize(self.eye_simple_bg_palette.sizeHint())
+        self.eye_simple_bg_palette.selected.connect(self.eye_config_simple_bg_selected)
+        self.eye_simple_background_layout.addWidget(self.eye_simple_bg_palette)
 
         # pupil group box
-        self.eye_config_pupil = QGroupBox(strings.EYE_CONFIG_P_G)
-        self.eye_config_pupil.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.eye_simple_layout.addWidget(self.eye_config_pupil, 0, 1)
-        self.eye_config_pupil_layout = QHBoxLayout()
-        self.eye_config_pupil.setLayout(self.eye_config_pupil_layout)
+        self.eye_simple_pupil_color = QGroupBox(strings.EYE_CONFIG_P_G)
+        self.eye_simple_pupil_color.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.eye_simple_layout.addWidget(self.eye_simple_pupil_color, 0, 1)
+        self.eye_simple_pupil_color_layout = QHBoxLayout()
+        self.eye_simple_pupil_color.setLayout(self.eye_simple_pupil_color_layout)
 
         # pupil image
-        self.eye_config_pupil_image = QLabel()
-        self.eye_config_pupil_image.setObjectName("Kevinbot3_RemoteUI_EyeConfigImage")
-        self.eye_config_pupil_image.setPixmap(QPixmap("icons/eye-pupil.svg")
-                                              .scaledToWidth(96, Qt.TransformationMode.SmoothTransformation))
-        self.eye_config_pupil_image.setAlignment(Qt.AlignCenter)
-        self.eye_config_pupil_layout.addWidget(self.eye_config_pupil_image)
+        self.eye_simple_pupil_color_image = QLabel()
+        self.eye_simple_pupil_color_image.setObjectName("Kevinbot3_RemoteUI_EyeConfigImage")
+        self.eye_simple_pupil_color_image.setPixmap(QPixmap("icons/eye-pupil.svg")
+                                                    .scaledToWidth(96, Qt.TransformationMode.SmoothTransformation))
+        self.eye_simple_pupil_color_image.setAlignment(Qt.AlignCenter)
+        self.eye_simple_pupil_color_layout.addWidget(self.eye_simple_pupil_color_image)
 
         # pupil palette
-        self.eye_config_palette_2 = PaletteGrid(colors=PALETTES['kevinbot'])
-        self.eye_config_palette_2.setObjectName("Kevinbot3_RemoteUI_EyeConfigPalette")
-        self.eye_config_palette_2.setFixedSize(self.eye_config_palette_2.sizeHint())
-        self.eye_config_palette_2.selected.connect(self.eye_config_simple_pupil_selected)
-        self.eye_config_pupil_layout.addWidget(self.eye_config_palette_2)
+        self.eye_simple_pupil_palette = PaletteGrid(colors=PALETTES['kevinbot'])
+        self.eye_simple_pupil_palette.setObjectName("Kevinbot3_RemoteUI_EyeConfigPalette")
+        self.eye_simple_pupil_palette.setFixedSize(self.eye_simple_pupil_palette.sizeHint())
+        self.eye_simple_pupil_palette.selected.connect(self.eye_config_simple_pupil_selected)
+        self.eye_simple_pupil_color_layout.addWidget(self.eye_simple_pupil_palette)
 
         # iris group box
-        self.eye_config_iris = QGroupBox(strings.EYE_CONFIG_I_G)
-        self.eye_config_iris.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.eye_simple_layout.addWidget(self.eye_config_iris, 1, 0)
-        self.eye_config_iris_layout = QHBoxLayout()
-        self.eye_config_iris.setLayout(self.eye_config_iris_layout)
+        self.eye_simple_iris = QGroupBox(strings.EYE_CONFIG_I_G)
+        self.eye_simple_iris.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.eye_simple_layout.addWidget(self.eye_simple_iris, 1, 0, 2, 1)
+        self.eye_simple_iris_layout = QHBoxLayout()
+        self.eye_simple_iris.setLayout(self.eye_simple_iris_layout)
 
         # iris image
-        self.eye_config_iris_image = QLabel()
-        self.eye_config_iris_image.setObjectName("Kevinbot3_RemoteUI_EyeConfigImage")
-        self.eye_config_iris_image.setPixmap(QPixmap("icons/eye-iris.svg")
+        self.eye_simple_iris_image = QLabel()
+        self.eye_simple_iris_image.setObjectName("Kevinbot3_RemoteUI_EyeConfigImage")
+        self.eye_simple_iris_image.setPixmap(QPixmap("icons/eye-iris.svg")
                                              .scaledToWidth(96, Qt.TransformationMode.SmoothTransformation))
-        self.eye_config_iris_image.setAlignment(Qt.AlignCenter)
-        self.eye_config_iris_layout.addWidget(self.eye_config_iris_image)
+        self.eye_simple_iris_image.setAlignment(Qt.AlignCenter)
+        self.eye_simple_iris_layout.addWidget(self.eye_simple_iris_image)
 
         # iris palette
-        self.eye_config_palette_3 = PaletteGrid(colors=PALETTES['kevinbot'])
-        self.eye_config_palette_3.setObjectName("Kevinbot3_RemoteUI_EyeConfigPalette")
-        self.eye_config_palette_3.setFixedSize(self.eye_config_palette_3.sizeHint())
-        self.eye_config_palette_3.selected.connect(self.eye_config_simple_iris_selected)
-        self.eye_config_iris_layout.addWidget(self.eye_config_palette_3)
+        self.eye_simple_iris_palette = PaletteGrid(colors=PALETTES['kevinbot'])
+        self.eye_simple_iris_palette.setObjectName("Kevinbot3_RemoteUI_EyeConfigPalette")
+        self.eye_simple_iris_palette.setFixedSize(self.eye_simple_iris_palette.sizeHint())
+        self.eye_simple_iris_palette.selected.connect(self.eye_config_simple_iris_selected)
+        self.eye_simple_iris_layout.addWidget(self.eye_simple_iris_palette)
 
-        # eye size group box
-        self.eye_config_size = QGroupBox(strings.EYE_CONFIG_S_G)
-        self.eye_config_size.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.eye_simple_layout.addWidget(self.eye_config_size, 1, 1)
-        self.eye_config_size_layout = QHBoxLayout()
-        self.eye_config_size.setLayout(self.eye_config_size_layout)
+        # pupil size group box
+        self.eye_simple_pupil_size = QGroupBox(strings.EYE_CONFIG_PS_G)
+        self.eye_simple_pupil_size.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.eye_simple_layout.addWidget(self.eye_simple_pupil_size, 1, 1)
+        self.eye_simple_pupil_size_layout = QHBoxLayout()
+        self.eye_simple_pupil_size.setLayout(self.eye_simple_pupil_size_layout)
 
-        # eye size image
-        self.eye_config_size_image = QLabel()
-        self.eye_config_size_image.setObjectName("Kevinbot3_RemoteUI_EyeConfigImage")
-        self.eye_config_size_image.setPixmap(QPixmap("icons/eye-size.svg")
-                                             .scaledToWidth(96, Qt.TransformationMode.SmoothTransformation))
-        self.eye_config_size_image.setAlignment(Qt.AlignCenter)
-        self.eye_config_size_layout.addWidget(self.eye_config_size_image)
+        # pupil size slider
+        self.eye_simple_pupil_size_slider = QSlider(Qt.Horizontal)
+        self.eye_simple_pupil_size_slider.setObjectName("Kevinbot3_RemoteUI_EyeConfigSlider")
+        self.eye_simple_pupil_size_slider.setMinimum(0)
+        self.eye_simple_pupil_size_slider.setMaximum(100)
+        self.eye_simple_pupil_size_slider.setValue(35)
+        self.eye_simple_pupil_size_slider.setTickPosition(QSlider.TicksBelow)
+        self.eye_simple_pupil_size_slider.setTickInterval(5)
+        self.eye_simple_pupil_size_slider.valueChanged.connect(self.eye_config_pupil_size_slider_value_changed)
+        self.eye_simple_pupil_size_layout.addWidget(self.eye_simple_pupil_size_slider)
 
-        # eye size slider
-        self.eye_config_size_slider = QSlider(Qt.Horizontal)
-        self.eye_config_size_slider.setObjectName("Kevinbot3_RemoteUI_EyeConfigSlider")
-        self.eye_config_size_slider.setMinimum(0)
-        self.eye_config_size_slider.setMaximum(50)
-        self.eye_config_size_slider.setValue(35)
-        self.eye_config_size_slider.setTickPosition(QSlider.TicksBelow)
-        self.eye_config_size_slider.setTickInterval(5)
-        self.eye_config_size_slider.valueChanged.connect(self.eye_config_size_slider_value_changed)
-        self.eye_config_size_layout.addWidget(self.eye_config_size_slider)
+        # iris size group box
+        self.eye_simple_iris_size = QGroupBox(strings.EYE_CONFIG_IS_G)
+        self.eye_simple_iris_size.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.eye_simple_layout.addWidget(self.eye_simple_iris_size, 2, 1)
+        self.eye_simple_iris_size_layout = QHBoxLayout()
+        self.eye_simple_iris_size.setLayout(self.eye_simple_iris_size_layout)
+
+        # iris size slider
+        self.eye_simple_iris_size_slider = QSlider(Qt.Horizontal)
+        self.eye_simple_iris_size_slider.setObjectName("Kevinbot3_RemoteUI_EyeConfigSlider")
+        self.eye_simple_iris_size_slider.setMinimum(0)
+        self.eye_simple_iris_size_slider.setMaximum(150)
+        self.eye_simple_iris_size_slider.setValue(35)
+        self.eye_simple_iris_size_slider.setTickPosition(QSlider.TicksBelow)
+        self.eye_simple_iris_size_slider.setTickInterval(5)
+        self.eye_simple_iris_size_slider.valueChanged.connect(self.eye_config_iris_size_slider_value_changed)
+        self.eye_simple_iris_size_layout.addWidget(self.eye_simple_iris_size_slider)
 
         # Metal Skin
         self.eye_metal_layout = QGridLayout()
@@ -1146,11 +1175,15 @@ class RemoteUI(KBMainWindow):
         self.eye_config_stack.insertWidget(1, self.eye_metal_widget)
         
         # Neon Skin
-        self.eye_neon_layout = QGridLayout()
+        self.eye_neon_layout = QVBoxLayout()
         self.eye_neon_layout.setContentsMargins(0, 0, 0, 0)
         self.eye_neon_widget = QWidget()
         self.eye_neon_widget.setLayout(self.eye_neon_layout)
         self.eye_config_stack.insertWidget(2, self.eye_neon_widget)
+
+        self.eye_neon_selector = KBSkinSelector()
+        self.eye_neon_selector.addSkins(EYE_NEON_SKINS, self.eye_set_neon_style, 84)
+        self.eye_neon_layout.addWidget(self.eye_neon_selector)
 
         self.eye_config_bottom_layout = QHBoxLayout()
         self.eye_config_inner_layout.addLayout(self.eye_config_bottom_layout)
@@ -1935,9 +1968,13 @@ class RemoteUI(KBMainWindow):
     def eye_config_simple_iris_selected(color):
         com.txstr(f"eye.set_skin_option=simple:iris_color:{color}")
 
-    @staticmethod
-    def eye_config_size_slider_value_changed(value):
-        com.txcv("eye_size", value)
+
+    def eye_config_pupil_size_slider_value_changed(self, value):
+        com.txstr(f"eye.set_skin_option=simple:pupil_size:{self.eye_simple_iris_size_slider.value() * value // 100}")
+
+    def eye_config_iris_size_slider_value_changed(self, value):
+        com.txstr(f"eye.set_skin_option=simple:iris_size:{value}")
+        com.txstr(f"eye.set_skin_option=simple:pupil_size:{value * self.eye_simple_pupil_size_slider.value() // 100}")
 
     @staticmethod
     def eye_config_speed_slider_value_changed(value):
@@ -1946,6 +1983,10 @@ class RemoteUI(KBMainWindow):
     @staticmethod
     def eye_config_bright_slider_value_changed(value):
         com.txcv("eye_brightness", value)
+
+    @staticmethod
+    def eye_set_neon_style(value):
+        com.txstr(f"eye.set_skin_option=neon:style:{value}")
 
     def motor_action(self):
         if not ANALOG_STICK:

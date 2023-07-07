@@ -583,9 +583,10 @@ class KBSkinSelector(QScrollArea):
         self.scroll_layout = QHBoxLayout()
         self.scroll_widget.setLayout(self.scroll_layout)
 
-    def addSkins(self, skins: dict, on_select) -> None:
+    def addSkins(self, skins: dict, on_select, button_height: int=72) -> None:
         for key in skins.keys():
             option = KBEyeSkin(skins[key][1], key)
+            option.setFixedSize(QSize(72, button_height))
             option.clicked.connect(functools.partial(on_select, skins[key][0]))
             self.scroll_layout.addWidget(option)
 
