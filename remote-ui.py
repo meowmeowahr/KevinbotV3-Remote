@@ -1173,11 +1173,35 @@ class RemoteUI(KBMainWindow):
         self.eye_simple_iris_size_layout.addWidget(self.eye_simple_iris_size_slider)
 
         # Metal Skin
-        self.eye_metal_layout = QGridLayout()
+        self.eye_metal_layout = QVBoxLayout()
         self.eye_metal_layout.setContentsMargins(0, 0, 0, 0)
         self.eye_metal_widget = QWidget()
         self.eye_metal_widget.setLayout(self.eye_metal_layout)
         self.eye_config_stack.insertWidget(1, self.eye_metal_widget)
+
+        # iris tint group box
+        self.eye_metal_iris_tint = QGroupBox(strings.EYE_CONFIG_METAL_IS_T_G)
+        self.eye_metal_iris_tint.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.eye_metal_layout.addWidget(self.eye_metal_iris_tint)
+        self.eye_metal_iris_tint_layout = QVBoxLayout()
+        self.eye_metal_iris_tint.setLayout(self.eye_metal_iris_tint_layout)
+
+        # iris tint slider
+        self.eye_metal_iris_tint_slider = QSlider(Qt.Horizontal)
+        self.eye_metal_iris_tint_slider.setObjectName("Kevinbot3_RemoteUI_EyeConfigSlider")
+        self.eye_metal_iris_tint_slider.setMinimum(0)
+        self.eye_metal_iris_tint_slider.setMaximum(255)
+        self.eye_metal_iris_tint_slider.setValue(35)
+        self.eye_metal_iris_tint_slider.setTickPosition(QSlider.TicksBelow)
+        self.eye_metal_iris_tint_slider.setTickInterval(5)
+        self.eye_metal_iris_tint_slider.valueChanged.connect(self.eye_config_metal_tint_changed)
+        self.eye_metal_iris_tint_layout.addWidget(self.eye_metal_iris_tint_slider)
+
+        self.eye_metal_iris_tint_image = QLabel()
+        self.eye_metal_iris_tint_image.setPixmap(QPixmap("res/misc/hues.png"))
+        self.eye_metal_iris_tint_image.setScaledContents(True)
+        self.eye_metal_iris_tint_image.setFixedHeight(24)
+        self.eye_metal_iris_tint_layout.addWidget(self.eye_metal_iris_tint_image)
         
         # Neon Skin
         self.eye_neon_layout = QVBoxLayout()
@@ -1988,6 +2012,10 @@ class RemoteUI(KBMainWindow):
     @staticmethod
     def eye_config_bright_slider_value_changed(value):
         com.txcv("eye.set_backlight", value)
+
+    @staticmethod
+    def eye_config_metal_tint_changed(value):
+        com.txstr(f"eye.set_skin_option=metal:tint:{value}")
 
     @staticmethod
     def eye_set_neon_style(value):

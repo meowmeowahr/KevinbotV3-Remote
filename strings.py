@@ -66,6 +66,8 @@ EYE_CONFIG_IS_G: Final[str] = "Iris Size"
 EYE_CONFIG_SP_G: Final[str] = "Motion Speed"
 EYE_CONFIG_BR_G: Final[str] = "Backlight"
 
+EYE_CONFIG_METAL_IS_T_G : Final[str] = "Iris Tint"
+
 SAVE: Final[str] = "Save"
 SAVE_SUCCESS: Final[str] = "Saved Successfully"
 SAVE_ERROR: Final[str] = "Save Error"
