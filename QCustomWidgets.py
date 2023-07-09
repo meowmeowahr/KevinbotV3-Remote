@@ -599,3 +599,4 @@ class KBEyeSkin(QToolButton):
         self.setFixedSize(QSize(72, 72))
         self.setText(text)
         self.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
+        self.setStyleSheet("font-family: Roboto; font-size: 13px;")
