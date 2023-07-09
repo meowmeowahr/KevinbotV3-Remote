@@ -341,6 +341,11 @@ class RemoteUI(KBMainWindow):
                     get_updater().call_latest(self.eye_simple_pupil_size_slider.blockSignals, True)
                     get_updater().call_latest(self.eye_simple_pupil_size_slider.setValue, int(data[1]))
                     get_updater().call_latest(self.eye_simple_pupil_size_slider.blockSignals, False)
+            elif data[0] == "eye_settings.display.backlight" or data[0] == "eye.set_backlight":
+                if window:
+                    get_updater().call_latest(self.eye_config_light_slider.blockSignals, True)
+                    get_updater().call_latest(self.eye_config_light_slider.setValue, int(data[1]))
+                    get_updater().call_latest(self.eye_config_light_slider.blockSignals, False)
 
         except Exception:
             traceback.print_exc()
@@ -1217,8 +1222,8 @@ class RemoteUI(KBMainWindow):
         self.eye_config_light_slider = QSlider(Qt.Horizontal)
         self.eye_config_light_slider.setObjectName("Kevinbot3_RemoteUI_EyeConfigSlider")
         self.eye_config_light_slider.setMinimum(1)
-        self.eye_config_light_slider.setMaximum(255)
-        self.eye_config_light_slider.setValue(255)
+        self.eye_config_light_slider.setMaximum(100)
+        self.eye_config_light_slider.setValue(100)
         self.eye_config_light_slider.setTickPosition(QSlider.NoTicks)
         self.eye_config_light_slider.setTickInterval(1)
         self.eye_config_light_slider.valueChanged.connect(self.eye_config_bright_slider_value_changed)
@@ -1982,7 +1987,7 @@ class RemoteUI(KBMainWindow):
 
     @staticmethod
     def eye_config_bright_slider_value_changed(value):
-        com.txcv("eye_brightness", value)
+        com.txcv("eye.set_backlight", value)
 
     @staticmethod
     def eye_set_neon_style(value):
