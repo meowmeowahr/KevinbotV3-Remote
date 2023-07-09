@@ -10,6 +10,51 @@ from qtpy.QtCore import QFile, QTextStream, QTimer
 from qtpy.QtWidgets import QWidget
 
 
+EXTRA_CSS = ("#Enable_Button{"
+             "background-color: #e65c4d;"
+             "color: #080808;"
+             "font-size: 18px;"
+             "font-family: Roboto;"
+             "font-weight: bold;"
+             "}"
+             "#Disable_Button{"
+             "background-color: #56bb74;"
+             "color: #080808;"
+             "font-size: 18px;"
+             "font-family: Roboto;"
+             "font-weight: bold;"
+             "}"
+             "#E_Stop{"
+             "background-color: #fbc02d;"
+             "color: #080808;"
+             "font-size: 24px;"
+             "font-family: Roboto;"
+             "font-weight: bold;"
+             "}"
+             "#Detailed_Help {"
+             "font-size: 13px;"
+             "font-family: Roboto;"
+             "}"
+             "QGroupBox {"
+             "font-family: Roboto;"
+             "font-size: 13px;"
+             "}"
+             "#Kevinbot3_RemoteUI_SensorData {"
+             "font-family: Roboto;"
+             "font-weight: medium;"
+             "font-size: 13px;"
+             "}"
+             "#Kevinbot3_Widget_KBDebugDataEntry_Data {"
+             "font-familt: Roboto;"
+             "font-size: 13px;"
+             "}"
+             "#Kevinbot3_RemoteUI_SMenuButton {"
+             "font-size: 14px;"
+             "font-weight: bold;"
+             "font-family: Roboto;"
+             "}")
+
+
 def capitalize(string):
     return string[0].upper() + string[1:]
 
@@ -64,7 +109,7 @@ def load_theme(widget: QWidget, theme="classic", theme_style="default"):
                                  "QDial{"
                                  "background-color: #8ab4f7;"
                                  "color: #202124;"
-                                 "}")
+                                 "}" + EXTRA_CSS)
         elif theme_style.lower() == "purple":
             widget.setStyleSheet(qdarktheme.load_stylesheet(custom_colors={"primary": "#d970d5"}))
             # add extra stylesheets
@@ -72,7 +117,7 @@ def load_theme(widget: QWidget, theme="classic", theme_style="default"):
                                  "QDial{"
                                  "background-color: #d970d5;"
                                  "color: #202124;"
-                                 "}")
+                                 "}" + EXTRA_CSS)
         elif theme_style.lower() == "green":
             widget.setStyleSheet(qdarktheme.load_stylesheet(custom_colors={"primary": "#56bb74"}))
             # add extra stylesheets
@@ -80,7 +125,7 @@ def load_theme(widget: QWidget, theme="classic", theme_style="default"):
                                  "QDial{"
                                  "background-color: #56bb74;"
                                  "color: #202124;"
-                                 "}")
+                                 "}" + EXTRA_CSS)
         elif theme_style.lower() == "orange":
             widget.setStyleSheet(qdarktheme.load_stylesheet(custom_colors={"primary": "#ffa348"}))
             # add extra stylesheets
@@ -88,7 +133,7 @@ def load_theme(widget: QWidget, theme="classic", theme_style="default"):
                                  "QDial{"
                                  "background-color: #ffa348;"
                                  "color: #202124;"
-                                 "}")
+                                 "}" + EXTRA_CSS)
         elif theme_style.lower() == "teal":
             widget.setStyleSheet(qdarktheme.load_stylesheet(custom_colors={"primary": "#56bbca"}))
             # add extra stylesheets
@@ -104,7 +149,7 @@ def load_theme(widget: QWidget, theme="classic", theme_style="default"):
                                  "QDial{"
                                  "background-color: #e65c4d;"
                                  "color: #202124;"
-                                 "}")
+                                 "}" + EXTRA_CSS)
         elif theme_style.lower() == "white":
             widget.setStyleSheet(qdarktheme.load_stylesheet(custom_colors={"primary": "#ffffff"}))
             # add extra stylesheets
@@ -112,7 +157,7 @@ def load_theme(widget: QWidget, theme="classic", theme_style="default"):
                                  "QDial{"
                                  "background-color: #ffffff;"
                                  "color: #202124;"
-                                 "}")
+                                 "}" + EXTRA_CSS)
         else:
             widget.setStyleSheet(qdarktheme.load_stylesheet())
             # add extra stylesheets
@@ -120,7 +165,7 @@ def load_theme(widget: QWidget, theme="classic", theme_style="default"):
                                  "QDial{"
                                  "background-color: #8ab4f7;"
                                  "color: #202124;"
-                                 "}")
+                                 "}" + EXTRA_CSS)
     elif theme == "qdarktheme_kbot":
         import qdarktheme
         widget.setStyleSheet(qdarktheme.load_stylesheet(custom_colors={"background": "#111114", "primary": "#afbfcf",
@@ -131,50 +176,7 @@ def load_theme(widget: QWidget, theme="classic", theme_style="default"):
                              "QDial{"
                              "background-color: #263f66;"
                              "color: #afbfcf;"
-                             "}"
-                             "#Enable_Button{"
-                             "background-color: #e65c4d;"
-                             "color: #080808;"
-                             "font-size: 18px;"
-                             "font-family: Roboto;"
-                             "font-weight: bold;"
-                             "}"
-                             "#Disable_Button{"
-                             "background-color: #56bb74;"
-                             "color: #080808;"
-                             "font-size: 18px;"
-                             "font-family: Roboto;"
-                             "font-weight: bold;"
-                             "}"
-                             "#E_Stop{"
-                             "background-color: #fbc02d;"
-                             "color: #080808;"
-                             "font-size: 24px;"
-                             "font-family: Roboto;"
-                             "font-weight: bold;"
-                             "}"
-                             "#Detailed_Help {"
-                             "font-size: 13px;"
-                             "font-family: Roboto;"
-                             "}"
-                             "QGroupBox {"
-                             "font-family: Roboto;"
-                             "font-size: 13px;"
-                             "}"
-                             "#Kevinbot3_RemoteUI_SensorData {"
-                             "font-family: Roboto;"
-                             "font-weight: medium;"
-                             "font-size: 13px;"
-                             "}"
-                             "#Kevinbot3_Widget_KBDebugDataEntry_Data {"
-                             "font-familt: Roboto;"
-                             "font-size: 13px;"
-                             "}"
-                             "#Kevinbot3_RemoteUI_SMenuButton {"
-                             "font-size: 14px;"
-                             "font-weight: bold;"
-                             "font-family: Roboto;"
-                             "}"
+                             "}" + EXTRA_CSS
                              )
     elif theme == "highcontrast":
         import qdarktheme
@@ -215,7 +217,7 @@ def load_theme(widget: QWidget, theme="classic", theme_style="default"):
                                  "QDial{"
                                  "background-color: #000000;"
                                  "color: #4990ed;"
-                                 "}")
+                                 "}" + EXTRA_CSS)
         elif theme_style.lower() == "purple":
             widget.setStyleSheet(qdarktheme.load_stylesheet(theme="light", custom_colors={"primary": "#a63da3"}))
             # add extra stylesheets
@@ -223,7 +225,7 @@ def load_theme(widget: QWidget, theme="classic", theme_style="default"):
                                  "QDial{"
                                  "background-color: #000000;"
                                  "color: #a63da3;"
-                                 "}")
+                                 "}" + EXTRA_CSS)
         elif theme_style.lower() == "green":
             widget.setStyleSheet(qdarktheme.load_stylesheet(theme="light", custom_colors={"primary": "#349952"}))
             # add extra stylesheets
@@ -231,7 +233,7 @@ def load_theme(widget: QWidget, theme="classic", theme_style="default"):
                                  "QDial{"
                                  "background-color: #000000;"
                                  "color: #349952;"
-                                 "}")
+                                 "}" + EXTRA_CSS)
         elif theme_style.lower() == "orange":
             widget.setStyleSheet(qdarktheme.load_stylesheet(theme="light", custom_colors={"primary": "#dd8126"}))
             # add extra stylesheets
@@ -239,7 +241,7 @@ def load_theme(widget: QWidget, theme="classic", theme_style="default"):
                                  "QDial{"
                                  "background-color: #000000;"
                                  "color: #dd8126;"
-                                 "}")
+                                 "}" + EXTRA_CSS)
         elif theme_style.lower() == "teal":
             widget.setStyleSheet(qdarktheme.load_stylesheet(theme="light", custom_colors={"primary": "#3499a8"}))
             # add extra stylesheets
@@ -247,7 +249,7 @@ def load_theme(widget: QWidget, theme="classic", theme_style="default"):
                                  "QDial{"
                                  "background-color: #000000;"
                                  "color: #3499a8;"
-                                 "}")
+                                 "}" + EXTRA_CSS)
         elif theme_style.lower() == "red":
             widget.setStyleSheet(qdarktheme.load_stylesheet(theme="light", custom_colors={"primary": "#c43a2b"}))
             # add extra stylesheets
@@ -255,7 +257,7 @@ def load_theme(widget: QWidget, theme="classic", theme_style="default"):
                                  "QDial{"
                                  "background-color: #c43a2b;"
                                  "color: #f8f9fa;"
-                                 "}")
+                                 "}" + EXTRA_CSS)
         elif theme_style.lower() == "black":
             widget.setStyleSheet(qdarktheme.load_stylesheet(theme="light", custom_colors={"primary": "#000000"}))
             # add extra stylesheets
@@ -263,7 +265,7 @@ def load_theme(widget: QWidget, theme="classic", theme_style="default"):
                                  "QDial{"
                                  "background-color: #000000;"
                                  "color: #f8f9fa;"
-                                 "}")
+                                 "}" + EXTRA_CSS)
         else:
             widget.setStyleSheet(qdarktheme.load_stylesheet(theme="light"))
             # add extra stylesheets
@@ -271,7 +273,7 @@ def load_theme(widget: QWidget, theme="classic", theme_style="default"):
                                  "QDial{"
                                  "background-color: #000000;"
                                  "color: #4990ed;"
-                                 "}")
+                                 "}" + EXTRA_CSS)
     elif theme == "breeze_dark":
         # noinspection PyUnresolvedReferences
         import breeze_resources
