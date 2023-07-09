@@ -292,6 +292,7 @@ class RemoteUI(KBMainWindow):
                         get_updater().call_latest(window.bottom_body_led_button.setDisabled, False)
                         get_updater().call_latest(window.bottom_head_led_button.setDisabled, False)
                         get_updater().call_latest(window.bottom_eye_button.setDisabled, False)
+            # old remote enable
             elif data[0] == "core.enabled" or data[0] == "enabled":
                 while not window:
                     time.sleep(0.02)
@@ -2179,6 +2180,7 @@ class RemoteUI(KBMainWindow):
 
     def add_mesh_devices(self, items):
         items = items.split(",")
+        self.connected_devices.setText(strings.CONNECTED_DEVICES.format(len(items)))
 
         for i in reversed(range(self.devices_layout.count())):
             self.devices_layout.itemAt(i).widget().setParent(None)
