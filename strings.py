@@ -68,6 +68,8 @@ EYE_CONFIG_BR_G: Final[str] = "Backlight"
 
 EYE_CONFIG_METAL_IS_T_G : Final[str] = "Iris Tint"
 
+EYE_CONFIG_NEON_PALETTES: Final[str] = "Foreground Colors"
+
 SAVE: Final[str] = "Save"
 SAVE_SUCCESS: Final[str] = "Saved Successfully"
 SAVE_ERROR: Final[str] = "Save Error"

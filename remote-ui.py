@@ -21,7 +21,7 @@ from qtpy.QtGui import *
 from qtpy.QtWebEngineWidgets import *
 from qtpy.QtWidgets import *
 from qt_thread_updater import get_updater
-from QCustomWidgets import KBModalBar, KBMainWindow, QSuperDial, KBDevice, KBDebugDataEntry, Level, KBSkinSelector
+from QCustomWidgets import KBModalBar, KBMainWindow, QSuperDial, KBDevice, KBDebugDataEntry, Level, KBSkinSelector, KBDualColorPicker
 import qtawesome as qta
 
 import Joystick.Joystick as Joystick
@@ -1213,6 +1213,9 @@ class RemoteUI(KBMainWindow):
         self.eye_neon_selector = KBSkinSelector()
         self.eye_neon_selector.addSkins(EYE_NEON_SKINS, self.eye_set_neon_style, 84)
         self.eye_neon_layout.addWidget(self.eye_neon_selector)
+
+        self.eye_neon_fg_color_picker = KBDualColorPicker(self.palette(), strings.EYE_CONFIG_NEON_PALETTES)
+        self.eye_neon_layout.addWidget(self.eye_neon_fg_color_picker)
 
         self.eye_config_bottom_layout = QHBoxLayout()
         self.eye_config_inner_layout.addLayout(self.eye_config_bottom_layout)

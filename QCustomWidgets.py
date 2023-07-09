@@ -15,6 +15,10 @@ import pyqtgraph.exporters
 import strings
 import utils
 
+from typing import Iterable
+
+import palette as ColorPalette
+
 
 class QPushToolButton(QToolButton):
     def __init__(self, text: str = None):
@@ -600,3 +604,65 @@ class KBEyeSkin(QToolButton):
         self.setText(text)
         self.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
         self.setStyleSheet("font-family: Roboto; font-size: 13px;")
+
+class KBDualColorPicker(QGroupBox):
+    def __init__(self, window_palette: QPalette, title: str="", palette_titles: Iterable[str]=("Left", "Right")):
+        super(KBDualColorPicker, self).__init__()
+        self.setTitle(title)
+
+        if utils.detect_dark((QColor(window_palette.color(QPalette.Window)).getRgb()[0],
+                        QColor(window_palette.color(QPalette.Window)).getRgb()[1],
+                        QColor(window_palette.color(QPalette.Window)).getRgb()[2])):
+            self.fg_color = Qt.GlobalColor.white
+        else:
+            self.fg_color = Qt.GlobalColor.black
+
+        self._root_layout = QVBoxLayout()
+        self.setLayout(self._root_layout)
+
+        self._titles_layout = QHBoxLayout()
+        self._root_layout.addLayout(self._titles_layout)
+
+        self.title_a = QLabel(palette_titles[0])
+        self.title_b = QLabel(palette_titles[1])
+
+        self._titles_layout.addStretch()
+        self._titles_layout.addWidget(self.title_a)
+        self._titles_layout.addStretch()
+        self._titles_layout.addStretch()
+        self._titles_layout.addWidget(self.title_b)
+        self._titles_layout.addStretch()
+
+        self.palette_layout = QHBoxLayout()
+        self._root_layout.addLayout(self.palette_layout)
+
+        self.palette_a = ColorPalette.PaletteGrid(colors=ColorPalette.PALETTES['kevinbot'])
+        self.palette_b = ColorPalette.PaletteGrid(colors=ColorPalette.PALETTES['kevinbot'])
+
+        self.palette_swap_layout = QVBoxLayout()
+
+        self.swap = QPushButton()
+        self.swap.setIcon(qta.icon("mdi.swap-horizontal-bold", color=self.fg_color))
+        self.swap.setFixedSize(QSize(36, 36))
+        self.swap.setIconSize(QSize(32, 32))
+        self.palette_swap_layout.addWidget(self.swap)
+
+        self.arrow_a = QPushButton()
+        self.arrow_a.setIcon(qta.icon("mdi.arrow-left-bold", color=self.fg_color))
+        self.arrow_a.setFixedSize(QSize(36, 36))
+        self.arrow_a.setIconSize(QSize(32, 32))
+        self.palette_swap_layout.addWidget(self.arrow_a)
+
+        self.arrow_b = QPushButton()
+        self.arrow_b.setIcon(qta.icon("mdi.arrow-right-bold", color=self.fg_color))
+        self.arrow_b.setFixedSize(QSize(36, 36))
+        self.arrow_b.setIconSize(QSize(32, 32))
+        self.palette_swap_layout.addWidget(self.arrow_b)
+
+        self.palette_layout.addStretch()
+        self.palette_layout.addWidget(self.palette_a)
+        self.palette_layout.addStretch()
+        self.palette_layout.addLayout(self.palette_swap_layout)
+        self.palette_layout.addStretch()
+        self.palette_layout.addWidget(self.palette_b)
+        self.palette_layout.addStretch()
