@@ -139,6 +139,8 @@ class RemoteUI(KBMainWindow):
         self.full_mesh = []
         self.full_mesh_last_part = 0
         self.eye_skin = 3
+        self.eye_neon_left_color = "#ffffff"
+        self.eye_neon_right_color = "#ffffff"
 
         self.init_ui()
 
@@ -342,6 +344,12 @@ class RemoteUI(KBMainWindow):
                     get_updater().call_latest(self.eye_simple_pupil_size_slider.blockSignals, True)
                     get_updater().call_latest(self.eye_simple_pupil_size_slider.setValue, int(data[1]))
                     get_updater().call_latest(self.eye_simple_pupil_size_slider.blockSignals, False)
+            elif data[0] == "eye_settings.skins.neon.fg_color_start":
+                if window:
+                    self.eye_neon_left_color = data[1].strip('"')
+            elif data[0] == "eye_settings.skins.neon.fg_color_end":
+                if window:
+                    self.eye_neon_right_color = data[1].strip('"')
             elif data[0] == "eye_settings.display.backlight" or data[0] == "eye.set_backlight":
                 if window:
                     get_updater().call_latest(self.eye_config_light_slider.blockSignals, True)
@@ -1216,6 +1224,11 @@ class RemoteUI(KBMainWindow):
         self.eye_neon_layout.addWidget(self.eye_neon_selector)
 
         self.eye_neon_fg_color_picker = KBDualColorPicker(self.palette(), strings.EYE_CONFIG_NEON_PALETTES)
+        self.eye_neon_fg_color_picker.palette_a.selected.connect(self.eye_neon_left_changed)
+        self.eye_neon_fg_color_picker.palette_b.selected.connect(self.eye_neon_right_changed)
+        self.eye_neon_fg_color_picker.swap.clicked.connect(self.eye_neon_swap_colors)
+        self.eye_neon_fg_color_picker.arrow_a.clicked.connect(self.eye_neon_copy_rtl)
+        self.eye_neon_fg_color_picker.arrow_b.clicked.connect(self.eye_neon_copy_ltr)
         self.eye_neon_layout.addWidget(self.eye_neon_fg_color_picker)
 
         self.eye_config_bottom_layout = QHBoxLayout()
@@ -2024,6 +2037,31 @@ class RemoteUI(KBMainWindow):
     @staticmethod
     def eye_set_neon_style(value):
         com.txstr(f"eye.set_skin_option=neon:style:{value}")
+
+    def eye_neon_left_changed(self, value):
+        self.eye_neon_left_color = value
+        com.txstr(f"eye.set_skin_option=neon:fg_color_start:{self.eye_neon_left_color}")
+        com.txstr(f"eye.set_skin_option=neon:fg_color_end:{self.eye_neon_right_color}")
+
+    def eye_neon_right_changed(self, value):
+        self.eye_neon_right_color = value
+        com.txstr(f"eye.set_skin_option=neon:fg_color_start:{self.eye_neon_left_color}")
+        com.txstr(f"eye.set_skin_option=neon:fg_color_end:{self.eye_neon_right_color}")
+
+    def eye_neon_swap_colors(self):
+        self.eye_neon_left_color, self.eye_neon_right_color = self.eye_neon_right_color, self.eye_neon_left_color
+        com.txstr(f"eye.set_skin_option=neon:fg_color_start:{self.eye_neon_left_color}")
+        com.txstr(f"eye.set_skin_option=neon:fg_color_end:{self.eye_neon_right_color}")
+
+    def eye_neon_copy_ltr(self):
+        self.eye_neon_right_color = self.eye_neon_left_color
+        com.txstr(f"eye.set_skin_option=neon:fg_color_start:{self.eye_neon_left_color}")
+        com.txstr(f"eye.set_skin_option=neon:fg_color_end:{self.eye_neon_right_color}")
+
+    def eye_neon_copy_rtl(self):
+        self.eye_neon_left_color = self.eye_neon_right_color
+        com.txstr(f"eye.set_skin_option=neon:fg_color_start:{self.eye_neon_left_color}")
+        com.txstr(f"eye.set_skin_option=neon:fg_color_end:{self.eye_neon_right_color}")
 
     def motor_action(self):
         if not ANALOG_STICK:

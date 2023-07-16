@@ -576,6 +576,7 @@ class Level(QFrame):
                                      datetime.now().strftime("%m-%d-%y_%I-%M_%p_") +
                                      str(shortuuid.uuid()[12:]) + ".png"))
 
+
 class KBSkinSelector(QScrollArea):
     def __init__(self):
         super(KBSkinSelector, self).__init__()
@@ -594,6 +595,7 @@ class KBSkinSelector(QScrollArea):
             option.clicked.connect(functools.partial(on_select, skins[key][0]))
             self.scroll_layout.addWidget(option)
 
+
 class KBEyeSkin(QToolButton):
     def __init__(self, image: QPixmap = None, text: str = ""):
         super(KBEyeSkin, self).__init__()
@@ -604,6 +606,7 @@ class KBEyeSkin(QToolButton):
         self.setText(text)
         self.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
         self.setStyleSheet("font-family: Roboto; font-size: 13px;")
+
 
 class KBDualColorPicker(QGroupBox):
     def __init__(self, window_palette: QPalette, title: str="", palette_titles: Iterable[str]=("Left", "Right")):
