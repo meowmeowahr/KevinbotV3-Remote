@@ -1182,7 +1182,7 @@ class RemoteUI(KBMainWindow):
         self.eye_simple_iris_size_layout.addWidget(self.eye_simple_iris_size_slider)
 
         # Metal Skin
-        self.eye_metal_layout = QVBoxLayout()
+        self.eye_metal_layout = QGridLayout()
         self.eye_metal_layout.setContentsMargins(0, 0, 0, 0)
         self.eye_metal_widget = QWidget()
         self.eye_metal_widget.setLayout(self.eye_metal_layout)
@@ -1191,7 +1191,7 @@ class RemoteUI(KBMainWindow):
         # iris tint group box
         self.eye_metal_iris_tint = QGroupBox(strings.EYE_CONFIG_METAL_IS_T_G)
         self.eye_metal_iris_tint.setObjectName("Kevinbot3_RemoteUI_Group")
-        self.eye_metal_layout.addWidget(self.eye_metal_iris_tint)
+        self.eye_metal_layout.addWidget(self.eye_metal_iris_tint, 0, 0, 1, 2)
         self.eye_metal_iris_tint_layout = QVBoxLayout()
         self.eye_metal_iris_tint.setLayout(self.eye_metal_iris_tint_layout)
 
@@ -1211,17 +1211,18 @@ class RemoteUI(KBMainWindow):
         self.eye_metal_iris_tint_image.setScaledContents(True)
         self.eye_metal_iris_tint_image.setFixedHeight(24)
         self.eye_metal_iris_tint_layout.addWidget(self.eye_metal_iris_tint_image)
-        
+
         # Neon Skin
-        self.eye_neon_layout = QVBoxLayout()
+        self.eye_neon_layout = QGridLayout()
         self.eye_neon_layout.setContentsMargins(0, 0, 0, 0)
         self.eye_neon_widget = QWidget()
         self.eye_neon_widget.setLayout(self.eye_neon_layout)
         self.eye_config_stack.insertWidget(2, self.eye_neon_widget)
 
-        self.eye_neon_selector = KBSkinSelector()
+        self.eye_neon_selector = KBSkinSelector(direction=QBoxLayout.Direction.Down)
         self.eye_neon_selector.addSkins(EYE_NEON_SKINS, self.eye_set_neon_style, 84)
-        self.eye_neon_layout.addWidget(self.eye_neon_selector)
+        self.eye_neon_selector.setFixedWidth(100)
+        self.eye_neon_layout.addWidget(self.eye_neon_selector, 0, 3, 3, 1)
 
         self.eye_neon_fg_color_picker = KBDualColorPicker(self.palette(), strings.EYE_CONFIG_NEON_PALETTES)
         self.eye_neon_fg_color_picker.palette_a.selected.connect(self.eye_neon_left_changed)
@@ -1229,7 +1230,21 @@ class RemoteUI(KBMainWindow):
         self.eye_neon_fg_color_picker.swap.clicked.connect(self.eye_neon_swap_colors)
         self.eye_neon_fg_color_picker.arrow_a.clicked.connect(self.eye_neon_copy_rtl)
         self.eye_neon_fg_color_picker.arrow_b.clicked.connect(self.eye_neon_copy_ltr)
-        self.eye_neon_layout.addWidget(self.eye_neon_fg_color_picker)
+        self.eye_neon_layout.addWidget(self.eye_neon_fg_color_picker, 0, 0, 1, 2)
+
+        # background group box
+        self.eye_neon_background = QGroupBox(strings.EYE_CONFIG_B_G)
+        self.eye_neon_background.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.eye_neon_layout.addWidget(self.eye_neon_background, 1, 0)
+        self.eye_neon_background_layout = QHBoxLayout()
+        self.eye_neon_background_layout.setContentsMargins(0, 2, 0, 2)
+        self.eye_neon_background.setLayout(self.eye_neon_background_layout)
+
+        self.eye_neon_bg_palette = PaletteGrid(colors=PALETTES['kevinbot'])
+        self.eye_neon_bg_palette.setObjectName("Kevinbot3_RemoteUI_EyeConfigPalette")
+        self.eye_neon_bg_palette.setFixedSize(self.eye_neon_bg_palette.sizeHint())
+        self.eye_neon_bg_palette.selected.connect(self.eye_config_neon_bg_selected)
+        self.eye_neon_background_layout.addWidget(self.eye_neon_bg_palette)
 
         self.eye_config_bottom_layout = QHBoxLayout()
         self.eye_config_inner_layout.addLayout(self.eye_config_bottom_layout)
@@ -1245,7 +1260,7 @@ class RemoteUI(KBMainWindow):
         self.eye_config_light_slider = QSlider(Qt.Horizontal)
         self.eye_config_light_slider.setObjectName("Kevinbot3_RemoteUI_EyeConfigSlider")
         self.eye_config_light_slider.setMinimum(1)
-        self.eye_config_light_slider.setMaximum(16)
+        self.eye_config_light_slider.setMaximum(100)
         self.eye_config_light_slider.setValue(5)
         self.eye_config_light_slider.setTickPosition(QSlider.NoTicks)
         self.eye_config_light_slider.setTickInterval(1)
@@ -2024,7 +2039,7 @@ class RemoteUI(KBMainWindow):
 
     @staticmethod
     def eye_config_speed_slider_value_changed(value):
-        com.txcv("eye_speed", value)
+        com.txcv("eye.set_speed", value)
 
     @staticmethod
     def eye_config_bright_slider_value_changed(value):
@@ -2062,6 +2077,10 @@ class RemoteUI(KBMainWindow):
         self.eye_neon_left_color = self.eye_neon_right_color
         com.txstr(f"eye.set_skin_option=neon:fg_color_start:{self.eye_neon_left_color}")
         com.txstr(f"eye.set_skin_option=neon:fg_color_end:{self.eye_neon_right_color}")
+
+    @staticmethod
+    def eye_config_neon_bg_selected(value):
+        com.txstr(f"eye.set_skin_option=neon:bg_color:{value}")
 
     def motor_action(self):
         if not ANALOG_STICK:

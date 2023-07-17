@@ -578,15 +578,19 @@ class Level(QFrame):
 
 
 class KBSkinSelector(QScrollArea):
-    def __init__(self):
+    def __init__(self, direction:QBoxLayout.Direction = QBoxLayout.Direction.LeftToRight):
         super(KBSkinSelector, self).__init__()
         self.setWidgetResizable(True)
 
         self.scroll_widget = QWidget()
         self.setWidget(self.scroll_widget)
 
-        self.scroll_layout = QHBoxLayout()
+        self.scroll_layout = QBoxLayout(direction)
+        self.scroll_layout.setContentsMargins(0, 0, 0, 0)
         self.scroll_widget.setLayout(self.scroll_layout)
+
+        if direction == QBoxLayout.Direction.Down or direction == QBoxLayout.Direction.Up:
+            self.scroll_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
     def addSkins(self, skins: dict, on_select, button_height: int=72) -> None:
         for key in skins.keys():
@@ -602,7 +606,7 @@ class KBEyeSkin(QToolButton):
 
         self.setIcon(QIcon(image))
         self.setIconSize(QSize(42, 42))
-        self.setFixedSize(QSize(72, 72))
+        self.setFixedSize(QSize(72, 68))
         self.setText(text)
         self.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
         self.setStyleSheet("font-family: Roboto; font-size: 13px;")
