@@ -1220,8 +1220,10 @@ class RemoteUI(KBMainWindow):
         self.eye_config_stack.insertWidget(2, self.eye_neon_widget)
 
         self.eye_neon_selector = KBSkinSelector(direction=QBoxLayout.Direction.Down)
-        self.eye_neon_selector.addSkins(EYE_NEON_SKINS, self.eye_set_neon_style, 84)
-        self.eye_neon_selector.setFixedWidth(100)
+        self.eye_neon_selector.setStyleSheet("margin: 8px;")
+        self.eye_neon_selector.setContentsMargins(0, 0, 0, 0)
+        self.eye_neon_selector.addSkins(EYE_NEON_SKINS, self.eye_set_neon_style, 84, 88)
+        self.eye_neon_selector.setFixedWidth(110)
         self.eye_neon_layout.addWidget(self.eye_neon_selector, 0, 3, 3, 1)
 
         self.eye_neon_fg_color_picker = KBDualColorPicker(self.palette(), strings.EYE_CONFIG_NEON_PALETTES)
