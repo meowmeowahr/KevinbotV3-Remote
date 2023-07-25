@@ -355,6 +355,9 @@ class RemoteUI(KBMainWindow):
                     get_updater().call_latest(self.eye_config_light_slider.blockSignals, True)
                     get_updater().call_latest(self.eye_config_light_slider.setValue, int(data[1]))
                     get_updater().call_latest(self.eye_config_light_slider.blockSignals, False)
+            elif data[0] == "eye_settings.motions.speed" or data[0] == "eye.set_speed":
+                if window:
+                    get_updater().call_latest(self.eye_config_speed_slider.setValue, int(data[1]))
 
         except Exception:
             traceback.print_exc()
@@ -1259,15 +1262,15 @@ class RemoteUI(KBMainWindow):
         self.eye_config_bright.setLayout(self.eye_config_speed_layout)
 
         # eye speed slider
-        self.eye_config_light_slider = QSlider(Qt.Horizontal)
-        self.eye_config_light_slider.setObjectName("Kevinbot3_RemoteUI_EyeConfigSlider")
-        self.eye_config_light_slider.setMinimum(1)
-        self.eye_config_light_slider.setMaximum(100)
-        self.eye_config_light_slider.setValue(5)
-        self.eye_config_light_slider.setTickPosition(QSlider.NoTicks)
-        self.eye_config_light_slider.setTickInterval(1)
-        self.eye_config_light_slider.valueChanged.connect(self.eye_config_speed_slider_value_changed)
-        self.eye_config_speed_layout.addWidget(self.eye_config_light_slider)
+        self.eye_config_speed_slider = QSlider(Qt.Horizontal)
+        self.eye_config_speed_slider.setObjectName("Kevinbot3_RemoteUI_EyeConfigSlider")
+        self.eye_config_speed_slider.setMinimum(1)
+        self.eye_config_speed_slider.setMaximum(100)
+        self.eye_config_speed_slider.setValue(50)
+        self.eye_config_speed_slider.setTickPosition(QSlider.NoTicks)
+        self.eye_config_speed_slider.setTickInterval(1)
+        self.eye_config_speed_slider.valueChanged.connect(self.eye_config_speed_slider_value_changed)
+        self.eye_config_speed_layout.addWidget(self.eye_config_speed_slider)
 
         # eye brightness group box
         self.eye_config_bright = QGroupBox(strings.EYE_CONFIG_BR_G)
