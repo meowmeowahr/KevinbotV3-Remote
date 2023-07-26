@@ -70,6 +70,8 @@ EYE_CONFIG_METAL_IS_T_G : Final[str] = "Iris Tint"
 
 EYE_CONFIG_NEON_PALETTES: Final[str] = "Foreground Colors"
 
+EYE_JOYSTICK: Final[str] = "Manual Position"
+
 SAVE: Final[str] = "Save"
 SAVE_SUCCESS: Final[str] = "Saved Successfully"
 SAVE_ERROR: Final[str] = "Save Error"

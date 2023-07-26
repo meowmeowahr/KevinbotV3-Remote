@@ -32,6 +32,9 @@ class Joystick(QWidget):
     def getMaxDistance(self):
         return self.__maxDistance
 
+    def setColor(self, color: QColor):
+        self.color = color
+
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)

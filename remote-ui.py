@@ -364,6 +364,14 @@ class RemoteUI(KBMainWindow):
             elif data[0] == "eye_settings.motions.speed" or data[0] == "eye.set_speed":
                 if window:
                     get_updater().call_latest(self.eye_config_speed_slider.setValue, int(data[1]))
+            elif data[0] == "eye_settings.states.motion" or data[0] == "eye.set_motion":
+                if window:
+                    if data[1] == "3":
+                        get_updater().call_latest(self.eye_joystick_group.setEnabled, True)
+                        get_updater().call_latest(self.eye_joystick.setColor, self.fg_color)
+                    else:
+                        get_updater().call_latest(self.eye_joystick_group.setEnabled, False)
+                        get_updater().call_latest(self.eye_joystick.setColor, QColor("#9E9E9E"))
 
         except Exception:
             traceback.print_exc()
@@ -1285,6 +1293,17 @@ class RemoteUI(KBMainWindow):
                                          icon_size=QSize(128, 128))
         self.eye_config_properties_layout.addWidget(self.eye_config_motions)
 
+        # eye joystick
+        self.eye_joystick_group = QGroupBox(strings.EYE_JOYSTICK)
+        self.eye_config_properties_layout.addWidget(self.eye_joystick_group)
+        self.eye_joystick_layout = QHBoxLayout()
+        self.eye_joystick_group.setLayout(self.eye_joystick_layout)
+
+        self.eye_joystick = Joystick.Joystick(sticky=True, color=self.fg_color, max_distance=80)
+        self.eye_joystick.setFixedSize(QSize(180, 180))
+        self.eye_joystick.posChanged.connect(self.eye_pos_changed)
+        self.eye_joystick_layout.addWidget(self.eye_joystick)
+
         # eye move speed group box
         self.eye_config_bright = QGroupBox(strings.EYE_CONFIG_SP_G)
         self.eye_config_bright.setObjectName("Kevinbot3_RemoteUI_Group")
@@ -1493,7 +1512,7 @@ class RemoteUI(KBMainWindow):
 
         self.debug_sys_uptime = KBDebugDataEntry()
         self.debug_sys_uptime.setText(strings.SYS_UPTIME.format(strings.UNKNOWN, strings.UNKNOWN))
-        self.debug_sys_uptime.setIcon(qta.icon("mdi.timer", color="#26A69A"))
+        self.debug_sys_uptime.setIcon(qta.icon("mdi.timer", color="#F44336"))
         self.debug_scroll_layout.addWidget(self.debug_sys_uptime)
 
         # Page Flip 1
@@ -2118,9 +2137,20 @@ class RemoteUI(KBMainWindow):
     def eye_config_neon_bg_selected(value):
         com.txstr(f"eye.set_skin_option=neon:bg_color:{value}")
 
-    @staticmethod
-    def eye_config_motion_selected(motion):
+    def eye_pos_changed(self):
+        pos = self.eye_joystick.getXY()
+        pos = (map_range(pos[0], -80, 80, 0, 240), map_range(pos[1], -80, 80, 0, 240))
+        com.txcv("eye.set_position", ",".join(str(x) for x in pos))
+
+    def eye_config_motion_selected(self, motion):
         com.txcv("eye.set_motion", motion)
+
+        if motion == 3:
+            self.eye_joystick_group.setEnabled(True)
+            self.eye_joystick.setColor(self.fg_color)
+        else:
+            self.eye_joystick_group.setEnabled(False)
+            self.eye_joystick.setColor(QColor("#9E9E9E"))
 
     def motor_action(self):
         if not ANALOG_STICK:
