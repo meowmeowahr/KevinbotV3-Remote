@@ -52,6 +52,15 @@ EXTRA_CSS = ("#Enable_Button{"
              "font-size: 14px;"
              "font-weight: bold;"
              "font-family: Roboto;"
+             "}"
+             "QTabBar::tab {"
+             "min-width: 72px;"
+             "min-height: 24px;"
+             "font-family: Roboto;"
+             "font-size: 14px;"
+             "}"
+             "QTabBar::tab:selected {"
+             "font-weight: bold;"
              "}")
 
 

@@ -425,6 +425,7 @@ class RemoteUI(KBMainWindow):
         self.widget.addWidget(self.arm_presets_widget)
 
         self.eye_config_layout = QHBoxLayout()
+        self.eye_config_layout.setContentsMargins(2, 2, 2, 2)
         self.eye_config_widget.setLayout(self.eye_config_layout)
         self.widget.addWidget(self.eye_config_widget)
 
@@ -1064,16 +1065,32 @@ class RemoteUI(KBMainWindow):
         self.eye_config_back.setFlat(True)
         self.eye_config_layout.addWidget(self.eye_config_back)
 
-        self.eye_config_inner_layout = QVBoxLayout()
-        self.eye_config_layout.addLayout(self.eye_config_inner_layout)
+        self.eye_config_tabs = QTabWidget()
+        self.eye_config_layout.addWidget(self.eye_config_tabs)
+
+        self.eye_config_skins_layout = QVBoxLayout()
+        self.eye_config_skins_widget = QWidget()
+        self.eye_config_skins_widget.setLayout(self.eye_config_skins_layout)
+
+        self.eye_config_tabs.addTab(self.eye_config_skins_widget, strings.SKINS)
+
+        self.eye_config_properties_layout = QVBoxLayout()
+        self.eye_config_properties_widget = QWidget()
+        self.eye_config_properties_widget.setLayout(self.eye_config_properties_layout)
+
+        self.eye_config_tabs.addTab(self.eye_config_properties_widget, strings.PROPERTIES)
 
         # Eye Skin Select
         self.eye_skin_selector = KBSkinSelector()
+        self.eye_skin_selector.setStyleSheet("border-top: none; "
+                                             "border-left: none; "
+                                             "border-right: none; "
+                                             "border-radius: 0px;")
         self.eye_skin_selector.addSkins(EYE_SKINS, self.eye_set_state)
-        self.eye_config_inner_layout.addWidget(self.eye_skin_selector)
+        self.eye_config_skins_layout.addWidget(self.eye_skin_selector)
 
         self.eye_config_stack = QStackedWidget()
-        self.eye_config_inner_layout.addWidget(self.eye_config_stack)
+        self.eye_config_skins_layout.addWidget(self.eye_config_stack)
 
         # Simple Skin
         self.eye_simple_layout = QGridLayout()
@@ -1226,7 +1243,7 @@ class RemoteUI(KBMainWindow):
         self.eye_neon_selector.setStyleSheet("margin: 8px;")
         self.eye_neon_selector.setContentsMargins(0, 0, 0, 0)
         self.eye_neon_selector.addSkins(EYE_NEON_SKINS, self.eye_set_neon_style, 84, 88)
-        self.eye_neon_selector.setFixedWidth(110)
+        self.eye_neon_selector.setFixedWidth(124)
         self.eye_neon_layout.addWidget(self.eye_neon_selector, 0, 3, 3, 1)
 
         self.eye_neon_fg_color_picker = KBDualColorPicker(self.palette(), strings.EYE_CONFIG_NEON_PALETTES)
@@ -1251,8 +1268,10 @@ class RemoteUI(KBMainWindow):
         self.eye_neon_bg_palette.selected.connect(self.eye_config_neon_bg_selected)
         self.eye_neon_background_layout.addWidget(self.eye_neon_bg_palette)
 
+        # Eye Props
+
         self.eye_config_bottom_layout = QHBoxLayout()
-        self.eye_config_inner_layout.addLayout(self.eye_config_bottom_layout)
+        self.eye_config_properties_layout.addLayout(self.eye_config_bottom_layout)
 
         # eye move speed group box
         self.eye_config_bright = QGroupBox(strings.EYE_CONFIG_SP_G)
@@ -2317,6 +2336,7 @@ if __name__ == '__main__':
 
         # Font
         QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Roboto-Regular.ttf"))
+        QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Roboto-Medium.ttf"))
         QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Roboto-Bold.ttf"))
         QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Lato-Regular.ttf"))
         QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Lato-Bold.ttf"))
