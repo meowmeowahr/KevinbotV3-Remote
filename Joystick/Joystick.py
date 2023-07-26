@@ -60,9 +60,10 @@ class Joystick(QWidget):
         norm_vector = QLineF(self._center(), self.movingOffset)
         return round(norm_vector.dx()), round(norm_vector.dy())
 
-    def mousePressEvent(self, ev):
-        self.grabCenter = self._centerEllipse().contains(ev.pos())
-        return super().mousePressEvent(ev)
+    def mousePressEvent(self, ev: QMouseEvent):
+        if ev.button() == Qt.MouseButton.LeftButton and self._centerEllipse().contains(ev.pos()):
+            self.grabCenter = self._centerEllipse().contains(ev.pos())
+            return super().mousePressEvent(ev)
 
     def mouseReleaseEvent(self, event):
         if self.sticky is False:
