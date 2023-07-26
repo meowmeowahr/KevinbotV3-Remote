@@ -592,11 +592,19 @@ class KBSkinSelector(QScrollArea):
         if direction == QBoxLayout.Direction.Down or direction == QBoxLayout.Direction.Up:
             self.scroll_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-    def addSkins(self, skins: dict, on_select, button_height: int=72, button_width: int=72) -> None:
+    def addSkins(self, skins: dict,
+                 on_select,
+                 button_height: int=72,
+                 button_width: int=72,
+                 icon_size: QSize=QSize(42, 42)) -> None:
         for key in skins.keys():
-            option = KBEyeSkin(skins[key][1], key)
+            if skins[key][1].endswith(".gif"):
+                option = KB_GIFSkin(skins[key][1], key)
+            else:
+                option = KBEyeSkin(skins[key][1], key)
             option.setFixedSize(QSize(button_width, button_height))
             option.clicked.connect(functools.partial(on_select, skins[key][0]))
+            option.setIconSize(icon_size)
             self.scroll_layout.addWidget(option)
 
 
@@ -610,6 +618,35 @@ class KBEyeSkin(QToolButton):
         self.setText(text)
         self.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
         self.setStyleSheet("font-family: Roboto; font-size: 13px;")
+
+
+class KB_GIFSkin(QToolButton):
+    def __init__(self, gif_path, text: str = "", parent=None):
+        super(KB_GIFSkin, self).__init__(parent)
+
+        self.setIconSize(QSize(42, 42))
+        self.setFixedSize(QSize(72, 68))
+        self.setText(text)
+        self.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
+        self.setStyleSheet("font-family: Roboto; font-size: 13px;")
+
+        self.movie = QMovie(gif_path)
+        self.set_gif_icon()
+
+    def set_gif_icon(self):
+        self.movie.frameChanged.connect(self.update_icon)
+        self.movie.start()
+
+    def update_icon(self):
+        frame = self.movie.currentPixmap()
+        self.setIcon(QIcon(frame))
+        self.setIconSize(frame.size())
+
+    def pause_animation(self):
+        self.movie.setPaused(True)
+
+    def resume_animation(self):
+        self.movie.setPaused(False)
 
 
 class KBDualColorPicker(QGroupBox):

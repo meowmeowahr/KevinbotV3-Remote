@@ -42,6 +42,9 @@ CURRENT_ARM_POS = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 2 5dof arms
 HIGH_INSIDE_TEMP = 45
 
 EYE_SKINS = {"Simple": (3, "icons/eye.svg"), "Metallic": (4, "icons/iris.png"), "Neon": (5, "icons/neon1.png")}
+EYE_MOTIONS = {"Smooth": (1, "res/eye_motions/smooth.gif"),
+               "Jump": (2, "res/eye_motions/const.gif"),
+               "Manual": (3, "res/eye_motions/manual.svg")}
 EYE_NEON_SKINS = {"Circle": ("neon1.png", "res/eye_skin_neon/neon1.png"),
                   "Semicircle": ("neon2.png", "res/eye_skin_neon/neon2.png"),
                   "Striped\nCircle": ("neon3.png", "res/eye_skin_neon/neon3.png")}
@@ -165,6 +168,9 @@ class RemoteUI(KBMainWindow):
         try:
             data = message["rf_data"].decode("utf-8").strip("\r\n")
             data = data.split("=", maxsplit=1)
+            if not "rf_data" in message:
+                return
+
             print(data)
             if data[0] == "batt_volts":
                 if window is not None:
@@ -1273,6 +1279,12 @@ class RemoteUI(KBMainWindow):
         self.eye_config_bottom_layout = QHBoxLayout()
         self.eye_config_properties_layout.addLayout(self.eye_config_bottom_layout)
 
+        # eye motions
+        self.eye_config_motions = KBSkinSelector()
+        self.eye_config_motions.addSkins(EYE_MOTIONS, self.eye_config_motion_selected, button_height=96,
+                                         icon_size=QSize(128, 128))
+        self.eye_config_properties_layout.addWidget(self.eye_config_motions)
+
         # eye move speed group box
         self.eye_config_bright = QGroupBox(strings.EYE_CONFIG_SP_G)
         self.eye_config_bright.setObjectName("Kevinbot3_RemoteUI_Group")
@@ -2105,6 +2117,10 @@ class RemoteUI(KBMainWindow):
     @staticmethod
     def eye_config_neon_bg_selected(value):
         com.txstr(f"eye.set_skin_option=neon:bg_color:{value}")
+
+    @staticmethod
+    def eye_config_motion_selected(motion):
+        com.txcv("eye.set_motion", motion)
 
     def motor_action(self):
         if not ANALOG_STICK:
