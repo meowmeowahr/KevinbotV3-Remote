@@ -166,10 +166,14 @@ class RemoteUI(KBMainWindow):
     def serial_callback(self, message):
         # noinspection PyBroadException
         try:
+            if not "rf_data" in message:
+                # TODO: Add a more permanant solution for the 0x74 error
+                # 0x74 = Message to long
+                print(f"Status message", message)
+                return
+
             data = message["rf_data"].decode("utf-8").strip("\r\n")
             data = data.split("=", maxsplit=1)
-            if not "rf_data" in message:
-                return
 
             print(data)
             if data[0] == "batt_volts":
