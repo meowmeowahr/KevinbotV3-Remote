@@ -21,7 +21,7 @@ from qtpy.QtGui import *
 from qtpy.QtWebEngineWidgets import *
 from qtpy.QtWidgets import *
 from qt_thread_updater import get_updater
-from QCustomWidgets import KBModalBar, KBMainWindow, QSuperDial, KBDevice, KBDebugDataEntry, Level, KBSkinSelector, KBDualColorPicker
+from QCustomWidgets import KBModalBar, KBMainWindow, QSuperDial, KBDevice, KBDebugDataEntry, Level, KBSkinSelector, KBDualColorPicker, KBHandshakeWidget
 import qtawesome as qta
 
 import Joystick.Joystick as Joystick
@@ -176,7 +176,9 @@ class RemoteUI(KBMainWindow):
             data = data.split("=", maxsplit=1)
 
             print(data)
-            if data[0] == "batt_volts":
+            if data[0] == "handshake.end":
+                get_updater().call_latest(window.widget.setCurrentIndex, 1)
+            elif data[0] == "batt_volts":
                 if window is not None:
                     volt1, volt2 = data[1].split(",")
                     get_updater().call_latest(window.batt_volt1.setText, strings.BATT_VOLT1.format(float(volt1) / 10) + "V")
@@ -385,8 +387,19 @@ class RemoteUI(KBMainWindow):
         self.widget = SlidingStackedWidget.SlidingStackedWidget()
         self.setCentralWidget(self.widget)
 
+        self.ensurePolished()
+        if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],
+                        QColor(self.palette().color(QPalette.Window)).getRgb()[1],
+                        QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
+            self.fg_color = Qt.GlobalColor.white
+        else:
+            self.fg_color = Qt.GlobalColor.black
+
         self.widget.setDirection(settings["window_properties"]["animation_dir"])
         self.widget.setSpeed(settings["window_properties"]["animation_speed"])
+
+        self.connect_widget = KBHandshakeWidget(QColor(self.fg_color))
+        self.connect_widget.setObjectName("Kevinbot3_RemoteUI_HandshakeWidget")
 
         self.main_widget = QWidget()
         self.main_widget.setObjectName("Kevinbot3_RemoteUI_MainWidget")
@@ -417,6 +430,8 @@ class RemoteUI(KBMainWindow):
 
         self.mesh_widget = QWidget()
         self.mesh_widget.setObjectName("Kevinbot3_RemoteUI_MeshWidget")
+
+        self.widget.addWidget(self.connect_widget)
 
         self.layout = QVBoxLayout()
         self.main_widget.setLayout(self.layout)
@@ -601,14 +616,6 @@ class RemoteUI(KBMainWindow):
         self.main_layout = QHBoxLayout()
         self.main_group.setLayout(self.main_layout)
 
-        self.ensurePolished()
-        if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],
-                        QColor(self.palette().color(QPalette.Window)).getRgb()[1],
-                        QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
-            self.fg_color = Qt.GlobalColor.white
-        else:
-            self.fg_color = Qt.GlobalColor.black
-
         self.motor_stick = Joystick.Joystick(color=self.fg_color, sticky=False, max_distance=JOYSTICK_SIZE)
         self.motor_stick.setObjectName("Kevinbot3_RemoteUI_Joystick")
         self.motor_stick.posChanged.connect(self.motor_action)
@@ -724,7 +731,7 @@ class RemoteUI(KBMainWindow):
         # Back Button
         self.head_color_back = QPushButton()
         self.head_color_back.setObjectName("Kevinbot3_RemoteUI_BackButton")
-        self.head_color_back.clicked.connect(lambda: self.widget.slideInIdx(0))
+        self.head_color_back.clicked.connect(lambda: self.widget.slideInIdx(1))
         self.head_color_back.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
         self.head_color_back.setIconSize(QSize(32, 32))
         self.head_color_back.setFixedSize(QSize(36, 36))
@@ -789,7 +796,7 @@ class RemoteUI(KBMainWindow):
         # Back Button
         self.body_color_back = QPushButton()
         self.body_color_back.setObjectName("Kevinbot3_RemoteUI_BackButton")
-        self.body_color_back.clicked.connect(lambda: self.widget.slideInIdx(0))
+        self.body_color_back.clicked.connect(lambda: self.widget.slideInIdx(1))
         self.body_color_back.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
         self.body_color_back.setIconSize(QSize(32, 32))
         self.body_color_back.setFixedSize(QSize(36, 36))
@@ -868,7 +875,7 @@ class RemoteUI(KBMainWindow):
         # Back Button
         self.base_color_back = QPushButton()
         self.base_color_back.setObjectName("Kevinbot3_RemoteUI_BackButton")
-        self.base_color_back.clicked.connect(lambda: self.widget.slideInIdx(0))
+        self.base_color_back.clicked.connect(lambda: self.widget.slideInIdx(1))
         self.base_color_back.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
         self.base_color_back.setIconSize(QSize(32, 32))
         self.base_color_back.setFixedSize(QSize(36, 36))
@@ -1060,7 +1067,7 @@ class RemoteUI(KBMainWindow):
         self.arm_preset_back.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
         self.arm_preset_back.setFixedSize(QSize(36, 36))
         self.arm_preset_back.setIconSize(QSize(32, 32))
-        self.arm_preset_back.clicked.connect(lambda: self.widget.slideInIdx(0))
+        self.arm_preset_back.clicked.connect(lambda: self.widget.slideInIdx(1))
         self.arm_preset_back.setFlat(True)
         self.arm_bottom_layout.addWidget(self.arm_preset_back)
 
@@ -1079,7 +1086,7 @@ class RemoteUI(KBMainWindow):
         self.eye_config_back.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
         self.eye_config_back.setFixedSize(QSize(36, 36))
         self.eye_config_back.setIconSize(QSize(32, 32))
-        self.eye_config_back.clicked.connect(lambda: self.widget.slideInIdx(0))
+        self.eye_config_back.clicked.connect(lambda: self.widget.slideInIdx(1))
         self.eye_config_back.setFlat(True)
         self.eye_config_layout.addWidget(self.eye_config_back)
 
@@ -1350,7 +1357,7 @@ class RemoteUI(KBMainWindow):
         self.sensors_back.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
         self.sensors_back.setFixedSize(QSize(36, 36))
         self.sensors_back.setIconSize(QSize(32, 32))
-        self.sensors_back.clicked.connect(lambda: self.widget.slideInIdx(0))
+        self.sensors_back.clicked.connect(lambda: self.widget.slideInIdx(1))
         self.sensor_layout.addWidget(self.sensors_back)
 
         self.sensors_box = QGroupBox(strings.SENSORS_G)
@@ -1453,7 +1460,7 @@ class RemoteUI(KBMainWindow):
         self.mesh_back.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
         self.mesh_back.setFixedSize(QSize(36, 36))
         self.mesh_back.setIconSize(QSize(32, 32))
-        self.mesh_back.clicked.connect(lambda: self.widget.slideInIdx(0))
+        self.mesh_back.clicked.connect(lambda: self.widget.slideInIdx(1))
         self.mesh_layout.addWidget(self.mesh_back)
 
         self.mesh_inner_layout = QVBoxLayout()
@@ -1486,7 +1493,7 @@ class RemoteUI(KBMainWindow):
         self.debug_back.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
         self.debug_back.setFixedSize(QSize(36, 36))
         self.debug_back.setIconSize(QSize(32, 32))
-        self.debug_back.clicked.connect(lambda: self.widget.slideInIdx(0))
+        self.debug_back.clicked.connect(lambda: self.widget.slideInIdx(1))
         self.debug_layout.addWidget(self.debug_back)
 
         self.debug_inner_layout = QVBoxLayout()
@@ -1525,20 +1532,20 @@ class RemoteUI(KBMainWindow):
 
         self.page_flip_left = QPushButton()
         self.page_flip_left.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
-        self.page_flip_left.clicked.connect(lambda: self.widget.slideInIdx(7))
+        self.page_flip_left.clicked.connect(lambda: self.widget.slideInIdx(8))
         self.page_flip_left.setShortcut(QKeySequence(Qt.Key.Key_Comma))
 
         self.page_flip_mesh = QPushButton()
         self.page_flip_mesh.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
-        self.page_flip_mesh.clicked.connect(lambda: self.widget.slideInIdx(8))
+        self.page_flip_mesh.clicked.connect(lambda: self.widget.slideInIdx(9))
 
         self.page_flip_debug = QPushButton()
         self.page_flip_debug.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
-        self.page_flip_debug.clicked.connect(lambda: self.widget.slideInIdx(9))
+        self.page_flip_debug.clicked.connect(lambda: self.widget.slideInIdx(10))
 
         self.page_flip_right = QPushButton()
         self.page_flip_right.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
-        self.page_flip_right.clicked.connect(lambda: self.widget.slideInIdx(1))
+        self.page_flip_right.clicked.connect(lambda: self.widget.slideInIdx(2))
         self.page_flip_right.setShortcut(QKeySequence(Qt.Key.Key_Period))
 
         self.shutdown = QPushButton()
@@ -1636,7 +1643,7 @@ class RemoteUI(KBMainWindow):
 
         self.page_flip_left_2 = QPushButton()
         self.page_flip_left_2.setObjectName("Kevinbot3_RemoteUI_PageFlipButton")
-        self.page_flip_left_2.clicked.connect(lambda: self.widget.slideInIdx(0))
+        self.page_flip_left_2.clicked.connect(lambda: self.widget.slideInIdx(1))
         self.page_flip_left_2.setShortcut(QKeySequence(Qt.Key.Key_Comma))
 
         self.refresh_camera = QPushButton()
@@ -1850,13 +1857,13 @@ class RemoteUI(KBMainWindow):
     def camera_led_action(self):
         old_dir = self.widget.getDirection()
         self.widget.setDirection(Qt.Axis.YAxis)
-        self.widget.slideInIdx(1)
+        self.widget.slideInIdx(2)
         self.widget.setDirection(old_dir)
 
     def arm_edit_action(self):
         old_dir = self.widget.getDirection()
         self.widget.setDirection(Qt.Axis.YAxis)
-        self.widget.slideInIdx(5)
+        self.widget.slideInIdx(6)
         self.widget.setDirection(old_dir)
 
     @staticmethod
@@ -1866,7 +1873,7 @@ class RemoteUI(KBMainWindow):
         CURRENT_ARM_POS = settings["arm_prog"][index]
 
     def led_action(self, index):
-        self.widget.slideInIdx(2 + index)
+        self.widget.slideInIdx(3 + index)
 
     @staticmethod
     def head_effect_action(index):
@@ -1881,7 +1888,7 @@ class RemoteUI(KBMainWindow):
         com.txcv("base_effect", settings["base_effects"][index].replace("*c", ""))
 
     def eye_config_action(self):
-        self.widget.slideInIdx(6)
+        self.widget.slideInIdx(7)
 
     def head_color1_changed(self):
         com.txcv("head_color1", str(self.head_color_picker.getHex()).strip("#") + "00")

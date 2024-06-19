@@ -710,3 +710,21 @@ class KBDualColorPicker(QGroupBox):
         self.palette_layout.addStretch()
         self.palette_layout.addWidget(self.palette_b)
         self.palette_layout.addStretch()
+
+class KBHandshakeWidget(QWidget):
+    def __init__(self, color: QColor):
+        super().__init__()
+
+        self._layout = QVBoxLayout()
+        self._layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.setLayout(self._layout)
+
+        self.icon = qta.IconWidget()
+        self.icon.setIconSize(QSize(256, 256))
+        self.icon.setIcon(qta.icon("mdi6.handshake", color=color.name()))
+        self._layout.addWidget(self.icon)
+
+        self.text = QLabel("Connecting to Kevinbot")
+        self.text.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.text.setStyleSheet("font-size: 24px; font-family: Roboto;")
+        self._layout.addWidget(self.text)
