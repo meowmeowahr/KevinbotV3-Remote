@@ -38,7 +38,7 @@ DEVEL_OPTIONS = True
 
 ENABLE_BATT2 = True
 THEME_FILE = "theme.qss"
-CURRENT_ARM_POS = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 2 5dof arms
+CURRENT_ARM_POS = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # two 5dof arms
 HIGH_INSIDE_TEMP = 45
 
 EYE_SKINS = {"Simple": (3, "icons/eye.svg"), "Metallic": (4, "icons/iris.png"), "Neon": (5, "icons/neon1.png")}
@@ -592,7 +592,7 @@ class RemoteUI(KBMainWindow):
         self.base_led.setFixedHeight(24)
         self.eye_config.setFixedHeight(24)
 
-        # DPad, Joystick, and Speech
+        # Joysticks and Speech
 
         self.main_group = QGroupBox(strings.MAIN_G)
         self.main_group.setObjectName("Kevinbot3_RemoteUI_Group")
