@@ -2263,10 +2263,11 @@ class RemoteUI(KBMainWindow):
             self.body_led.setEnabled(enabled)
             self.camera_led.setEnabled(enabled)
 
-            self.bottom_base_led_button.setEnabled(enabled)
-            self.bottom_body_led_button.setEnabled(enabled)
-            self.bottom_head_led_button.setEnabled(enabled)
-            self.bottom_eye_button.setEnabled(enabled)
+            if settings["window_properties"]["ui_style"] == "modern":
+                self.bottom_base_led_button.setEnabled(enabled)
+                self.bottom_body_led_button.setEnabled(enabled)
+                self.bottom_head_led_button.setEnabled(enabled)
+                self.bottom_eye_button.setEnabled(enabled)
 
         if tx:
             if not enabled:
