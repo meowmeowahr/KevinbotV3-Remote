@@ -28,7 +28,7 @@ EMULATE_REAL_REMOTE = True
 if platform.system() == "Windows":
     import ctypes
 
-    app_id = 'kevinbot.kevinbot.runner._'  # arbitrary string
+    app_id = "kevinbot.kevinbot.runner._"  # arbitrary string
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(app_id)
 
 settings = json.load(open("settings.json", "r"))
@@ -40,7 +40,7 @@ if "joystick_size" in settings:
 else:
     settings["joystick_size"] = 80  # save default
     JOYSTICK_SIZE = settings["joystick_size"]
-    with open('settings.json', 'w') as file:
+    with open("settings.json", "w") as file:
         json.dump(settings, file, indent=2)
 
 # load stick mode settings
@@ -56,24 +56,32 @@ else:
         ANALOG_STICK = False
     else:
         ANALOG_STICK = True
-    with open('settings.json', 'w') as file:
+    with open("settings.json", "w") as file:
         json.dump(settings, file, indent=2)
 
 # load runner theme flat setting
 if "theme_flat" not in settings["apps"]:
     settings["apps"]["theme_flat"] = False  # save default
-    with open('settings.json', 'w') as file:
+    with open("settings.json", "w") as file:
         json.dump(settings, file, indent=2)
 
 THEME_PAIRS = [
     ("Kevinbot Dark", "qdarktheme_kbot"),
-    ("QDarkTheme Dark", "qdarktheme", ["Default", "Teal", "Green", "Purple", "Orange", "Red", "White"]),
-    ("QDarkTheme Light", "qdarktheme_light", ["Default", "Teal", "Green", "Purple", "Orange", "Red", "Black"]),
+    (
+        "QDarkTheme Dark",
+        "qdarktheme",
+        ["Default", "Teal", "Green", "Purple", "Orange", "Red", "White"],
+    ),
+    (
+        "QDarkTheme Light",
+        "qdarktheme_light",
+        ["Default", "Teal", "Green", "Purple", "Orange", "Red", "Black"],
+    ),
     ("High Contrast", "highcontrast", ["Default", "Light"]),
     ("Breeze Dark", "breeze_dark"),
     ("Breeze Light", "breeze_light"),
     ("Kevinbot Dark (Old)", "classic"),
-    ("System (Debug)", "null")
+    ("System (Debug)", "null"),
 ]
 
 haptics.init(21)
@@ -105,11 +113,17 @@ class MainWindow(KBMainWindow):
         super(MainWindow, self).__init__()
         self.slider_style = SliderProxyStyle(QSlider().style())
         self.setWindowTitle("Kevinbot Remote Settings")
-        self.setWindowIcon(QIcon(os.path.join(os.path.dirname(__file__), "icons/settings.svg")))
+        self.setWindowIcon(
+            QIcon(os.path.join(os.path.dirname(__file__), "icons/settings.svg"))
+        )
         self.setObjectName("Kevinbot3_RemoteUI")
 
         try:
-            load_theme(self, settings["window_properties"]["theme"], settings["window_properties"]["theme_colors"])
+            load_theme(
+                self,
+                settings["window_properties"]["theme"],
+                settings["window_properties"]["theme_colors"],
+            )
         except NameError:
             load_theme(self, settings["window_properties"]["theme"])
 
@@ -118,9 +132,13 @@ class MainWindow(KBMainWindow):
             self.setFixedSize(QSize(800, 480))
 
         self.ensurePolished()
-        if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],
-                        QColor(self.palette().color(QPalette.Window)).getRgb()[1],
-                        QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
+        if detect_dark(
+            (
+                QColor(self.palette().color(QPalette.Window)).getRgb()[0],
+                QColor(self.palette().color(QPalette.Window)).getRgb()[1],
+                QColor(self.palette().color(QPalette.Window)).getRgb()[2],
+            )
+        ):
             self.fg_color = Qt.GlobalColor.white
         else:
             self.fg_color = Qt.GlobalColor.black
@@ -147,7 +165,9 @@ class MainWindow(KBMainWindow):
         self.adv_exit_button = haptics.HPushButton()
         self.adv_exit_button.setObjectName("Kevinbot3_RemoteUI_Button")
         self.adv_exit_button.clicked.connect(lambda: self.main_widget.slideInIdx(0))
-        self.adv_exit_button.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
+        self.adv_exit_button.setIcon(
+            qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color)
+        )
         self.adv_exit_button.setIconSize(QSize(32, 32))
         self.adv_exit_button.setFixedSize(QSize(36, 36))
         self.adv_bottom_layout.addWidget(self.adv_exit_button)
@@ -163,7 +183,9 @@ class MainWindow(KBMainWindow):
         self.adv_expand_all_button = haptics.HPushButton()
         self.adv_expand_all_button.setObjectName("Kevinbot3_RemoteUI_Button")
         self.adv_expand_all_button.clicked.connect(self.adv_editor.expandAll)
-        self.adv_expand_all_button.setIcon(qta.icon("fa5s.caret-down", color=self.fg_color))
+        self.adv_expand_all_button.setIcon(
+            qta.icon("fa5s.caret-down", color=self.fg_color)
+        )
         self.adv_expand_all_button.setIconSize(QSize(32, 32))
         self.adv_expand_all_button.setFixedSize(QSize(36, 36))
         self.adv_bottom_layout.addWidget(self.adv_expand_all_button)
@@ -171,17 +193,21 @@ class MainWindow(KBMainWindow):
         self.adv_collapse_all_button = haptics.HPushButton()
         self.adv_collapse_all_button.setObjectName("Kevinbot3_RemoteUI_Button")
         self.adv_collapse_all_button.clicked.connect(self.adv_editor.collapseAll)
-        self.adv_collapse_all_button.setIcon(qta.icon("fa5s.caret-up", color=self.fg_color))
+        self.adv_collapse_all_button.setIcon(
+            qta.icon("fa5s.caret-up", color=self.fg_color)
+        )
         self.adv_collapse_all_button.setIconSize(QSize(32, 32))
         self.adv_collapse_all_button.setFixedSize(QSize(36, 36))
         self.adv_bottom_layout.addWidget(self.adv_collapse_all_button)
 
         self.adv_warning = QLabel(strings.SETTINGS_ADV_WARNING)
         self.adv_warning.setObjectName("Kevinbot3_RemoteUI_Warning")
-        self.adv_warning.setStyleSheet("color: #ffffff;"
-                                       "background-color: #df574d;"
-                                       "height: 36px;"
-                                       "font-weight: bold;")
+        self.adv_warning.setStyleSheet(
+            "color: #ffffff;"
+            "background-color: #df574d;"
+            "height: 36px;"
+            "font-weight: bold;"
+        )
         self.adv_warning.setFixedHeight(36)
         self.adv_warning.setFrameStyle(QFrame.Shape.Box)
         self.adv_warning.setAlignment(Qt.AlignCenter)
@@ -282,8 +308,10 @@ class MainWindow(KBMainWindow):
         if not is_pi():
             pass
         else:
-            result = subprocess.result = subprocess.run(['cat', settings["backlight_dir"] + "brightness"],
-                                                        stdout=subprocess.PIPE)
+            result = subprocess.result = subprocess.run(
+                ["cat", settings["backlight_dir"] + "brightness"],
+                stdout=subprocess.PIPE,
+            )
             self.screen_bright_slider.setValue(int(result.stdout))
 
         self.display_layout.addWidget(self.screen_bright_box)
@@ -294,12 +322,16 @@ class MainWindow(KBMainWindow):
         self.animation_box.setLayout(self.animation_layout)
         self.display_layout.addWidget(self.animation_box)
 
-        self.animation_spinner = QSpinner(text=strings.SETTINGS_ANIM_SPEED, icon_color=self.fg_color)
+        self.animation_spinner = QSpinner(
+            text=strings.SETTINGS_ANIM_SPEED, icon_color=self.fg_color
+        )
         self.animation_spinner.spinbox.setMaximum(500)
         self.animation_spinner.spinbox.setMinimum(50)
         self.animation_spinner.spinbox.setSingleStep(25)
         self.animation_spinner.spinbox.valueChanged.connect(self.set_animation_speed)
-        self.animation_spinner.setValue(settings["window_properties"]["animation_speed"])
+        self.animation_spinner.setValue(
+            settings["window_properties"]["animation_speed"]
+        )
         self.animation_layout.addWidget(self.animation_spinner)
 
         # App Themes
@@ -312,7 +344,9 @@ class MainWindow(KBMainWindow):
         self.display_layout.addWidget(self.app_themes_button)
 
         self.app_themes_scroll = QScrollArea()
-        QScroller.grabGesture(self.app_themes_scroll, QScroller.LeftMouseButtonGesture)  # enable single-touch scroll
+        QScroller.grabGesture(
+            self.app_themes_scroll, QScroller.LeftMouseButtonGesture
+        )  # enable single-touch scroll
         self.app_themes_scroll.setWidgetResizable(True)
         self.app_theme_layout.addWidget(self.app_themes_scroll)
 
@@ -332,7 +366,13 @@ class MainWindow(KBMainWindow):
 
             image = QLabel()
             image.setAlignment(Qt.AlignCenter)
-            image.setPixmap(QPixmap(os.path.join(os.curdir, "res/theme_previews", THEME_PAIRS[i][1] + ".png")))
+            image.setPixmap(
+                QPixmap(
+                    os.path.join(
+                        os.curdir, "res/theme_previews", THEME_PAIRS[i][1] + ".png"
+                    )
+                )
+            )
             frame_layout.addWidget(image)
 
             label = QLabel(THEME_PAIRS[i][0])
@@ -354,30 +394,44 @@ class MainWindow(KBMainWindow):
                 customizer.setPlaceholderText("Default")
                 customizer.setFixedWidth(120)
                 customizer.setEnabled(not enable.isEnabled())
-                customizer.currentIndexChanged.connect(partial(self.activate_custom, customizer))
+                customizer.currentIndexChanged.connect(
+                    partial(self.activate_custom, customizer)
+                )
                 button_layout.addWidget(customizer)
 
                 for item in THEME_PAIRS[i][2]:
                     customizer.addItem(item)
-                    if settings["window_properties"]["theme"] == THEME_PAIRS[i][1] and len(THEME_PAIRS[i]) == 3:
-                        customizer.setCurrentText(settings["window_properties"]["theme_colors"])
+                    if (
+                        settings["window_properties"]["theme"] == THEME_PAIRS[i][1]
+                        and len(THEME_PAIRS[i]) == 3
+                    ):
+                        customizer.setCurrentText(
+                            settings["window_properties"]["theme_colors"]
+                        )
 
-                enable.clicked.connect(partial(self.activate_theme, THEME_PAIRS[i][1], enable, customizer))
+                enable.clicked.connect(
+                    partial(self.activate_theme, THEME_PAIRS[i][1], enable, customizer)
+                )
             else:
-                enable.clicked.connect(partial(self.activate_theme, THEME_PAIRS[i][1], enable))
+                enable.clicked.connect(
+                    partial(self.activate_theme, THEME_PAIRS[i][1], enable)
+                )
 
         # Runner Themes
 
         self.runner_themes_button = haptics.HPushButton(strings.SETTINGS_RUNNER_THEMES)
         self.runner_themes_button.setStyleSheet("text-align: left;")
         self.runner_themes_button.setIcon(qta.icon("fa5s.rocket", color=self.fg_color))
-        self.runner_themes_button.clicked.connect(lambda: self.main_widget.slideInIdx(7))
+        self.runner_themes_button.clicked.connect(
+            lambda: self.main_widget.slideInIdx(7)
+        )
         self.runner_themes_button.setIconSize(QSize(36, 36))
         self.display_layout.addWidget(self.runner_themes_button)
 
         self.runner_themes_scroll = QScrollArea()
-        QScroller.grabGesture(self.runner_themes_scroll,
-                              QScroller.LeftMouseButtonGesture)  # enable single-touch scroll
+        QScroller.grabGesture(
+            self.runner_themes_scroll, QScroller.LeftMouseButtonGesture
+        )  # enable single-touch scroll
         self.runner_themes_scroll.setWidgetResizable(True)
         self.runner_theme_layout.addWidget(self.runner_themes_scroll)
 
@@ -404,12 +458,28 @@ class MainWindow(KBMainWindow):
 
             image = QLabel()
             image.setAlignment(Qt.AlignCenter)
-            if os.path.exists(os.path.join(os.curdir, "res/runner_theme_previews",
-                                           runner_theme_pairs[i][1].replace(" ", "_") + ".png")):
-                image.setPixmap(QPixmap(os.path.join(os.curdir, "res/runner_theme_previews",
-                                                     runner_theme_pairs[i][1].replace(" ", "_") + ".png")))
+            if os.path.exists(
+                os.path.join(
+                    os.curdir,
+                    "res/runner_theme_previews",
+                    runner_theme_pairs[i][1].replace(" ", "_") + ".png",
+                )
+            ):
+                image.setPixmap(
+                    QPixmap(
+                        os.path.join(
+                            os.curdir,
+                            "res/runner_theme_previews",
+                            runner_theme_pairs[i][1].replace(" ", "_") + ".png",
+                        )
+                    )
+                )
             else:
-                image.setPixmap(QPixmap(os.path.join(os.curdir, "res/runner_theme_previews/unknown.png")))
+                image.setPixmap(
+                    QPixmap(
+                        os.path.join(os.curdir, "res/runner_theme_previews/unknown.png")
+                    )
+                )
             frame_layout.addWidget(image)
 
             label = QLabel(runner_theme_pairs[i][1])
@@ -421,7 +491,9 @@ class MainWindow(KBMainWindow):
             frame_layout.addLayout(button_layout)
 
             enable = haptics.HPushButton("Enable")
-            enable.clicked.connect(partial(self.set_runner_theme, runner_theme_pairs[i][0], enable))
+            enable.clicked.connect(
+                partial(self.set_runner_theme, runner_theme_pairs[i][0], enable)
+            )
             if settings["apps"]["theme"] == runner_theme_pairs[i][0]:
                 enable.setText("Active")
                 enable.setEnabled(False)
@@ -429,7 +501,9 @@ class MainWindow(KBMainWindow):
 
         self.exit_app_themes = haptics.HPushButton()
         self.exit_app_themes.clicked.connect(lambda: self.main_widget.slideInIdx(2))
-        self.exit_app_themes.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
+        self.exit_app_themes.setIcon(
+            qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color)
+        )
         self.exit_app_themes.setFixedSize(QSize(36, 36))
         self.exit_app_themes.setIconSize(QSize(32, 32))
         self.app_theme_layout.addWidget(self.exit_app_themes)
@@ -439,7 +513,9 @@ class MainWindow(KBMainWindow):
 
         self.exit_runner_themes = haptics.HPushButton()
         self.exit_runner_themes.clicked.connect(lambda: self.main_widget.slideInIdx(2))
-        self.exit_runner_themes.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
+        self.exit_runner_themes.setIcon(
+            qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color)
+        )
         self.exit_runner_themes.setFixedSize(QSize(36, 36))
         self.exit_runner_themes.setIconSize(QSize(32, 32))
         self.runner_themes_bottom.addWidget(self.exit_runner_themes)
@@ -458,15 +534,25 @@ class MainWindow(KBMainWindow):
             self.ss_box.setLayout(self.ss_box_layout)
             self.display_layout.addWidget(self.ss_box)
 
-            self.xsc_config = xSc.ConfigParser("/home/$USER/.xscreensaver".replace("$USER", os.getenv("USER")))
+            self.xsc_config = xSc.ConfigParser(
+                "/home/$USER/.xscreensaver".replace("$USER", os.getenv("USER"))
+            )
 
             self.preview_ss_button = QPushButton(strings.SETTINGS_XSC_PREVIEW_B)
-            self.preview_ss_button.clicked.connect(lambda: os.system("xscreensaver-command -activate"))
+            self.preview_ss_button.clicked.connect(
+                lambda: os.system("xscreensaver-command -activate")
+            )
 
-            self.ss_timeout_spinner = QSpinner(strings.SETTINGS_XSC_TIME_S, icon_color=self.fg_color)
+            self.ss_timeout_spinner = QSpinner(
+                strings.SETTINGS_XSC_TIME_S, icon_color=self.fg_color
+            )
             self.ss_timeout_spinner.setSuffix(strings.SETTINGS_XSC_TIME_SUF)
-            self.ss_timeout_spinner.spinbox.valueChanged.connect(self.ss_timeout_changed)
-            self.ss_timeout_spinner.setValue(int(self.xsc_config.read()["timeout"].split(":")[1]))
+            self.ss_timeout_spinner.spinbox.valueChanged.connect(
+                self.ss_timeout_changed
+            )
+            self.ss_timeout_spinner.setValue(
+                int(self.xsc_config.read()["timeout"].split(":")[1])
+            )
 
             self.ss_enable_checkbox = QCheckBox(strings.SETTINGS_TICK_ENABLE)
             self.ss_enable_checkbox.stateChanged.connect(self.ss_enable_changed)
@@ -484,7 +570,9 @@ class MainWindow(KBMainWindow):
 
         self.exit_themes = haptics.HPushButton()
         self.exit_themes.clicked.connect(lambda: self.main_widget.slideInIdx(0))
-        self.exit_themes.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
+        self.exit_themes.setIcon(
+            qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color)
+        )
         self.exit_themes.setFixedSize(QSize(36, 36))
         self.exit_themes.setIconSize(QSize(32, 32))
         self.display_layout.addWidget(self.exit_themes)
@@ -532,7 +620,9 @@ class MainWindow(KBMainWindow):
 
         self.exit_robot = haptics.HPushButton()
         self.exit_robot.clicked.connect(lambda: self.main_widget.slideInIdx(0))
-        self.exit_robot.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
+        self.exit_robot.setIcon(
+            qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color)
+        )
         self.exit_robot.setFixedSize(QSize(36, 36))
         self.exit_robot.setIconSize(QSize(32, 32))
         self.robot_layout.addWidget(self.exit_robot)
@@ -551,7 +641,9 @@ class MainWindow(KBMainWindow):
 
         self.exit_web = haptics.HPushButton()
         self.exit_web.clicked.connect(lambda: self.main_widget.slideInIdx(0))
-        self.exit_web.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
+        self.exit_web.setIcon(
+            qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color)
+        )
         self.exit_web.setFixedSize(QSize(36, 36))
         self.exit_web.setIconSize(QSize(32, 32))
         self.web_layout.addWidget(self.exit_web)
@@ -662,7 +754,9 @@ class MainWindow(KBMainWindow):
 
         self.exit_remote = haptics.HPushButton()
         self.exit_remote.clicked.connect(lambda: self.main_widget.slideInIdx(0))
-        self.exit_remote.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
+        self.exit_remote.setIcon(
+            qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color)
+        )
         self.exit_remote.setFixedSize(QSize(36, 36))
         self.exit_remote.setIconSize(QSize(32, 32))
         self.remote_layout.addWidget(self.exit_remote)
@@ -688,7 +782,9 @@ class MainWindow(KBMainWindow):
 
     def change_backlight(self):
         if is_pi():
-            os.system(f"echo {self.screen_bright_slider.value()} > {settings['backlight_dir']}brightness")
+            os.system(
+                f"echo {self.screen_bright_slider.value()} > {settings['backlight_dir']}brightness"
+            )
         else:
             print(f"Brightness: {self.screen_bright_slider.value()}")
 
@@ -708,36 +804,42 @@ class MainWindow(KBMainWindow):
 
     def save_url(self):
         settings["camera_url"] = self.cam_url_input.text()
-        with open('settings.json', 'w') as file:
+        with open("settings.json", "w") as file:
             json.dump(settings, file, indent=2)
 
     def max_us_changed(self):
         settings["max_us"] = self.max_us_spinner.spinbox.value()
-        with open('settings.json', 'w') as file:
+        with open("settings.json", "w") as file:
             json.dump(settings, file, indent=2)
 
     @staticmethod
     def set_joy_size(value):
         settings["joystick_size"] = value
-        with open('settings.json', 'w') as file:
+        with open("settings.json", "w") as file:
             json.dump(settings, file, indent=2)
 
     @staticmethod
     def set_joy_mode(value):
         settings["joystick_type"] = value
-        with open('settings.json', 'w') as file:
+        with open("settings.json", "w") as file:
             json.dump(settings, file, indent=2)
 
     def set_runner_theme(self, name, button):
         settings["apps"]["theme"] = name
-        with open('settings.json', 'w') as file:
+        with open("settings.json", "w") as file:
             json.dump(settings, file, indent=2)
 
         for i in range(self.runner_themes_scroll_layout.count()):
-            self.runner_themes_scroll_layout.itemAt(i).widget().layout().itemAt(2).layout().itemAt(0).widget() \
-                .setEnabled(True)  # enable button
-            self.runner_themes_scroll_layout.itemAt(i).widget().layout().itemAt(2).layout().itemAt(0).widget() \
-                .setText("Enable")  # set button text
+            self.runner_themes_scroll_layout.itemAt(i).widget().layout().itemAt(
+                2
+            ).layout().itemAt(0).widget().setEnabled(
+                True
+            )  # enable button
+            self.runner_themes_scroll_layout.itemAt(i).widget().layout().itemAt(
+                2
+            ).layout().itemAt(0).widget().setText(
+                "Enable"
+            )  # set button text
 
         button.setText("Active")
         button.setEnabled(False)
@@ -748,27 +850,52 @@ class MainWindow(KBMainWindow):
         settings["apps"]["theme"] = file_name
         settings["apps"]["theme_name"] = self.theme_picker.currentText()
 
-        with open('settings.json', 'w') as file:
+        with open("settings.json", "w") as file:
             json.dump(settings, file, indent=2)
 
     def activate_theme(self, theme, button, customizer=None):
         settings["window_properties"]["theme"] = theme
 
-        with open('settings.json', 'w') as file:
+        with open("settings.json", "w") as file:
             json.dump(settings, file, indent=2)
 
-        load_theme(self, settings["window_properties"]["theme"], settings["window_properties"]["theme_colors"])
+        load_theme(
+            self,
+            settings["window_properties"]["theme"],
+            settings["window_properties"]["theme_colors"],
+        )
 
         for i in range(self.app_themes_scroll_layout.count()):
-            self.app_themes_scroll_layout.itemAt(i).widget().layout().itemAt(2).layout().itemAt(0).widget() \
-                .setEnabled(True)  # enable button
-            self.app_themes_scroll_layout.itemAt(i).widget().layout().itemAt(2).layout().itemAt(0).widget() \
-                .setText("Enable")  # set button text
-            if len(self.app_themes_scroll_layout.itemAt(i).widget().layout().itemAt(2).layout()) > 1:
-                self.app_themes_scroll_layout.itemAt(i).widget().layout().itemAt(2).layout().itemAt(1).widget() \
-                    .setEnabled(False)  # disable combobox
-                self.app_themes_scroll_layout.itemAt(i).widget().layout().itemAt(2).layout().itemAt(1).widget() \
-                    .setCurrentIndex(0)  # set current index
+            self.app_themes_scroll_layout.itemAt(i).widget().layout().itemAt(
+                2
+            ).layout().itemAt(0).widget().setEnabled(
+                True
+            )  # enable button
+            self.app_themes_scroll_layout.itemAt(i).widget().layout().itemAt(
+                2
+            ).layout().itemAt(0).widget().setText(
+                "Enable"
+            )  # set button text
+            if (
+                len(
+                    self.app_themes_scroll_layout.itemAt(i)
+                    .widget()
+                    .layout()
+                    .itemAt(2)
+                    .layout()
+                )
+                > 1
+            ):
+                self.app_themes_scroll_layout.itemAt(i).widget().layout().itemAt(
+                    2
+                ).layout().itemAt(1).widget().setEnabled(
+                    False
+                )  # disable combobox
+                self.app_themes_scroll_layout.itemAt(i).widget().layout().itemAt(
+                    2
+                ).layout().itemAt(1).widget().setCurrentIndex(
+                    0
+                )  # set current index
 
         button.setText("Active")
         button.setEnabled(False)
@@ -779,16 +906,22 @@ class MainWindow(KBMainWindow):
     def activate_custom(self, customizer: QComboBox):
         settings["window_properties"]["theme_colors"] = customizer.currentText()
 
-        with open('settings.json', 'w') as file:
+        with open("settings.json", "w") as file:
             json.dump(settings, file, indent=2)
 
-        load_theme(self, settings["window_properties"]["theme"], settings["window_properties"]["theme_colors"])
+        load_theme(
+            self,
+            settings["window_properties"]["theme"],
+            settings["window_properties"]["theme_colors"],
+        )
 
     def change_app_theme(self):
         combo_val = self.app_theme_picker.currentText()
 
         theme_color = self.app_theme_customizer.currentText()
-        settings["window_properties"]["theme_colors"] = self.app_theme_customizer.currentText()
+        settings["window_properties"][
+            "theme_colors"
+        ] = self.app_theme_customizer.currentText()
 
         for pair in THEME_PAIRS:
             if pair[0] == combo_val:
@@ -815,21 +948,27 @@ class MainWindow(KBMainWindow):
         self.app_theme_customizer.setCurrentText(theme_color)
         self.app_theme_customizer.blockSignals(False)
 
-        with open('settings.json', 'w') as file:
+        with open("settings.json", "w") as file:
             json.dump(settings, file, indent=2)
 
-        load_theme(self, settings["window_properties"]["theme"], settings["window_properties"]["theme_colors"])
+        load_theme(
+            self,
+            settings["window_properties"]["theme"],
+            settings["window_properties"]["theme_colors"],
+        )
 
     def update_homepage(self):
         settings["homepage"] = self.homepage_line.text()
 
-        with open('settings.json', 'w') as file:
+        with open("settings.json", "w") as file:
             json.dump(settings, file, indent=2)
 
     def set_animation_speed(self):
-        settings["window_properties"]["animation_speed"] = self.animation_spinner.spinbox.value()
+        settings["window_properties"][
+            "animation_speed"
+        ] = self.animation_spinner.spinbox.value()
 
-        with open('settings.json', 'w') as file:
+        with open("settings.json", "w") as file:
             json.dump(settings, file, indent=2)
 
     def ss_timeout_changed(self):
@@ -852,18 +991,18 @@ class MainWindow(KBMainWindow):
         name = self.name_edit.lineedit.text()
         settings["name"] = name
 
-        with open('settings.json', 'w') as file:
+        with open("settings.json", "w") as file:
             json.dump(settings, file, indent=2)
 
     def runner_theme_flat_changed(self):
         settings["apps"]["theme_flat"] = self.runner_theme_flat.isChecked()
-        with open('settings.json', 'w') as file:
+        with open("settings.json", "w") as file:
             json.dump(settings, file, indent=2)
 
     @staticmethod
     def set_ui_mode(ui_mode: str):
         settings["window_properties"]["ui_style"] = ui_mode
-        with open('settings.json', 'w') as file:
+        with open("settings.json", "w") as file:
             json.dump(settings, file, indent=2)
 
 
@@ -874,9 +1013,15 @@ if __name__ == "__main__":
     app.setWindowIcon(QIcon("icons/settings.svg"))
 
     # Font
-    QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Roboto-Regular.ttf"))
-    QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Roboto-Bold.ttf"))
-    QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Lato-Regular.ttf"))
+    QFontDatabase.addApplicationFont(
+        os.path.join(os.curdir, "res/fonts/Roboto-Regular.ttf")
+    )
+    QFontDatabase.addApplicationFont(
+        os.path.join(os.curdir, "res/fonts/Roboto-Bold.ttf")
+    )
+    QFontDatabase.addApplicationFont(
+        os.path.join(os.curdir, "res/fonts/Lato-Regular.ttf")
+    )
     QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Lato-Bold.ttf"))
 
     window = MainWindow()

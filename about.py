@@ -11,8 +11,10 @@ import sys
 
 # noinspection PyPackageRequirements
 from qtpy.QtCore import *
+
 # noinspection PyPackageRequirements
 from qtpy.QtGui import *
+
 # noinspection PyPackageRequirements
 from qtpy.QtWidgets import *
 
@@ -29,7 +31,7 @@ EMULATE_REAL_REMOTE = True
 if platform.system() == "Windows":
     import ctypes
 
-    WIN_APP_ID = 'kevinbot.kevinbot.remote.about'  # arbitrary string
+    WIN_APP_ID = "kevinbot.kevinbot.remote.about"  # arbitrary string
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(WIN_APP_ID)
 
 settings = json.load(open("settings.json", encoding="utf-8"))
@@ -38,7 +40,8 @@ haptics.init(21)
 
 
 class MainWindow(KBMainWindow):
-    """ Kevinbot About App Window """
+    """Kevinbot About App Window"""
+
     # noinspection PyUnresolvedReferences,PyArgumentList
     def __init__(self):
         # noinspection PyArgumentList
@@ -47,8 +50,11 @@ class MainWindow(KBMainWindow):
         self.setObjectName("Kevinbot3_RemoteUI")
 
         try:
-            load_theme(self, settings["window_properties"]["theme"],
-                       settings["window_properties"]["theme_colors"])
+            load_theme(
+                self,
+                settings["window_properties"]["theme"],
+                settings["window_properties"]["theme_colors"],
+            )
         except NameError:
             load_theme(self, settings["window_properties"]["theme"])
 
@@ -59,10 +65,13 @@ class MainWindow(KBMainWindow):
         self.ee_count = 0
 
         self.ensurePolished()
-        if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],
-                        QColor(self.palette().color(
-                            QPalette.Window)).getRgb()[1],
-                        QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
+        if detect_dark(
+            (
+                QColor(self.palette().color(QPalette.Window)).getRgb()[0],
+                QColor(self.palette().color(QPalette.Window)).getRgb()[1],
+                QColor(self.palette().color(QPalette.Window)).getRgb()[2],
+            )
+        ):
             self.fg_color = Qt.GlobalColor.white
         else:
             self.fg_color = Qt.GlobalColor.black
@@ -85,35 +94,48 @@ class MainWindow(KBMainWindow):
         self.icon_layout.addWidget(self.icon)
 
         self.name_text = QLabel("Kevinbot v3 Remote")
-        self.name_text.setStyleSheet("font-size: 30px; font-weight: bold; font-family: Roboto;")
+        self.name_text.setStyleSheet(
+            "font-size: 30px; font-weight: bold; font-family: Roboto;"
+        )
         self.name_text.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.layout.addWidget(self.name_text)
 
-        self.version = QLabel("Version: " + open("version.txt", encoding="utf-8").read())
-        self.version.setStyleSheet("font-size: 24px; font-weight: semibold; font-family: Roboto;")
+        self.version = QLabel(
+            "Version: " + open("version.txt", encoding="utf-8").read()
+        )
+        self.version.setStyleSheet(
+            "font-size: 24px; font-weight: semibold; font-family: Roboto;"
+        )
         self.version.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.layout.addWidget(self.version)
 
         self.qt_version = QLabel("PyQt Version: " + PYQT_VERSION_STR)
-        self.qt_version.setStyleSheet("font-size: 22px; font-weight: normal; font-family: Roboto;")
+        self.qt_version.setStyleSheet(
+            "font-size: 22px; font-weight: normal; font-family: Roboto;"
+        )
         self.qt_version.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.layout.addWidget(self.qt_version)
 
         self.credits_box = QTextEdit()
         self.credits_box.setReadOnly(True)
         self.credits_box.setStyleSheet("font-family: Roboto;")
-        self.credits_box.setText("<p>Kevinbot and Kevinbot Software created by Kevin Ahr <br>"
-                                 "PyQtDarkTheme created by Yunosuke Ohsugi <br>"
-                                 "BreezeStyleSheets created by Alexander Huszagh <br>"
-                                 "Syntax Highlighting based on: "
-                                 "https://github.com/art1415926535/PyQt5-syntax-highlighting <br>"
-                                 "QSuperDial based on: "
-                                 "https://github.com/Vampouille/superboucle/blob/master/superboucle/qsuperdial.py <br>"
-                                 "Roboto Font by Christian Robertson<br>"
-                                 "Lato Font by Łukasz Dziedzic</p>")
+        self.credits_box.setText(
+            "<p>Kevinbot and Kevinbot Software created by Kevin Ahr <br>"
+            "PyQtDarkTheme created by Yunosuke Ohsugi <br>"
+            "BreezeStyleSheets created by Alexander Huszagh <br>"
+            "Syntax Highlighting based on: "
+            "https://github.com/art1415926535/PyQt5-syntax-highlighting <br>"
+            "QSuperDial based on: "
+            "https://github.com/Vampouille/superboucle/blob/master/superboucle/qsuperdial.py <br>"
+            "Roboto Font by Christian Robertson<br>"
+            "Lato Font by Łukasz Dziedzic</p>"
+        )
         self.credits_box.setVerticalScrollBarPolicy(
-            Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        QScroller.grabGesture(self.credits_box, QScroller.LeftMouseButtonGesture)  # enable single-touch scroll
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOff
+        )
+        QScroller.grabGesture(
+            self.credits_box, QScroller.LeftMouseButtonGesture
+        )  # enable single-touch scroll
         self.credits_box.hide()
         self.layout.addWidget(self.credits_box)
 
@@ -178,9 +200,15 @@ if __name__ == "__main__":
     app.setWindowIcon(QIcon("icons/icon.svg"))
 
     # Font
-    QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Roboto-Regular.ttf"))
-    QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Roboto-Bold.ttf"))
-    QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Lato-Regular.ttf"))
+    QFontDatabase.addApplicationFont(
+        os.path.join(os.curdir, "res/fonts/Roboto-Regular.ttf")
+    )
+    QFontDatabase.addApplicationFont(
+        os.path.join(os.curdir, "res/fonts/Roboto-Bold.ttf")
+    )
+    QFontDatabase.addApplicationFont(
+        os.path.join(os.curdir, "res/fonts/Lato-Regular.ttf")
+    )
     QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Lato-Bold.ttf"))
 
     window = MainWindow()

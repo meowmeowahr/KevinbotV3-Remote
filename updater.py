@@ -32,7 +32,7 @@ FULLSCREEN = False
 if platform.system() == "Windows":
     import ctypes
 
-    myappid = 'kevinbot.kevinbot.updater._'  # arbitrary string
+    myappid = "kevinbot.kevinbot.updater._"  # arbitrary string
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
 settings = json.load(open("settings.json", "r"))
@@ -51,25 +51,38 @@ class Worker(QObject):
         global version
         # make a backup of the current files
         # create a backup directory if it doesn't exist
-        if not os.path.exists(settings["backup_dir"].replace("$USER", os.getenv("USER"))):
+        if not os.path.exists(
+            settings["backup_dir"].replace("$USER", os.getenv("USER"))
+        ):
             os.makedirs(settings["backup_dir"].replace("$USER", os.getenv("USER")))
 
         self.set_prog(12)
 
         # make a zip file of the current files
-        shutil.make_archive(os.path.join(settings["backup_dir"].replace("$USER", os.getenv("USER")),
-                                         "Kevinbot3_Backup_{}".format(datetime.datetime.now()
-                                                                      .strftime("%Y-%m-%d_%H-%M-%S"))),
-                            "zip", os.path.join(settings["data_dir"].replace("$USER", os.getenv("USER"))))
+        shutil.make_archive(
+            os.path.join(
+                settings["backup_dir"].replace("$USER", os.getenv("USER")),
+                "Kevinbot3_Backup_{}".format(
+                    datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+                ),
+            ),
+            "zip",
+            os.path.join(settings["data_dir"].replace("$USER", os.getenv("USER"))),
+        )
 
         self.set_prog(25)
 
         backups = []
 
         # if there are more than two backups, delete the oldest one
-        if len(os.listdir(settings["backup_dir"].replace("$USER", os.getenv("USER")))) > 2:
+        if (
+            len(os.listdir(settings["backup_dir"].replace("$USER", os.getenv("USER"))))
+            > 2
+        ):
             # make a list of the files in the backup directory
-            for file in os.listdir(settings["backup_dir"].replace("$USER", os.getenv("USER"))):
+            for file in os.listdir(
+                settings["backup_dir"].replace("$USER", os.getenv("USER"))
+            ):
                 if file.endswith(".zip"):
                     backups.append(file)
 
@@ -79,7 +92,11 @@ class Worker(QObject):
 
         # remove the files
         for file in backups:
-            os.remove(os.path.join(settings["backup_dir"].replace("$USER", os.getenv("USER")), file))
+            os.remove(
+                os.path.join(
+                    settings["backup_dir"].replace("$USER", os.getenv("USER")), file
+                )
+            )
 
         self.set_prog(37)
 
@@ -90,9 +107,14 @@ class Worker(QObject):
         self.set_prog(50)
 
         # extract the file to the temporary directory
-        with tarfile.open(os.path.join(settings["media_dir"].replace("$USER", os.getenv("USER")),
-                                       window.drive_combo.currentText(), window.file_combo.currentText()),
-                          "r:gz") as tar:
+        with tarfile.open(
+            os.path.join(
+                settings["media_dir"].replace("$USER", os.getenv("USER")),
+                window.drive_combo.currentText(),
+                window.file_combo.currentText(),
+            ),
+            "r:gz",
+        ) as tar:
             tar.extractall(path="/tmp/Kevinbot3_Temp")
 
         requirements = None
@@ -108,39 +130,61 @@ class Worker(QObject):
                         continue
                     # if the dont_copy_settings checkbox is not checked, copy the file
                     else:
-                        shutil.copy(os.path.join("/tmp/Kevinbot3_Temp", file), os.path.join(settings["data_dir"]
-                                                                                            .replace("$USER",
-                                                                                                     os.getenv("USER")),
-                                                                                            file))
+                        shutil.copy(
+                            os.path.join("/tmp/Kevinbot3_Temp", file),
+                            os.path.join(
+                                settings["data_dir"].replace(
+                                    "$USER", os.getenv("USER")
+                                ),
+                                file,
+                            ),
+                        )
 
                 elif file == "requirements.txt":
                     requirements = os.path.join("/tmp/Kevinbot3_Temp", file)
                 elif file == "update_manifest.json":
-                    manifest = json.loads(open(os.path.join("/tmp/Kevinbot3_Temp", file), "r").read())
+                    manifest = json.loads(
+                        open(os.path.join("/tmp/Kevinbot3_Temp", file), "r").read()
+                    )
                     version = manifest["version"]
 
                 else:
-                    shutil.copy(os.path.join("/tmp/Kevinbot3_Temp", file), os.path.join(settings["data_dir"]
-                                                                                        .replace("$USER",
-                                                                                                 os.getenv("USER")),
-                                                                                        file))
+                    shutil.copy(
+                        os.path.join("/tmp/Kevinbot3_Temp", file),
+                        os.path.join(
+                            settings["data_dir"].replace("$USER", os.getenv("USER")),
+                            file,
+                        ),
+                    )
 
         # copy the folders to the data directory and overwrite any existing files
         for folder in os.listdir("/tmp/Kevinbot3_Temp"):
             if os.path.isdir(os.path.join("/tmp/Kevinbot3_Temp", folder)):
                 try:
-                    shutil.rmtree(os.path.join(settings["data_dir"].replace("$USER", os.getenv("USER")), folder))
+                    shutil.rmtree(
+                        os.path.join(
+                            settings["data_dir"].replace("$USER", os.getenv("USER")),
+                            folder,
+                        )
+                    )
                 except FileNotFoundError:
                     pass
 
-                shutil.copytree(os.path.join("/tmp/Kevinbot3_Temp", folder), os.path.join(settings["data_dir"]
-                                                                                          .replace("$USER",
-                                                                                                   os.getenv("USER")),
-                                                                                          folder))
+                shutil.copytree(
+                    os.path.join("/tmp/Kevinbot3_Temp", folder),
+                    os.path.join(
+                        settings["data_dir"].replace("$USER", os.getenv("USER")), folder
+                    ),
+                )
         if manifest:
             for filename in manifest["removed_files"]:
                 try:
-                    os.remove(os.path.join(settings["data_dir"].replace("$USER", os.getenv("USER")), filename))
+                    os.remove(
+                        os.path.join(
+                            settings["data_dir"].replace("$USER", os.getenv("USER")),
+                            filename,
+                        )
+                    )
                 except FileNotFoundError:
                     pass
 
@@ -172,9 +216,13 @@ class MainWindow(KBMainWindow):
             self.setFixedSize(QSize(800, 480))
 
         self.ensurePolished()
-        if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],
-                        QColor(self.palette().color(QPalette.Window)).getRgb()[1],
-                        QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
+        if detect_dark(
+            (
+                QColor(self.palette().color(QPalette.Window)).getRgb()[0],
+                QColor(self.palette().color(QPalette.Window)).getRgb()[1],
+                QColor(self.palette().color(QPalette.Window)).getRgb()[2],
+            )
+        ):
             self.fg_color = Qt.GlobalColor.white
         else:
             self.fg_color = Qt.GlobalColor.black
@@ -234,7 +282,9 @@ class MainWindow(KBMainWindow):
         self.file_layout.addWidget(self.file_button)
 
         # applying updates to ... label
-        self.apply_label = QLabel("Applying updates to: {}".format(settings["data_dir"]))
+        self.apply_label = QLabel(
+            "Applying updates to: {}".format(settings["data_dir"])
+        )
         self.apply_label.setObjectName("Kevinbot3_RemoteUI_Label")
         self.apply_label.setFixedHeight(24)
         self.layout.addWidget(self.apply_label)
@@ -299,9 +349,15 @@ class MainWindow(KBMainWindow):
         if not platform.system() == "Windows":
             # get drives
             drives = []
-            for drive in os.listdir(settings["media_dir"].replace("$USER", os.getenv("USER"))):
+            for drive in os.listdir(
+                settings["media_dir"].replace("$USER", os.getenv("USER"))
+            ):
                 # if it has files in it
-                if os.path.isdir(os.path.join(settings["media_dir"].replace("$USER", os.getenv("USER")), drive)):
+                if os.path.isdir(
+                    os.path.join(
+                        settings["media_dir"].replace("$USER", os.getenv("USER")), drive
+                    )
+                ):
                     drives.append(drive)
 
             # add drives to combo
@@ -317,8 +373,12 @@ class MainWindow(KBMainWindow):
         if not platform.system() == "Windows":
             # get files
             files = []
-            for file in os.listdir(os.path.join(settings["media_dir"].replace("$USER", os.getenv("USER")),
-                                                self.drive_combo.currentText())):
+            for file in os.listdir(
+                os.path.join(
+                    settings["media_dir"].replace("$USER", os.getenv("USER")),
+                    self.drive_combo.currentText(),
+                )
+            ):
                 if file.endswith(".tar.gz"):
                     files.append(file)
 
@@ -375,9 +435,15 @@ if __name__ == "__main__":
     app.setApplicationVersion("1.0")
 
     # Font
-    QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Roboto-Regular.ttf"))
-    QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Roboto-Bold.ttf"))
-    QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Lato-Regular.ttf"))
+    QFontDatabase.addApplicationFont(
+        os.path.join(os.curdir, "res/fonts/Roboto-Regular.ttf")
+    )
+    QFontDatabase.addApplicationFont(
+        os.path.join(os.curdir, "res/fonts/Roboto-Bold.ttf")
+    )
+    QFontDatabase.addApplicationFont(
+        os.path.join(os.curdir, "res/fonts/Lato-Regular.ttf")
+    )
     QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Lato-Bold.ttf"))
 
     window = MainWindow()

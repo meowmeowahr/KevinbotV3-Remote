@@ -15,10 +15,16 @@ class MainWindow(QWidget):
         self.setObjectName("Kevinbot3_RemoteUI")
 
         palette = self.palette()
-        palette.setColor(QPalette.Inactive, QPalette.Highlight,
-                         palette.color(QPalette.Active, QPalette.Highlight))
-        palette.setColor(QPalette.Inactive, QPalette.HighlightedText,
-                         palette.color(QPalette.Active, QPalette.HighlightedText))
+        palette.setColor(
+            QPalette.Inactive,
+            QPalette.Highlight,
+            palette.color(QPalette.Active, QPalette.Highlight),
+        )
+        palette.setColor(
+            QPalette.Inactive,
+            QPalette.HighlightedText,
+            palette.color(QPalette.Active, QPalette.HighlightedText),
+        )
         self.setPalette(palette)
 
         self.layout = QGridLayout()
@@ -50,6 +56,6 @@ class MainWindow(QWidget):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainWindow()
-    QApplication.setStyle(QStyleFactory().create('Fusion'))
+    QApplication.setStyle(QStyleFactory().create("Fusion"))
     window.show()
     app.exec()

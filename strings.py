@@ -66,7 +66,7 @@ EYE_CONFIG_IS_G: Final[str] = "Iris Size"
 EYE_CONFIG_SP_G: Final[str] = "Motion Speed"
 EYE_CONFIG_BR_G: Final[str] = "Backlight"
 
-EYE_CONFIG_METAL_IS_T_G : Final[str] = "Iris Tint"
+EYE_CONFIG_METAL_IS_T_G: Final[str] = "Iris Tint"
 
 EYE_CONFIG_NEON_PALETTES: Final[str] = "Foreground Colors"
 
@@ -143,7 +143,9 @@ SETTINGS_HOMEPAGE_G: Final[str] = "Homepage"
 SETTINGS_REMOTE_G: Final[str] = "Remote"
 
 SETTINGS_ADV_G: Final[str] = "Advanced Settings"
-SETTINGS_ADV_WARNING: Final[str] = "WARNING: Changing some of these settings may damage your remote or robot."
+SETTINGS_ADV_WARNING: Final[str] = (
+    "WARNING: Changing some of these settings may damage your remote or robot."
+)
 
 SETTINGS_DISPLAY_OPT: Final[str] = "Display and Theme Settings"
 SETTINGS_ROBOT_OPT: Final[str] = "Robot Settings"
@@ -163,7 +165,9 @@ SETTINGS_XSC_TIME_SUF: Final[str] = " minutes"
 
 SETTINGS_MAX_US_L: Final[str] = "Max µS:"
 SETTINGS_NICKNAME_L: Final[str] = "Unique Identifier:"
-SETTINGS_NICKNAME_DESC: Final[str] = "The Unique ID is the identifier for this remote.\nIt must be unique and not used on any other remote.\nIt must also not contain special characters."
+SETTINGS_NICKNAME_DESC: Final[str] = (
+    "The Unique ID is the identifier for this remote.\nIt must be unique and not used on any other remote.\nIt must also not contain special characters."
+)
 SETTINGS_STICK_SIZE_L: Final[str] = "Joystick Size:"
 SETTINGS_STICK_MODE_L: Final[str] = "Joystick Mode:"
 SETTINGS_UI_MODE_L: Final[str] = "UI Style"
@@ -201,4 +205,4 @@ REFRESH: Final[str] = "Refresh"
 UNKNOWN: Final[str] = "Unknown"
 DEV_OFF: Final[str] = "Dev Options Disabled"
 SKINS: Final[str] = "Skins"
-PROPERTIES: Final[str]= "Properties"
+PROPERTIES: Final[str] = "Properties"

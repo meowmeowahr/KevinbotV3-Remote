@@ -21,6 +21,7 @@ def is_pi():
 if is_pi():
     try:
         import json
+
         with open("settings.json", "r") as f:
             settings = json.load(f)
         PORT = settings["ports"]["pi_port"]
@@ -29,6 +30,7 @@ if is_pi():
 else:
     try:
         import json
+
         with open("settings.json", "r") as f:
             settings = json.load(f)
             if platform.system() == "Windows":
@@ -52,17 +54,21 @@ def init(callback=None):
         try:
             # noinspection PyUnresolvedReferences
             import sys
+
             # noinspection PyUnresolvedReferences,PyPackageRequirements
             from qtpy.QtWidgets import QApplication, QMessageBox, QInputDialog
+
             _ = QApplication(sys.argv)
             # noinspection PyTypeChecker
-            resp, _ = QInputDialog.getText(None, f"Port Not Found", "Type the correct port")
+            resp, _ = QInputDialog.getText(
+                None, f"Port Not Found", "Type the correct port"
+            )
             if not resp.lower() == "dummy":
                 ser = serial.Serial(resp, BAUD)
             else:
                 ser = None
         except ImportError:
-            print(f"Port \"{PORT}\" Not Found")
+            print(f'Port "{PORT}" Not Found')
     if ser:
         xb = xbee_com.XBee(ser, escaped=False, callback=callback)
 
@@ -70,7 +76,7 @@ def init(callback=None):
 def _send_data(data):
     # noinspection PyUnresolvedReferences
     if xb:
-        xb.send("tx", dest_addr=b'\x00\x00', data=bytes("{}\r".format(data), 'utf-8'))
+        xb.send("tx", dest_addr=b"\x00\x00", data=bytes("{}\r".format(data), "utf-8"))
 
 
 def txstr(string):
@@ -81,8 +87,8 @@ def txstr(string):
 def txcv(cmd, val, delay=0):
     # see if val is a list or a string
     if isinstance(val, list) or isinstance(val, tuple):
-        val = str(val).strip('[]()').replace(', ', ',')
-        
+        val = str(val).strip("[]()").replace(", ", ",")
+
     txstr(cmd + "=" + str(val))
     time.sleep(delay)
 

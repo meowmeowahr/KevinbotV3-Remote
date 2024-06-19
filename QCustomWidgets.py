@@ -101,7 +101,9 @@ class KBMainWindow(QMainWindow):
         self._close_action = QAction("Quit")
         self._close_action.triggered.connect(self.close)
 
-        self.setWindowIcon(QIcon(os.path.join(os.curdir, "icons/application-default-icon.svg")))
+        self.setWindowIcon(
+            QIcon(os.path.join(os.curdir, "icons/application-default-icon.svg"))
+        )
         self.setWindowTitle("Kevinbot Application")
 
     def _windowModeToggle(self):
@@ -113,7 +115,7 @@ class KBMainWindow(QMainWindow):
         self.show()
 
     def createDevTools(self):
-        """ Create a right-click Debug Menu in app """
+        """Create a right-click Debug Menu in app"""
         self.centralWidget().setContextMenuPolicy(Qt.ActionsContextMenu)
         self.centralWidget().addAction(self._title_action)
         self.centralWidget().addAction(self._windowify_action)
@@ -121,7 +123,16 @@ class KBMainWindow(QMainWindow):
 
 
 class KBModalBar(QFrame):
-    def __init__(self, parent, width=400, height=64, gap=16, centerText=True, opacity=90, bgColor=None):
+    def __init__(
+        self,
+        parent,
+        width=400,
+        height=64,
+        gap=16,
+        centerText=True,
+        opacity=90,
+        bgColor=None,
+    ):
         super(KBModalBar, self).__init__()
 
         self.gap = gap
@@ -137,8 +148,10 @@ class KBModalBar(QFrame):
         self.setGraphicsEffect(op)
         self.setAutoFillBackground(True)
 
-        self.move(int(parent.width() / 2 - self.width() / 2),
-                  int(parent.height() - height - gap))
+        self.move(
+            int(parent.width() / 2 - self.width() / 2),
+            int(parent.height() - height - gap),
+        )
 
         if bgColor:
             self.setStyleSheet(f"background-color: {bgColor}")
@@ -174,41 +187,55 @@ class KBModalBar(QFrame):
     def setPixmap(self, pixmap):
         self.__icon.setPixmap(pixmap)
 
-    def closeToast(self, closeSpeed = 750):
+    def closeToast(self, closeSpeed=750):
         self.__anim = QPropertyAnimation(self, b"pos")
         self.__anim.setEasingCurve(QEasingCurve.InOutCubic)
-        self.__anim.setEndValue(QPoint(int(self.parent.width() / 2 - self.width() / 2),
-                                self.parent.height() + self.height() + 25))
+        self.__anim.setEndValue(
+            QPoint(
+                int(self.parent.width() / 2 - self.width() / 2),
+                self.parent.height() + self.height() + 25,
+            )
+        )
         self.__anim.setDuration(closeSpeed)
         self.__anim.start()
 
         timer = QTimer()
         timer.singleShot(closeSpeed, self.deleteLater)
 
-    def changeIndex(self, newIndex, moveSpeed = 750, easingCurve = QEasingCurve.OutCubic):
+    def changeIndex(self, newIndex, moveSpeed=750, easingCurve=QEasingCurve.OutCubic):
         self.posIndex = newIndex
         self.__anim = QPropertyAnimation(self, b"pos")
         self.__anim.setEasingCurve(easingCurve)
-        self.__anim.setEndValue(QPoint(int(self.parent.width() / 2 - self.width() / 2),
-                                     int(self.parent.height() - ((self.height() + self.gap) * newIndex))))
+        self.__anim.setEndValue(
+            QPoint(
+                int(self.parent.width() / 2 - self.width() / 2),
+                int(self.parent.height() - ((self.height() + self.gap) * newIndex)),
+            )
+        )
         self.__anim.setDuration(moveSpeed)
         self.__anim.start()
 
     def getIndex(self):
         return self.posIndex
 
-    def popToast(self, pop_speed = 750, easing_curve = QEasingCurve.OutCubic, pos_index = 1):
+    def popToast(self, pop_speed=750, easing_curve=QEasingCurve.OutCubic, pos_index=1):
 
         self.posIndex = pos_index
 
-        self.move(int(self.parent.width() / 2 - self.width() / 2),
-                 self.parent.height() + self.height())
+        self.move(
+            int(self.parent.width() / 2 - self.width() / 2),
+            self.parent.height() + self.height(),
+        )
         self.show()
 
         self.__anim = QPropertyAnimation(self, b"pos")
         self.__anim.setEasingCurve(easing_curve)
-        self.__anim.setEndValue(QPoint(int(self.parent.width() / 2 - self.width() / 2),
-                                       int(self.parent.height() - (self.height() + self.gap) * pos_index)))
+        self.__anim.setEndValue(
+            QPoint(
+                int(self.parent.width() / 2 - self.width() / 2),
+                int(self.parent.height() - (self.height() + self.gap) * pos_index),
+            )
+        )
         self.__anim.setDuration(pop_speed)
         self.__anim.start()
 
@@ -258,14 +285,14 @@ class QSuperDial(QDial):
         x = math.cos(angle) * (rx - self.knobRadius - self.knobMargin) + rx
 
         # Draw the ellipse
-        painter.drawEllipse(QPointF(x, y),
-                            self.knobRadius,
-                            self.knobRadius)
+        painter.drawEllipse(QPointF(x, y), self.knobRadius, self.knobRadius)
+
 
 class KBDevice(QWidget):
     class IconType(enum.Enum):
         Remote = 0
         Robot = 1
+
     def __init__(self):
         super(KBDevice, self).__init__()
 
@@ -313,6 +340,7 @@ class KBDevice(QWidget):
     def setDeviceNickName(self, name: str):
         self.__device_nickname.setText(name)
 
+
 class KBDebugDataEntry(QWidget):
     def __init__(self):
         super(KBDebugDataEntry, self).__init__()
@@ -333,6 +361,7 @@ class KBDebugDataEntry(QWidget):
 
     def setText(self, text: str):
         self.__data.setText(text)
+
     def setIcon(self, icon: QIcon, size: QSize = QSize(36, 36)):
         self.__icon.setPixmap(icon.pixmap(size))
 
@@ -379,19 +408,37 @@ class LevelWidget(QWidget):
         painter.setRenderHint(QPainter.Antialiasing)
         painter.setPen(QPen(self._lineColor, self._lineWidth))
 
-        painter.drawLine(QPointF(self.height() / 2, self.height() / 2),
-                         QPointF(self.height() / 2 + math.cos(math.radians(self.angle)) * self.height() / 2 - 5,
-                                 self.height() / 2 + math.sin(math.radians(self.angle)) * self.height() / 2))
+        painter.drawLine(
+            QPointF(self.height() / 2, self.height() / 2),
+            QPointF(
+                self.height() / 2
+                + math.cos(math.radians(self.angle)) * self.height() / 2
+                - 5,
+                self.height() / 2
+                + math.sin(math.radians(self.angle)) * self.height() / 2,
+            ),
+        )
 
-        painter.drawLine(QPointF(self.height() / 2, self.height() / 2),
-                         QPointF(self.height() / 2 - math.cos(math.radians(self.angle)) * self.height() / 2 + 5,
-                                 self.height() / 2 - math.sin(math.radians(self.angle)) * self.height() / 2))
+        painter.drawLine(
+            QPointF(self.height() / 2, self.height() / 2),
+            QPointF(
+                self.height() / 2
+                - math.cos(math.radians(self.angle)) * self.height() / 2
+                + 5,
+                self.height() / 2
+                - math.sin(math.radians(self.angle)) * self.height() / 2,
+            ),
+        )
 
         # line 20px out of the angle line
         painter.setPen(QPen(self._robotColor, self._lineWidth))
-        painter.drawLine(QPointF(self.height() / 2, self.height() / 2),
-                         QPointF(self.height() / 2 + math.cos(math.radians(self.angle - 90)) * 20,
-                                 self.height() / 2 + math.sin(math.radians(self.angle - 90)) * 20))
+        painter.drawLine(
+            QPointF(self.height() / 2, self.height() / 2),
+            QPointF(
+                self.height() / 2 + math.cos(math.radians(self.angle - 90)) * 20,
+                self.height() / 2 + math.sin(math.radians(self.angle - 90)) * 20,
+            ),
+        )
 
         painter.setPen(QPen(self._backgroundColor, 30))
         painter.drawEllipse(QRect(0, 0, self.height(), self.height()))
@@ -411,9 +458,13 @@ class Level(QFrame):
         self.roll_text = "Roll: {}°"
         self.x_size = 200
 
-        if utils.detect_dark((QColor(palette.color(QPalette.Window)).getRgb()[0],
-                        QColor(palette.color(QPalette.Window)).getRgb()[1],
-                        QColor(palette.color(QPalette.Window)).getRgb()[2])):
+        if utils.detect_dark(
+            (
+                QColor(palette.color(QPalette.Window)).getRgb()[0],
+                QColor(palette.color(QPalette.Window)).getRgb()[1],
+                QColor(palette.color(QPalette.Window)).getRgb()[2],
+            )
+        ):
             self.fg_color = Qt.GlobalColor.white
         else:
             self.fg_color = Qt.GlobalColor.black
@@ -451,8 +502,10 @@ class Level(QFrame):
         self.y_pitch = [0 for _ in range(self.x_size)]
 
         pen = qtg.mkPen(color="#FFEB3B")
-        self.pitch_line = self.graph.plot(self.x_pitch, self.y_pitch, pen=pen, name="Pitch")
-        
+        self.pitch_line = self.graph.plot(
+            self.x_pitch, self.y_pitch, pen=pen, name="Pitch"
+        )
+
         self.x_yaw = list(range(self.x_size))
         self.y_yaw = [0 for _ in range(self.x_size)]
 
@@ -479,7 +532,7 @@ class Level(QFrame):
         self.take_image_button = QPushButton()
         self.take_image_button.setFixedSize(QSize(32, 32))
         self.take_image_button.setIconSize(QSize(32, 32))
-        self.take_image_button.setIcon(qta.icon('mdi.image', color=self.fg_color))
+        self.take_image_button.setIcon(qta.icon("mdi.image", color=self.fg_color))
         self.take_image_button.clicked.connect(self.take_image)
         self.settings_layout.addWidget(self.take_image_button)
 
@@ -517,7 +570,9 @@ class Level(QFrame):
         self.roll_label.setText(self.roll_text.format(angles[2]))
 
         self.x_roll = self.x_roll[1:]  # Remove the first y element.
-        self.x_roll.append(self.x_roll[-1] + 1)  # Add a new value 1 higher than the last.
+        self.x_roll.append(
+            self.x_roll[-1] + 1
+        )  # Add a new value 1 higher than the last.
 
         self.y_roll = self.y_roll[1:]  # Remove the first
         self.y_roll.append(angles[0])  # Add a new random value.
@@ -525,13 +580,15 @@ class Level(QFrame):
         self.roll_line.setData(self.x_roll, self.y_roll)  # Update the data.
 
         self.x_pitch = self.x_pitch[1:]  # Remove the first y element.
-        self.x_pitch.append(self.x_pitch[-1] + 1)  # Add a new value 1 higher than the last.
+        self.x_pitch.append(
+            self.x_pitch[-1] + 1
+        )  # Add a new value 1 higher than the last.
 
         self.y_pitch = self.y_pitch[1:]  # Remove the first
         self.y_pitch.append(angles[1])  # Add a new random value.
 
         self.pitch_line.setData(self.x_pitch, self.y_pitch)  # Update the data.
-        
+
         self.x_yaw = self.x_yaw[1:]  # Remove the first y element.
         self.x_yaw.append(self.x_yaw[-1] + 1)  # Add a new value 1 higher than the last.
 
@@ -558,9 +615,9 @@ class Level(QFrame):
         self.x_pitch = list(range(value))
 
         if value < self.x_size:
-            self.y_roll = self.y_roll[self.x_size - value:]
-            self.y_yaw = self.y_yaw[self.x_size - value:]
-            self.y_pitch = self.y_pitch[self.x_size - value:]
+            self.y_roll = self.y_roll[self.x_size - value :]
+            self.y_yaw = self.y_yaw[self.x_size - value :]
+            self.y_pitch = self.y_pitch[self.x_size - value :]
 
         if value > self.x_size:
             self.y_roll = ([0] * (value - self.x_size)) + self.y_roll
@@ -571,14 +628,22 @@ class Level(QFrame):
 
     def take_image(self):
         exporter = qtg.exporters.ImageExporter(self.graph.plotItem)
-        exporter.parameters()['width'] = 500
-        exporter.export(os.path.join(os.path.curdir, "mpu_graph_images",
-                                     datetime.now().strftime("%m-%d-%y_%I-%M_%p_") +
-                                     str(shortuuid.uuid()[12:]) + ".png"))
+        exporter.parameters()["width"] = 500
+        exporter.export(
+            os.path.join(
+                os.path.curdir,
+                "mpu_graph_images",
+                datetime.now().strftime("%m-%d-%y_%I-%M_%p_")
+                + str(shortuuid.uuid()[12:])
+                + ".png",
+            )
+        )
 
 
 class KBSkinSelector(QScrollArea):
-    def __init__(self, direction:QBoxLayout.Direction = QBoxLayout.Direction.LeftToRight):
+    def __init__(
+        self, direction: QBoxLayout.Direction = QBoxLayout.Direction.LeftToRight
+    ):
         super(KBSkinSelector, self).__init__()
         self.setWidgetResizable(True)
 
@@ -589,14 +654,20 @@ class KBSkinSelector(QScrollArea):
         self.scroll_layout.setContentsMargins(0, 0, 0, 0)
         self.scroll_widget.setLayout(self.scroll_layout)
 
-        if direction == QBoxLayout.Direction.Down or direction == QBoxLayout.Direction.Up:
+        if (
+            direction == QBoxLayout.Direction.Down
+            or direction == QBoxLayout.Direction.Up
+        ):
             self.scroll_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-    def addSkins(self, skins: dict,
-                 on_select,
-                 button_height: int=72,
-                 button_width: int=72,
-                 icon_size: QSize=QSize(42, 42)) -> None:
+    def addSkins(
+        self,
+        skins: dict,
+        on_select,
+        button_height: int = 72,
+        button_width: int = 72,
+        icon_size: QSize = QSize(42, 42),
+    ) -> None:
         for key in skins.keys():
             if skins[key][1].endswith(".gif"):
                 option = KB_GIFSkin(skins[key][1], key)
@@ -650,13 +721,22 @@ class KB_GIFSkin(QToolButton):
 
 
 class KBDualColorPicker(QGroupBox):
-    def __init__(self, window_palette: QPalette, title: str="", palette_titles: Iterable[str]=("Left", "Right")):
+    def __init__(
+        self,
+        window_palette: QPalette,
+        title: str = "",
+        palette_titles: Iterable[str] = ("Left", "Right"),
+    ):
         super(KBDualColorPicker, self).__init__()
         self.setTitle(title)
 
-        if utils.detect_dark((QColor(window_palette.color(QPalette.Window)).getRgb()[0],
-                        QColor(window_palette.color(QPalette.Window)).getRgb()[1],
-                        QColor(window_palette.color(QPalette.Window)).getRgb()[2])):
+        if utils.detect_dark(
+            (
+                QColor(window_palette.color(QPalette.Window)).getRgb()[0],
+                QColor(window_palette.color(QPalette.Window)).getRgb()[1],
+                QColor(window_palette.color(QPalette.Window)).getRgb()[2],
+            )
+        ):
             self.fg_color = Qt.GlobalColor.white
         else:
             self.fg_color = Qt.GlobalColor.black
@@ -680,8 +760,12 @@ class KBDualColorPicker(QGroupBox):
         self.palette_layout = QHBoxLayout()
         self._root_layout.addLayout(self.palette_layout)
 
-        self.palette_a = ColorPalette.PaletteGrid(colors=ColorPalette.PALETTES['kevinbot'])
-        self.palette_b = ColorPalette.PaletteGrid(colors=ColorPalette.PALETTES['kevinbot'])
+        self.palette_a = ColorPalette.PaletteGrid(
+            colors=ColorPalette.PALETTES["kevinbot"]
+        )
+        self.palette_b = ColorPalette.PaletteGrid(
+            colors=ColorPalette.PALETTES["kevinbot"]
+        )
 
         self.palette_swap_layout = QVBoxLayout()
 
@@ -710,6 +794,7 @@ class KBDualColorPicker(QGroupBox):
         self.palette_layout.addStretch()
         self.palette_layout.addWidget(self.palette_b)
         self.palette_layout.addStretch()
+
 
 class KBHandshakeWidget(QWidget):
     def __init__(self, color: QColor):

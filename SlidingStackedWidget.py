@@ -93,7 +93,7 @@ class SlidingStackedWidget(QStackedWidget):
         anim_group = QParallelAnimationGroup(self, finished=self.animationDoneSlot)
 
         for index, start, end in zip(
-                (_now, _next), (pnow, pnext - offset), (pnow + offset, pnext)
+            (_now, _next), (pnow, pnext - offset), (pnow + offset, pnext)
         ):
             # noinspection PyArgumentList
             animation = QPropertyAnimation(

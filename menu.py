@@ -30,7 +30,7 @@ EMULATE_REAL_REMOTE = True
 if platform.system() == "Windows":
     import ctypes
 
-    appid = 'kevinbot.kevinbot.runner._'  # arbitrary string
+    appid = "kevinbot.kevinbot.runner._"  # arbitrary string
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(appid)
 
 settings = json.load(open("settings.json", "r"))
@@ -41,16 +41,16 @@ if "dev_mode" in settings:
 else:
     settings["dev_mode"] = False  # save default
     DEV_MODE = settings["dev_mode"]
-    with open('settings.json', 'w') as file:
+    with open("settings.json", "w") as file:
         json.dump(settings, file, indent=2)
 
 try:
-    logging.basicConfig(filename='menu.log', filemode='w', level=settings["log_level"])
+    logging.basicConfig(filename="menu.log", filemode="w", level=settings["log_level"])
 except KeyError as e:
-    logging.basicConfig(filename='menu.log', filemode='w', level=logging.INFO)
+    logging.basicConfig(filename="menu.log", filemode="w", level=logging.INFO)
     logging.warning("log level has not been set")
     settings["log_level"] = 20
-    with open('settings.json', 'w') as file:
+    with open("settings.json", "w") as file:
         json.dump(settings, file, indent=2)
     print(e)
 
@@ -59,7 +59,7 @@ haptics.init(21)
 # load runner theme flat setting
 if "theme_flat" not in settings["apps"]:
     settings["apps"]["theme_flat"] = False  # save default
-    with open('settings.json', 'w') as file:
+    with open("settings.json", "w") as file:
         json.dump(settings, file, indent=2)
 
 
@@ -79,9 +79,13 @@ class Handler(FileSystemEventHandler):
 def run_app(command, gui=True):
     if is_using_venv():
         if platform.system() == "Windows":
-            command = command.replace("python3", os.path.join(os.curdir, "venv\\Scripts\\python.exe"))
+            command = command.replace(
+                "python3", os.path.join(os.curdir, "venv\\Scripts\\python.exe")
+            )
         elif platform.system() == "Linux":
-            command = command.replace("python3", os.path.join(os.curdir, "venv\\bin\\python"))
+            command = command.replace(
+                "python3", os.path.join(os.curdir, "venv\\bin\\python")
+            )
 
     logging.info(f"Running command: {command}")
 
@@ -95,11 +99,11 @@ def run_app(command, gui=True):
 
 
 def extract_digits(string):
-    return [int(s) for s in re.findall(r'\d+', string)]
+    return [int(s) for s in re.findall(r"\d+", string)]
 
 
 def hex2rgb(h):
-    t = tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
+    t = tuple(int(h[i : i + 2], 16) for i in (0, 2, 4))
     return t[0], t[1], t[2]
 
 
@@ -113,9 +117,13 @@ class MainWindow(KBMainWindow):
         self.setObjectName("Kevinbot3_RemoteUI")
 
         self.ensurePolished()
-        if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],
-                        QColor(self.palette().color(QPalette.Window)).getRgb()[1],
-                        QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
+        if detect_dark(
+            (
+                QColor(self.palette().color(QPalette.Window)).getRgb()[0],
+                QColor(self.palette().color(QPalette.Window)).getRgb()[1],
+                QColor(self.palette().color(QPalette.Window)).getRgb()[2],
+            )
+        ):
             self.fg_color = Qt.GlobalColor.white
         else:
             self.fg_color = Qt.GlobalColor.black
@@ -137,7 +145,9 @@ class MainWindow(KBMainWindow):
         self.root_widget = QStackedWidget()
         self.setCentralWidget(self.root_widget)
 
-        self.main_widget = QGroupBox("Kevinbot Runner | {}".format(time.strftime("%I:%M %p")))
+        self.main_widget = QGroupBox(
+            "Kevinbot Runner | {}".format(time.strftime("%I:%M %p"))
+        )
         self.main_widget.setObjectName("Kevinbot3_RemoteUI_Group")
         self.root_widget.addWidget(self.main_widget)
 
@@ -196,7 +206,9 @@ class MainWindow(KBMainWindow):
 
             self.exit_dev = haptics.HPushButton()
             self.exit_dev.clicked.connect(lambda: self.root_widget.setCurrentIndex(0))
-            self.exit_dev.setIcon(qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color))
+            self.exit_dev.setIcon(
+                qta.icon("fa5s.arrow-alt-circle-left", color=self.fg_color)
+            )
             self.exit_dev.setFixedSize(QSize(36, 36))
             self.exit_dev.setIconSize(QSize(32, 32))
             self.dev_root_layout.addWidget(self.exit_dev)
@@ -211,7 +223,9 @@ class MainWindow(KBMainWindow):
 
             self.dev_sysinfo = haptics.HPushButton("Launch System Info App")
             self.dev_sysinfo.setIcon(qta.icon("fa5s.search", color=self.fg_color))
-            self.dev_sysinfo.clicked.connect(lambda: run_app("python3 sysinfo.py", gui=False))
+            self.dev_sysinfo.clicked.connect(
+                lambda: run_app("python3 sysinfo.py", gui=False)
+            )
             self.dev_layout.addWidget(self.dev_sysinfo)
 
             self.dev_layout.addStretch()
@@ -225,7 +239,9 @@ class MainWindow(KBMainWindow):
 
         self.edit_exit_action = QAction("Cancel")
         self.edit_exit_action.triggered.connect(self.exit_edit_mode)
-        self.edit_exit_action.setIcon(QIcon(qta.icon("fa5s.backspace", color=QColor("#0288D1"))))
+        self.edit_exit_action.setIcon(
+            QIcon(qta.icon("fa5s.backspace", color=QColor("#0288D1")))
+        )
         self.edit_toolbar.addAction(self.edit_exit_action)
 
         # timer to update time
@@ -244,24 +260,30 @@ class MainWindow(KBMainWindow):
     def load_theme(self):
         try:
             # load theme from module
-            theme = importlib.import_module(f"themepacks.{settings['apps']['theme'][:-3]}")
+            theme = importlib.import_module(
+                f"themepacks.{settings['apps']['theme'][:-3]}"
+            )
 
             self.setStyleSheet(theme.QSS)  # set style sheet
 
-            if not theme.EFFECTS == ['none']:
+            if not theme.EFFECTS == ["none"]:
                 widget_effect = None
                 effect_type = theme.EFFECTS.split(":")
                 if effect_type[0] == "shadow":
                     widget_effect = QGraphicsDropShadowEffect(self)
-                    is_blur = [i for i in effect_type if i.startswith('b')]
-                    is_color = [i for i in effect_type if i.startswith('c')]
-                    if is_blur[0].startswith('b'):
+                    is_blur = [i for i in effect_type if i.startswith("b")]
+                    is_color = [i for i in effect_type if i.startswith("c")]
+                    if is_blur[0].startswith("b"):
                         widget_effect.setBlurRadius(extract_digits(effect_type[1])[0])
 
-                    if is_color[0].startswith('c'):
-                        widget_effect.setColor(QColor().fromRgb(hex2rgb(is_color[0][1:])[0],
-                                                                hex2rgb(is_color[0][1:])[1],
-                                                                hex2rgb(is_color[0][1:])[2]))
+                    if is_color[0].startswith("c"):
+                        widget_effect.setColor(
+                            QColor().fromRgb(
+                                hex2rgb(is_color[0][1:])[0],
+                                hex2rgb(is_color[0][1:])[1],
+                                hex2rgb(is_color[0][1:])[2],
+                            )
+                        )
                 if not settings["apps"]["theme_flat"]:
                     self.main_widget.setGraphicsEffect(widget_effect)
             else:
@@ -306,7 +328,9 @@ class MainWindow(KBMainWindow):
         self.root_widget.setCurrentIndex(1)
 
     def update_time(self):
-        self.main_widget.setTitle("Kevinbot Runner | {}".format(time.strftime("%I:%M %p")))
+        self.main_widget.setTitle(
+            "Kevinbot Runner | {}".format(time.strftime("%I:%M %p"))
+        )
         self.timer.start(1000)
 
     def check_hold(self, btn, index):
@@ -314,19 +338,32 @@ class MainWindow(KBMainWindow):
             self.editMode = True
             self.editBtn = btn
 
-            self.edit_toolbar.move(QPoint(btn.pos().x() +
-                                          int((btn.geometry().width() - self.edit_toolbar.geometry().width()) / 2),
-                                          btn.pos().y() + btn.geometry().height() + 2))
+            self.edit_toolbar.move(
+                QPoint(
+                    btn.pos().x()
+                    + int(
+                        (btn.geometry().width() - self.edit_toolbar.geometry().width())
+                        / 2
+                    ),
+                    btn.pos().y() + btn.geometry().height() + 2,
+                )
+            )
             self.edit_toolbar.show()
 
             self.edit_left_action = QAction("Left")
             self.edit_left_action.triggered.connect(lambda: self.left_edit_mode(index))
-            self.edit_left_action.setIcon(QIcon(qta.icon("fa5s.caret-left", color=QColor("#0288D1"))))
+            self.edit_left_action.setIcon(
+                QIcon(qta.icon("fa5s.caret-left", color=QColor("#0288D1")))
+            )
             self.edit_toolbar.addAction(self.edit_left_action)
 
             self.edit_right_action = QAction("Right")
-            self.edit_right_action.triggered.connect(lambda: self.right_edit_mode(index))
-            self.edit_right_action.setIcon(QIcon(qta.icon("fa5s.caret-right", color=QColor("#0288D1"))))
+            self.edit_right_action.triggered.connect(
+                lambda: self.right_edit_mode(index)
+            )
+            self.edit_right_action.setIcon(
+                QIcon(qta.icon("fa5s.caret-right", color=QColor("#0288D1")))
+            )
             self.edit_toolbar.addAction(self.edit_right_action)
 
     def right_edit_mode(self, index):
@@ -341,7 +378,7 @@ class MainWindow(KBMainWindow):
                 settings["apps"]["apps"].insert(pos + 1, app_item)
                 break
 
-        with open('settings.json', 'w') as file:
+        with open("settings.json", "w") as file:
             json.dump(settings, file, indent=2)
 
         self.exit_edit_mode()
@@ -359,7 +396,7 @@ class MainWindow(KBMainWindow):
                 settings["apps"]["apps"].insert(pos - 1, app_item)
                 break
 
-        with open('settings.json', 'w') as file:
+        with open("settings.json", "w") as file:
             json.dump(settings, file, indent=2)
 
         self.exit_edit_mode()
@@ -408,9 +445,15 @@ if __name__ == "__main__":
     app.setApplicationVersion("1.0")
 
     # Font
-    QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Roboto-Regular.ttf"))
-    QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Roboto-Bold.ttf"))
-    QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Lato-Regular.ttf"))
+    QFontDatabase.addApplicationFont(
+        os.path.join(os.curdir, "res/fonts/Roboto-Regular.ttf")
+    )
+    QFontDatabase.addApplicationFont(
+        os.path.join(os.curdir, "res/fonts/Roboto-Bold.ttf")
+    )
+    QFontDatabase.addApplicationFont(
+        os.path.join(os.curdir, "res/fonts/Lato-Regular.ttf")
+    )
     QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Lato-Bold.ttf"))
 
     # Window

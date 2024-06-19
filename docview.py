@@ -19,23 +19,29 @@ EMULATE_REAL_REMOTE = True
 if platform.system() == "Windows":
     import ctypes
 
-    WIN_APP_ID = 'kevinbot.kevinbot.remote.sysinfo'  # arbitrary string
+    WIN_APP_ID = "kevinbot.kevinbot.remote.sysinfo"  # arbitrary string
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(WIN_APP_ID)
 
 settings = json.load(open("settings.json", encoding="utf-8"))
 
 
 class MainWindow(KBMainWindow):
-    """ Kevinbot About App Window """
+    """Kevinbot About App Window"""
+
     def __init__(self):
         super(MainWindow, self).__init__()
 
         self.setWindowTitle("Remote Info")
-        self.setWindowIcon(QIcon(os.path.join(os.path.dirname(__file__), "icons/help.svg")))
+        self.setWindowIcon(
+            QIcon(os.path.join(os.path.dirname(__file__), "icons/help.svg"))
+        )
 
         try:
-            load_theme(self, settings["window_properties"]["theme"],
-                       settings["window_properties"]["theme_colors"])
+            load_theme(
+                self,
+                settings["window_properties"]["theme"],
+                settings["window_properties"]["theme_colors"],
+            )
         except NameError:
             load_theme(self, settings["window_properties"]["theme"])
 
@@ -44,10 +50,13 @@ class MainWindow(KBMainWindow):
             self.setFixedSize(QSize(800, 480))
 
         self.ensurePolished()
-        if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],
-                        QColor(self.palette().color(
-                            QPalette.Window)).getRgb()[1],
-                        QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
+        if detect_dark(
+            (
+                QColor(self.palette().color(QPalette.Window)).getRgb()[0],
+                QColor(self.palette().color(QPalette.Window)).getRgb()[1],
+                QColor(self.palette().color(QPalette.Window)).getRgb()[2],
+            )
+        ):
             self.fg_color = Qt.GlobalColor.white
         else:
             self.fg_color = Qt.GlobalColor.black
@@ -61,7 +70,11 @@ class MainWindow(KBMainWindow):
         self.browser = QWebEngineView()
         self.layout.addWidget(self.browser)
 
-        self.browser.load(QUrl().fromLocalFile(os.path.split(os.path.abspath(__file__))[0] + r'/built_docs/index.html'))
+        self.browser.load(
+            QUrl().fromLocalFile(
+                os.path.split(os.path.abspath(__file__))[0] + r"/built_docs/index.html"
+            )
+        )
 
         self.close_button = QPushButton()
         self.close_button.setIcon(qta.icon("fa5s.window-close", color="#F44336"))

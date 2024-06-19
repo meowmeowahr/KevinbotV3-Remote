@@ -23,7 +23,7 @@ EMULATE_REAL_REMOTE = True
 if platform.system() == "Windows":
     import ctypes
 
-    WIN_APP_ID = 'kevinbot.kevinbot.remote.sysinfo'  # arbitrary string
+    WIN_APP_ID = "kevinbot.kevinbot.remote.sysinfo"  # arbitrary string
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(WIN_APP_ID)
 
 settings = json.load(open("settings.json", encoding="utf-8"))
@@ -42,8 +42,11 @@ class MainWindow(KBMainWindow):
         self.setWindowTitle("Remote Info")
 
         try:
-            load_theme(self, settings["window_properties"]["theme"],
-                       settings["window_properties"]["theme_colors"])
+            load_theme(
+                self,
+                settings["window_properties"]["theme"],
+                settings["window_properties"]["theme_colors"],
+            )
         except NameError:
             load_theme(self, settings["window_properties"]["theme"])
 
@@ -52,10 +55,13 @@ class MainWindow(KBMainWindow):
             self.setFixedSize(QSize(800, 480))
 
         self.ensurePolished()
-        if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],
-                        QColor(self.palette().color(
-                            QPalette.Window)).getRgb()[1],
-                        QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
+        if detect_dark(
+            (
+                QColor(self.palette().color(QPalette.Window)).getRgb()[0],
+                QColor(self.palette().color(QPalette.Window)).getRgb()[1],
+                QColor(self.palette().color(QPalette.Window)).getRgb()[2],
+            )
+        ):
             self.fg_color = Qt.GlobalColor.white
         else:
             self.fg_color = Qt.GlobalColor.black
@@ -74,7 +80,9 @@ class MainWindow(KBMainWindow):
         self.widget.addWidget(self.graph_widget)
 
         self.title = QLabel("Image Viewer")
-        self.title.setStyleSheet("font-size: 22px; font-weight: bold; font-family: Roboto;")
+        self.title.setStyleSheet(
+            "font-size: 22px; font-weight: bold; font-family: Roboto;"
+        )
         self.home_layout.addWidget(self.title, alignment=Qt.AlignmentFlag.AlignCenter)
 
         self.graph_button = haptics.HPushButton(strings.IMVIEW_GRAPH_A)
@@ -92,10 +100,14 @@ class MainWindow(KBMainWindow):
         self.close_button.setIconSize(QSize(32, 32))
         self.close_button.clicked.connect(self.close)
         self.close_button.setFixedSize(QSize(36, 36))
-        self.home_layout.addWidget(self.close_button, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.home_layout.addWidget(
+            self.close_button, alignment=Qt.AlignmentFlag.AlignCenter
+        )
 
         self.model = ImageModel()
-        self.model.setStringList(os.listdir(os.path.join(os.curdir, "mpu_graph_images")))
+        self.model.setStringList(
+            os.listdir(os.path.join(os.curdir, "mpu_graph_images"))
+        )
 
         self.proxy_model = QSortFilterProxyModel()
         self.proxy_model.setSourceModel(self.model)
@@ -106,7 +118,9 @@ class MainWindow(KBMainWindow):
         self.graph_list.setModel(self.proxy_model)
         self.graph_list.clicked.connect(self.select)
         self.graph_list.doubleClicked.connect(self.view_image)
-        QScroller.grabGesture(self.graph_list, QScroller.LeftMouseButtonGesture)  # enable single-touch scroll
+        QScroller.grabGesture(
+            self.graph_list, QScroller.LeftMouseButtonGesture
+        )  # enable single-touch scroll
         self.graph_layout.addWidget(self.graph_list)
 
         self.picker_bottom_layout = QHBoxLayout()
@@ -120,7 +134,9 @@ class MainWindow(KBMainWindow):
         self.picker_bottom_layout.addWidget(self.back_button)
 
         self.time_label = QLabel(strings.IMVIEW_TIME.format(strings.UNKNOWN))
-        self.picker_bottom_layout.addWidget(self.time_label, alignment=Qt.AlignmentFlag.AlignRight)
+        self.picker_bottom_layout.addWidget(
+            self.time_label, alignment=Qt.AlignmentFlag.AlignRight
+        )
 
         self.im_view_widget = QWidget()
         self.widget.addWidget(self.im_view_widget)
@@ -137,14 +153,18 @@ class MainWindow(KBMainWindow):
         self.image = QLabel()
         self.image.setPixmap(self.pixmap)
         self.image.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        QScroller.grabGesture(self.image_area, QScroller.LeftMouseButtonGesture)  # enable single-touch scroll
+        QScroller.grabGesture(
+            self.image_area, QScroller.LeftMouseButtonGesture
+        )  # enable single-touch scroll
         self.image_area.setWidget(self.image)
 
         self.viewer_bottom_layout = QHBoxLayout()
         self.im_view_layout.addLayout(self.viewer_bottom_layout)
 
         self.viewer_back_button = QPushButton()
-        self.viewer_back_button.setIcon(qta.icon("fa5s.caret-left", color=self.fg_color))
+        self.viewer_back_button.setIcon(
+            qta.icon("fa5s.caret-left", color=self.fg_color)
+        )
         self.viewer_back_button.setIconSize(QSize(32, 32))
         self.viewer_back_button.clicked.connect(lambda: self.widget.slideInIdx(1))
         self.viewer_back_button.setFixedSize(QSize(36, 36))
@@ -191,8 +211,12 @@ class MainWindow(KBMainWindow):
         timestamp = os.path.getmtime(self.im_dir)
         self.time_label.setText(strings.IMVIEW_TIME.format(time.ctime(timestamp)))
         self.pixmap = QPixmap(self.im_dir)
-        self.image.setPixmap(self.pixmap.scaledToWidth(round(self.pixmap.width() * self.scale_factor),
-                                                       mode=Qt.TransformationMode.SmoothTransformation))
+        self.image.setPixmap(
+            self.pixmap.scaledToWidth(
+                round(self.pixmap.width() * self.scale_factor),
+                mode=Qt.TransformationMode.SmoothTransformation,
+            )
+        )
 
     def view_image(self):
         self.select()
@@ -201,13 +225,19 @@ class MainWindow(KBMainWindow):
     def zoom(self, factor):
         if int((self.scale_factor + factor) * 100) in range(10, 210):
             self.scale_factor += factor
-            self.image.setPixmap(self.pixmap.scaledToWidth(round(self.pixmap.width() * self.scale_factor),
-                                                           mode=Qt.TransformationMode.SmoothTransformation))
+            self.image.setPixmap(
+                self.pixmap.scaledToWidth(
+                    round(self.pixmap.width() * self.scale_factor),
+                    mode=Qt.TransformationMode.SmoothTransformation,
+                )
+            )
             self.zoom_label.setText(f"Zoom: {int(self.scale_factor * 100)}")
 
     def delete(self):
         os.remove(self.im_dir)
-        self.model.setStringList(os.listdir(os.path.join(os.curdir, "mpu_graph_images")))
+        self.model.setStringList(
+            os.listdir(os.path.join(os.curdir, "mpu_graph_images"))
+        )
         self.widget.slideInIdx(1)
 
 
@@ -239,8 +269,9 @@ class ImageModel(QStringListModel):
     def data(self, index, role):
         if role == Qt.ItemDataRole.DecorationRole:
             icon_string = self.data(index, role=Qt.ItemDataRole.DisplayRole)
-            image = QPixmap(os.path.join(os.curdir, "mpu_graph_images", icon_string))\
-                .scaledToWidth(180, mode=Qt.TransformationMode.SmoothTransformation)
+            image = QPixmap(
+                os.path.join(os.curdir, "mpu_graph_images", icon_string)
+            ).scaledToWidth(180, mode=Qt.TransformationMode.SmoothTransformation)
 
             return image
         return super().data(index, role)
@@ -255,9 +286,15 @@ if __name__ == "__main__":
     app.setApplicationVersion("1.0")
 
     # Font
-    QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Roboto-Regular.ttf"))
-    QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Roboto-Bold.ttf"))
-    QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Lato-Regular.ttf"))
+    QFontDatabase.addApplicationFont(
+        os.path.join(os.curdir, "res/fonts/Roboto-Regular.ttf")
+    )
+    QFontDatabase.addApplicationFont(
+        os.path.join(os.curdir, "res/fonts/Roboto-Bold.ttf")
+    )
+    QFontDatabase.addApplicationFont(
+        os.path.join(os.curdir, "res/fonts/Lato-Regular.ttf")
+    )
     QFontDatabase.addApplicationFont(os.path.join(os.curdir, "res/fonts/Lato-Bold.ttf"))
 
     window = MainWindow()

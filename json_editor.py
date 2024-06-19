@@ -28,7 +28,7 @@ from syntax import JsonHighlighter, STYLE_1, STYLE_1_QSS
 
 # Set UI file
 MODULE_PATH = os.path.dirname(os.path.abspath(__file__))
-UI_PATH = os.path.join(MODULE_PATH, 'ui', 'jsonEditor.ui')
+UI_PATH = os.path.join(MODULE_PATH, "ui", "jsonEditor.ui")
 
 # Default JSON file
 with open("settings.json", "r") as f:
@@ -49,7 +49,9 @@ class Editor(QSplitter):
         self.setMinimumSize(400, 190)
 
         self.ui_view_edit = JSONEditor()
-        QScroller.grabGesture(self.ui_view_edit, QScroller.LeftMouseButtonGesture)  # enable single-touch scroll
+        QScroller.grabGesture(
+            self.ui_view_edit, QScroller.LeftMouseButtonGesture
+        )  # enable single-touch scroll
         self.ui_view_edit.setStyleSheet(STYLE_1_QSS)
         self.highlight = JsonHighlighter(self.ui_view_edit.document(), STYLE_1)
         self.ui_view_edit.setReadOnly(True)
@@ -81,16 +83,21 @@ class Editor(QSplitter):
         # Json Viewer
         self.ui_tree_view.setModel(self._proxyModel)
         self.updateBrowser()
-        self.filePath = ['', '']
+        self.filePath = ["", ""]
 
     # Save file
     def saveFile(self):
         # ask for confirmation
-        reply = QMessageBox.question(self, 'Confirmation', "Are you sure to save settings.json?",
-                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        reply = QMessageBox.question(
+            self,
+            "Confirmation",
+            "Are you sure to save settings.json?",
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.No,
+        )
         if reply == QMessageBox.Yes:
             self.filePath = "settings.json"
-            file = open(self.filePath, 'w')
+            file = open(self.filePath, "w")
             file.write(self.ui_view_edit.toPlainText())
             file.close()
 
@@ -110,7 +117,7 @@ class Editor(QSplitter):
         self.ui_view_edit.setPlainText(str(json_dict))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     window = Editor()
     window.show()

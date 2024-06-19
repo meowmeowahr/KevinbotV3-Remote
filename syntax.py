@@ -9,7 +9,7 @@ from qtpy.QtGui import QColor, QTextCharFormat, QFont, QSyntaxHighlighter
 from qtpy.QtWidgets import QApplication, QPlainTextEdit
 
 
-def color_format(color, style=''):
+def color_format(color, style=""):
     """
     Return a QTextCharFormat with the given attributes.
     """
@@ -21,9 +21,9 @@ def color_format(color, style=''):
 
     _format = QTextCharFormat()
     _format.setForeground(_color)
-    if 'bold' in style:
+    if "bold" in style:
         _format.setFontWeight(QFont.Weight.Bold)
-    if 'italic' in style:
+    if "italic" in style:
         _format.setFontItalic(True)
 
     return _format
@@ -32,20 +32,22 @@ def color_format(color, style=''):
 # Syntax styles that can be shared by all languages
 
 STYLE_1 = {
-    'keyword': color_format([198, 120, 221], 'bold'),
-    'brace': color_format([241, 115, 71]),
-    'string': color_format([136, 192, 91]),
-    'numbers': color_format([208, 149, 82])
+    "keyword": color_format([198, 120, 221], "bold"),
+    "brace": color_format([241, 115, 71]),
+    "string": color_format([136, 192, 91]),
+    "numbers": color_format([208, 149, 82]),
 }
-STYLE_1_QSS = "QPlainTextEdit{ " \
-              "font-family:monospace; " \
-              "color: #ccc; " \
-              "background-color: #23272e; " \
-              "font-size: 13px; }"
+STYLE_1_QSS = (
+    "QPlainTextEdit{ "
+    "font-family:monospace; "
+    "color: #ccc; "
+    "background-color: #23272e; "
+    "font-size: 13px; }"
+)
 
 
 class JsonHighlighter(QSyntaxHighlighter):
-    """ Syntax highlighter for JSON """
+    """Syntax highlighter for JSON"""
 
     def __init__(self, document, style=None):
         QSyntaxHighlighter.__init__(self, document)
@@ -57,17 +59,14 @@ class JsonHighlighter(QSyntaxHighlighter):
 
         # All other rules
         self.rules += [
-
             # string
-            (r'"[^"\\]*(\\.[^"\\]*)*"', style['string']),
-
+            (r'"[^"\\]*(\\.[^"\\]*)*"', style["string"]),
             # Numeric literals
-            (r'\b[+-]?[0-9]+[lL]?\b', style['numbers']),
-            (r'\b[+-]?0[xX][0-9A-Fa-f]+[lL]?\b', style['numbers']),
-            (r'\b[+-]?[0-9]+(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?\b', style['numbers']),
-
+            (r"\b[+-]?[0-9]+[lL]?\b", style["numbers"]),
+            (r"\b[+-]?0[xX][0-9A-Fa-f]+[lL]?\b", style["numbers"]),
+            (r"\b[+-]?[0-9]+(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?\b", style["numbers"]),
             # Keywords
-            (r'true|false|null', style["keyword"]),
+            (r"true|false|null", style["keyword"]),
         ]
 
     def highlightBlock(self, text):
@@ -76,10 +75,12 @@ class JsonHighlighter(QSyntaxHighlighter):
             i = expression.globalMatch(text)
             while i.hasNext():
                 match = i.next()
-                self.setFormat(match.capturedStart(), match.capturedLength(), rule_pair[1])
+                self.setFormat(
+                    match.capturedStart(), match.capturedLength(), rule_pair[1]
+                )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QApplication([])
     editor = QPlainTextEdit()
     editor.setStyleSheet(STYLE_1_QSS)
@@ -87,7 +88,7 @@ if __name__ == '__main__':
     highlight = JsonHighlighter(editor.document(), STYLE_1)
     editor.show()
 
-    infile = open('settings.json', 'r')
+    infile = open("settings.json", "r")
     editor.setPlainText(infile.read())
 
     app.exec()

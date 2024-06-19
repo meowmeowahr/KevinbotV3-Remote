@@ -39,14 +39,22 @@ class Window(KBMainWindow):
         super().__init__()
 
         try:
-            load_theme(self, settings["window_properties"]["theme"], settings["window_properties"]["theme_colors"])
+            load_theme(
+                self,
+                settings["window_properties"]["theme"],
+                settings["window_properties"]["theme_colors"],
+            )
         except NameError:
             load_theme(self, settings["window_properties"]["theme"])
 
         self.ensurePolished()
-        if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],
-                        QColor(self.palette().color(QPalette.Window)).getRgb()[1],
-                        QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
+        if detect_dark(
+            (
+                QColor(self.palette().color(QPalette.Window)).getRgb()[0],
+                QColor(self.palette().color(QPalette.Window)).getRgb()[1],
+                QColor(self.palette().color(QPalette.Window)).getRgb()[2],
+            )
+        ):
             self.fg_color = Qt.GlobalColor.white
         else:
             self.fg_color = Qt.GlobalColor.black
@@ -150,23 +158,35 @@ class Window(KBMainWindow):
                 data = com.xb.wait_read_frame(1)
             except XBee_Timeout:
                 continue
-            red = "<span style=\" font-size:12pt; color:#ef0000;\" >"
-            val = red + "RX ⇒  " + data["rf_data"].decode("UTF-8").strip("\r") + "<span>"
+            red = '<span style=" font-size:12pt; color:#ef0000;" >'
+            val = (
+                red + "RX ⇒  " + data["rf_data"].decode("UTF-8").strip("\r") + "<span>"
+            )
             if not self.hex_mode:
                 self.display(val)
             else:
-                self.display(red + "RX ⇒  " +
-                             " ".join("{:02x}".format(ord(c)) for c in data["rf_data"].decode("UTF-8")) + "<span>")
+                self.display(
+                    red
+                    + "RX ⇒  "
+                    + " ".join(
+                        "{:02x}".format(ord(c)) for c in data["rf_data"].decode("UTF-8")
+                    )
+                    + "<span>"
+                )
 
     def tx_data(self):
         blue = '<span style=" font-size:12pt; color:#0000ef;" >'
-        val = blue + 'TX ⇐  ' + self.tx_line.text() + '<span>'
+        val = blue + "TX ⇐  " + self.tx_line.text() + "<span>"
         com.txstr(self.tx_line.text())
         if not self.hex_mode:
             self.display(val)
         else:
-            self.display(blue + 'TX ⇐  ' +
-                         ' '.join('{:02x}'.format(ord(c)) for c in self.tx_line.text() + '\r') + '<span>')
+            self.display(
+                blue
+                + "TX ⇐  "
+                + " ".join("{:02x}".format(ord(c)) for c in self.tx_line.text() + "\r")
+                + "<span>"
+            )
 
     def enable_utf8(self):
         self.hex_mode = False
@@ -181,7 +201,7 @@ if __name__ == "__main__":
     com.init()
     app = QApplication(sys.argv)
     app.setApplicationVersion(__version__)
-    app.setApplicationName('Kevinbot XBee Terminal')
+    app.setApplicationName("Kevinbot XBee Terminal")
     w = Window()
-    w.setWindowTitle('Kevinbot XBee Terminal')
+    w.setWindowTitle("Kevinbot XBee Terminal")
     sys.exit(app.exec_())

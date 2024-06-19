@@ -18,22 +18,26 @@ EMULATE_REAL_REMOTE = True
 if platform.system() == "Windows":
     import ctypes
 
-    WIN_APP_ID = 'kevinbot.kevinbot.remote.sysinfo'  # arbitrary string
+    WIN_APP_ID = "kevinbot.kevinbot.remote.sysinfo"  # arbitrary string
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(WIN_APP_ID)
 
 settings = json.load(open("settings.json", encoding="utf-8"))
 
 
 class MainWindow(KBMainWindow):
-    """ Kevinbot About App Window """
+    """Kevinbot About App Window"""
+
     def __init__(self):
         super().__init__()
 
         self.setWindowTitle("Remote Info")
 
         try:
-            load_theme(self, settings["window_properties"]["theme"],
-                       settings["window_properties"]["theme_colors"])
+            load_theme(
+                self,
+                settings["window_properties"]["theme"],
+                settings["window_properties"]["theme_colors"],
+            )
         except NameError:
             load_theme(self, settings["window_properties"]["theme"])
 
@@ -42,10 +46,13 @@ class MainWindow(KBMainWindow):
             self.setFixedSize(QSize(800, 480))
 
         self.ensurePolished()
-        if detect_dark((QColor(self.palette().color(QPalette.Window)).getRgb()[0],
-                        QColor(self.palette().color(
-                            QPalette.Window)).getRgb()[1],
-                        QColor(self.palette().color(QPalette.Window)).getRgb()[2])):
+        if detect_dark(
+            (
+                QColor(self.palette().color(QPalette.Window)).getRgb()[0],
+                QColor(self.palette().color(QPalette.Window)).getRgb()[1],
+                QColor(self.palette().color(QPalette.Window)).getRgb()[2],
+            )
+        ):
             self.fg_color = Qt.GlobalColor.white
         else:
             self.fg_color = Qt.GlobalColor.black
@@ -68,10 +75,20 @@ class MainWindow(KBMainWindow):
         self.using_pi.setStyleSheet("font-weight: bold;")
         self.layout.addWidget(self.using_pi, alignment=Qt.AlignmentFlag.AlignLeft)
 
-        self.installed_themes = QLabel("Runner Themes: {}".format(os.listdir(os.path.join(os.curdir, "themepacks"))))
-        self.layout.addWidget(self.installed_themes, alignment=Qt.AlignmentFlag.AlignLeft)
+        self.installed_themes = QLabel(
+            "Runner Themes: {}".format(
+                os.listdir(os.path.join(os.curdir, "themepacks"))
+            )
+        )
+        self.layout.addWidget(
+            self.installed_themes, alignment=Qt.AlignmentFlag.AlignLeft
+        )
 
-        self.kbot_size = QLabel("Remote System Storage Usage: {}MB (Mega)".format(round(get_size() / 1000 / 1000, 2)))
+        self.kbot_size = QLabel(
+            "Remote System Storage Usage: {}MB (Mega)".format(
+                round(get_size() / 1000 / 1000, 2)
+            )
+        )
         self.layout.addWidget(self.kbot_size, alignment=Qt.AlignmentFlag.AlignLeft)
 
         self.is_venv = QLabel("Using Virtual Environment: {}".format(is_using_venv()))
@@ -80,7 +97,9 @@ class MainWindow(KBMainWindow):
         self.platform = QLabel("Platform: {}".format(platform.platform()))
         self.layout.addWidget(self.platform, alignment=Qt.AlignmentFlag.AlignLeft)
 
-        self.python_version = QLabel("Python Version: {}".format(platform.python_version()))
+        self.python_version = QLabel(
+            "Python Version: {}".format(platform.python_version())
+        )
         self.layout.addWidget(self.python_version, alignment=Qt.AlignmentFlag.AlignLeft)
 
         self.qt_version = QLabel("PyQt Version: {}".format(PYQT_VERSION_STR))
