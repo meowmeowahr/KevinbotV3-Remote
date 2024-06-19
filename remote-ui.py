@@ -203,12 +203,12 @@ class RemoteUI(KBMainWindow):
                         if float(volt1) / 10 < 11:
                             print(enabled)
                             if enabled:
-                                get_updater().call_latest(window.set_enabled, False)
+                                get_updater().call_latest(window.request_enabled, False)
                             get_updater().call_latest(window.battModalText.setText, strings.BATT_LOW)
                             get_updater().call_latest(window.batt_modal.show)
                         elif float(volt2) / 10 < 11:
                             if enabled:
-                                get_updater().call_latest(window.set_enabled, False)
+                                get_updater().call_latest(window.request_enabled, False)
                             get_updater().call_latest(window.battModalText.setText, strings.BATT_LOW)
                             get_updater().call_latest(window.batt_modal.show)
             # bme280 sensor
@@ -307,11 +307,11 @@ class RemoteUI(KBMainWindow):
                         get_updater().call_latest(window.bottom_head_led_button.setDisabled, False)
                         get_updater().call_latest(window.bottom_eye_button.setDisabled, False)
             # old remote enable
-            elif data[0] == "core.enabled" or data[0] == "enabled":
+            elif data[0] == "core.enabled":
                 while not window:
                     time.sleep(0.02)
 
-                get_updater().call_latest(window.set_enabled, data[1].lower() == "true", False)
+                get_updater().call_latest(window.set_enabled, data[1].lower() == "true")
             elif data[0] == "core.speech-engine":
                 while not window:
                     time.sleep(0.02)
@@ -643,13 +643,13 @@ class RemoteUI(KBMainWindow):
         self.enable_button = QPushButton("ENABLE")
         self.enable_button.setObjectName("Enable_Button")
         self.enable_button.setMinimumHeight(42)
-        self.enable_button.clicked.connect(lambda: self.set_enabled(True))
+        self.enable_button.clicked.connect(lambda: self.request_enabled(True))
         self.speech_grid.addWidget(self.enable_button, 1, 0)
 
         self.disable_button = QPushButton("DISABLE")
         self.disable_button.setObjectName("Disable_Button")
         self.disable_button.setMinimumHeight(42)
-        self.disable_button.clicked.connect(lambda: self.set_enabled(False))
+        self.disable_button.clicked.connect(lambda: self.request_enabled(False))
         self.speech_grid.addWidget(self.disable_button, 1, 1)
 
         self.speech_input = QLineEdit()
@@ -2220,7 +2220,9 @@ class RemoteUI(KBMainWindow):
 
             com.txmot((int(right), int(left)))
 
-    def set_enabled(self, ena: bool, tx=True):
+    def set_enabled(self, ena: bool):
+        global enabled
+
         def close_modal():
             # close this modal, move other modals
             modal_bar.closeToast()
@@ -2231,10 +2233,7 @@ class RemoteUI(KBMainWindow):
             for modal in self.modals:
                 modal.changeIndex(modal.getIndex() - 1, moveSpeed=600)
 
-        global enabled
-
         if not enabled == ena:
-            # show modal
             if self.modal_count < 6:
                 modal_bar = KBModalBar(self)
                 self.modals.append(modal_bar)
@@ -2247,7 +2246,6 @@ class RemoteUI(KBMainWindow):
 
                 modal_timeout = QTimer()
                 modal_timeout.singleShot(1500, close_modal)
-
         enabled = ena
 
         if window:
@@ -2276,16 +2274,9 @@ class RemoteUI(KBMainWindow):
                 self.bottom_head_led_button.setEnabled(enabled)
                 self.bottom_eye_button.setEnabled(enabled)
 
-        if tx:
-            if not enabled:
-                com.txcv("head_effect", "color1", delay=0.02)
-                com.txcv("body_effect", "color1", delay=0.02)
-                com.txcv("base_effect", "color1", delay=0.02)
-                com.txcv("head_color1", "000000", delay=0.02)
-                com.txcv("body_color1", "000000", delay=0.02)
-                com.txcv("base_color1", "000000", delay=0.02)
-
-            com.txcv("enabled", str(enabled))
+    @staticmethod
+    def request_enabled(ena: bool):
+        com.txcv("request.enabled", str(ena))
 
     def e_stop_action(self):
         """EMERGENCY STOP CODE"""
