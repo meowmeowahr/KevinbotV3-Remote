@@ -198,9 +198,9 @@ class RemoteUI(KBMainWindow):
             data = data.split("=", maxsplit=1)
 
             print(data)
-            if data[0] == "handshake.end":
+            if data[0] == "handshake.end" and data[1] == remote_name:
                 get_updater().call_latest(window.widget.setCurrentIndex, 1)
-            elif data[0] == "batt_volts":
+            elif data[0] == "bms.voltages":
                 if window is not None:
                     volt1, volt2 = data[1].split(",")
                     get_updater().call_latest(
@@ -363,7 +363,7 @@ class RemoteUI(KBMainWindow):
                     else:
                         get_updater().call_latest(window.level.setLineColor, Qt.white)
             # core alive message
-            elif data[0] == "alive":
+            elif data[0] == "core.uptime":
                 if window:
                     delta = datetime.timedelta(seconds=int(data[1]))
                     get_updater().call_latest(
@@ -423,6 +423,8 @@ class RemoteUI(KBMainWindow):
                     time.sleep(0.02)
 
                 get_updater().call_latest(window.set_enabled, data[1].lower() == "true")
+            elif data[0] == "core.enablefailed":
+                get_updater().call_latest(window.show_enabled_fail, int(data[1]))
             elif data[0] == "core.speech-engine":
                 while not window:
                     time.sleep(0.02)
@@ -2192,7 +2194,7 @@ class RemoteUI(KBMainWindow):
 
     def shutdown_robot_modal_action(self):
         com.txstr("core.remote.status=disconnected")
-        com.txshut()
+        com.tx_e_stop()
         self.close()
 
     def camera_led_action(self):
@@ -2664,6 +2666,34 @@ class RemoteUI(KBMainWindow):
 
             com.txmot((int(right), int(left)))
 
+    def show_enabled_fail(self, ena: int):
+        def close_modal():
+            # close this modal, move other modals
+            modal_bar.closeToast()
+            self.modal_count -= 1
+
+            self.modals.remove(modal_bar)
+
+            for modal in self.modals:
+                modal.changeIndex(modal.getIndex() - 1, moveSpeed=600)
+
+        modal_bar = KBModalBar(self)
+        self.modals.append(modal_bar)
+        self.modal_count += 1
+        modal_bar.setTitle("Enable action failed")
+        modal_bar.setDescription(
+            f"Attempt to set enabled state to {int(ena)}"
+        )
+        modal_bar.setPixmap(
+            qta.icon("fa5s.power-off", color="#F44336").pixmap(36)
+        )
+
+        modal_bar.popToast(pop_speed=500, pos_index=self.modal_count)
+
+        modal_timeout = QTimer()
+        modal_timeout.singleShot(4000, close_modal)
+
+
     def set_enabled(self, ena: bool):
         global enabled
 
@@ -2723,6 +2753,7 @@ class RemoteUI(KBMainWindow):
                 self.bottom_head_led_button.setEnabled(enabled)
                 self.bottom_eye_button.setEnabled(enabled)
 
+
     @staticmethod
     def request_enabled(ena: bool):
         com.txcv("request.enabled", str(ena))
@@ -2740,7 +2771,7 @@ class RemoteUI(KBMainWindow):
             for modal in self.modals:
                 modal.changeIndex(modal.getIndex() - 1, moveSpeed=600)
 
-        com.txshut()
+        com.tx_e_stop()
 
         # show modal
         if self.modal_count < 6:

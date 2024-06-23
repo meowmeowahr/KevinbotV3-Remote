@@ -90,6 +90,7 @@ def txcv(cmd, val, delay=0):
         val = str(val).strip("[]()").replace(", ", ",")
 
     txstr(cmd + "=" + str(val))
+    print(cmd + "=" + str(val))
     time.sleep(delay)
 
 
@@ -103,5 +104,5 @@ def txstop():
     txstr("stop")
 
 
-def txshut():
-    txstr("shutdown")
+def tx_e_stop():
+    txstr("request.estop")
