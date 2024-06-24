@@ -2860,6 +2860,7 @@ def init_robot():
 
 
 if __name__ == "__main__":
+    ex = 0
     try:
         if platform.system() == "Windows":
             import ctypes
@@ -2903,3 +2904,4 @@ if __name__ == "__main__":
         com.txcv(
             "core.remotes.remove", f"{remote_name}|{remote_version}|kevinbot.remote"
         )
+        sys.exit(ex)
