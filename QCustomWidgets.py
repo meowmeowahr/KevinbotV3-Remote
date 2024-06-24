@@ -801,15 +801,29 @@ class KBHandshakeWidget(QWidget):
         super().__init__()
 
         self._layout = QVBoxLayout()
-        self._layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self._layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.setLayout(self._layout)
+
+        self._layout.addStretch()
 
         self.icon = qta.IconWidget()
         self.icon.setIconSize(QSize(256, 256))
-        self.icon.setIcon(qta.icon("mdi6.handshake", color=color.name()))
+        self.icon.setIcon(qta.icon("mdi6.loading", color=color.name(), animation=qta.animation.Spin(self.icon, step=3, interval=8)))
         self._layout.addWidget(self.icon)
 
         self.text = QLabel("Connecting to Kevinbot")
         self.text.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.text.setStyleSheet("font-size: 24px; font-family: Roboto;")
         self._layout.addWidget(self.text)
+
+        self._layout.addStretch()
+
+        self._bottom = QHBoxLayout()
+        self._layout.addLayout(self._bottom)
+
+        self.shutdown = QPushButton()
+        self.shutdown.setObjectName("Kevinbot3_RemoteUI_ShutdownButton")
+        self.shutdown.setIcon(qta.icon("fa5s.window-close", color=color.name()))
+        self.shutdown.setIconSize(QSize(32, 32))
+        self.shutdown.setFixedSize(QSize(36, 36))
+        self._bottom.addWidget(self.shutdown)

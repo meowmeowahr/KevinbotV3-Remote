@@ -554,6 +554,7 @@ class RemoteUI(KBMainWindow):
         self.widget.setSpeed(settings["window_properties"]["animation_speed"])
 
         self.connect_widget = KBHandshakeWidget(QColor(self.fg_color))
+        self.connect_widget.shutdown.clicked.connect(self.shutdown_action)
         self.connect_widget.setObjectName("Kevinbot3_RemoteUI_HandshakeWidget")
 
         self.main_widget = QWidget()
@@ -2896,6 +2897,8 @@ if __name__ == "__main__":
 
         window = RemoteUI()
         ex = app.exec()
+    except Exception:
+        traceback.print_exc()
     finally:
         try:
             remote_version = open("version.txt", "r").read()
