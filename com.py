@@ -46,7 +46,7 @@ xb = None
 ser = None
 
 
-def init(callback=None):
+def init(callback=None, qapp = None):
     global xb, ser
     try:
         ser = serial.Serial(PORT, BAUD)
@@ -58,7 +58,8 @@ def init(callback=None):
             # noinspection PyUnresolvedReferences,PyPackageRequirements
             from qtpy.QtWidgets import QApplication, QMessageBox, QInputDialog
 
-            _ = QApplication(sys.argv)
+            if not qapp:
+                qapp = QApplication(sys.argv)
             # noinspection PyTypeChecker
             resp, _ = QInputDialog.getText(
                 None, f"Port Not Found", "Type the correct port"

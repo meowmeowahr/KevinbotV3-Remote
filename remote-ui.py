@@ -141,7 +141,7 @@ class RemoteUI(KBMainWindow):
         self.setWindowIcon(QIcon("icons/icon.svg"))
 
         # start coms
-        com.init(callback=self.serial_callback)
+        com.init(callback=self.serial_callback, qapp=app)
         init_robot()
 
         if EMULATE_REAL_REMOTE:
