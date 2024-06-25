@@ -1,7 +1,11 @@
+import os
+
 from qtpy.QtWidgets import QPushButton, QToolButton
 from utils import is_pi
 import time
 import threading
+
+import log
 
 try:
     import RPi.GPIO as GPIO
@@ -13,6 +17,7 @@ except ImportError:
 _pin = None
 pwm = None
 
+logger = log.setup(os.path.basename(__file__).rstrip(".py"), log.AUTO)
 
 def init(pin):
     global _pin
@@ -25,7 +30,7 @@ def init(pin):
         pwm = GPIO.PWM(pin, 120)
         pwm.start(0)
     else:
-        print(f"Haptics Initialized at Pin: {pin}")
+        logger.info(f"Haptics Initialized at Pin: {pin}")
         try:
             GPIO.setmode(GPIO.BCM)
             GPIO.setwarnings(False)

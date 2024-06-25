@@ -41,6 +41,7 @@ import strings
 from colorpicker.colorpicker import ColorPicker
 from palette import PaletteGrid, PALETTES
 from utils import *
+import log
 
 START_FULL_SCREEN = False
 EMULATE_REAL_REMOTE = True
@@ -129,6 +130,7 @@ try:
 except KeyError:
     remote_name = "KBOT_REMOTE"
 
+logger = log.setup(os.path.basename(__file__).rstrip(".py"), log.AUTO)
 
 # noinspection PyAttributeOutsideInit,PyArgumentList
 class RemoteUI(KBMainWindow):
@@ -191,13 +193,13 @@ class RemoteUI(KBMainWindow):
             if not "rf_data" in message:
                 # TODO: Add a more permanant solution for the 0x74 error
                 # 0x74 = Message to long
-                print(f"Status message", message)
+                logger.warning(f"Status message", message)
                 return
 
             data = message["rf_data"].decode("utf-8").strip("\r\n")
             data = data.split("=", maxsplit=1)
+            logger.trace(f"Recieved: {data}")
 
-            print(data)
             if data[0] == "handshake.end" and data[1] == remote_name:
                 get_updater().call_latest(window.widget.setCurrentIndex, 1)
             elif data[0] == "bms.voltages":
@@ -243,7 +245,6 @@ class RemoteUI(KBMainWindow):
 
                     if not disable_batt_modal:
                         if float(volt1) / 10 < 11:
-                            print(enabled)
                             if enabled:
                                 get_updater().call_latest(window.request_enabled, False)
                             get_updater().call_latest(
@@ -2474,15 +2475,11 @@ class RemoteUI(KBMainWindow):
         com.txstr(f"eye.set_skin_option=simple:iris_color:{color}")
 
     def eye_config_pupil_size_slider_value_changed(self, value):
-        com.txstr(
-            f"eye.set_skin_option=simple:pupil_size:{self.eye_simple_iris_size_slider.value() * value // 100}"
-        )
+        com.txstr(f"eye.set_skin_option=simple:pupil_size:{self.eye_simple_iris_size_slider.value() * value // 100}")
 
     def eye_config_iris_size_slider_value_changed(self, value):
         com.txstr(f"eye.set_skin_option=simple:iris_size:{value}")
-        com.txstr(
-            f"eye.set_skin_option=simple:pupil_size:{value * self.eye_simple_pupil_size_slider.value() // 100}"
-        )
+        com.txstr(f"eye.set_skin_option=simple:pupil_size:{value * self.eye_simple_pupil_size_slider.value() // 100}")
 
     @staticmethod
     def eye_config_speed_slider_value_changed(value):
@@ -2866,18 +2863,20 @@ if __name__ == "__main__":
     try:
         if platform.system() == "Windows":
             import ctypes
-
+            logger.debug("Added Windows taskbar icon and Explicit App ID")
             # show icon in the taskbar
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(
                 "Kevinbot3 Remote"
             )
 
         if not os.path.exists(os.path.join(os.curdir, "mpu_graph_images")):
+            logger.info("Created mpu_graph_images directory")
             os.mkdir(os.path.join(os.curdir, "mpu_graph_images"))
 
         app = QApplication(sys.argv)
         app.setApplicationName("Kevinbot Remote")
         app.setApplicationVersion(__version__)
+        logger.debug("Created QApplication")
 
         # Font
         QFontDatabase.addApplicationFont(
@@ -2895,8 +2894,10 @@ if __name__ == "__main__":
         QFontDatabase.addApplicationFont(
             os.path.join(os.curdir, "res/fonts/Lato-Bold.ttf")
         )
+        logger.debug("Added Roboto and Lato fonts")
 
         window = RemoteUI()
+        logger.debug("Created RemoteUI class")
         ex = app.exec()
     except Exception:
         traceback.print_exc()
@@ -2908,4 +2909,5 @@ if __name__ == "__main__":
         com.txcv(
             "core.remotes.remove", f"{remote_name}|{remote_version}|kevinbot.remote"
         )
+        logger.debug(f"Application execution finished with return code, {ex}")
         sys.exit(ex)

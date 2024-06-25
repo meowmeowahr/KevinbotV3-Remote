@@ -1,5 +1,8 @@
 # XBee Communication wrapper for Kevinbot v3
+import os
 import time
+from typing import Iterable, Union, Callable, Any, Optional
+
 import serial
 from serial.serialutil import SerialException
 import xbee as xbee_com
@@ -7,10 +10,14 @@ import platform
 
 import log
 
-logger = log.setup("com", log.AUTO)
+import sys
+# noinspection PyUnresolvedReferences,PyPackageRequirements
+from qtpy.QtWidgets import QApplication, QMessageBox, QInputDialog
+
+logger = log.setup(os.path.basename(__file__).rstrip(".py"), log.AUTO)
 
 # detect if an actual Raspberry Pi is being used
-def is_pi():
+def is_pi() -> bool:
     try:
         if "Raspberry" in open("/sys/firmware/devicetree/base/model", "r").readline():
             return True
@@ -27,8 +34,10 @@ if is_pi():
         with open("settings.json", "r") as f:
             settings = json.load(f)
         PORT = settings["ports"]["pi_port"]
+        logger.debug(f"Using Raspberry Pi port, {PORT}")
     except KeyError:
         PORT = "/dev/ttyS0"
+        logger.debug(f"Using default port, {PORT}")
 else:
     try:
         import json
@@ -37,29 +46,26 @@ else:
             settings = json.load(f)
             if platform.system() == "Windows":
                 PORT = settings["ports"]["win_port"]
+                logger.debug(f"Using Windows port, {PORT}")
             else:
                 PORT = settings["ports"]["linux_port"]
+                logger.debug(f"Using Linux port, {PORT}")
     except KeyError:
         PORT = "/dev/ttyS0"
+        logger.debug(f"Using default port, {PORT}")
 
-BAUD = 460800
+BAUD: int = 460800
 
-xb = None
-ser = None
+xb: Optional[xbee_com.XBee] = None
+ser: Optional[serial.Serial] = None
 
 
-def init(callback=None, qapp = None):
+def init(callback: Optional[Callable[[str], Any]] =None, qapp: QApplication=None):
     global xb, ser
     try:
         ser = serial.Serial(PORT, BAUD)
-    except SerialException:
+    except (SerialException, FileNotFoundError):
         try:
-            # noinspection PyUnresolvedReferences
-            import sys
-
-            # noinspection PyUnresolvedReferences,PyPackageRequirements
-            from qtpy.QtWidgets import QApplication, QMessageBox, QInputDialog
-
             if not qapp:
                 qapp = QApplication(sys.argv)
             # noinspection PyTypeChecker
@@ -70,24 +76,25 @@ def init(callback=None, qapp = None):
                 ser = serial.Serial(resp, BAUD)
             else:
                 ser = None
+                logger.debug("Activated dummy port mode")
         except ImportError:
-            print(f'Port "{PORT}" Not Found')
+            logger.error(f'Port "{PORT}" Not Found')
     if ser:
         xb = xbee_com.XBee(ser, escaped=False, callback=callback)
 
 
-def _send_data(data):
+def _send_data(data: str):
     # noinspection PyUnresolvedReferences
     if xb:
         xb.send("tx", dest_addr=b"\x00\x00", data=bytes("{}\r".format(data), "utf-8"))
 
 
-def txstr(string):
-    logger.trace("Sent: " + string)
-    _send_data(string)
+def txstr(data: str):
+    logger.trace("Sent: " + data)
+    _send_data(data)
 
 
-def txcv(cmd, val, delay=0):
+def txcv(cmd: str, val: str, delay: int=0):
     # see if val is a list or a string
     if isinstance(val, list) or isinstance(val, tuple):
         val = str(val).strip("[]()").replace(", ", ",")
@@ -96,7 +103,7 @@ def txcv(cmd, val, delay=0):
     time.sleep(delay)
 
 
-def txmot(vals):
+def txmot(vals: Union[list[int, int], tuple[int, int]]):
     # send motor values to the xbee
     txcv("left_motor", vals[0])
     txcv("right_motor", vals[1])

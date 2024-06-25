@@ -1,10 +1,12 @@
+from typing import LiteralString, Union
+
 import loguru
 import sys
 import json
 
 AUTO = -1
 
-def setup(name: str = __name__, level: int = 20):
+def setup(name: Union[LiteralString, bytes] = __name__, level: int = 20):
     if level == AUTO:
         with open("settings.json", "r") as f:
             level = json.load(f).get("log_level", 20)
