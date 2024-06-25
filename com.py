@@ -1,11 +1,13 @@
 # XBee Communication wrapper for Kevinbot v3
-import logging
 import time
 import serial
 from serial.serialutil import SerialException
 import xbee as xbee_com
 import platform
 
+import log
+
+logger = log.setup("com", log.AUTO)
 
 # detect if an actual Raspberry Pi is being used
 def is_pi():
@@ -81,7 +83,7 @@ def _send_data(data):
 
 
 def txstr(string):
-    logging.debug("Sent: " + string)
+    logger.trace("Sent: " + string)
     _send_data(string)
 
 
@@ -91,7 +93,6 @@ def txcv(cmd, val, delay=0):
         val = str(val).strip("[]()").replace(", ", ",")
 
     txstr(cmd + "=" + str(val))
-    print(cmd + "=" + str(val))
     time.sleep(delay)
 
 

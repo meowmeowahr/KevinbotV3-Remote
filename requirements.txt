@@ -13,3 +13,4 @@ Qt.py
 QtPy
 pyqtgraph
 shortuuid
+loguru

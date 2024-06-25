@@ -2862,6 +2862,7 @@ def init_robot():
 
 if __name__ == "__main__":
     ex = 0
+    # noinspection PyBroadException
     try:
         if platform.system() == "Windows":
             import ctypes
