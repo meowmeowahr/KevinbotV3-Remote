@@ -2,7 +2,7 @@
 import enum
 import os
 import time
-from typing import Union, Callable, Any, Optional
+from typing import Callable, Any, Optional
 
 import serial
 from serial.serialutil import SerialException
@@ -61,14 +61,14 @@ xb: Optional[xbee_com.XBee] = None
 ser: Optional[serial.Serial] = None
 
 
-def init(callback: Optional[Callable[[str], Any]] =None, qapp: QApplication=None):
+def init(callback: Optional[Callable[[str], Any]] = None, qapp: QApplication=None):
     global xb, ser
     try:
         ser = serial.Serial(PORT, BAUD)
     except (SerialException, FileNotFoundError):
         try:
             if not qapp:
-                qapp = QApplication(sys.argv)
+                _ = QApplication(sys.argv)
             # noinspection PyTypeChecker
             resp, _ = QInputDialog.getText(
                 None, f"Port Not Found", "Type the correct port"
@@ -134,25 +134,27 @@ class RobotCommand(enum.StrEnum):
     HeadXPosition = "head.position.x"
     HeadYPosition = "head.position.y"
 
-def txcv(cmd: RobotCommand, val: Any | None = None, delay: float=0):
+    DriveLeft = "drivebase.left"
+    DriveRight = "drivebase.right"
+
+def txcv(cmd: RobotCommand, val: Any | None = None, delay: float = 0):
     # see if val is a list or a string
     if isinstance(val, list) or isinstance(val, tuple):
         val = str(val).strip("[]()").replace(", ", ",")
 
     if val:
-        logger.trace("Sent: " + cmd.value + "=" + str(val))
+        logger.trace("Sent: " + cmd + "=" + str(val))
         _send_data(cmd.value + "=" + str(val))
     else:
-        logger.trace("Sent: " + cmd.value)
-        _send_data(cmd.value)
+        logger.trace("Sent: " + cmd)
+        _send_data(cmd)
     time.sleep(delay)
 
 
 def txmot(vals: list[int] | tuple[int, int]):
-    logger.warning("Using com.txmot is deprecated. Try to use com.txcv instead")
     # send motor values to the xbee
-    txcv("left_motor", vals[0])
-    txcv("right_motor", vals[1])
+    txcv(RobotCommand.DriveLeft, vals[0])
+    txcv(RobotCommand.DriveRight, vals[1])
 
 
 def txstop():
