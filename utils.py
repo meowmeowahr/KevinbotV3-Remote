@@ -74,7 +74,7 @@ def extract_digits(string):
     return [int(s) for s in re.findall(r"\d+", string)]
 
 
-def map_range(x, in_min, in_max, out_min, out_max):
+def map_range(x, in_min, in_max, out_min, out_max) -> int:
     return (x - in_min) * (out_max - out_min) // (in_max - in_min) + out_min
 
 

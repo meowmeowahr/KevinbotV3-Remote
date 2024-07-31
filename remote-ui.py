@@ -37,6 +37,7 @@ import qtawesome as qta
 import Joystick.Joystick as Joystick
 import SlidingStackedWidget as SlidingStackedWidget
 import com
+from com import RobotCommand
 import strings
 from colorpicker.colorpicker import ColorPicker
 from palette import PaletteGrid, PALETTES
@@ -171,7 +172,7 @@ class RemoteUI(KBMainWindow):
 
         self.init_ui()
 
-        com.txcv("eye.get_settings", True)
+        com.txcv(RobotCommand.EyeFetchSettings, "True")
 
         if settings["dev_mode"]:
             self.createDevTools()
@@ -180,7 +181,7 @@ class RemoteUI(KBMainWindow):
             remote_version = open("version.txt", "r").read()
         except FileNotFoundError:
             remote_version = "UNKNOWN"
-        com.txcv("core.remotes.add", f"{remote_name}|{remote_version}|kevinbot.remote")
+        com.txcv(RobotCommand.RemoteListAdd, f"{remote_name}|{remote_version}|kevinbot.remote")
 
         if START_FULL_SCREEN:
             self.showFullScreen()
@@ -245,15 +246,11 @@ class RemoteUI(KBMainWindow):
 
                     if not disable_batt_modal:
                         if float(volt1) / 10 < 11:
-                            if enabled:
-                                get_updater().call_latest(window.request_enabled, False)
                             get_updater().call_latest(
                                 window.battModalText.setText, strings.BATT_LOW
                             )
                             get_updater().call_latest(window.batt_modal.show)
                         elif float(volt2) / 10 < 11:
-                            if enabled:
-                                get_updater().call_latest(window.request_enabled, False)
                             get_updater().call_latest(
                                 window.battModalText.setText, strings.BATT_LOW
                             )
@@ -445,7 +442,7 @@ class RemoteUI(KBMainWindow):
                 except FileNotFoundError:
                     remote_version = "UNKNOWN"
                 com.txcv(
-                    "core.remotes.add",
+                    RobotCommand.RemoteListAdd,
                     f"{remote_name}|{remote_version}|kevinbot.remote",
                 )
             elif data[0].startswith("core.full_mesh"):
@@ -815,7 +812,7 @@ class RemoteUI(KBMainWindow):
         self.speech_input.setObjectName("Kevinbot3_RemoteUI_SpeechInput")
         self.speech_input.setText(settings["speech"]["text"])
         self.speech_input.returnPressed.connect(
-            lambda: com.txcv("core.speech", self.speech_input.text())
+            lambda: com.txcv(RobotCommand.SpeechSpeak, self.speech_input.text())
         )
         self.speech_input.setPlaceholderText(strings.SPEECH_INPUT_H)
         self.speech_grid.addWidget(self.speech_input, 2, 0, 1, 2)
@@ -823,7 +820,7 @@ class RemoteUI(KBMainWindow):
         self.speech_button = QPushButton(strings.SPEECH_BUTTON)
         self.speech_button.setObjectName("Kevinbot3_RemoteUI_SpeechButton")
         self.speech_button.clicked.connect(
-            lambda: com.txcv("core.speech", self.speech_input.text())
+            lambda: com.txcv(RobotCommand.SpeechSpeak, self.speech_input.text())
         )
         self.speech_button.setShortcut(QKeySequence("Ctrl+Shift+S"))
         self.speech_grid.addWidget(self.speech_button, 3, 0)
@@ -840,7 +837,7 @@ class RemoteUI(KBMainWindow):
         self.espeak_radio.setObjectName("Kevinbot3_RemoteUI_SpeechRadio")
         self.espeak_radio.setChecked(True)
         self.espeak_radio.pressed.connect(
-            lambda: com.txcv("core.speech-engine", "espeak")
+            lambda: com.txcv(RobotCommand.SpeechEngine, "espeak")
         )
         self.espeak_radio.setShortcut(QKeySequence("Ctrl+Shift+E"))
         self.speech_grid.addWidget(self.espeak_radio, 4, 0)
@@ -848,7 +845,7 @@ class RemoteUI(KBMainWindow):
         self.festival_radio = QRadioButton(strings.SPEECH_FESTIVAL)
         self.festival_radio.setObjectName("Kevinbot3_RemoteUI_SpeechRadio")
         self.festival_radio.pressed.connect(
-            lambda: com.txcv("core.speech-engine", "festival")
+            lambda: com.txcv(RobotCommand.SpeechEngine, "festival")
         )
         self.festival_radio.setShortcut(QKeySequence("Ctrl+Shift+F"))
         self.speech_grid.addWidget(self.festival_radio, 4, 1)
@@ -945,7 +942,7 @@ class RemoteUI(KBMainWindow):
         self.head_speed.setRange(100, 500)
         self.head_speed.setObjectName("Kevinbot3_RemoteUI_Slider")
         self.head_speed.valueChanged.connect(
-            lambda x: com.txcv("head_update", map_range(x, 100, 500, 500, 100))
+            lambda x: com.txcv(RobotCommand.LightingHeadUpdateSpeed, map_range(x, 100, 500, 500, 100))
         )
         self.head_speed_layout.addWidget(self.head_speed)
 
@@ -1012,7 +1009,7 @@ class RemoteUI(KBMainWindow):
         self.bodySpeed.setRange(100, 500)
         self.bodySpeed.setObjectName("Kevinbot3_RemoteUI_Slider")
         self.bodySpeed.valueChanged.connect(
-            lambda x: com.txcv("body_update", map_range(x, 100, 500, 500, 100))
+            lambda x: com.txcv(RobotCommand.LightingBodyUpdateSpeed, map_range(x, 100, 500, 500, 100))
         )
         self.bodySpeedLayout.addWidget(self.bodySpeed)
 
@@ -1097,7 +1094,7 @@ class RemoteUI(KBMainWindow):
         self.base_speed.setRange(100, 500)
         self.base_speed.setObjectName("Kevinbot3_RemoteUI_Slider")
         self.base_speed.valueChanged.connect(
-            lambda x: com.txcv("base_update", map_range(x, 100, 500, 500, 100))
+            lambda x: com.txcv(RobotCommand.LightingBaseUpdateSpeed, map_range(x, 100, 500, 500, 100))
         )
         self.base_speed_layout.addWidget(self.base_speed)
         self.base_speed_box.setLayout(self.base_speed_layout)
@@ -2195,7 +2192,7 @@ class RemoteUI(KBMainWindow):
             sys.exit()
 
     def shutdown_robot_modal_action(self):
-        com.txstr("core.remote.status=disconnected")
+        com.txcv(RobotCommand.RemoteStatus, "disconnected")
         com.tx_e_stop()
         self.close()
 
@@ -2214,7 +2211,8 @@ class RemoteUI(KBMainWindow):
     @staticmethod
     def arm_action(index):
         global CURRENT_ARM_POS
-        com.txcv("arms", settings["arm_prog"][index])
+        for index, position in enumerate(settings['arm_prog'][index]):
+            com.txcv(RobotCommand.ArmPosition, f"{index},{position}")
         CURRENT_ARM_POS = settings["arm_prog"][index]
 
     def led_action(self, index):
@@ -2222,47 +2220,47 @@ class RemoteUI(KBMainWindow):
 
     @staticmethod
     def head_effect_action(index):
-        com.txcv("head_effect", settings["head_effects"][index])
+        com.txcv(RobotCommand.LightingHeadEffect, settings["head_effects"][index])
 
     @staticmethod
     def body_effect_action(index):
-        com.txcv("body_effect", settings["body_effects"][index].replace("*c", ""))
+        com.txcv(RobotCommand.LightingBodyEffect, settings["body_effects"][index].replace("*c", ""))
 
     @staticmethod
     def base_effect_action(index):
-        com.txcv("base_effect", settings["base_effects"][index].replace("*c", ""))
+        com.txcv(RobotCommand.LightingBaseEffect, settings["base_effects"][index].replace("*c", ""))
 
     def eye_config_action(self):
         self.widget.slideInIdx(7)
 
     def head_color1_changed(self):
-        com.txcv("head_color1", str(self.head_color_picker.getHex()).strip("#") + "00")
+        com.txcv(RobotCommand.LightingHeadColor1, str(self.head_color_picker.getHex()).strip("#") + "00")
 
     def head_color2_changed(self):
         com.txcv(
-            "head_color2", str(self.head_color_picker_2.getHex()).strip("#") + "00"
+            RobotCommand.LightingHeadColor2, str(self.head_color_picker_2.getHex()).strip("#") + "00"
         )
 
     def body_color1_changed(self):
-        com.txcv("body_color1", str(self.bodyColorPicker.getHex()).strip("#") + "00")
+        com.txcv(RobotCommand.LightingBodyColor1, str(self.bodyColorPicker.getHex()).strip("#") + "00")
 
     def body_color2_changed(self):
-        com.txcv("body_color2", str(self.bodyColorPicker2.getHex()).strip("#") + "00")
+        com.txcv(RobotCommand.LightingBodyColor2, str(self.bodyColorPicker2.getHex()).strip("#") + "00")
 
     def base_color1_changed(self):
-        com.txcv("base_color1", str(self.base_color_picker.getHex()).strip("#") + "00")
+        com.txcv(RobotCommand.LightingBaseColor1, str(self.base_color_picker.getHex()).strip("#") + "00")
 
     def base_color2_changed(self):
         com.txcv(
-            "base_color2", str(self.base_color_picker_2.getHex()).strip("#") + "00"
+            RobotCommand.LightingBaseColor2, str(self.base_color_picker_2.getHex()).strip("#") + "00"
         )
 
     def camera_brightness_changed(self):
-        com.txcv("cam_brightness", str(self.camera_led_slider.value()))
+        com.txcv(RobotCommand.LightingCameraBrightness, str(self.camera_led_slider.value()))
 
     def arm_preset_action(self, index):
         global CURRENT_ARM_POS
-        com.txcv("arms", settings["arm_prog"][index])
+        com.txcv(RobotCommand.ArmPosition, f"{index},{settings['arm_prog'][index]}")
         CURRENT_ARM_POS = settings["arm_prog"][index]
 
         # suppress events on knobs
@@ -2305,11 +2303,12 @@ class RemoteUI(KBMainWindow):
     def arm_preset_left_changed(self, index):
         global CURRENT_ARM_POS
         self.left_labels[index].setText(str(self.left_knobs[index].value()))
-        com.txcv(
-            "arms",
-            [self.left_knobs[i].value() for i in range(len(self.left_knobs))]
-            + [self.right_knobs[i].value() for i in range(len(self.right_knobs))],
-        )
+        for index, position in enumerate([self.left_knobs[i].value() for i in range(len(self.left_knobs))]
+            + [self.right_knobs[i].value() for i in range(len(self.right_knobs))]):
+            com.txcv(
+                RobotCommand.ArmPosition,
+                f"{index},{position}"
+            )
         CURRENT_ARM_POS = [
             self.left_knobs[i].value() for i in range(len(self.left_knobs))
         ] + [self.right_knobs[i].value() for i in range(len(self.right_knobs))]
@@ -2317,11 +2316,12 @@ class RemoteUI(KBMainWindow):
     def arm_preset_right_changed(self, index):
         global CURRENT_ARM_POS
         self.right_labels[index].setText(str(self.right_knobs[index].value()))
-        com.txcv(
-            "arms",
-            [self.left_knobs[i].value() for i in range(len(self.left_knobs))]
-            + [self.right_knobs[i].value() for i in range(len(self.right_knobs))],
-        )
+        for index, position in enumerate([self.left_knobs[i].value() for i in range(len(self.left_knobs))]
+                                         + [self.right_knobs[i].value() for i in range(len(self.right_knobs))]):
+            com.txcv(
+                RobotCommand.ArmPosition,
+                f"{index},{position}"
+            )
         CURRENT_ARM_POS = [
             self.left_knobs[i].value() for i in range(len(self.left_knobs))
         ] + [self.right_knobs[i].value() for i in range(len(self.right_knobs))]
@@ -2448,10 +2448,10 @@ class RemoteUI(KBMainWindow):
 
     def head_changed_action(self):
         com.txcv(
-            "head_x", map_range(self.head_stick.getXY()[0], 0, JOYSTICK_SIZE, 0, 60)
+            RobotCommand.HeadXPosition, map_range(self.head_stick.getXY()[0], 0, JOYSTICK_SIZE, 0, 60)
         )
         com.txcv(
-            "head_y", map_range(self.head_stick.getXY()[1], 0, JOYSTICK_SIZE, 0, 60)
+            RobotCommand.HeadYPosition, map_range(self.head_stick.getXY()[1], 0, JOYSTICK_SIZE, 0, 60)
         )
 
     def shutdown_action(self):
@@ -2459,87 +2459,87 @@ class RemoteUI(KBMainWindow):
         app.quit()
 
     def eye_set_state(self, state: int):
-        com.txcv("eye.set_state", state)
+        com.txcv(RobotCommand.EyeSetState, state)
         self.eye_config_stack.setCurrentIndex(state - 3)
 
     @staticmethod
     def eye_config_simple_bg_selected(color):
-        com.txstr(f"eye.set_skin_option=simple:bg_color:{color}")
+        com.txcv(RobotCommand.EyeSetSkinOption, f"simple:bg_color:{color}")
 
     @staticmethod
     def eye_config_simple_pupil_selected(color):
-        com.txstr(f"eye.set_skin_option=simple:pupil_color:{color}")
+        com.txcv(RobotCommand.EyeSetSkinOption, f"simple:pupil_color:{color}")
 
     @staticmethod
     def eye_config_simple_iris_selected(color):
-        com.txstr(f"eye.set_skin_option=simple:iris_color:{color}")
+        com.txcv(RobotCommand.EyeSetSkinOption, f"simple:iris_color:{color}")
 
     def eye_config_pupil_size_slider_value_changed(self, value):
-        com.txstr(f"eye.set_skin_option=simple:pupil_size:{self.eye_simple_iris_size_slider.value() * value // 100}")
+        com.txcv(RobotCommand.EyeSetSkinOption, f"simple:pupil_size:{self.eye_simple_iris_size_slider.value() * value // 100}")
 
     def eye_config_iris_size_slider_value_changed(self, value):
-        com.txstr(f"eye.set_skin_option=simple:iris_size:{value}")
-        com.txstr(f"eye.set_skin_option=simple:pupil_size:{value * self.eye_simple_pupil_size_slider.value() // 100}")
+        com.txcv(RobotCommand.EyeSetSkinOption, f"simple:iris_size:{value}")
+        com.txcv(RobotCommand.EyeSetSkinOption, f"simple:pupil_size:{value * self.eye_simple_pupil_size_slider.value() // 100}")
 
     @staticmethod
     def eye_config_speed_slider_value_changed(value):
-        com.txcv("eye.set_speed", value)
+        com.txcv(RobotCommand.EyeSetSpeed, value)
 
     @staticmethod
     def eye_config_bright_slider_value_changed(value):
-        com.txcv("eye.set_backlight", value)
+        com.txcv(RobotCommand.EyeSetBacklight, value)
 
     @staticmethod
     def eye_config_metal_tint_changed(value):
-        com.txstr(f"eye.set_skin_option=metal:tint:{value}")
+        com.txcv(RobotCommand.EyeSetSkinOption, f"metal:tint:{value}")
 
     @staticmethod
     def eye_set_neon_style(value):
-        com.txstr(f"eye.set_skin_option=neon:style:{value}")
+        com.txcv(RobotCommand.EyeSetSkinOption, f"neon:style:{value}")
 
     def eye_neon_left_changed(self, value):
         self.eye_neon_left_color = value
-        com.txstr(f"eye.set_skin_option=neon:fg_color_start:{self.eye_neon_left_color}")
-        com.txstr(f"eye.set_skin_option=neon:fg_color_end:{self.eye_neon_right_color}")
+        com.txcv(RobotCommand.EyeSetSkinOption, f"neon:fg_color_start:{self.eye_neon_left_color}")
+        com.txcv(RobotCommand.EyeSetSkinOption, f"neon:fg_color_end:{self.eye_neon_right_color}")
 
     def eye_neon_right_changed(self, value):
         self.eye_neon_right_color = value
-        com.txstr(f"eye.set_skin_option=neon:fg_color_start:{self.eye_neon_left_color}")
-        com.txstr(f"eye.set_skin_option=neon:fg_color_end:{self.eye_neon_right_color}")
+        com.txcv(RobotCommand.EyeSetSkinOption, f"neon:fg_color_start:{self.eye_neon_left_color}")
+        com.txcv(RobotCommand.EyeSetSkinOption, f"neon:fg_color_end:{self.eye_neon_right_color}")
 
     def eye_neon_swap_colors(self):
         self.eye_neon_left_color, self.eye_neon_right_color = (
             self.eye_neon_right_color,
             self.eye_neon_left_color,
         )
-        com.txstr(f"eye.set_skin_option=neon:fg_color_start:{self.eye_neon_left_color}")
-        com.txstr(f"eye.set_skin_option=neon:fg_color_end:{self.eye_neon_right_color}")
+        com.txcv(RobotCommand.EyeSetSkinOption, f"neon:fg_color_start:{self.eye_neon_left_color}")
+        com.txcv(RobotCommand.EyeSetSkinOption, f"neon:fg_color_end:{self.eye_neon_right_color}")
 
     def eye_neon_copy_ltr(self):
         self.eye_neon_right_color = self.eye_neon_left_color
-        com.txstr(f"eye.set_skin_option=neon:fg_color_start:{self.eye_neon_left_color}")
-        com.txstr(f"eye.set_skin_option=neon:fg_color_end:{self.eye_neon_right_color}")
+        com.txcv(RobotCommand.EyeSetSkinOption, f"neon:fg_color_start:{self.eye_neon_left_color}")
+        com.txcv(RobotCommand.EyeSetSkinOption, f"neon:fg_color_end:{self.eye_neon_right_color}")
 
     def eye_neon_copy_rtl(self):
         self.eye_neon_left_color = self.eye_neon_right_color
-        com.txstr(f"eye.set_skin_option=neon:fg_color_start:{self.eye_neon_left_color}")
-        com.txstr(f"eye.set_skin_option=neon:fg_color_end:{self.eye_neon_right_color}")
+        com.txcv(RobotCommand.EyeSetSkinOption, f"neon:fg_color_start:{self.eye_neon_left_color}")
+        com.txcv(RobotCommand.EyeSetSkinOption, f"neon:fg_color_end:{self.eye_neon_right_color}")
 
     @staticmethod
     def eye_config_neon_bg_selected(value):
-        com.txstr(f"eye.set_skin_option=neon:bg_color:{value}")
+        com.txcv(RobotCommand.EyeSetSkinOption, f"neon:bg_color:{value}")
 
     def eye_pos_changed(self):
         pos = self.eye_joystick.getXY()
         pos = (map_range(pos[0], -80, 80, 0, 240), map_range(pos[1], -80, 80, 0, 240))
-        com.txcv("eye.set_position", ",".join(str(x) for x in pos))
+        com.txcv(RobotCommand.EyeSetPosition, ",".join(str(x) for x in pos))
 
     def eye_config_motion_selected(self, motion):
-        com.txcv("eye.set_motion", motion)
+        com.txcv(RobotCommand.EyeSetMotion, motion)
 
         if motion == 3:
             self.eye_joystick_group.setEnabled(True)
-            self.eye_joystick.setColor(self.fg_color)
+            self.eye_joystick.setColor(QColor(self.fg_color))
         else:
             self.eye_joystick_group.setEnabled(False)
             self.eye_joystick.setColor(QColor("#9E9E9E"))
@@ -2754,7 +2754,7 @@ class RemoteUI(KBMainWindow):
 
     @staticmethod
     def request_enabled(ena: bool):
-        com.txcv("request.enabled", str(ena))
+        com.txcv(RobotCommand.RequestEnable, str(ena))
 
     def e_stop_action(self):
         """EMERGENCY STOP CODE"""
@@ -2787,8 +2787,9 @@ class RemoteUI(KBMainWindow):
             modal_timeout = QTimer()
             modal_timeout.singleShot(2000, close_modal)
 
-    def refresh_mesh(self):
-        com.txstr("core.remotes.get_full")
+    @staticmethod
+    def refresh_mesh():
+        com.txcv(RobotCommand.RemoteListFetch)
 
     def add_mesh_devices(self, items):
         items = items.split(",")
@@ -2844,17 +2845,19 @@ class RemoteUI(KBMainWindow):
             modal_timeout = QTimer()
             modal_timeout.singleShot(3000, close_modal)
 
-    def send_ping(self, source):
-        com.txcv("core.ping", f"{source},{remote_name}")
+    @staticmethod
+    def send_ping(source):
+        com.txcv(RobotCommand.Ping, f"{source},{remote_name}")
 
 
 def init_robot():
-    com.txcv("arms", CURRENT_ARM_POS, delay=0.02)
-    com.txcv("core.speech-engine", "espeak", delay=0.02)
-    com.txcv("head_effect", "color1", delay=0.02)
-    com.txcv("body_effect", "color1", delay=0.02)
-    com.txcv("base_effect", "color1", delay=0.02)
-    com.txcv("cam_brightness", 0, delay=0.02)
+    for index, position in enumerate(CURRENT_ARM_POS):
+        com.txcv(RobotCommand.ArmPosition, f"{index},{position}", delay=0.02)
+    com.txcv(RobotCommand.SpeechEngine, "espeak", delay=0.02)
+    com.txcv(RobotCommand.LightingHeadEffect, "color1", delay=0.02)
+    com.txcv(RobotCommand.LightingBodyEffect, "color1", delay=0.02)
+    com.txcv(RobotCommand.LightingBaseEffect, "color1", delay=0.02)
+    com.txcv(RobotCommand.LightingCameraBrightness, "0", delay=0.02)
 
 
 if __name__ == "__main__":
@@ -2907,7 +2910,7 @@ if __name__ == "__main__":
         except FileNotFoundError:
             remote_version = "UNKNOWN"
         com.txcv(
-            "core.remotes.remove", f"{remote_name}|{remote_version}|kevinbot.remote"
+            RobotCommand.RemoteListRemove, f"{remote_name}|{remote_version}|kevinbot.remote"
         )
         logger.debug(f"Application execution finished with return code, {ex}")
         sys.exit(ex)

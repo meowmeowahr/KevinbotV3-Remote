@@ -1,7 +1,8 @@
 # XBee Communication wrapper for Kevinbot v3
+import enum
 import os
 import time
-from typing import Iterable, Union, Callable, Any, Optional
+from typing import Union, Callable, Any, Optional
 
 import serial
 from serial.serialutil import SerialException
@@ -90,28 +91,75 @@ def _send_data(data: str):
 
 
 def txstr(data: str):
+    logger.warning("Using com.txstr is deprecated. Try to use com.txcv instead")
     logger.trace("Sent: " + data)
     _send_data(data)
 
+class RobotCommand(enum.Enum):
+    RemoteListAdd = "connection.remotes.add"
+    RemoteListRemove = "connection.remotes.remove"
+    RemoteListFetch = "connection.remotes.get"
+    RemoteStatus = "connection.remote.status"
+    Ping = "connection.ping"
 
-def txcv(cmd: str, val: str, delay: int=0):
+    RequestEnable = "kevinbot.request.enable"
+
+    ArmPosition = "arms.position"
+
+    SpeechEngine = "system.speechEngine"
+    SpeechSpeak = "system.speak"
+
+    LightingHeadEffect = "lighting.head.effect"
+    LightingBodyEffect = "lighting.body.effect"
+    LightingBaseEffect = "lighting.base.effect"
+    LightingHeadColor1 = "lighting.head.color1"
+    LightingBodyColor1 = "lighting.body.color1"
+    LightingBaseColor1 = "lighting.base.color1"
+    LightingHeadColor2 = "lighting.head.color2"
+    LightingBodyColor2 = "lighting.body.color2"
+    LightingBaseColor2 = "lighting.base.color2"
+    LightingHeadUpdateSpeed = "lighting.head.update"
+    LightingBodyUpdateSpeed = "lighting.body.update"
+    LightingBaseUpdateSpeed = "lighting.base.update"
+    LightingCameraBrightness = "lighting.camera.brightness"
+
+    EyeFetchSettings = "eyes.getSettings"
+    EyeSetState = "eyes.setState"
+    EyeSetSpeed = "eyes.setSpeed"
+    EyeSetPosition = "eyes.setPosition"
+    EyeSetMotion = "eyes.setMotion"
+    EyeSetBacklight = "eyes.setBacklight"
+    EyeSetSkinOption = "eyes.setSkinOption"
+
+    HeadXPosition = "head.position.x"
+    HeadYPosition = "head.position.y"
+
+def txcv(cmd: RobotCommand, val: Any | None = None, delay: float=0):
     # see if val is a list or a string
     if isinstance(val, list) or isinstance(val, tuple):
         val = str(val).strip("[]()").replace(", ", ",")
 
-    txstr(cmd + "=" + str(val))
+    if val:
+        logger.trace("Sent: " + cmd.value + "=" + str(val))
+        _send_data(cmd.value + "=" + str(val))
+    else:
+        logger.trace("Sent: " + cmd.value)
+        _send_data(cmd.value)
     time.sleep(delay)
 
 
-def txmot(vals: Union[list[int, int], tuple[int, int]]):
+def txmot(vals: list[int] | tuple[int, int]):
+    logger.warning("Using com.txmot is deprecated. Try to use com.txcv instead")
     # send motor values to the xbee
     txcv("left_motor", vals[0])
     txcv("right_motor", vals[1])
 
 
 def txstop():
+    logger.warning("Using com.txstop is deprecated. Try to use com.txcv instead")
     txstr("stop")
 
 
 def tx_e_stop():
+    logger.warning("Using com.tx_e_stop is deprecated. Try to use com.txcv instead")
     txstr("request.estop")
