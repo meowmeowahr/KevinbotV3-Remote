@@ -95,7 +95,7 @@ def txstr(data: str):
     logger.trace("Sent: " + data)
     _send_data(data)
 
-class RobotCommand(enum.Enum):
+class RobotCommand(enum.StrEnum):
     RemoteListAdd = "connection.remotes.add"
     RemoteListRemove = "connection.remotes.remove"
     RemoteListFetch = "connection.remotes.get"
