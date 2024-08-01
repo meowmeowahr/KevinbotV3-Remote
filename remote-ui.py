@@ -277,7 +277,7 @@ class RemoteUI(KBMainWindow):
                         strings.OUTSIDE_PRES.format(data[1].split(",")[3]),
                     )
             # motor, body temps
-            elif data[0] == "temps":
+            elif data[0] == "sensors.temps":
                 if window is not None:
                     get_updater().call_latest(
                         window.left_temp.setText,
