@@ -122,6 +122,9 @@ class RobotCommand(enum.StrEnum):
     LightingHeadUpdateSpeed = "lighting.head.update"
     LightingBodyUpdateSpeed = "lighting.body.update"
     LightingBaseUpdateSpeed = "lighting.base.update"
+    LightingHeadBright = "lighting.head.bright"
+    LightingBodyBright = "lighting.body.bright"
+    LightingBaseBright = "lighting.base.bright"
     LightingCameraBrightness = "lighting.camera.brightness"
 
     EyeFetchSettings = "eyes.getSettings"

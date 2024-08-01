@@ -532,7 +532,30 @@ class RemoteUI(KBMainWindow):
                         get_updater().call_latest(
                             self.eye_joystick.setColor, QColor("#9E9E9E")
                         )
-
+            elif data[0] == "lighting.head.update":
+                get_updater().call_latest(window.head_speed.blockSignals, True)
+                get_updater().call_latest(window.head_speed.setValue, map_range(int(data[1]), 500, 100, 100, 500))
+                get_updater().call_latest(window.head_speed.blockSignals, False)
+            elif data[0] == "lighting.head.bright":
+                get_updater().call_latest(window.head_bright.blockSignals, True)
+                get_updater().call_latest(window.head_bright.setValue, int(data[1]))
+                get_updater().call_latest(window.head_bright.blockSignals, False)
+            elif data[0] == "lighting.body.update":
+                get_updater().call_latest(window.body_speed.blockSignals, True)
+                get_updater().call_latest(window.body_speed.setValue, map_range(int(data[1]), 500, 100, 100, 500))
+                get_updater().call_latest(window.body_speed.blockSignals, False)
+            elif data[0] == "lighting.body.bright":
+                get_updater().call_latest(window.body_bright.blockSignals, True)
+                get_updater().call_latest(window.body_bright.setValue, int(data[1]))
+                get_updater().call_latest(window.body_bright.blockSignals, False)
+            elif data[0] == "lighting.base.update":
+                get_updater().call_latest(window.base_speed.blockSignals, True)
+                get_updater().call_latest(window.base_speed.setValue, map_range(int(data[1]), 500, 100, 100, 500))
+                get_updater().call_latest(window.base_speed.blockSignals, False)
+            elif data[0] == "lighting.base.bright":
+                get_updater().call_latest(window.base_bright.blockSignals, True)
+                get_updater().call_latest(window.base_bright.setValue, int(data[1]))
+                get_updater().call_latest(window.base_bright.blockSignals, False)
         except Exception:
             traceback.print_exc()
 
@@ -951,6 +974,22 @@ class RemoteUI(KBMainWindow):
         )
         self.head_speed_layout.addWidget(self.head_speed)
 
+        # Head Brightness
+        self.head_bright_box = QGroupBox("Head Brightness")
+        self.head_bright_box.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.head_right_layout.addWidget(self.head_bright_box)
+
+        self.head_bright_layout = QVBoxLayout()
+        self.head_bright_box.setLayout(self.head_bright_layout)
+
+        self.head_bright = QSlider(Qt.Orientation.Horizontal)
+        self.head_bright.setRange(0, 255)
+        self.head_bright.setObjectName("Kevinbot3_RemoteUI_Slider")
+        self.head_bright.valueChanged.connect(
+            lambda x: com.txcv(RobotCommand.LightingHeadBright, x)
+        )
+        self.head_bright_layout.addWidget(self.head_bright)
+
         # Head Effects
         self.head_effects_group = QGroupBox(strings.HEAD_EFFECTS_G)
         self.head_effects_group.setObjectName("Kevinbot3_RemoteUI_Group")
@@ -1010,13 +1049,29 @@ class RemoteUI(KBMainWindow):
         self.bodySpeedLayout = QVBoxLayout()
         self.bodySpeedBox.setLayout(self.bodySpeedLayout)
 
-        self.bodySpeed = QSlider(Qt.Orientation.Horizontal)
-        self.bodySpeed.setRange(100, 500)
-        self.bodySpeed.setObjectName("Kevinbot3_RemoteUI_Slider")
-        self.bodySpeed.valueChanged.connect(
+        self.body_speed = QSlider(Qt.Orientation.Horizontal)
+        self.body_speed.setRange(100, 500)
+        self.body_speed.setObjectName("Kevinbot3_RemoteUI_Slider")
+        self.body_speed.valueChanged.connect(
             lambda x: com.txcv(RobotCommand.LightingBodyUpdateSpeed, map_range(x, 100, 500, 500, 100))
         )
-        self.bodySpeedLayout.addWidget(self.bodySpeed)
+        self.bodySpeedLayout.addWidget(self.body_speed)
+
+        # Body Animation Bright
+        self.bodyBrightBox = QGroupBox("Body Brightness")
+        self.bodyBrightBox.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.body_right_layout.addWidget(self.bodyBrightBox)
+
+        self.bodyBrightLayout = QVBoxLayout()
+        self.bodyBrightBox.setLayout(self.bodyBrightLayout)
+
+        self.body_bright = QSlider(Qt.Orientation.Horizontal)
+        self.body_bright.setRange(0, 255)
+        self.body_bright.setObjectName("Kevinbot3_RemoteUI_Slider")
+        self.body_bright.valueChanged.connect(
+            lambda x: com.txcv(RobotCommand.LightingBodyBright, x)
+        )
+        self.bodyBrightLayout.addWidget(self.body_bright)
 
         # Body Effects
         self.body_effects_group = QGroupBox(strings.BODY_EFFECTS_G)
@@ -1032,26 +1087,6 @@ class RemoteUI(KBMainWindow):
             self.body_effects_layout.addWidget(effect_button, i // 4, i % 4)
             effect_button.clicked.connect(partial(self.body_effect_action, i))
             effect_button.setFixedSize(QSize(75, 50))
-
-        self.body_bright_plus = QPushButton("Bright+")
-        self.body_bright_plus.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
-        self.body_bright_plus.clicked.connect(lambda: com.txstr("body_bright+"))
-        self.body_bright_plus.setFixedSize(QSize(75, 50))
-        self.body_effects_layout.addWidget(
-            self.body_bright_plus,
-            (len(settings["body_effects"]) // 4),
-            (len(settings["body_effects"]) % 4),
-        )
-
-        self.body_bright_minus = QPushButton("Bright-")
-        self.body_bright_minus.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
-        self.body_bright_minus.clicked.connect(lambda: com.txstr("body_bright-"))
-        self.body_bright_minus.setFixedSize(QSize(75, 50))
-        self.body_effects_layout.addWidget(
-            self.body_bright_minus,
-            len(settings["body_effects"]) // 4,
-            len(settings["body_effects"]) % 4 + 1,
-        )
 
         # Base Color Page
 
@@ -1104,6 +1139,21 @@ class RemoteUI(KBMainWindow):
         self.base_speed_layout.addWidget(self.base_speed)
         self.base_speed_box.setLayout(self.base_speed_layout)
 
+        # Base Animation Bright
+        self.base_bright_box = QGroupBox("Base Brightness")
+        self.base_bright_box.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.base_right_layout.addWidget(self.base_bright_box)
+        self.base_bright_layout = QVBoxLayout()
+
+        self.base_bright = QSlider(Qt.Orientation.Horizontal)
+        self.base_bright.setRange(0, 255)
+        self.base_bright.setObjectName("Kevinbot3_RemoteUI_Slider")
+        self.base_bright.valueChanged.connect(
+            lambda x: com.txcv(RobotCommand.LightingBaseBright, x)
+        )
+        self.base_bright_layout.addWidget(self.base_bright)
+        self.base_bright_box.setLayout(self.base_bright_layout)
+
         # Base Effects
         self.base_effects_group = QGroupBox(strings.BASE_EFFECTS_G)
         self.base_effects_group.setObjectName("Kevinbot3_RemoteUI_Group")
@@ -1118,26 +1168,6 @@ class RemoteUI(KBMainWindow):
             self.base_effects_layout.addWidget(effect_button, i // 4, i % 4)
             effect_button.clicked.connect(partial(self.base_effect_action, i))
             effect_button.setFixedSize(QSize(75, 50))
-
-        self.base_bright_plus = QPushButton("Bright+")
-        self.base_bright_plus.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
-        self.base_bright_plus.clicked.connect(lambda: com.txstr("base_bright+"))
-        self.base_bright_plus.setFixedSize(QSize(75, 50))
-        self.base_effects_layout.addWidget(
-            self.base_bright_plus,
-            (len(settings["base_effects"]) // 4),
-            (len(settings["base_effects"]) % 4),
-        )
-
-        self.base_bright_minus = QPushButton("Bright-")
-        self.base_bright_minus.setObjectName("Kevinbot3_RemoteUI_BodyEffectButton")
-        self.base_bright_minus.clicked.connect(lambda: com.txstr("base_bright-"))
-        self.base_bright_minus.setFixedSize(QSize(75, 50))
-        self.base_effects_layout.addWidget(
-            self.base_bright_minus,
-            len(settings["base_effects"]) // 4,
-            len(settings["base_effects"]) % 4 + 1,
-        )
 
         # Arm Preset Editor
 
@@ -2849,9 +2879,6 @@ class RemoteUI(KBMainWindow):
 def init_robot():
     com.txcv(RobotCommand.ArmPositions, ",".join(map(str, CURRENT_ARM_POS)), delay=0.02)
     com.txcv(RobotCommand.SpeechEngine, "espeak", delay=0.02)
-    com.txcv(RobotCommand.LightingHeadEffect, "color1", delay=0.02)
-    com.txcv(RobotCommand.LightingBodyEffect, "color1", delay=0.02)
-    com.txcv(RobotCommand.LightingBaseEffect, "color1", delay=0.02)
     com.txcv(RobotCommand.LightingCameraBrightness, "0", delay=0.02)
 
 
