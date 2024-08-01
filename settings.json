@@ -1,283 +1,339 @@
 {
-   "apps": {
-      "apps": [
-         {
-            "icon": "icon.svg",
-            "id": 0,
-            "launch": "python3 remote-ui.py",
-            "name": "Remote"
-         },
-         {
-            "icon": "system-software-update.svg",
-            "id": 1,
-            "launch": "python3 updater.py",
-            "name": "Software\nUpdate"
-         },
-         {
-            "icon": "terminal.svg",
-            "id": 2,
-            "launch": "python3 terminal.py",
-            "name": "XBee\nTerminal"
-         },
-         {
-            "icon": "settings.svg",
-            "id": 3,
-            "launch": "python3 settings.py",
-            "name": "Settings"
-         },
-         {
-            "icon": "browser.svg",
-            "id": 4,
-            "launch": "python3 browser.py",
-            "name": "Browser\n(Beta)"
-         },
-         {
-            "icon": "imview.svg",
-            "id": 5,
-            "launch": "python3 imview.py",
-            "name": "Image\nViewer"
-         },
-         {
-            "icon": "help.svg",
-            "id": 6,
-            "launch": "python3 docview.py",
-            "name": "Help"
-         },
-         {
-            "icon": "about.svg",
-            "id": 7,
-            "launch": "python3 about.py",
-            "name": "About"
-         }
-      ],
-      "theme": "dark.py",
-      "theme_files": [
-         "blue.py",
-         "green.py",
-         "yellow.py",
-         "purple.py",
-         "geoblue.py",
-         "geogreen.py",
-         "geo.py"
-      ],
-      "theme_flat": true
-   },
-   "arm_dof": 5,
-   "arm_min_max": [
-      [
-         0,
-         180
-      ],
-      [
-         0,
-         180
-      ],
-      [
-         0,
-         180
-      ],
-      [
-         0,
-         180
-      ],
-      [
-         0,
-         180
-      ],
-      [
-         0,
-         180
-      ],
-      [
-         0,
-         180
-      ],
-      [
-         0,
-         180
-      ],
-      [
-         0,
-         180
-      ],
-      [
-         0,
-         180
-      ]
-   ],
-   "arm_prog": [
-      [
-         109,
-         90,
-         2,
-         160,
-         88,
-         51,
-         178,
-         12,
-         76,
-         55
-      ],
-      [
-         1,
-         115,
-         117,
-         65,
-         0,
-         23,
-         0,
-         156,
-         0,
-         44
-      ],
-      [
-         2,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0
-      ],
-      [
-         3,
-         0,
-         87,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0
-      ],
-      [
-         4,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0
-      ],
-      [
-         5,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0
-      ],
-      [
-         6,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0
-      ],
-      [
-         7,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0
-      ],
-      [
-         8,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0,
-         0
-      ]
-   ],
-   "arm_servos": 10,
-   "backlight_dir": "/sys/class/backlight/10-0045/",
-   "backup_dir": "/home/$USER/Kbot3RemoteBackups/",
-   "base_effects": [
-      "magic",
-      "rainbow",
-      "fire",
-      "twinkle",
-      "swipe",
-      "flash",
-      "fade",
-      "jump3",
-      "color1",
-      "color2"
-   ],
-   "body_effects": [
-      "magic",
-      "rainbow",
-      "fire",
-      "twinkle",
-      "swipe",
-      "flash",
-      "fade",
-      "jump3",
-      "color1",
-      "color2"
-   ],
-   "camera_url": "http://kevinbotv3/stream",
-   "data_dir": "/home/$USER/KbotV3/",
-   "dev_mode": true,
-   "head_effects": [
-      "flash",
-      "fade",
-      "jump3",
-      "twinkle",
-      "color1",
-      "color2"
-   ],
-   "homepage": "https://www.google.com/",
-   "joystick_size": 80,
-   "joystick_type": "analog",
-   "log_level": 0,
-   "max_us": 1000,
-   "media_dir": "/media/$USER/",
-   "motor_temp_warning": 50,
-   "name": "REMOTE",
-   "ports": {
-      "linux_port": "/dev/ttyUSB0",
-      "pi_port": "/dev/ttyS0",
-      "win_port": "COM5"
-   },
-   "reboot_command": "sudo shutdown -r now",
-   "shutdown_command": "sudo shutdown now",
-   "speech": {
-      "text": "Hi"
-   },
-   "warning_voltage": 10,
-   "window_properties": {
-      "animation_dir": 0,
-      "animation_speed": 500,
-      "error_animation_speed": 80,
-      "theme": "qdarktheme_kbot",
-      "theme_colors": "Default",
-      "ui_style": "modern"
-   }
+  "apps": {
+    "apps": [
+      {
+        "icon": "icon.svg",
+        "id": 0,
+        "launch": "python3 remote-ui.py",
+        "name": "Remote"
+      },
+      {
+        "icon": "system-software-update.svg",
+        "id": 1,
+        "launch": "python3 updater.py",
+        "name": "Software\nUpdate"
+      },
+      {
+        "icon": "terminal.svg",
+        "id": 2,
+        "launch": "python3 terminal.py",
+        "name": "XBee\nTerminal"
+      },
+      {
+        "icon": "settings.svg",
+        "id": 3,
+        "launch": "python3 settings.py",
+        "name": "Settings"
+      },
+      {
+        "icon": "browser.svg",
+        "id": 4,
+        "launch": "python3 browser.py",
+        "name": "Browser\n(Beta)"
+      },
+      {
+        "icon": "imview.svg",
+        "id": 5,
+        "launch": "python3 imview.py",
+        "name": "Image\nViewer"
+      },
+      {
+        "icon": "help.svg",
+        "id": 6,
+        "launch": "python3 docview.py",
+        "name": "Help"
+      },
+      {
+        "icon": "about.svg",
+        "id": 7,
+        "launch": "python3 about.py",
+        "name": "About"
+      }
+    ],
+    "theme": "dark.py",
+    "theme_files": [
+      "blue.py",
+      "green.py",
+      "yellow.py",
+      "purple.py",
+      "geoblue.py",
+      "geogreen.py",
+      "geo.py"
+    ],
+    "theme_flat": true
+  },
+  "arm_dof": 7,
+  "arm_min_max": [
+    [
+      0,
+      180
+    ],
+    [
+      0,
+      180
+    ],
+    [
+      0,
+      180
+    ],
+    [
+      0,
+      180
+    ],
+    [
+      0,
+      180
+    ],
+    [
+      0,
+      180
+    ],
+    [
+      0,
+      180
+    ],
+    [
+      0,
+      180
+    ],
+    [
+      0,
+      180
+    ],
+    [
+      0,
+      180
+    ],
+    [
+      0,
+      180
+    ],
+    [
+      0,
+      180
+    ],
+    [
+      0,
+      180
+    ],
+    [
+      0,
+      180
+    ]
+  ],
+  "arm_prog": [
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      95,
+      117,
+      123,
+      86,
+      92,
+      84,
+      0
+    ],
+    [
+      180,
+      180,
+      180,
+      180,
+      180,
+      180,
+      180,
+      180,
+      180,
+      180,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      2,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      3,
+      0,
+      87,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      4,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      6,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      7,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      8,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  ],
+  "arm_servos": 10,
+  "backlight_dir": "/sys/class/backlight/10-0045/",
+  "backup_dir": "/home/$USER/Kbot3RemoteBackups/",
+  "base_effects": [
+    "magic",
+    "rainbow",
+    "fire",
+    "twinkle",
+    "swipe",
+    "flash",
+    "fade",
+    "jump3",
+    "color1",
+    "color2"
+  ],
+  "body_effects": [
+    "magic",
+    "rainbow",
+    "fire",
+    "twinkle",
+    "swipe",
+    "flash",
+    "fade",
+    "jump3",
+    "color1",
+    "color2"
+  ],
+  "camera_url": "http://kevinbotv3/stream",
+  "data_dir": "/home/$USER/KbotV3/",
+  "dev_mode": true,
+  "head_effects": [
+    "flash",
+    "fade",
+    "jump3",
+    "twinkle",
+    "color1",
+    "color2"
+  ],
+  "homepage": "https://www.google.com/",
+  "joystick_size": 80,
+  "joystick_type": "analog",
+  "log_level": 0,
+  "max_us": 1000,
+  "media_dir": "/media/$USER/",
+  "motor_temp_warning": 50,
+  "name": "REMOTE",
+  "ports": {
+    "linux_port": "/dev/ttyUSB0",
+    "pi_port": "/dev/ttyS0",
+    "win_port": "COM5"
+  },
+  "reboot_command": "sudo shutdown -r now",
+  "shutdown_command": "sudo shutdown now",
+  "speech": {
+    "text": "Hi"
+  },
+  "warning_voltage": 10,
+  "window_properties": {
+    "animation_dir": 0,
+    "animation_speed": 500,
+    "error_animation_speed": 80,
+    "theme": "qdarktheme_kbot",
+    "theme_colors": "Default",
+    "ui_style": "modern"
+  },
+  "xbee": {
+    "min_dbm": -100,
+    "max_dbm": 0
+  }
 }

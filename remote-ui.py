@@ -21,6 +21,8 @@ from qtpy.QtGui import *
 from qtpy.QtWebEngineWidgets import *
 from qtpy.QtWidgets import *
 from qt_thread_updater import get_updater
+
+import utils
 from QCustomWidgets import (
     KBModalBar,
     KBMainWindow,
@@ -80,7 +82,7 @@ last_alive_message = datetime.datetime.now()
 
 # load settings from file
 with open("settings.json", "r") as f:
-    settings = json.load(f)
+    settings: dict = json.load(f)
 
 
 def save_settings():
@@ -188,20 +190,21 @@ class RemoteUI(KBMainWindow):
         else:
             self.show()
 
-    def serial_callback(self, message):
+    def serial_callback(self, message: dict):
         # noinspection PyBroadException
+        print(message)
+        if "rssi" in message:
+            signal_strength = -ord(message["rssi"])
+            get_updater().call_latest(window.signal_strength.setText, f"Signal Strength: {round(signal_strength)}dBm")
         try:
             if not "rf_data" in message:
-                # TODO: Add a more permanant solution for the 0x74 error
-                # 0x74 = Message to long
-                logger.warning(f"Status message", message)
                 return
 
             data = message["rf_data"].decode("utf-8").strip("\r\n")
             data = data.split("=", maxsplit=1)
             logger.trace(f"Recieved: {data}")
 
-            if data[0] == "handshake.end" and data[1] == remote_name:
+            if data[0] == "connection.handshake.end" and data[1] == remote_name:
                 get_updater().call_latest(window.widget.setCurrentIndex, 1)
             elif data[0] == "bms.voltages":
                 if window is not None:
@@ -369,7 +372,7 @@ class RemoteUI(KBMainWindow):
                         strings.CORE_UPTIME.format(delta, data[1] + "s"),
                     )
             # sys uptime
-            elif data[0] == "os_uptime":
+            elif data[0] == "system.uptime":
                 if window:
                     delta = datetime.timedelta(seconds=int(data[1]))
                     get_updater().call_latest(
@@ -416,24 +419,26 @@ class RemoteUI(KBMainWindow):
                             window.bottom_eye_button.setDisabled, False
                         )
             # old remote enable
-            elif data[0] == "core.enabled":
+            elif data[0] == "kevinbot.enabled":
                 while not window:
                     time.sleep(0.02)
 
                 get_updater().call_latest(window.set_enabled, data[1].lower() == "true")
-            elif data[0] == "core.enablefailed":
+            elif data[0] == "kevinbot.enableFailed":
                 get_updater().call_latest(window.show_enabled_fail, int(data[1]))
-            elif data[0] == "core.speech-engine":
+            elif data[0] == "system.speechEngine":
                 while not window:
                     time.sleep(0.02)
 
                 if data[1] == "festival":
                     get_updater().call_latest(window.festival_radio.blockSignals, True)
                     get_updater().call_latest(window.festival_radio.setChecked, True)
+                    get_updater().call_latest(window.espeak_radio.setChecked, False)
                     get_updater().call_latest(window.festival_radio.blockSignals, False)
                 else:
                     get_updater().call_latest(window.espeak_radio.blockSignals, True)
                     get_updater().call_latest(window.espeak_radio.setChecked, True)
+                    get_updater().call_latest(window.festival_radio.setChecked, False)
                     get_updater().call_latest(window.espeak_radio.blockSignals, False)
             elif data == ["core.service.init", "kevinbot.com"]:
                 get_updater().call_latest(window.pop_com_service_modal)
@@ -445,7 +450,7 @@ class RemoteUI(KBMainWindow):
                     RobotCommand.RemoteListAdd,
                     f"{remote_name}|{remote_version}|kevinbot.remote",
                 )
-            elif data[0].startswith("core.full_mesh"):
+            elif data[0].startswith("system.remotes.list"):
                 cmd_part = data[0].split(":")[1]
                 cmd_parts = data[0].split(":")[2]
 
@@ -456,7 +461,7 @@ class RemoteUI(KBMainWindow):
                         window.add_mesh_devices, "".join(self.full_mesh)
                     )
                     self.full_mesh = []
-            elif data[0] == "core.ping":
+            elif data[0] == "connection.ping":
                 src_dest = data[1].split(",", maxsplit=1)
                 get_updater().call_latest(window.ping, src_dest[0])
             elif data[0] == "eye_settings.states.page":
@@ -1833,12 +1838,16 @@ class RemoteUI(KBMainWindow):
         self.page_flip_right.clicked.connect(lambda: self.widget.slideInIdx(2))
         self.page_flip_right.setShortcut(QKeySequence(Qt.Key.Key_Period))
 
+        # rssi
+        self.signal_strength = QLabel("Signal Strength: ?dBm")
+
         self.shutdown = QPushButton()
         self.shutdown.setObjectName("Kevinbot3_RemoteUI_ShutdownButton")
         self.shutdown.setIcon(qta.icon("fa5s.window-close", color=self.fg_color))
         self.shutdown.setIconSize(QSize(32, 32))
         self.shutdown.clicked.connect(self.shutdown_action)
         self.shutdown.setFixedSize(QSize(36, 36))
+
 
         # icons
         self.page_flip_left.setIcon(
@@ -1878,70 +1887,60 @@ class RemoteUI(KBMainWindow):
         self.page_flip_debug.setIconSize(QSize(24, 24))
         self.page_flip_right.setIconSize(QSize(32, 32))
 
-        if settings["window_properties"]["ui_style"] == "classic":
-            self.page_flip_layout_1.addWidget(self.page_flip_left)
-            self.page_flip_layout_1.addWidget(self.page_flip_mesh)
-            self.page_flip_layout_1.addWidget(self.page_flip_debug)
-            self.page_flip_layout_1.addStretch()
-            self.page_flip_layout_1.addWidget(self.batt_volt1)
-            self.page_flip_layout_1.addStretch()
-            self.page_flip_layout_1.addWidget(self.shutdown)
-            self.page_flip_layout_1.addStretch()
-            if ENABLE_BATT2:
-                self.page_flip_layout_1.addWidget(self.batt_volt2)
-                self.page_flip_layout_1.addStretch()
-            self.page_flip_layout_1.addWidget(self.page_flip_right)
-        elif settings["window_properties"]["ui_style"] == "modern":
-            self.bottom_batt_layout.addWidget(self.batt_volt1)
-            if ENABLE_BATT2:
-                self.bottom_batt_layout.addWidget(self.batt_volt2)
+        self.bottom_batt_layout.addWidget(self.batt_volt1)
+        if ENABLE_BATT2:
+            self.bottom_batt_layout.addWidget(self.batt_volt2)
 
-            self.page_flip_layout_1.addWidget(self.page_flip_left)
-            self.page_flip_layout_1.addWidget(self.page_flip_mesh)
-            self.page_flip_layout_1.addWidget(self.page_flip_debug)
-            self.page_flip_layout_1.addStretch()
-            self.page_flip_layout_1.addLayout(self.bottom_batt_layout)
-            self.page_flip_layout_1.addStretch()
-            self.page_flip_layout_1.addWidget(
-                self.shutdown, alignment=Qt.AlignmentFlag.AlignVCenter
-            )
-            self.page_flip_layout_1.addStretch()
+        self.page_flip_layout_1.addWidget(self.page_flip_left)
+        self.page_flip_layout_1.addWidget(self.page_flip_mesh)
+        self.page_flip_layout_1.addWidget(self.page_flip_debug)
+        self.page_flip_layout_1.addStretch()
+        self.page_flip_layout_1.addLayout(self.bottom_batt_layout)
+        self.page_flip_layout_1.addStretch()
+        self.page_flip_layout_1.addWidget(
+            self.shutdown, alignment=Qt.AlignmentFlag.AlignVCenter
+        )
+        self.page_flip_layout_1.addStretch()
 
-            self.bottom_head_led_button = QPushButton()
-            self.bottom_head_led_button.setFixedSize(QSize(36, 36))
-            self.bottom_head_led_button.setIconSize(QSize(32, 32))
-            self.bottom_head_led_button.setIcon(
-                qta.icon("ph.number-circle-one-fill", color="#ff2a2a")
-            )
-            self.bottom_head_led_button.clicked.connect(lambda: self.led_action(0))
-            self.page_flip_layout_1.addWidget(self.bottom_head_led_button)
+        self.page_flip_layout_1.addWidget(self.signal_strength)
 
-            self.bottom_body_led_button = QPushButton()
-            self.bottom_body_led_button.setFixedSize(QSize(36, 36))
-            self.bottom_body_led_button.setIconSize(QSize(32, 32))
-            self.bottom_body_led_button.setIcon(
-                qta.icon("ph.number-circle-two-fill", color="#5fd35f")
-            )
-            self.bottom_body_led_button.clicked.connect(lambda: self.led_action(1))
-            self.page_flip_layout_1.addWidget(self.bottom_body_led_button)
+        self.page_flip_layout_1.addStretch()
 
-            self.bottom_base_led_button = QPushButton()
-            self.bottom_base_led_button.setFixedSize(QSize(36, 36))
-            self.bottom_base_led_button.setIconSize(QSize(32, 32))
-            self.bottom_base_led_button.setIcon(
-                qta.icon("ph.number-circle-three-fill", color="#2a7fff")
-            )
-            self.bottom_base_led_button.clicked.connect(lambda: self.led_action(2))
-            self.page_flip_layout_1.addWidget(self.bottom_base_led_button)
+        self.bottom_head_led_button = QPushButton()
+        self.bottom_head_led_button.setFixedSize(QSize(36, 36))
+        self.bottom_head_led_button.setIconSize(QSize(32, 32))
+        self.bottom_head_led_button.setIcon(
+            qta.icon("ph.number-circle-one-fill", color="#ff2a2a")
+        )
+        self.bottom_head_led_button.clicked.connect(lambda: self.led_action(0))
+        self.page_flip_layout_1.addWidget(self.bottom_head_led_button)
 
-            self.bottom_eye_button = QPushButton()
-            self.bottom_eye_button.setFixedSize(QSize(36, 36))
-            self.bottom_eye_button.setIconSize(QSize(32, 32))
-            self.bottom_eye_button.setIcon(qta.icon("fa5s.eye", color="#ff7fff"))
-            self.bottom_eye_button.clicked.connect(self.eye_config_action)
-            self.page_flip_layout_1.addWidget(self.bottom_eye_button)
+        self.bottom_body_led_button = QPushButton()
+        self.bottom_body_led_button.setFixedSize(QSize(36, 36))
+        self.bottom_body_led_button.setIconSize(QSize(32, 32))
+        self.bottom_body_led_button.setIcon(
+            qta.icon("ph.number-circle-two-fill", color="#5fd35f")
+        )
+        self.bottom_body_led_button.clicked.connect(lambda: self.led_action(1))
+        self.page_flip_layout_1.addWidget(self.bottom_body_led_button)
 
-            self.page_flip_layout_1.addWidget(self.page_flip_right)
+        self.bottom_base_led_button = QPushButton()
+        self.bottom_base_led_button.setFixedSize(QSize(36, 36))
+        self.bottom_base_led_button.setIconSize(QSize(32, 32))
+        self.bottom_base_led_button.setIcon(
+            qta.icon("ph.number-circle-three-fill", color="#2a7fff")
+        )
+        self.bottom_base_led_button.clicked.connect(lambda: self.led_action(2))
+        self.page_flip_layout_1.addWidget(self.bottom_base_led_button)
+
+        self.bottom_eye_button = QPushButton()
+        self.bottom_eye_button.setFixedSize(QSize(36, 36))
+        self.bottom_eye_button.setIconSize(QSize(32, 32))
+        self.bottom_eye_button.setIcon(qta.icon("fa5s.eye", color="#ff7fff"))
+        self.bottom_eye_button.clicked.connect(self.eye_config_action)
+        self.page_flip_layout_1.addWidget(self.bottom_eye_button)
+
+        self.page_flip_layout_1.addWidget(self.page_flip_right)
 
         # Page Flip 2
         self.page_flip_layout_2 = QHBoxLayout()
@@ -2193,7 +2192,7 @@ class RemoteUI(KBMainWindow):
 
     def shutdown_robot_modal_action(self):
         com.txcv(RobotCommand.RemoteStatus, "disconnected")
-        com.tx_e_stop()
+        com.txcv(RobotCommand.RequestEstop)
         self.close()
 
     def camera_led_action(self):
@@ -2211,8 +2210,7 @@ class RemoteUI(KBMainWindow):
     @staticmethod
     def arm_action(index):
         global CURRENT_ARM_POS
-        for index, position in enumerate(settings['arm_prog'][index]):
-            com.txcv(RobotCommand.ArmPosition, f"{index},{position}")
+        com.txcv(RobotCommand.ArmPositions, ",".join(map(str, settings['arm_prog'][index])))
         CURRENT_ARM_POS = settings["arm_prog"][index]
 
     def led_action(self, index):
@@ -2260,7 +2258,7 @@ class RemoteUI(KBMainWindow):
 
     def arm_preset_action(self, index):
         global CURRENT_ARM_POS
-        com.txcv(RobotCommand.ArmPosition, f"{index},{settings['arm_prog'][index]}")
+        com.txcv(RobotCommand.ArmPositions, ",".join(map(str, settings['arm_prog'][index])))
         CURRENT_ARM_POS = settings["arm_prog"][index]
 
         # suppress events on knobs
@@ -2303,28 +2301,26 @@ class RemoteUI(KBMainWindow):
     def arm_preset_left_changed(self, index):
         global CURRENT_ARM_POS
         self.left_labels[index].setText(str(self.left_knobs[index].value()))
-        for index, position in enumerate([self.left_knobs[i].value() for i in range(len(self.left_knobs))]
-            + [self.right_knobs[i].value() for i in range(len(self.right_knobs))]):
-            com.txcv(
-                RobotCommand.ArmPosition,
-                f"{index},{position}"
-            )
+        com.txcv(
+            RobotCommand.ArmPositions,
+            [self.left_knobs[i].value() for i in range(len(self.left_knobs))]
+            + [self.right_knobs[i].value() for i in range(len(self.right_knobs))],
+        )
         CURRENT_ARM_POS = [
-            self.left_knobs[i].value() for i in range(len(self.left_knobs))
-        ] + [self.right_knobs[i].value() for i in range(len(self.right_knobs))]
+                              self.left_knobs[i].value() for i in range(len(self.left_knobs))
+                          ] + [self.right_knobs[i].value() for i in range(len(self.right_knobs))]
 
     def arm_preset_right_changed(self, index):
         global CURRENT_ARM_POS
         self.right_labels[index].setText(str(self.right_knobs[index].value()))
-        for index, position in enumerate([self.left_knobs[i].value() for i in range(len(self.left_knobs))]
-                                         + [self.right_knobs[i].value() for i in range(len(self.right_knobs))]):
-            com.txcv(
-                RobotCommand.ArmPosition,
-                f"{index},{position}"
-            )
+        com.txcv(
+            RobotCommand.ArmPositions,
+            [self.left_knobs[i].value() for i in range(len(self.left_knobs))]
+            + [self.right_knobs[i].value() for i in range(len(self.right_knobs))],
+        )
         CURRENT_ARM_POS = [
-            self.left_knobs[i].value() for i in range(len(self.left_knobs))
-        ] + [self.right_knobs[i].value() for i in range(len(self.right_knobs))]
+                              self.left_knobs[i].value() for i in range(len(self.left_knobs))
+                          ] + [self.right_knobs[i].value() for i in range(len(self.right_knobs))]
 
     def arm_preset_save_action(self):
         def close_modal():
@@ -2769,7 +2765,7 @@ class RemoteUI(KBMainWindow):
             for modal in self.modals:
                 modal.changeIndex(modal.getIndex() - 1, moveSpeed=600)
 
-        com.tx_e_stop()
+        com.txcv(RobotCommand.RequestEstop)
 
         # show modal
         if self.modal_count < 6:
@@ -2851,8 +2847,7 @@ class RemoteUI(KBMainWindow):
 
 
 def init_robot():
-    for index, position in enumerate(CURRENT_ARM_POS):
-        com.txcv(RobotCommand.ArmPosition, f"{index},{position}", delay=0.02)
+    com.txcv(RobotCommand.ArmPositions, ",".join(map(str, CURRENT_ARM_POS)), delay=0.02)
     com.txcv(RobotCommand.SpeechEngine, "espeak", delay=0.02)
     com.txcv(RobotCommand.LightingHeadEffect, "color1", delay=0.02)
     com.txcv(RobotCommand.LightingBodyEffect, "color1", delay=0.02)

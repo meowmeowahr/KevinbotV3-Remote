@@ -81,13 +81,13 @@ def init(callback: Optional[Callable[[str], Any]] = None, qapp: QApplication=Non
         except ImportError:
             logger.error(f'Port "{PORT}" Not Found')
     if ser:
-        xb = xbee_com.XBee(ser, escaped=False, callback=callback)
+        xb = xbee_com.XBee(ser, escaped=True, callback=callback)
 
 
 def _send_data(data: str):
     # noinspection PyUnresolvedReferences
     if xb:
-        xb.send("tx", dest_addr=b"\x00\x00", data=bytes("{}\r".format(data), "utf-8"))
+        xb.send("tx", dest_addr=b"\x00\x00", data=bytes("{}\n".format(data), "utf-8"))
 
 
 def txstr(data: str):
@@ -103,8 +103,9 @@ class RobotCommand(enum.StrEnum):
     Ping = "connection.ping"
 
     RequestEnable = "kevinbot.request.enable"
+    RequestEstop = "kevinbot.request.estop"
 
-    ArmPosition = "arms.position"
+    ArmPositions = "arms.positions"
 
     SpeechEngine = "system.speechEngine"
     SpeechSpeak = "system.speak"

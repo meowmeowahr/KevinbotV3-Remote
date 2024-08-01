@@ -90,6 +90,8 @@ def map_range_limit(x, in_min, in_max, out_min, out_max):
 def convert_c_to_f(c):
     return (c * 9 / 5) + 32
 
+def convert_dbm_to_percent(dbm: float, max_dbm: float, min_dbm: float):
+    return 100 * (1 - (max_dbm - dbm) / (max_dbm - min_dbm))
 
 def rstr(string, decimals=1):
     return str(round(float(string), decimals))
