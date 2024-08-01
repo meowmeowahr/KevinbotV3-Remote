@@ -22,7 +22,6 @@ from qtpy.QtWebEngineWidgets import *
 from qtpy.QtWidgets import *
 from qt_thread_updater import get_updater
 
-import utils
 from QCustomWidgets import (
     KBModalBar,
     KBMainWindow,
@@ -192,7 +191,6 @@ class RemoteUI(KBMainWindow):
 
     def serial_callback(self, message: dict):
         # noinspection PyBroadException
-        print(message)
         if "rssi" in message:
             signal_strength = -ord(message["rssi"])
             get_updater().call_latest(window.signal_strength.setText, f"Signal Strength: {round(signal_strength)}dBm")
