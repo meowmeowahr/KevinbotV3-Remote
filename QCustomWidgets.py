@@ -453,10 +453,15 @@ class Level(QFrame):
     def __init__(self, palette, parent=None):
         super(Level, self).__init__(parent)
 
-        self.yaw_text = "Yaw: {}°"
-        self.pitch_text = "Pitch: {}°"
-        self.roll_text = "Roll: {}°"
-        self.x_size = 200
+        self.gyro_yaw_text = "Gyro Yaw: {}°"
+        self.gyro_pitch_text = "Gyro Pitch: {}°"
+        self.gyro_roll_text = "Gyro Roll: {}°"
+
+        self.accel_yaw_text = "Accel Yaw: {}°"
+        self.accel_pitch_text = "Accel Pitch: {}°"
+        self.accel_roll_text = "Accel Roll: {}°"
+
+        self.x_size = 400
 
         if utils.detect_dark(
             (
@@ -477,40 +482,36 @@ class Level(QFrame):
         self._top_layout = QHBoxLayout()
         self._layout.addLayout(self._top_layout)
 
-        self._level = LevelWidget(self)
-        self._level.setFixedSize(QSize(200, 200))
-        self._top_layout.addWidget(self._level)
-
         qtg.setConfigOption("antialias", True)
 
         self.graph = qtg.PlotWidget()
-        self.graph.addLegend((10, 10))
         self.graph.plotItem.setMenuEnabled(False)
         self.graph.plotItem.setMouseEnabled(False, False)
+        self.graph.addLegend((10, 10))
         self._top_layout.addWidget(self.graph)
 
         color = palette.color(QPalette.Window)
         self.graph.setBackground(color)
 
-        self.x_roll = list(range(self.x_size))
-        self.y_roll = [0 for _ in range(self.x_size)]
+        self.gyro_x_roll = list(range(self.x_size))
+        self.gyro_y_roll = [0 for _ in range(self.x_size)]
 
         pen = qtg.mkPen(color="#F44336")
-        self.roll_line = self.graph.plot(self.x_roll, self.y_roll, pen=pen, name="Roll")
+        self.gyro_roll_line = self.graph.plot(self.gyro_x_roll, self.gyro_y_roll, pen=pen, name="Gyro Roll")
 
-        self.x_pitch = list(range(self.x_size))
-        self.y_pitch = [0 for _ in range(self.x_size)]
+        self.gyro_x_pitch = list(range(self.x_size))
+        self.gyro_y_pitch = [0 for _ in range(self.x_size)]
 
         pen = qtg.mkPen(color="#FFEB3B")
-        self.pitch_line = self.graph.plot(
-            self.x_pitch, self.y_pitch, pen=pen, name="Pitch"
+        self.gyro_pitch_line = self.graph.plot(
+            self.gyro_x_pitch, self.gyro_y_pitch, pen=pen, name="Gyro Pitch"
         )
 
-        self.x_yaw = list(range(self.x_size))
-        self.y_yaw = [0 for _ in range(self.x_size)]
+        self.gyro_x_yaw = list(range(self.x_size))
+        self.gyro_y_yaw = [0 for _ in range(self.x_size)]
 
         pen = qtg.mkPen(color="#4CAF50")
-        self.yaw_line = self.graph.plot(self.x_yaw, self.y_yaw, pen=pen, name="Yaw")
+        self.gyro_yaw_line = self.graph.plot(self.gyro_x_yaw, self.gyro_y_yaw, pen=pen, name="Gyro Yaw")
 
         self.settings_layout = QHBoxLayout()
         self._layout.addLayout(self.settings_layout)
@@ -536,93 +537,80 @@ class Level(QFrame):
         self.take_image_button.clicked.connect(self.take_image)
         self.settings_layout.addWidget(self.take_image_button)
 
-        self.details_layout = QHBoxLayout()
+        self.details_layout = QGridLayout()
         self._layout.addLayout(self.details_layout)
 
-        self.yaw_label = QLabel()
-        self.yaw_label.setFixedHeight(32)
-        self.yaw_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.yaw_label.setText(self.yaw_text.format(strings.UNKNOWN))
-        self.yaw_label.setFrameShape(QFrame.Shape.Box)
-        self.yaw_label.setObjectName("Kevinbot3_RemoteUI_SensorData")
-        self.details_layout.addWidget(self.yaw_label)
+        self.gyro_yaw_label = QLabel()
+        self.gyro_yaw_label.setFixedHeight(32)
+        self.gyro_yaw_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.gyro_yaw_label.setText(self.gyro_yaw_text.format(strings.UNKNOWN))
+        self.gyro_yaw_label.setFrameShape(QFrame.Shape.Box)
+        self.gyro_yaw_label.setObjectName("Kevinbot3_RemoteUI_SensorData")
+        self.details_layout.addWidget(self.gyro_yaw_label, 0, 0)
 
-        self.pitch_label = QLabel()
-        self.pitch_label.setFixedHeight(32)
-        self.pitch_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.pitch_label.setText(self.pitch_text.format(strings.UNKNOWN))
-        self.pitch_label.setFrameShape(QFrame.Shape.Box)
-        self.pitch_label.setObjectName("Kevinbot3_RemoteUI_SensorData")
-        self.details_layout.addWidget(self.pitch_label)
+        self.gyro_pitch_label = QLabel()
+        self.gyro_pitch_label.setFixedHeight(32)
+        self.gyro_pitch_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.gyro_pitch_label.setText(self.gyro_pitch_text.format(strings.UNKNOWN))
+        self.gyro_pitch_label.setFrameShape(QFrame.Shape.Box)
+        self.gyro_pitch_label.setObjectName("Kevinbot3_RemoteUI_SensorData")
+        self.details_layout.addWidget(self.gyro_pitch_label, 0, 1)
 
-        self.roll_label = QLabel()
-        self.roll_label.setFixedHeight(32)
-        self.roll_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.roll_label.setText(self.roll_text.format(strings.UNKNOWN))
-        self.roll_label.setFrameShape(QFrame.Shape.Box)
-        self.roll_label.setObjectName("Kevinbot3_RemoteUI_SensorData")
-        self.details_layout.addWidget(self.roll_label)
+        self.gyro_roll_label = QLabel()
+        self.gyro_roll_label.setFixedHeight(32)
+        self.gyro_roll_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.gyro_roll_label.setText(self.gyro_roll_text.format(strings.UNKNOWN))
+        self.gyro_roll_label.setFrameShape(QFrame.Shape.Box)
+        self.gyro_roll_label.setObjectName("Kevinbot3_RemoteUI_SensorData")
+        self.details_layout.addWidget(self.gyro_roll_label, 0, 2)
 
-    def setAngles(self, angles):
-        self._level.setAngle(angles[0])
-        self.yaw_label.setText(self.yaw_text.format(angles[0]))
-        self.pitch_label.setText(self.pitch_text.format(angles[1]))
-        self.roll_label.setText(self.roll_text.format(angles[2]))
+    def setGyro(self, angles):
+        self.gyro_yaw_label.setText(self.gyro_yaw_text.format(angles[0]))
+        self.gyro_pitch_label.setText(self.gyro_pitch_text.format(angles[1]))
+        self.gyro_roll_label.setText(self.gyro_roll_text.format(angles[2]))
 
-        self.x_roll = self.x_roll[1:]  # Remove the first y element.
-        self.x_roll.append(
-            self.x_roll[-1] + 1
+        self.gyro_x_roll = self.gyro_x_roll[1:]  # Remove the first y element.
+        self.gyro_x_roll.append(
+            self.gyro_x_roll[-1] + 1
         )  # Add a new value 1 higher than the last.
 
-        self.y_roll = self.y_roll[1:]  # Remove the first
-        self.y_roll.append(angles[0])  # Add a new random value.
+        self.gyro_y_roll = self.gyro_y_roll[1:]  # Remove the first
+        self.gyro_y_roll.append(angles[0])  # Add a new random value.
 
-        self.roll_line.setData(self.x_roll, self.y_roll)  # Update the data.
+        self.gyro_roll_line.setData(self.gyro_x_roll, self.gyro_y_roll)  # Update the data.
 
-        self.x_pitch = self.x_pitch[1:]  # Remove the first y element.
-        self.x_pitch.append(
-            self.x_pitch[-1] + 1
+        self.gyro_x_pitch = self.gyro_x_pitch[1:]  # Remove the first y element.
+        self.gyro_x_pitch.append(
+            self.gyro_x_pitch[-1] + 1
         )  # Add a new value 1 higher than the last.
 
-        self.y_pitch = self.y_pitch[1:]  # Remove the first
-        self.y_pitch.append(angles[1])  # Add a new random value.
+        self.gyro_y_pitch = self.gyro_y_pitch[1:]  # Remove the first
+        self.gyro_y_pitch.append(angles[1])  # Add a new random value.
 
-        self.pitch_line.setData(self.x_pitch, self.y_pitch)  # Update the data.
+        self.gyro_pitch_line.setData(self.gyro_x_pitch, self.gyro_y_pitch)  # Update the data.
 
-        self.x_yaw = self.x_yaw[1:]  # Remove the first y element.
-        self.x_yaw.append(self.x_yaw[-1] + 1)  # Add a new value 1 higher than the last.
+        self.gyro_x_yaw = self.gyro_x_yaw[1:]  # Remove the first y element.
+        self.gyro_x_yaw.append(self.gyro_x_yaw[-1] + 1)  # Add a new value 1 higher than the last.
 
-        self.y_yaw = self.y_yaw[1:]  # Remove the first
-        self.y_yaw.append(angles[2])  # Add a new random value.
+        self.gyro_y_yaw = self.gyro_y_yaw[1:]  # Remove the first
+        self.gyro_y_yaw.append(angles[2])  # Add a new random value.
 
-        self.yaw_line.setData(self.x_yaw, self.y_yaw)  # Update the data.
-
-    def setLineColor(self, color):
-        self._level.setLineColor(color)
-
-    def setRobotColor(self, color):
-        self._level.setRobotColor(color)
-
-    def setLineWidth(self, width):
-        self._level.setLineWidth(width)
-
-    def setBackgroundColor(self, color):
-        self._level.setBackgroundColor(color)
+        self.gyro_yaw_line.setData(self.gyro_x_yaw, self.gyro_y_yaw)  # Update the data.
 
     def _update_graph_len(self, value):
-        self.x_roll = list(range(value))
-        self.x_yaw = list(range(value))
-        self.x_pitch = list(range(value))
+        self.gyro_x_roll = list(range(value))
+        self.gyro_x_yaw = list(range(value))
+        self.gyro_x_pitch = list(range(value))
 
         if value < self.x_size:
-            self.y_roll = self.y_roll[self.x_size - value :]
-            self.y_yaw = self.y_yaw[self.x_size - value :]
-            self.y_pitch = self.y_pitch[self.x_size - value :]
+            self.gyro_y_roll = self.gyro_y_roll[self.x_size - value:]
+            self.gyro_y_yaw = self.gyro_y_yaw[self.x_size - value:]
+            self.gyro_y_pitch = self.gyro_y_pitch[self.x_size - value:]
 
         if value > self.x_size:
-            self.y_roll = ([0] * (value - self.x_size)) + self.y_roll
-            self.y_pitch = ([0] * (value - self.x_size)) + self.y_pitch
-            self.y_yaw = ([0] * (value - self.x_size)) + self.y_yaw
+            self.gyro_y_roll = ([0] * (value - self.x_size)) + self.gyro_y_roll
+            self.gyro_y_pitch = ([0] * (value - self.x_size)) + self.gyro_y_pitch
+            self.gyro_y_yaw = ([0] * (value - self.x_size)) + self.gyro_y_yaw
 
         self.x_size = value
 

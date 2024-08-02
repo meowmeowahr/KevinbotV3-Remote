@@ -257,7 +257,7 @@ class RemoteUI(KBMainWindow):
                             )
                             get_updater().call_latest(window.batt_modal.show)
             # bme280 sensor
-            elif data[0] == "bme":
+            elif data[0] == "sensors.bme":
                 if window is not None:
                     get_updater().call_latest(
                         window.outside_temp.setText,
@@ -345,22 +345,12 @@ class RemoteUI(KBMainWindow):
                     else:
                         get_updater().call_latest(window.robot_temp.setStyleSheet, "")
             # yaw, pitch, roll
-            elif data[0] == "imu":
-                roll, pitch, yaw = data[1].split(",")
+            elif data[0] == "sensors.imu":
+                groll, gpitch, gyaw = data[1].split(",")
                 if window is not None:
                     get_updater().call_latest(
-                        window.level.setAngles, (float(roll), float(pitch), float(yaw))
+                        window.imu.setGyro, (float(groll), float(gpitch), float(gyaw))
                     )
-                    if abs(float(roll)) > 18:
-                        get_updater().call_latest(
-                            window.level.setLineColor, QColor("#df574d")
-                        )
-                    elif abs(float(roll)) > 10:
-                        get_updater().call_latest(
-                            window.level.setLineColor, QColor("#eebc2a")
-                        )
-                    else:
-                        get_updater().call_latest(window.level.setLineColor, Qt.white)
             # core alive message
             elif data[0] == "core.uptime":
                 if window:
@@ -1735,22 +1725,11 @@ class RemoteUI(KBMainWindow):
         self.motor_temp_layout.addWidget(self.right_temp)
 
         # Level
-        self.level_layout = QHBoxLayout()
-        self.sensor_box_layout.addLayout(self.level_layout)
+        self.imu_layout = QHBoxLayout()
+        self.sensor_box_layout.addLayout(self.imu_layout)
 
-        self.level = Level(self.palette())
-        self.level.setFixedSize(QSize(500, 320))
-        self.level.setLineColor(self.fg_color)
-        self.level.setLineWidth(16)
-        self.level.setRobotColor(QColor(0, 34, 255))
-        self.level.setBackgroundColor(
-            QColor(
-                QColor(self.palette().color(QPalette.Window)).getRgb()[0],
-                QColor(self.palette().color(QPalette.Window)).getRgb()[1],
-                QColor(self.palette().color(QPalette.Window)).getRgb()[2],
-            )
-        )
-        self.level_layout.addWidget(self.level)
+        self.imu = Level(self.palette())
+        self.imu_layout.addWidget(self.imu)
 
         self.sensor_box_layout.addStretch()
 
