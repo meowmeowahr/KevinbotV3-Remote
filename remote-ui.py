@@ -1232,9 +1232,7 @@ class RemoteUI(KBMainWindow):
             # knob
             self.left_knobs.append(QSuperDial(knob_radius=8, knob_margin=7))
             self.left_knobs[i].setObjectName("Kevinbot3_RemoteUI_ArmKnob")
-            self.left_knobs[i].setRange(
-                settings["arm_min_max"][i][0], settings["arm_min_max"][i][1]
-            )
+            self.left_knobs[i].setRange(0, 255)
             self.left_knobs[i].setValue(settings["arm_prog"][0][i])
             self.left_knobs[i].setFixedSize(QSize(72, 72))
 
@@ -1257,10 +1255,7 @@ class RemoteUI(KBMainWindow):
             # knob
             self.right_knobs.append(QSuperDial(knob_radius=8, knob_margin=7))
             self.right_knobs[i].setObjectName("Kevinbot3_RemoteUI_ArmKnob")
-            self.right_knobs[i].setRange(
-                settings["arm_min_max"][i + settings["arm_dof"]][0],
-                settings["arm_min_max"][i + settings["arm_dof"]][1],
-            )
+            self.right_knobs[i].setRange(0, 255)
             self.right_knobs[i].setValue(
                 settings["arm_prog"][0][i + settings["arm_dof"]]
             )
@@ -2450,11 +2445,12 @@ class RemoteUI(KBMainWindow):
         save_settings()
 
     def head_changed_action(self):
+        print(map_range(self.head_stick.getXY()[0], 0, JOYSTICK_SIZE, 0, 60))
         com.txcv(
-            RobotCommand.HeadXPosition, map_range(self.head_stick.getXY()[0], 0, JOYSTICK_SIZE, 0, 60)
+            RobotCommand.HeadXPosition, map_range(self.head_stick.getXY()[0], -JOYSTICK_SIZE, JOYSTICK_SIZE, 0, 255)
         )
         com.txcv(
-            RobotCommand.HeadYPosition, map_range(self.head_stick.getXY()[1], 0, JOYSTICK_SIZE, 0, 60)
+            RobotCommand.HeadYPosition, map_range(self.head_stick.getXY()[1], -JOYSTICK_SIZE, JOYSTICK_SIZE, 0, 255)
         )
 
     def shutdown_action(self):

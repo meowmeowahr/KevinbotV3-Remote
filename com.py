@@ -55,7 +55,7 @@ else:
         PORT = "/dev/ttyS0"
         logger.debug(f"Using default port, {PORT}")
 
-BAUD: int = 460800
+BAUD: int = 921600
 
 xb: Optional[xbee_com.XBee] = None
 ser: Optional[serial.Serial] = None
@@ -64,7 +64,7 @@ ser: Optional[serial.Serial] = None
 def init(callback: Optional[Callable[[str], Any]] = None, qapp: QApplication=None):
     global xb, ser
     try:
-        ser = serial.Serial(PORT, BAUD)
+        ser = serial.Serial(PORT, BAUD, rtscts=True)
     except (SerialException, FileNotFoundError):
         try:
             if not qapp:
@@ -74,7 +74,7 @@ def init(callback: Optional[Callable[[str], Any]] = None, qapp: QApplication=Non
                 None, f"Port Not Found", "Type the correct port"
             )
             if not resp.lower() == "dummy":
-                ser = serial.Serial(resp, BAUD)
+                ser = serial.Serial(resp, BAUD, rtscts=True)
             else:
                 ser = None
                 logger.debug("Activated dummy port mode")
