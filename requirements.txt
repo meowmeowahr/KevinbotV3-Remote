@@ -14,3 +14,4 @@ QtPy
 pyqtgraph
 shortuuid
 loguru
+command_queue~=0.2.0

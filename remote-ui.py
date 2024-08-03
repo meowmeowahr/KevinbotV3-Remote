@@ -35,6 +35,8 @@ from QCustomWidgets import (
 )
 import qtawesome as qta
 
+import command_queue
+
 import Joystick.Joystick as Joystick
 import SlidingStackedWidget as SlidingStackedWidget
 import com
@@ -147,6 +149,10 @@ class RemoteUI(KBMainWindow):
         # start coms
         com.init(callback=self.serial_callback, qapp=app)
         init_robot()
+
+        # queue
+        self.queue = command_queue.CommandQueue()
+        self.queue.run_in_background(120) # 120 commands per second
 
         if EMULATE_REAL_REMOTE:
             self.setWindowFlags(Qt.Window | Qt.FramelessWindowHint)
@@ -2262,7 +2268,7 @@ class RemoteUI(KBMainWindow):
 
     def arm_preset_action(self, index):
         global CURRENT_ARM_POS
-        com.txcv(RobotCommand.ArmPositions, ",".join(map(str, settings['arm_prog'][index])))
+        self.queue.add_command(command_queue.commands.FunctionCommand(lambda: com.txcv(RobotCommand.ArmPositions, ",".join(map(str, settings['arm_prog'][index])))))
         CURRENT_ARM_POS = settings["arm_prog"][index]
 
         # suppress events on knobs
@@ -2305,11 +2311,11 @@ class RemoteUI(KBMainWindow):
     def arm_preset_left_changed(self, index):
         global CURRENT_ARM_POS
         self.left_labels[index].setText(str(self.left_knobs[index].value()))
-        com.txcv(
+        self.queue.add_command(command_queue.commands.FunctionCommand(lambda: com.txcv(
             RobotCommand.ArmPositions,
             [self.left_knobs[i].value() for i in range(len(self.left_knobs))]
             + [self.right_knobs[i].value() for i in range(len(self.right_knobs))],
-        )
+        )))
         CURRENT_ARM_POS = [
                               self.left_knobs[i].value() for i in range(len(self.left_knobs))
                           ] + [self.right_knobs[i].value() for i in range(len(self.right_knobs))]
@@ -2317,11 +2323,11 @@ class RemoteUI(KBMainWindow):
     def arm_preset_right_changed(self, index):
         global CURRENT_ARM_POS
         self.right_labels[index].setText(str(self.right_knobs[index].value()))
-        com.txcv(
+        self.queue.add_command(command_queue.commands.FunctionCommand(lambda: com.txcv(
             RobotCommand.ArmPositions,
             [self.left_knobs[i].value() for i in range(len(self.left_knobs))]
             + [self.right_knobs[i].value() for i in range(len(self.right_knobs))],
-        )
+        )))
         CURRENT_ARM_POS = [
                               self.left_knobs[i].value() for i in range(len(self.left_knobs))
                           ] + [self.right_knobs[i].value() for i in range(len(self.right_knobs))]
@@ -2447,13 +2453,12 @@ class RemoteUI(KBMainWindow):
         save_settings()
 
     def head_changed_action(self):
-        print(map_range(self.head_stick.getXY()[0], 0, JOYSTICK_SIZE, 0, 60))
-        com.txcv(
+        self.queue.add_command(command_queue.commands.FunctionCommand(lambda: com.txcv(
             RobotCommand.HeadXPosition, map_range(self.head_stick.getXY()[0], -JOYSTICK_SIZE, JOYSTICK_SIZE, 0, 255)
-        )
-        com.txcv(
+        )))
+        self.queue.add_command(command_queue.commands.FunctionCommand(lambda: com.txcv(
             RobotCommand.HeadYPosition, map_range(self.head_stick.getXY()[1], -JOYSTICK_SIZE, JOYSTICK_SIZE, 0, 255)
-        )
+        )))
 
     def shutdown_action(self):
         self.close()

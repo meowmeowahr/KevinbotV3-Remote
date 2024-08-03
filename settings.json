@@ -250,7 +250,7 @@
   "homepage": "https://www.google.com/",
   "joystick_size": 80,
   "joystick_type": "analog",
-  "log_level": 0,
+  "log_level": 10,
   "max_us": 1000,
   "media_dir": "/media/$USER/",
   "motor_temp_warning": 50,
