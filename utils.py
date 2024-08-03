@@ -63,6 +63,9 @@ EXTRA_CSS = (
     "QTabBar::tab:selected {"
     "font-weight: bold;"
     "}"
+    "QPushButton {"
+    "font-family: Roboto;"
+    "}"
 )
 
 

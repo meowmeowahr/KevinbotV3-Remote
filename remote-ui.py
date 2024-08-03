@@ -667,77 +667,22 @@ class RemoteUI(KBMainWindow):
 
         # Arm Presets
 
-        self.arm_preset1 = QPushButton(strings.ARM_PRESETS[0])
-        self.arm_preset1.setObjectName("Kevinbot3_RemoteUI_ArmButton")
+        self.arm_buttons = []
 
-        self.arm_preset2 = QPushButton(strings.ARM_PRESETS[1])
-        self.arm_preset2.setObjectName("Kevinbot3_RemoteUI_ArmButton")
-
-        self.arm_preset3 = QPushButton(strings.ARM_PRESETS[2])
-        self.arm_preset3.setObjectName("Kevinbot3_RemoteUI_ArmButton")
-
-        self.arm_preset4 = QPushButton(strings.ARM_PRESETS[3])
-        self.arm_preset4.setObjectName("Kevinbot3_RemoteUI_ArmButton")
-
-        self.arm_preset5 = QPushButton(strings.ARM_PRESETS[4])
-        self.arm_preset5.setObjectName("Kevinbot3_RemoteUI_ArmButton")
-
-        self.arm_preset6 = QPushButton(strings.ARM_PRESETS[5])
-        self.arm_preset6.setObjectName("Kevinbot3_RemoteUI_ArmButton")
-
-        self.arm_preset7 = QPushButton(strings.ARM_PRESETS[6])
-        self.arm_preset7.setObjectName("Kevinbot3_RemoteUI_ArmButton")
-
-        self.arm_preset8 = QPushButton(strings.ARM_PRESETS[7])
-        self.arm_preset8.setObjectName("Kevinbot3_RemoteUI_ArmButton")
-
-        self.arm_preset9 = QPushButton(strings.ARM_PRESETS[8])
-        self.arm_preset9.setObjectName("Kevinbot3_RemoteUI_ArmButton")
+        for i, preset in enumerate(strings.ARM_PRESETS):
+            button = QPushButton(preset)
+            button.setObjectName("Kevinbot3_RemoteUI_ArmButton")
+            button.setFixedSize(60, 50)
+            button.setStyleSheet("font-size: 20px;")
+            button.clicked.connect(lambda checked, index=i: self.arm_action(index))
+            button.setShortcut(str(i + 1))
+            self.arm_layout.addWidget(button)
+            self.arm_buttons.append(button)
 
         self.arm_set_preset = QPushButton(strings.ARM_SET_PRESET)
         self.arm_set_preset.setObjectName("Kevinbot3_RemoteUI_ArmButton")
-
-        self.arm_preset1.setFixedSize(60, 50)
-        self.arm_preset2.setFixedSize(60, 50)
-        self.arm_preset3.setFixedSize(60, 50)
-        self.arm_preset4.setFixedSize(60, 50)
-        self.arm_preset5.setFixedSize(60, 50)
-        self.arm_preset6.setFixedSize(60, 50)
-        self.arm_preset7.setFixedSize(60, 50)
-        self.arm_preset8.setFixedSize(60, 50)
-        self.arm_preset9.setFixedSize(60, 50)
         self.arm_set_preset.setFixedSize(60, 50)
-
-        self.arm_preset1.clicked.connect(lambda: self.arm_action(0))
-        self.arm_preset2.clicked.connect(lambda: self.arm_action(1))
-        self.arm_preset3.clicked.connect(lambda: self.arm_action(2))
-        self.arm_preset4.clicked.connect(lambda: self.arm_action(3))
-        self.arm_preset5.clicked.connect(lambda: self.arm_action(4))
-        self.arm_preset6.clicked.connect(lambda: self.arm_action(5))
-        self.arm_preset7.clicked.connect(lambda: self.arm_action(6))
-        self.arm_preset8.clicked.connect(lambda: self.arm_action(7))
-        self.arm_preset9.clicked.connect(lambda: self.arm_action(8))
         self.arm_set_preset.clicked.connect(self.arm_edit_action)
-
-        self.arm_preset1.setShortcut("1")
-        self.arm_preset2.setShortcut("2")
-        self.arm_preset3.setShortcut("3")
-        self.arm_preset4.setShortcut("4")
-        self.arm_preset5.setShortcut("5")
-        self.arm_preset6.setShortcut("6")
-        self.arm_preset7.setShortcut("7")
-        self.arm_preset8.setShortcut("8")
-        self.arm_preset9.setShortcut("9")
-
-        self.arm_layout.addWidget(self.arm_preset1)
-        self.arm_layout.addWidget(self.arm_preset2)
-        self.arm_layout.addWidget(self.arm_preset3)
-        self.arm_layout.addWidget(self.arm_preset4)
-        self.arm_layout.addWidget(self.arm_preset5)
-        self.arm_layout.addWidget(self.arm_preset6)
-        self.arm_layout.addWidget(self.arm_preset7)
-        self.arm_layout.addWidget(self.arm_preset8)
-        self.arm_layout.addWidget(self.arm_preset9)
         self.arm_layout.addWidget(self.arm_set_preset)
 
         # LED Options
@@ -1189,6 +1134,7 @@ class RemoteUI(KBMainWindow):
             preset_button = QPushButton(strings.ARM_PRESETS[i])
             preset_button.setObjectName("Kevinbot3_RemoteUI_ArmButton")
             preset_button.setFixedSize(QSize(50, 50))
+            preset_button.setStyleSheet("font-size: 20px;")
             preset_button.clicked.connect(partial(self.arm_preset_action, i))
             self.arm_preset_layout.addWidget(preset_button)
 
@@ -1992,15 +1938,8 @@ class RemoteUI(KBMainWindow):
 
         # disable items on startup
         self.arm_set_preset.setEnabled(False)
-        self.arm_preset1.setEnabled(False)
-        self.arm_preset2.setEnabled(False)
-        self.arm_preset3.setEnabled(False)
-        self.arm_preset4.setEnabled(False)
-        self.arm_preset5.setEnabled(False)
-        self.arm_preset6.setEnabled(False)
-        self.arm_preset7.setEnabled(False)
-        self.arm_preset8.setEnabled(False)
-        self.arm_preset9.setEnabled(False)
+        for button in self.arm_buttons:
+            button.setEnabled(False)
 
         self.motor_stick.setEnabled(False)
         self.head_stick.setEnabled(False)
@@ -2732,15 +2671,8 @@ class RemoteUI(KBMainWindow):
 
         if window:
             self.arm_set_preset.setEnabled(enabled)
-            self.arm_preset1.setEnabled(enabled)
-            self.arm_preset2.setEnabled(enabled)
-            self.arm_preset3.setEnabled(enabled)
-            self.arm_preset4.setEnabled(enabled)
-            self.arm_preset5.setEnabled(enabled)
-            self.arm_preset6.setEnabled(enabled)
-            self.arm_preset7.setEnabled(enabled)
-            self.arm_preset8.setEnabled(enabled)
-            self.arm_preset9.setEnabled(enabled)
+            for button in self.arm_buttons:
+                button.setEnabled(enabled)
 
             self.motor_stick.setEnabled(enabled)
             self.head_stick.setEnabled(enabled)
