@@ -815,12 +815,14 @@ class RemoteUI(KBMainWindow):
         self.enable_button = QPushButton("ENABLE")
         self.enable_button.setObjectName("Enable_Button")
         self.enable_button.setMinimumHeight(42)
+        self.enable_button.setShortcut("'")
         self.enable_button.clicked.connect(lambda: self.request_enabled(True))
         self.speech_grid.addWidget(self.enable_button, 1, 0)
 
         self.disable_button = QPushButton("DISABLE")
         self.disable_button.setObjectName("Disable_Button")
         self.disable_button.setMinimumHeight(42)
+        self.disable_button.setShortcut(Qt.Key.Key_Return)
         self.disable_button.clicked.connect(lambda: self.request_enabled(False))
         self.speech_grid.addWidget(self.disable_button, 1, 1)
 
