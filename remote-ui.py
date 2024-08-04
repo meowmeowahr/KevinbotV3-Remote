@@ -57,9 +57,9 @@ CURRENT_ARM_POS = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # two 5dof arms
 HIGH_INSIDE_TEMP = 45
 
 EYE_SKINS = {
-    "Simple": (3, "icons/eye.svg"),
-    "Metallic": (4, "icons/iris.png"),
-    "Neon": (5, "icons/neon1.png"),
+    "Simple": (0, "icons/eye.svg"),
+    "Metallic": (1, "icons/iris.png"),
+    "Neon": (2, "icons/neon1.png"),
 }
 EYE_MOTIONS = {
     "Smooth": (1, "res/eye_motions/smooth.gif"),
@@ -173,7 +173,7 @@ class RemoteUI(KBMainWindow):
         self.modals = []
         self.full_mesh = []
         self.full_mesh_last_part = 0
-        self.eye_skin = 3
+        self.eye_skin = 1
         self.eye_neon_left_color = "#ffffff"
         self.eye_neon_right_color = "#ffffff"
 
@@ -458,12 +458,12 @@ class RemoteUI(KBMainWindow):
             elif data[0] == "connection.ping":
                 src_dest = data[1].split(",", maxsplit=1)
                 get_updater().call_latest(window.ping, src_dest[0])
-            elif data[0] == "eye_settings.states.page":
+            elif data[0] == "eyeSettings.states.page":
                 if window:
                     get_updater().call_latest(
-                        self.eye_config_stack.setCurrentIndex, int(data[1]) - 3
+                        self.eye_config_stack.setCurrentIndex, int(data[1]) - 1
                     )
-            elif data[0] == "eye_settings.skins.simple.iris_size":
+            elif data[0] == "eyeSettings.skins.simple.iris_size":
                 if window:
                     get_updater().call_latest(
                         self.eye_simple_iris_size_slider.blockSignals, True
@@ -474,7 +474,7 @@ class RemoteUI(KBMainWindow):
                     get_updater().call_latest(
                         self.eye_simple_iris_size_slider.blockSignals, False
                     )
-            elif data[0] == "eye_settings.skins.simple.pupil_size":
+            elif data[0] == "eyeSettings.skins.simple.pupil_size":
                 if window:
                     get_updater().call_latest(
                         self.eye_simple_pupil_size_slider.blockSignals, True
@@ -485,15 +485,37 @@ class RemoteUI(KBMainWindow):
                     get_updater().call_latest(
                         self.eye_simple_pupil_size_slider.blockSignals, False
                     )
-            elif data[0] == "eye_settings.skins.neon.fg_color_start":
+            elif data[0] == "eyeSettings.skins.neon.fg_color_start":
                 if window:
                     self.eye_neon_left_color = data[1].strip('"')
-            elif data[0] == "eye_settings.skins.neon.fg_color_end":
+            elif data[0] == "eyeSettings.skins.neon.fg_color_end":
                 if window:
                     self.eye_neon_right_color = data[1].strip('"')
+            elif data[0] == "eyeSettings.skins.metal.tint":
+                if window:
+                    get_updater().call_latest(
+                        self.eye_metal_iris_tint_slider.blockSignals, True
+                    )
+                    get_updater().call_latest(
+                        self.eye_metal_iris_tint_slider.setValue, int(data[1])
+                    )
+                    get_updater().call_latest(
+                        self.eye_metal_iris_tint_slider.blockSignals, False
+                    )
+            elif data[0] == "eyeSettings.skins.metal.iris_size":
+                if window:
+                    get_updater().call_latest(
+                        self.eye_metal_iris_size_slider.blockSignals, True
+                    )
+                    get_updater().call_latest(
+                        self.eye_metal_iris_size_slider.setValue, int(data[1])
+                    )
+                    get_updater().call_latest(
+                        self.eye_metal_iris_size_slider.blockSignals, False
+                    )
             elif (
-                data[0] == "eye_settings.display.backlight"
-                or data[0] == "eye.set_backlight"
+                data[0] == "eyeSettings.display.backlight"
+                or data[0] == "eyes.setBacklight"
             ):
                 if window:
                     get_updater().call_latest(
@@ -505,12 +527,12 @@ class RemoteUI(KBMainWindow):
                     get_updater().call_latest(
                         self.eye_config_light_slider.blockSignals, False
                     )
-            elif data[0] == "eye_settings.motions.speed" or data[0] == "eye.set_speed":
+            elif data[0] == "eyeSettings.motions.speed" or data[0] == "eye.set_speed":
                 if window:
                     get_updater().call_latest(
                         self.eye_config_speed_slider.setValue, int(data[1])
                     )
-            elif data[0] == "eye_settings.states.motion" or data[0] == "eye.set_motion":
+            elif data[0] == "eyeSettings.states.motion" or data[0] == "eye.set_motion":
                 if window:
                     if data[1] == "3":
                         get_updater().call_latest(
@@ -1472,6 +1494,28 @@ class RemoteUI(KBMainWindow):
         self.eye_metal_iris_tint_image.setFixedHeight(24)
         self.eye_metal_iris_tint_layout.addWidget(self.eye_metal_iris_tint_image)
 
+        # iris size group box
+        self.eye_metal_iris_size = QGroupBox("Iris Size")
+        self.eye_metal_iris_size.setObjectName("Kevinbot3_RemoteUI_Group")
+        self.eye_metal_layout.addWidget(self.eye_metal_iris_size, 1, 0, 2, 2)
+        self.eye_metal_iris_size_layout = QVBoxLayout()
+        self.eye_metal_iris_size.setLayout(self.eye_metal_iris_size_layout)
+
+        # iris size slider
+        self.eye_metal_iris_size_slider = QSlider(Qt.Horizontal)
+        self.eye_metal_iris_size_slider.setObjectName(
+            "Kevinbot3_RemoteUI_EyeConfigSlider"
+        )
+        self.eye_metal_iris_size_slider.setMinimum(85)
+        self.eye_metal_iris_size_slider.setMaximum(200)
+        self.eye_metal_iris_size_slider.setValue(120)
+        self.eye_metal_iris_size_slider.setTickPosition(QSlider.TicksBelow)
+        self.eye_metal_iris_size_slider.setTickInterval(5)
+        self.eye_metal_iris_size_slider.valueChanged.connect(
+            self.eye_config_metal_size_changed
+        )
+        self.eye_metal_iris_size_layout.addWidget(self.eye_metal_iris_size_slider)
+
         # Neon Skin
         self.eye_neon_layout = QGridLayout()
         self.eye_neon_layout.setContentsMargins(0, 0, 0, 0)
@@ -2404,8 +2448,8 @@ class RemoteUI(KBMainWindow):
         app.quit()
 
     def eye_set_state(self, state: int):
-        com.txcv(RobotCommand.EyeSetState, state)
-        self.eye_config_stack.setCurrentIndex(state - 3)
+        com.txcv(RobotCommand.EyeSetState, str(state+1))
+        self.eye_config_stack.setCurrentIndex(state)
 
     @staticmethod
     def eye_config_simple_bg_selected(color):
@@ -2438,6 +2482,9 @@ class RemoteUI(KBMainWindow):
     def eye_config_metal_tint_changed(value):
         com.txcv(RobotCommand.EyeSetSkinOption, f"metal:tint:{value}")
 
+    @staticmethod
+    def eye_config_metal_size_changed(value):
+        com.txcv(RobotCommand.EyeSetSkinOption, f"metal:iris_size:{value}")
     @staticmethod
     def eye_set_neon_style(value):
         com.txcv(RobotCommand.EyeSetSkinOption, f"neon:style:{value}")
