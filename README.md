@@ -1,4 +1,8 @@
 # Kevinbot v3 Remote
+> [!WARNING]
+> This app is no longer being developed
+> 
+> Check out [Kevinbot Desktop Client](https://github.com/meowmeowahr/KevinbotV3-DesktopClient), the new Kevinbot control app, powered by KevinbotLib
 
 ### Setup
 -   Configure Wi-Fi and Serial Port
